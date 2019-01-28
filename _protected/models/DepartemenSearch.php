@@ -46,9 +46,10 @@ class DepartemenSearch extends Departemen
         $query = Departemen::find();
 
         $query->joinWith(['perusahaan as perusahaan']);
-
+        
         // add conditions that should always apply here
 
+        $query->where(['perusahaan_id'=>Yii::$app->user->identity->perusahaan_id]);
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -69,12 +70,12 @@ class DepartemenSearch extends Departemen
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'perusahaan_id' => $this->perusahaan_id,
+        // $query->andFilterWhere([
+        //     'id' => $this->id,
+        //     'perusahaan_id' => $this->perusahaan_id,
            
-            'created' => $this->created,
-        ]);
+        //     'created' => $this->created,
+        // ]);
 
         $query->andFilterWhere(['like', 'nama', $this->nama])
         ->andFilterWhere(['like', 'perusahaan.nama', $this->namaPerusahaan]);

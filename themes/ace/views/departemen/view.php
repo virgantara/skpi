@@ -8,7 +8,7 @@ use yii\grid\GridView;
 /* @var $model app\models\PerusahaanSub */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Perusahaan Subs', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Unit', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="perusahaan-sub-view">

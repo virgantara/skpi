@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\PerusahaanSubSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Cabang';
+$this->title = 'Unit';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="perusahaan-sub-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Cabang', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Unit', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

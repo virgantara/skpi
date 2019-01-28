@@ -9,7 +9,7 @@ $params = array_merge(
 
 $config = [
     'id' => 'basic',
-    'name' => 'ERP',
+    'name' => 'SPMI Online | Universitas Darussalam Gontor',
     'language' => 'en',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'app\components\Aliases'],
@@ -152,7 +152,6 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
-        'dbSimrs' => require(__DIR__ . '/dbSimrs.php'),
     ],
     'params' => $params,
 ];

@@ -68,7 +68,7 @@ class Perusahaan extends \yii\db\ActiveRecord
         $where = [];    
         $userLevel = Yii::$app->user->identity->access_role;    
             
-        if($userLevel != 'admin'){
+        if($userLevel != 'theCreator'){
             $userPt = Yii::$app->user->identity->perusahaan_id;
             $where = array_merge($where,['id_perusahaan' => $userPt]);
         }
