@@ -346,11 +346,12 @@ class MenuHelper
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Laporan </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	         'visible' => Yii::$app->user->can('admin'),
 	        'items'=>[
 	           [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Laporan Evaluasi Diri',  
 	                'url' => ['/evaluasi-diri/rekap'],	        
-	                'visible' => Yii::$app->user->can('admin'),
+	                
 	               
 	            ],
 	            // [
