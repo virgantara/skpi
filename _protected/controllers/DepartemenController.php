@@ -31,7 +31,7 @@ class DepartemenController extends Controller
 
     
 
-    public function actionProfile(){
+    public function actionProfile($p){
         $searchModel = new \app\models\DepartemenUserSearch();
 
         $id = Yii::$app->user->identity->departemen;
@@ -39,6 +39,7 @@ class DepartemenController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('profile', [
+            'p' => $p,
             'model' => $this->findModel($id),
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

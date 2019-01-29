@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model app\models\PerusahaanSub */
 
-$this->title = $model->id;
+$this->title = $model->nama.' - '.Yii::$app->name;
 $this->params['breadcrumbs'][] = ['label' => 'Unit', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -20,20 +20,34 @@ $this->params['breadcrumbs'][] = $this->title;
         
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            
-            'nama',
-            'namaPerusahaan',
-            'visi',
-            'misi',
-            'sasaran',
-            'tujuan',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
+    <p>
+        
+        <?php 
+        if($p == 'visi-misi'){
+            ?>
+            <h2>Visi dan Misi</h2>
+            <h4>A. Visi</h4>
+        
+            <?=$model->visi;?>
+            <h4>B. Misi</h4>
+        
+            <?=$model->misi;?>
+        <?php }
+        else if($p == 'sasaran-tujuan'){
+         ?>
+             <h2>Sasaran dan Tujuan</h2>
+            <h4>Sasaran</h4>
+        
+            <?=$model->sasaran;?>
+            <h4>Tujuan</h4>
+        
+            <?=$model->tujuan;?>
+         <?php   
+            }
+         ?>
+        
+        
+    </p>
 
-    
+
 </div>

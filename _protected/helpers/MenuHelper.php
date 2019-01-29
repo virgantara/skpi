@@ -319,8 +319,14 @@ class MenuHelper
 	        'items'=>[
 	           
 	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i>Visi, Misi, Tujuan, Sasaran',  
-	                'url' => ['/departemen/profile'],	        
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i>Visi & Misi',  
+	                'url' => ['/departemen/profile','p'=>'visi-misi'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang'),
+	               
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i>Sasaran & Tujuan',  
+	                'url' => ['/departemen/profile','p'=>'sasaran-tujuan'],	        
 	                'visible' => Yii::$app->user->can('operatorCabang'),
 	               
 	            ],
