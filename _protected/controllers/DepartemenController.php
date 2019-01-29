@@ -29,6 +29,32 @@ class DepartemenController extends Controller
         ];
     }
 
+    public function actionProfile(){
+        $searchModel = new \app\models\DepartemenUserSearch();
+        $id = Yii::$app->user->identity->departemen;
+        $searchModel->departemen_id = $id;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('profile', [
+            'model' => $this->findModel($id),
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionUpdateProfile($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['profile']);
+        }
+
+        return $this->render('update_profile', [
+            'model' => $model,
+        ]);
+    }
+
     /**
      * Lists all PerusahaanSub models.
      * @return mixed

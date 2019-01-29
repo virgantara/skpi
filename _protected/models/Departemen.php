@@ -5,17 +5,22 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "perusahaan_sub".
+ * This is the model class for table "{{%departemen}}".
  *
  * @property int $id
  * @property string $nama
+ * @property int $departemen_level_id
  * @property int $perusahaan_id
- * @property int $user_id
- * @property string $created
+ * @property string $visi
+ * @property string $misi
+ * @property string $tujuan
+ * @property string $sasaran
+ * @property string $created_at
+ * @property string $updated_at
  *
+ * @property DepartemenLevel $departemenLevel
  * @property Perusahaan $perusahaan
- * @property User $user
- * @property PerusahaanSubStok[] $perusahaanSubStoks
+ * @property DepartemenUser[] $departemenUsers
  */
 class Departemen extends \yii\db\ActiveRecord
 {
@@ -33,38 +38,14 @@ class Departemen extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'perusahaan_id'], 'required'],
-            [['perusahaan_id'], 'integer'],
-            [['created'], 'safe'],
+            [['nama', 'departemen_level_id', 'perusahaan_id', 'visi', 'misi', 'tujuan', 'sasaran'], 'required'],
+            [['departemen_level_id', 'perusahaan_id'], 'integer'],
+            [['visi', 'misi', 'tujuan', 'sasaran'], 'string'],
+            [['created_at', 'updated_at'], 'safe'],
             [['nama'], 'string', 'max' => 100],
-            [['perusahaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => Perusahaan::className(), 'targetAttribute' => ['perusahaan_id' => 'id_perusahaan']],
             [['departemen_level_id'], 'exist', 'skipOnError' => true, 'targetClass' => DepartemenLevel::className(), 'targetAttribute' => ['departemen_level_id' => 'id']],
-            
+            [['perusahaan_id'], 'exist', 'skipOnError' => true, 'targetClass' => Perusahaan::className(), 'targetAttribute' => ['perusahaan_id' => 'id_perusahaan']],
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'nama' => 'Nama',
-            'perusahaan_id' => 'Perusahaan',
-            'departemen_level_id' => 'Level',
-            'created' => 'Created',
-        ];
-    }
-
-    public function getDepartemenLevel()
-    {
-        return $this->hasOne(DepartemenLevel::className(), ['id' => 'departemen_level_id']);
-    }
-
-    public function getDepartemenUsers()
-    {
-        return $this->hasMany(DepartemenUser::className(), ['departemen_id' => 'id']);
     }
 
     public static function getDepartemenId()
@@ -141,6 +122,38 @@ class Departemen extends \yii\db\ActiveRecord
         return $listData;
     } 
 
+    public  function getNamaPerusahaan(){
+        return $this->perusahaan->nama;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'nama' => 'Nama Unit',
+            'namaPerusahaan' => 'Universitas',
+            'departemen_level_id' => 'Departemen Level ID',
+            'perusahaan_id' => 'Perusahaan ID',
+            'visi' => 'Visi',
+            'misi' => 'Misi',
+            'tujuan' => 'Tujuan',
+            'sasaran' => 'Sasaran',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDepartemenLevel()
+    {
+        return $this->hasOne(DepartemenLevel::className(), ['id' => 'departemen_level_id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -149,29 +162,11 @@ class Departemen extends \yii\db\ActiveRecord
         return $this->hasOne(Perusahaan::className(), ['id_perusahaan' => 'perusahaan_id']);
     }
 
-    public function getNamaPerusahaan()
-    {
-        return $this->perusahaan->nama;
-    }
-
-    public function getNamaUser()
-    {
-        return $this->user->username;
-    }
-
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
+    public function getDepartemenUsers()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDepartemenStoks()
-    {
-        return $this->hasMany(DepartemenStok::className(), ['perusahaan_sub_id' => 'id']);
+        return $this->hasMany(DepartemenUser::className(), ['departemen_id' => 'id']);
     }
 }

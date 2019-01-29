@@ -310,13 +310,50 @@ class MenuHelper
 	        // ]];
 	    }
 
-	    if (Yii::$app->user->can('gudang') || Yii::$app->user->can('operatorCabang'))
+	    if (Yii::$app->user->can('operatorCabang'))
 	    {
-	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Laporan </span><i class="caret"></i>', 'url' => '#',
+	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Profil </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	        'items'=>[
 	           
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i>Visi, Misi, Tujuan, Sasaran',  
+	                'url' => ['/departemen/profile'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang'),
+	               
+	            ],
+	           
+	            
+	        ]];
+
+	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> SPMI </span><i class="caret"></i>', 'url' => '#',
+	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	        'items'=>[
+	           
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Isian Evaluasi Diri',  
+	                'url' => ['/evaluasi-diri/index'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang'),
+	               
+	            ],
+
+
+	           
+	            
+	        ]];
+
+	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Laporan </span><i class="caret"></i>', 'url' => '#',
+	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	        'items'=>[
+	           [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Laporan Evaluasi Diri',  
+	                'url' => ['/evaluasi-diri/rekap'],	        
+	                'visible' => Yii::$app->user->can('admin'),
+	               
+	            ],
 	            // [
 	            // 	'label' => '<i class="menu-icon fa fa-caret-right"></i>Mutasi Barang',  
 	            //     'url' => '#',	        

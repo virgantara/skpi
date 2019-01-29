@@ -11,6 +11,7 @@ nbproject
 
 db.php
 dbSimrs.php
+uploads/*
 
 # zend studio for eclipse project files
 .buildpath

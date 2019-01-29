@@ -108,7 +108,7 @@ class User extends UserIdentity
         $where = [];    
         $userLevel = Yii::$app->user->identity->access_role;    
             
-        if($userLevel != 'admin'){
+        if($userLevel != 'theCreator'){
             $userPt = Yii::$app->user->identity->perusahaan_id;
             $where = ['perusahaan_id' => $userPt];
         }

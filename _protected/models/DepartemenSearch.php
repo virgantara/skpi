@@ -21,7 +21,7 @@ class DepartemenSearch extends Departemen
     {
         return [
             [['id', 'perusahaan_id'], 'integer'],
-            [['nama', 'created','namaPerusahaan','namaUser'], 'safe'],
+            [['nama', 'created','namaPerusahaan','namaUser','visi','misi','tujuan','sasaran'], 'safe'],
         ];
     }
 
@@ -49,17 +49,19 @@ class DepartemenSearch extends Departemen
         
         // add conditions that should always apply here
 
-        $query->where(['perusahaan_id'=>Yii::$app->user->identity->perusahaan_id]);
+        
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
-         $dataProvider->sort->attributes['namaPerusahaan'] = [
+        $dataProvider->sort->attributes['namaPerusahaan'] = [
             'asc' => ['perusahaan.nama'=>SORT_ASC],
             'desc' => ['perusahaan.nama'=>SORT_DESC]
         ];
 
-      
+        if(!Yii::$app->user->can('theCreator')){
+            $query->where(['perusahaan_id'=>Yii::$app->user->identity->perusahaan_id]);
+        }
 
         $this->load($params);
 

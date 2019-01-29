@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use dosamigos\ckeditor\CKEditor;
 /* @var $this yii\web\View */
 /* @var $model app\models\PerusahaanSub */
 /* @var $form yii\widgets\ActiveForm */
@@ -44,6 +44,25 @@ if($userLevel != 'admin'){
 
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'visi')->widget(CKEditor::className(), [
+        'options' => ['rows' => 6],
+        'preset' => 'advance'
+    ]) ?>
+
+    <?= $form->field($model, 'misi')->widget(CKEditor::className(), [
+        'options' => ['rows' => 6],
+        'preset' => 'advance'
+    ]) ?>
+
+    <?= $form->field($model, 'sasaran')->widget(CKEditor::className(), [
+        'options' => ['rows' => 6],
+        'preset' => 'advance'
+    ]) ?>
+
+    <?= $form->field($model, 'tujuan')->widget(CKEditor::className(), [
+        'options' => ['rows' => 6],
+        'preset' => 'advance'
+    ]) ?>
 
     <?= $form->field($model, 'perusahaan_id')->dropDownList($listData, ['prompt'=>'..Pilih Perusahaan..']); ?>
 
