@@ -46,16 +46,17 @@ class DepartemenController extends Controller
         ]);
     }
 
-    public function actionUpdateProfile($id)
+    public function actionUpdateProfile($id,$p)
     {
         $model = $this->findModel($id);
-
+        // print_r($_POST);exit;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['profile']);
+            return $this->redirect(['profile','p'=>$p]);
         }
 
         return $this->render('update_profile', [
             'model' => $model,
+            'p' => $p
         ]);
     }
 

@@ -41,6 +41,8 @@ if($userLevel != 'admin'){
         'preset' => 'advance'
     ]) ?>
 
+    <input type="hidden" name="p" value="<?=$p;?>"/>
+
     <?= $form->field($model, 'misi')->widget(CKEditor::className(), [
         'options' => ['rows' => 6],
         'preset' => 'advance'
