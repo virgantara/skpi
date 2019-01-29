@@ -29,8 +29,11 @@ class DepartemenController extends Controller
         ];
     }
 
+    
+
     public function actionProfile(){
         $searchModel = new \app\models\DepartemenUserSearch();
+
         $id = Yii::$app->user->identity->departemen;
         $searchModel->departemen_id = $id;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);

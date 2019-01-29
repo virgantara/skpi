@@ -30,7 +30,55 @@ class EvaluasiDiriController extends Controller
         ];
     }
 
-    
+    public function actionRekap(){
+
+        $results = [];
+
+        if(!empty($_POST['tanggal']) && !empty($_POST['dept_id']))
+        {
+
+
+            $tanggal = date('d',strtotime($_POST['tanggal']));
+            $bulan = date('m',strtotime($_POST['tanggal']));
+            $tahun = date('Y',strtotime($_POST['tanggal']));
+            $query = \app\models\EvaluasiDiri::find();
+            $query->where(['departemen_id'=>$_POST['dept_id']]);
+            // $query->orderBy(['depa'=>SORT_ASC]);
+            $list = $query->all();
+
+            $total = 0;
+            foreach($list as $q => $m)
+            {
+                
+                $results[] = [
+                    'id' => $m->id,
+                    'unit' => $m->namaDepartemen,
+                    'strength' => $m->strength,
+                    'weakness' => $m->weakness,
+                    'opportunity' => $m->opportunity,
+                    'threat' => $m->threat,
+                    
+                ];
+            }
+
+
+            if(!empty($_POST['export']) && empty($_POST['search']))
+            {
+                return $this->renderPartial('_tabel_swot', [
+                    'list' => $results,
+                    'model' => $model,
+                    'export' => 1
+                ]); 
+            }
+
+        }
+
+        return $this->render('rekap', [
+            'list' => $results,
+            'model' => $model,
+
+        ]);
+    }
 
     public function actionDownload($id)
     {

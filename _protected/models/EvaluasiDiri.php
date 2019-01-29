@@ -66,6 +66,10 @@ class EvaluasiDiri extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getNamaDepartemen(){
+        return $this->departemen->nama;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

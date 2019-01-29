@@ -315,6 +315,7 @@ class MenuHelper
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Profil </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	         'visible' => Yii::$app->user->can('operatorCabang') && !Yii::$app->user->can('admin'),
 	        'items'=>[
 	           
 	            [
@@ -323,8 +324,6 @@ class MenuHelper
 	                'visible' => Yii::$app->user->can('operatorCabang'),
 	               
 	            ],
-	           
-	            
 	        ]];
 
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> SPMI </span><i class="caret"></i>', 'url' => '#',
@@ -511,13 +510,13 @@ class MenuHelper
 	    }
 
 	    if (Yii::$app->user->can('theCreator')){
-	         $menuItems[] = ['label' => '<i class="menu-icon fa fa-building"></i><span class="menu-text"> Perusahaan </span><i class="caret"></i>', 'url' => '#',
-	          'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	           'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-	         'items'=>[
-	            ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['perusahaan/index']],
-	            ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),'url' => ['perusahaan/create']]
-	        ]];
+	        //  $menuItems[] = ['label' => '<i class="menu-icon fa fa-building"></i><span class="menu-text"> Perusahaan </span><i class="caret"></i>', 'url' => '#',
+	        //   'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	        //    'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	        //  'items'=>[
+	        //     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['perusahaan/index']],
+	        //     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),'url' => ['perusahaan/create']]
+	        // ]];
 
 
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-users"></i><span class="menu-text"> Users </span>', 'url' => ['/user/index']];
