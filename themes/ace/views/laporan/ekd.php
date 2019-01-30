@@ -76,19 +76,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="row">
     <div class="col-sm-12">
-        <table class="table table-striped">
+        <table class="table table-striped" id="tabel_ekd">
             <thead>
                 <tr>
                     <th>No</th>
                     <th>Kode Dosen</th>
                     <th>Nama Dosen</th>
                     <th>Nilai Angka</th>
+                    <th>Nilai Huruf</th>
+                    <th>Keterangan</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                </tr>
+
             </tbody>
         </table>
     </div>
@@ -117,7 +117,34 @@ $this->registerJs('
                 url : \'/api/ajax-get-ekd\',
                 data  : $("#form-ekd").serialize(),
                 success : function(data){
-                    console.log(data);
+                    var hsl = $.parseJSON(data);
+                    $(\'#tabel_ekd > tbody\').empty();
+                    var row = \'\';
+                    $.each(hsl,function(i,obj){
+                        row += \'<tr>\';
+                        row += \'<td>\';
+                        row += (i+1);
+                        row += \'</td>\';
+                        row += \'<td>\';
+                        row += obj.kode;
+                        row += \'</td>\';
+                        row += \'<td>\';
+                        row += obj.nama;
+                        row += \'</td>\';
+                        row += \'<td>\';
+                        row += obj.angka;
+                        row += \'</td>\';
+                        row += \'<td>\';
+                        row += obj.huruf;
+                        row += \'</td>\';
+                        row += \'<td>\';
+                        row += obj.keterangan;
+                        row += \'</td>\';
+                        row += \'</tr>\';
+
+                    });
+
+                    $(\'#tabel_ekd > tbody\').append(row);
                 }
             });
         });

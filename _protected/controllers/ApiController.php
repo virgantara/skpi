@@ -50,10 +50,11 @@ class ApiController extends Controller
             $result = $response->data['values'];
             foreach ($result as $d) {
                 $out[] = [
-                    'kode' => $d['kode_dosen'],
-                    'nama'=> $d['nama_dosen'],
-                    'score' => $d['score_ekd']
-                   
+                    'kode' => $d['kode'],
+                    'nama'=> $d['nama'],
+                    'angka' => $d['nilai_angka'],
+                    'huruf' => $d['nilai_huruf'],
+                    'keterangan' => $d['keterangan'],
                 ];
             }
         }
