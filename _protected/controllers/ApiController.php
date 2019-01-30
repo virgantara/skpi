@@ -32,14 +32,17 @@ class ApiController extends Controller
         ];
     }
 
-    public function actionAjaxGetDokter() {
+    public function actionAjaxGetEkd() {
 
-        $q = $_GET['term'];
+        $tahun = $_POST['tahun'];
+        $semester = $_POST['semester'];
+        $prodi = $_POST['prodi'];
+        $ta = $tahun.$semester;
         
         // $list = Pasien::find()->addFilterWhere(['like',])
         $api_baseurl = Yii::$app->params['api_baseurl'];
         $client = new Client(['baseUrl' => $api_baseurl]);
-        $response = $client->get('/d/nama', ['key' => $q])->send();
+        $response = $client->get('/d/ekd', ['tahun' => $ta,'prodi'=>$prodi])->send();
         
         $out = [];
         
@@ -47,8 +50,9 @@ class ApiController extends Controller
             $result = $response->data['values'];
             foreach ($result as $d) {
                 $out[] = [
-                    'id' => $d['id_dokter'],
-                    'label'=> $d['nama_dokter'],
+                    'kode' => $d['kode_dosen'],
+                    'nama'=> $d['nama_dosen'],
+                    'score' => $d['score_ekd']
                    
                 ];
             }

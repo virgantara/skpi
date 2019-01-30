@@ -360,6 +360,12 @@ class MenuHelper
 	                
 	               
 	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Laporan EKD',  
+	                'url' => ['/laporan/ekd'],	        
+	                
+	               
+	            ],
 	            // [
 	            // 	'label' => '<i class="menu-icon fa fa-caret-right"></i>Mutasi Barang',  
 	            //     'url' => '#',	        

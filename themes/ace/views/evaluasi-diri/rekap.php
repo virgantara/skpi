@@ -35,7 +35,7 @@ $listDepartment = \app\models\Departemen::getListDepartemens();
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Tanggal Opname</label>
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Tanggal</label>
         <div class="col-sm-2">
            <?= \yii\jui\DatePicker::widget([
              'options' => ['placeholder' => 'Pilih tanggal awal ...','id'=>'tanggal'],
