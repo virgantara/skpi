@@ -35,13 +35,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php }
         else if($p == 'sasaran-tujuan'){
          ?>
-             <h2>Sasaran dan Tujuan</h2>
+             <h2>Tujuan dan Sasaran</h2>
+             <h4>Tujuan</h4>
+        
+            <?=$model->tujuan;?>
             <h4>Sasaran</h4>
         
             <?=$model->sasaran;?>
-            <h4>Tujuan</h4>
-        
-            <?=$model->tujuan;?>
+            
          <?php   
             }
          ?>

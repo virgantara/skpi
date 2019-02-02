@@ -325,7 +325,7 @@ class MenuHelper
 	               
 	            ],
 	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i>Sasaran & Tujuan',  
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i>Tujuan & Sasaran',  
 	                'url' => ['/departemen/profile','p'=>'sasaran-tujuan'],	        
 	                'visible' => Yii::$app->user->can('operatorCabang'),
 	               

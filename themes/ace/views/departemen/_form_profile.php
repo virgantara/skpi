@@ -35,15 +35,20 @@ if($userLevel != 'admin'){
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
+     <input type="hidden" name="p" value="<?=$p;?>"/>
 
     <?= $form->field($model, 'visi')->widget(CKEditor::className(), [
         'options' => ['rows' => 6],
         'preset' => 'advance'
     ]) ?>
 
-    <input type="hidden" name="p" value="<?=$p;?>"/>
-
+   
     <?= $form->field($model, 'misi')->widget(CKEditor::className(), [
+        'options' => ['rows' => 6],
+        'preset' => 'advance'
+    ]) ?>
+
+      <?= $form->field($model, 'tujuan')->widget(CKEditor::className(), [
         'options' => ['rows' => 6],
         'preset' => 'advance'
     ]) ?>
@@ -53,10 +58,7 @@ if($userLevel != 'admin'){
         'preset' => 'advance'
     ]) ?>
 
-    <?= $form->field($model, 'tujuan')->widget(CKEditor::className(), [
-        'options' => ['rows' => 6],
-        'preset' => 'advance'
-    ]) ?>
+  
 
 
 
