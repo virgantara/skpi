@@ -82,6 +82,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     <th>No</th>
                     <th>Kode Dosen</th>
                     <th>Nama Dosen</th>
+                      <th>Kampus</th>
+                    <th>Kode MK</th>
+                    <th>Nama MK</th>
+                    <th>SKS</th>
                     <th>Nilai Angka</th>
                     <th>Nilai Huruf</th>
                     <th>Keterangan</th>
@@ -117,29 +121,22 @@ $this->registerJs('
                 url : \'/api/ajax-get-ekd\',
                 data  : $("#form-ekd").serialize(),
                 success : function(data){
-                    var hsl = $.parseJSON(data);
+
+                    // var hsl = $.parseJSON(data);
                     $(\'#tabel_ekd > tbody\').empty();
                     var row = \'\';
-                    $.each(hsl,function(i,obj){
+                    $.each(data,function(i,obj){
                         row += \'<tr>\';
-                        row += \'<td>\';
-                        row += (i+1);
-                        row += \'</td>\';
-                        row += \'<td>\';
-                        row += obj.kode;
-                        row += \'</td>\';
-                        row += \'<td>\';
-                        row += obj.nama;
-                        row += \'</td>\';
-                        row += \'<td>\';
-                        row += obj.angka;
-                        row += \'</td>\';
-                        row += \'<td>\';
-                        row += obj.huruf;
-                        row += \'</td>\';
-                        row += \'<td>\';
-                        row += obj.keterangan;
-                        row += \'</td>\';
+                        row += \'<td>\'+(i+1)+\'</td>\';
+                        row += \'<td>\'+obj.kode+\'</td>\';
+                        row += \'<td>\'+obj.nama+\'</td>\';
+                        row += \'<td>\'+obj.kampus+\'</td>\';
+                        row += \'<td>\'+obj.kode_mk+\'</td>\';
+                        row += \'<td>\'+obj.nama_mk+\'</td>\';
+                        row += \'<td>\'+obj.sks+\'</td>\';
+                        row += \'<td>\'+obj.angka+\'</td>\';
+                        row += \'<td>\'+obj.huruf+\'</td>\';
+                        row += \'<td>\'+obj.keterangan+\'</td>\';
                         row += \'</tr>\';
 
                     });

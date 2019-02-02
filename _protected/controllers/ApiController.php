@@ -47,19 +47,25 @@ class ApiController extends Controller
         $out = [];
         
         if ($response->isOk) {
-            $result = $response->data['values'];
-            foreach ($result as $d) {
-                $out[] = [
-                    'kode' => $d['kode'],
-                    'nama'=> $d['nama'],
-                    'angka' => $d['nilai_angka'],
-                    'huruf' => $d['nilai_huruf'],
-                    'keterangan' => $d['keterangan'],
-                ];
-            }
+            $out = $response->data['values'];
+            // foreach ($result as $d) {
+            //     $out[] = [
+            //         'kode' => $d['kode'],
+            //         'nama'=> $d['nama'],
+            //         'kode_mk' => $d['kode_mk'],
+            //         'nama_mk'=> $d['nama_mk'],
+            //         'sks'=> $d['sks'],
+            //         'angka' => $d['nilai_angka'],
+            //         'huruf' => $d['nilai_huruf'],
+            //         'keterangan' => $d['keterangan'],
+            //     ];
+            // }
         }
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; 
+        \Yii::$app->response->data  =  $out;
         
-        echo \yii\helpers\Json::encode($out);
+        // echo \yii\helpers\Json::encode($out);
 
       
     }

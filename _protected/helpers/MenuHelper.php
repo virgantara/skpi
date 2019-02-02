@@ -503,7 +503,7 @@ class MenuHelper
 	            [
 	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Unit <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	                'visible' => Yii::$app->user->can('admSalesCab') || Yii::$app->user->can('gudang'),
+	                'visible' => Yii::$app->user->can('admin'),
 	                'url' => ['#'],
 	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	                'items' => [
