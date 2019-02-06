@@ -82,10 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <th>No</th>
                     <th>Kode Dosen</th>
                     <th>Nama Dosen</th>
-                      <th>Kampus</th>
-                    <th>Kode MK</th>
-                    <th>Nama MK</th>
-                    <th>SKS</th>
+                   
                     <th>Nilai Angka</th>
                     <th>Nilai Huruf</th>
                     <th>Keterangan</th>
@@ -130,12 +127,9 @@ $this->registerJs('
                         row += \'<td>\'+(i+1)+\'</td>\';
                         row += \'<td>\'+obj.kode+\'</td>\';
                         row += \'<td>\'+obj.nama+\'</td>\';
-                        row += \'<td>\'+obj.kampus+\'</td>\';
-                        row += \'<td>\'+obj.kode_mk+\'</td>\';
-                        row += \'<td>\'+obj.nama_mk+\'</td>\';
-                        row += \'<td>\'+obj.sks+\'</td>\';
-                        row += \'<td>\'+obj.angka+\'</td>\';
-                        row += \'<td>\'+obj.huruf+\'</td>\';
+                        
+                        row += \'<td>\'+obj.nilai_angka+\'</td>\';
+                        row += \'<td>\'+obj.nilai_huruf+\'</td>\';
                         row += \'<td>\'+obj.keterangan+\'</td>\';
                         row += \'</tr>\';
 
