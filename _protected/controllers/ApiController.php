@@ -42,6 +42,7 @@ class ApiController extends Controller
         // $list = Pasien::find()->addFilterWhere(['like',])
         $api_baseurl = Yii::$app->params['api_baseurl'];
         $client = new Client(['baseUrl' => $api_baseurl]);
+        
         $response = $client->get('/d/ekd', ['tahun' => $ta,'prodi'=>$prodi])->send();
         
         $out = [];
@@ -60,12 +61,18 @@ class ApiController extends Controller
             //         'keterangan' => $d['keterangan'],
             //     ];
             // }
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; 
+            \Yii::$app->response->data  =  $out;    
         }
 
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; 
-        \Yii::$app->response->data  =  $out;
+        else{
+
+            echo \yii\helpers\Json::encode($out);    
+        }
+
         
-        // echo \yii\helpers\Json::encode($out);
+        
+        
 
       
     }
