@@ -42,6 +42,16 @@ class LaporanController extends Controller
         ];
     }
 
+    public function actionEkdDetil($tahun, $semester, $prodi, $kode){
+        
+        $ta = $tahun.$semester;
+        return $this->render('ekd_detil', [
+            'ta' => $ta,
+            'kode' => $kode,
+            'prodi' => $prodi
+        ]);
+    }
+
     public function actionEkd(){
 
         $results = [];

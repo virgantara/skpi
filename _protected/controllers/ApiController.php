@@ -32,6 +32,36 @@ class ApiController extends Controller
         ];
     }
 
+    public function actionAjaxGetEkdDetil() {
+
+       
+        $prodi = $_POST['prodi'];
+        $kode = $_POST['kode'];
+        $ta = $_POST['ta'];
+        
+        // $list = Pasien::find()->addFilterWhere(['like',])
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        
+        $response = $client->get('/d/ekd/detil', ['tahun' => $ta,'prodi'=>$prodi,'kode'=>$kode])->send();
+        
+        
+        $out = [];
+        
+        if ($response->isOk) {
+            $out = $response->data['values'];
+            
+            \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; 
+            \Yii::$app->response->data  =  $out;    
+        }
+
+        else{
+
+            echo \yii\helpers\Json::encode($out);    
+        }
+      
+    }
+
     public function actionAjaxGetEkd() {
 
         $tahun = $_POST['tahun'];
@@ -49,18 +79,7 @@ class ApiController extends Controller
         
         if ($response->isOk) {
             $out = $response->data['values'];
-            // foreach ($result as $d) {
-            //     $out[] = [
-            //         'kode' => $d['kode'],
-            //         'nama'=> $d['nama'],
-            //         'kode_mk' => $d['kode_mk'],
-            //         'nama_mk'=> $d['nama_mk'],
-            //         'sks'=> $d['sks'],
-            //         'angka' => $d['nilai_angka'],
-            //         'huruf' => $d['nilai_huruf'],
-            //         'keterangan' => $d['keterangan'],
-            //     ];
-            // }
+            
             \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; 
             \Yii::$app->response->data  =  $out;    
         }
@@ -69,11 +88,6 @@ class ApiController extends Controller
 
             echo \yii\helpers\Json::encode($out);    
         }
-
-        
-        
-        
-
       
     }
 
