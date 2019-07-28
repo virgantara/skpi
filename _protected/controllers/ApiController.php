@@ -47,7 +47,7 @@ class ApiController extends Controller
         $out = [];
         
         if ($response->isOk) {
-            $out = $response->data['values'];
+            $out = $response->data['values'][0];
             // foreach ($result as $d) {
             //     $out[] = [
             //         'kode' => $d['kode'],

@@ -27,13 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="barang-opname-form">
 <form class="form-horizontal" id="form-ekd">
-     <div class="form-group">
-        <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Prodi</label>
-        <div class="col-sm-2">
-          <?= Html::dropDownList('prodi',!empty($_POST['prodi']) ? $_POST['prodi'] : $_POST['prodi'],$listProdi, ['prompt'=>'..Pilih Prodi..','id'=>'prodi']);?>
-
-        </div>
-    </div>
+    
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Tahun</label>
         <div class="col-sm-2">
@@ -62,12 +56,18 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
     
+     <div class="form-group">
+        <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Prodi</label>
+        <div class="col-sm-2">
+          <?= Html::dropDownList('prodi',!empty($_POST['prodi']) ? $_POST['prodi'] : $_POST['prodi'],$listProdi, ['prompt'=>'..Pilih Prodi..','id'=>'prodi']);?>
 
+        </div>
+    </div>
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> </label>
             <div class="col-sm-2">
  <?= Html::button(' <i class="ace-icon fa fa-check bigger-110"></i>Cari', ['class' => 'btn btn-info','name'=>'search','value'=>1,'id'=>'btn-search']) ?>    
-
+<span id="loading" style="display: none">Loading...</span>
             </div>
   
         </div>
@@ -82,10 +82,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     <th>No</th>
                     <th>Kode Dosen</th>
                     <th>Nama Dosen</th>
-                      <th>Kampus</th>
-                    <th>Kode MK</th>
-                    <th>Nama MK</th>
-                    <th>SKS</th>
+                    <th>Pedagogik</th>
+                    <th>Profesional</th>
+                    <th>Kepribadian</th>
+                    <th>Sosial</th>
                     <th>Nilai Angka</th>
                     <th>Nilai Huruf</th>
                     <th>Keterangan</th>
@@ -120,25 +120,47 @@ $this->registerJs('
                 type : \'POST\',
                 url : \'/api/ajax-get-ekd\',
                 data  : $("#form-ekd").serialize(),
+                timeout : 15000,
+                beforeSend : function(){
+                    $("#loading").show();
+                },
+                error: function(){
+                    $("#loading").hide();
+                },
                 success : function(data){
-
+                    $("#loading").hide();
                     // var hsl = $.parseJSON(data);
                     $(\'#tabel_ekd > tbody\').empty();
                     var row = \'\';
+                    var index = 0;
                     $.each(data,function(i,obj){
-                        row += \'<tr>\';
-                        row += \'<td>\'+(i+1)+\'</td>\';
-                        row += \'<td>\'+obj.kode+\'</td>\';
-                        row += \'<td>\'+obj.nama+\'</td>\';
-                        row += \'<td>\'+obj.kampus+\'</td>\';
-                        row += \'<td>\'+obj.kode_mk+\'</td>\';
-                        row += \'<td>\'+obj.nama_mk+\'</td>\';
-                        row += \'<td>\'+obj.sks+\'</td>\';
-                        row += \'<td>\'+obj.angka+\'</td>\';
-                        row += \'<td>\'+obj.huruf+\'</td>\';
-                        row += \'<td>\'+obj.keterangan+\'</td>\';
-                        row += \'</tr>\';
+                        if(obj.overall != 0){
+                            index++;
+                            row += \'<tr>\';
+                            row += \'<td>\'+(index)+\'</td>\';
+                            row += \'<td>\'+obj.kd_dsn+\'</td>\';
+                            row += \'<td>\'+obj.nm_dsn+\'</td>\';
+                            row += \'<td>\'+obj.angka_pedagogik+\'</td>\';
+                            row += \'<td>\'+obj.angka_profesional+\'</td>\';
+                            row += \'<td>\'+obj.angka_kepribadian+\'</td>\';
+                            row += \'<td>\'+obj.angka_sosial+\'</td>\';
+                            row += \'<td>\'+obj.overall+\'</td>\';
+                            row += \'<td>\'+obj.huruf+\'</td>\';
+                            if(obj.huruf == "A")
+                                row += \'<td>Dilaporkan kepada Rektor untuk diberi reward sertifikat dan insentif tertentu penambah semangat kerja</td>\';
+                            else if(obj.huruf == "B")
+                                row += \'<td>Dilaporkan kepada Rektor untuk diberi reward sertifikat.</td>\';
+                            else if(obj.huruf == "C")
+                                row += \'<td>Dilaporkan kepada Rektor bahwa yang bersangkutan telah mencukupi kinerjanya</td>\';
+                            else if(obj.huruf == "D")
+                                row += \'<td>Dilaporkan kepada Rektor untuk diberi peringatan.</td>\';
+                            else if(obj.huruf == "E")
+                                row += \'<td>Dilaporkan kepada Rektor untuk diberikan sanksi tertentu yang mendukung peningkatan kinerjanya</td>\';
+                            else
+                                row += \'<td>-</td>\';
 
+                            row += \'</tr>\';
+                        }
                     });
 
                     $(\'#tabel_ekd > tbody\').append(row);
