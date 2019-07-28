@@ -110,7 +110,7 @@ $this->registerJs('
 
     $(document).ready(function(){
         $(\'#btn-search\').click(function(){
-
+            
             var tahun = $(\'#tahun\').val();
             var semester = $(\'#semester\').val();
             var prodi = $(\'#prodi\').val();
@@ -124,7 +124,8 @@ $this->registerJs('
                 beforeSend : function(){
                     $("#loading").show();
                 },
-                error: function(){
+                error: function(e){
+                    console.log(e.responseText);
                     $("#loading").hide();
                 },
                 success : function(data){

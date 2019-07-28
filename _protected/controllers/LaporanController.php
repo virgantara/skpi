@@ -42,25 +42,43 @@ class LaporanController extends Controller
         ];
     }
 
+    public function actionEkdDetil($tahun, $semester, $prodi, $kode){
+        
+        $ta = $tahun.$semester;
+        return $this->render('ekd_detil', [
+            'ta' => $ta,
+            'kode' => $kode,
+            'prodi' => $prodi
+        ]);
+    }
+
     public function actionEkd(){
 
         $results = [];
-        $api_baseurl = Yii::$app->params['api_baseurl'];
-        $client = new Client(['baseUrl' => $api_baseurl]);
-        $response = $client->get('/p/list', ['tahun' => date("Y")])->send();
-        
         $out = [];
-        
-        if ($response->isOk) {
-            $result = $response->data['values'];
-            foreach ($result as $d) {
-                $out[] = [
-                    'kode' => $d['kode_prodi'],
-                    'nama'=> $d['nama_prodi'],
-                    'singkatan'=> $d['singkatan'],
-                   
-                ];
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        try {
+            $client = new Client(['baseUrl' => $api_baseurl]);
+            $response = $client->get('/p/list', ['tahun' => date("Y")])->send();
+            
+            
+            
+            if ($response->isOk) {
+                $result = $response->data['values'];
+                foreach ($result as $d) {
+                    $out[] = [
+                        'kode' => $d['kode_prodi'],
+                        'nama'=> $d['nama_prodi'],
+                        'singkatan'=> $d['singkatan'],
+                       
+                    ];
+                }
             }
+        } catch (\Exception $e) {
+            $out = [
+                'kode' => 500,
+                'nama' =>  'Data Tidak Ditemukan'
+            ];
         }
 
         $out = \yii\helpers\ArrayHelper::map($out,'kode','nama');

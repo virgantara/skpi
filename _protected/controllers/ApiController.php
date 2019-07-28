@@ -45,8 +45,8 @@ class ApiController extends Controller
         $response = $client->get('/d/ekd', ['tahun' => $ta,'prodi'=>$prodi])->send();
         
         $out = [];
-        
         if ($response->isOk) {
+
             $out = $response->data['values'][0];
             // foreach ($result as $d) {
             //     $out[] = [
