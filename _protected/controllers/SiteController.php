@@ -8,6 +8,7 @@ use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
 use app\models\SignupForm;
 use app\models\ContactForm;
+use yii\httpclient\Client;
 use yii\helpers\Html;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -92,7 +93,20 @@ class SiteController extends Controller
 
         else
         {
-            return $this->render('index');
+            $api_baseurl = Yii::$app->params['api_baseurl'];
+            $client = new Client(['baseUrl' => $api_baseurl]);
+            $response = $client->get('/ekd/univ', ['tahun' => '20182'])->send();
+            
+            $out = [];
+            if ($response->isOk) {
+
+                $out = $response->data['values'][0];
+                
+            }
+
+            return $this->render('index',[
+                'data'=>$out
+            ]);
         }
     }
 

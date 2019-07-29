@@ -32,6 +32,44 @@ class ApiController extends Controller
         ];
     }
 
+    public function actionAjaxGetEkdUniv() {
+
+        // $tahun = $_POST['tahun'];
+        // $semester = $_POST['semester'];
+        // $prodi = $_POST['prodi'];
+        // $ta = $tahun.$semester;
+        
+        // $list = Pasien::find()->addFilterWhere(['like',])
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $response = $client->get('/ekd/univ', ['tahun' => '20182'])->send();
+        
+        $out = [];
+        if ($response->isOk) {
+
+            $out = $response->data['values'][0];
+            // foreach ($result as $d) {
+            //     $out[] = [
+            //         'kode' => $d['kode'],
+            //         'nama'=> $d['nama'],
+            //         'kode_mk' => $d['kode_mk'],
+            //         'nama_mk'=> $d['nama_mk'],
+            //         'sks'=> $d['sks'],
+            //         'angka' => $d['nilai_angka'],
+            //         'huruf' => $d['nilai_huruf'],
+            //         'keterangan' => $d['keterangan'],
+            //     ];
+            // }
+        }
+
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; 
+        \Yii::$app->response->data  =  $out;
+        
+        // echo \yii\helpers\Json::encode($out);
+
+      
+    }
+
     public function actionAjaxGetEkd() {
 
         $tahun = $_POST['tahun'];

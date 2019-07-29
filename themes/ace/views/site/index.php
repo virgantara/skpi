@@ -17,3 +17,33 @@ $this->title = Yii::t('app', Yii::$app->name);
     </strong>,
 
 </div>
+<div class="row">
+	<div class="col-xs-12">
+<?php
+use dosamigos\chartjs\ChartJs;
+
+echo ChartJs::widget([
+    'type' => 'radar',
+    
+    'data' => [
+        'labels' => ["Pedagogi", "Profesional", "Kepribadian", "Sosial"],
+        'datasets' => [
+            
+            [
+                'label' => "Nilai EKD Universitas Darussalam Gontor",
+                'backgroundColor' => "rgba(255,99,132,0.2)",
+                'borderColor' => "rgba(255,99,132,1)",
+                'pointBackgroundColor' => "rgba(255,99,132,1)",
+                'pointBorderColor' => "#fff",
+                'pointHoverBackgroundColor' => "#fff",
+                'pointHoverBorderColor' => "rgba(255,99,132,1)",
+                'data' => [$data['angka_pedagogik'], $data['angka_profesional'], $data['angka_kepribadian'], $data['angka_sosial']]
+            ]
+        ]
+    ],
+    
+]);
+
+?>
+	</div>
+</div>
