@@ -95,7 +95,13 @@ class SiteController extends Controller
         {
             $api_baseurl = Yii::$app->params['api_baseurl'];
             $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/ekd/univ', ['tahun' => '20182'])->send();
+
+            $tahun = $_POST['tahun'] ?: date('Y');
+            $tahun = $_POST['tahun'] ?: date('Y');
+            $semester = $_POST['semester'] ?: 1;
+            $ta = $tahun.$semester;
+
+            $response = $client->get('/ekd/univ', ['tahun' => $ta])->send();
             
             $out = [];
             if ($response->isOk) {

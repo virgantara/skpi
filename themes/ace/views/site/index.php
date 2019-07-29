@@ -1,6 +1,8 @@
 <?php
 /* @var $this yii\web\View */
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+
 $this->title = Yii::t('app', Yii::$app->name);
 ?>
 <div class="alert alert-block alert-success">
@@ -18,7 +20,21 @@ $this->title = Yii::t('app', Yii::$app->name);
 
 </div>
 <div class="row">
-	<div class="col-xs-12">
+	<div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+ <?php $form = ActiveForm::begin(); ?>  
+    Tahun : 
+        	<?php 
+        	$tahuns = [];
+        	for($i=2014;$i<date('Y',strtotime('+50 years'));$i++){
+        		$tahuns[$i] = $i;
+        	}
+        	?>
+         	<?= Html::dropDownList('tahun',$_POST['tahun'] ?: date('Y'),$tahuns, ['prompt'=>'..Pilih Tahun..','id'=>'tahun']);?>
+         	Semester :  <?= Html::dropDownList('semester',$_POST['semester'] ?: 1,['1'=>'Gasal','2'=>'Genap'], ['prompt'=>'..Pilih Semester..','id'=>'semester']);?>
+         	 <?= Html::submitButton(' <i class="ace-icon fa fa-check bigger-110"></i>Cari', ['class' => 'btn btn-info btn-sm','name'=>'search','value'=>1,'id'=>'btn-search']) ?>    
+    <?php ActiveForm::end(); ?>
+</div>
+<div class="col-xs-12">
 <?php
 use dosamigos\chartjs\ChartJs;
 
