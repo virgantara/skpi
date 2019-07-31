@@ -125,7 +125,7 @@ $this->registerJs('
                     $("#loading").show();
                 },
                 error: function(e){
-                    console.log(e.responseText);
+                    console.log(e);
                     $("#loading").hide();
                 },
                 success : function(data){
