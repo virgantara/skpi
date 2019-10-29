@@ -31,20 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Tahun</label>
         <div class="col-sm-2">
-           <?= \yii\jui\DatePicker::widget([
-             'options' => ['placeholder' => 'Pilih Tahun ...','id'=>'tahun'],
-             'clientOptions' => [
-                 'changeMonth' => false,
-                'changeYear' => true,
-                'showButtonPanel' => true,
-             ],
-             'name' => 'tahun',
-             'value' => $tanggal,
-            'dateFormat' => 'php:Y',
-        ]
-    ) ?>
-       
-
+          <select name="tahun">
+              <option>Pilih tahun</option>
+              <?php 
+              for($i=2014;$i<date('Y')+10;$i++){
+                echo '<option value="'.$i.'">'.$i.'</option>';
+              }
+              ?>
+          </select>
 
         </div>
     </div>

@@ -80,12 +80,13 @@ class ApiController extends Controller
         // $list = Pasien::find()->addFilterWhere(['like',])
         $api_baseurl = Yii::$app->params['api_baseurl'];
         $client = new Client(['baseUrl' => $api_baseurl]);
-        $response = $client->get('/d/ekd', ['tahun' => $ta,'prodi'=>$prodi])->send();
+        $response = $client->get('/d/ekd', ['tahun' => $ta,'prodi'=>$prodi,'dosen'=>''])->send();
         
         $out = [];
         if ($response->isOk) {
 
-            $out = $response->data['values'][0];
+            $out = $response->data['values'];
+            
             // foreach ($result as $d) {
             //     $out[] = [
             //         'kode' => $d['kode'],
