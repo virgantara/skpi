@@ -128,32 +128,56 @@ $this->registerJs('
                     $(\'#tabel_ekd > tbody\').empty();
                     var row = \'\';
                     var index = 0;
-                    $.each(data,function(i,obj){
-                        if(obj.overall != 0){
+                    console.log(data);
+                    // data = (array) data;
+                    $.each(data[\'pedagogik\'],function(i,obj){
+                        var angka_pro = data[\'profesional\'][i][\'angka\'];
+                        var angka_pri = data[\'kepribadian\'][i][\'angka\'];
+                        var angka_sos = data[\'sosial\'][i][\'angka\'];
+                        
+                        var huruf = "";
+                        var ket = "";
+                        var skor = (obj.angka + angka_pro + angka_pri + angka_sos) / 4;
+                        
+                        
+                        if(skor >= 126){
+                            huruf = "A";
+                            ket = "Dilaporkan kepada Rektor untuk diberi reward sertifikat dan insentif tertentu penambah semangat kerja";
+                        }
+                        else if(skor >= 101){
+                            huruf = "B";
+                            ket = "Dilaporkan kepada Rektor untuk diberi reward sertifikat";
+                        }
+                        else if(obj.huruf == "C"){
+                            huruf = "C";
+                            ket = "Dilaporkan kepada Rektor bahwa yang bersangkutan telah mencukupi kinerjanya";
+                        }
+                        else if(obj.huruf == "D"){
+                            huruf = "D";
+                            ket = "<td>Dilaporkan kepada Rektor untuk diberi peringatan.</td>";
+                        }
+                        else if(obj.huruf == "E"){
+                            huruf = "E";
+                            ket = "Dilaporkan kepada Rektor untuk diberikan sanksi tertentu yang mendukung peningkatan kinerjanya";
+                        }
+                        else{
+                            huruf = "F";
+                            ket = "-";
+                        }
+
+                        if(huruf != "F"){
                             index++;
                             row += \'<tr>\';
                             row += \'<td>\'+(index)+\'</td>\';
                             row += \'<td>\'+obj.kd_dsn+\'</td>\';
                             row += \'<td>\'+obj.nm_dsn+\'</td>\';
-                            row += \'<td>\'+obj.angka_pedagogik+\'</td>\';
-                            row += \'<td>\'+obj.angka_profesional+\'</td>\';
-                            row += \'<td>\'+obj.angka_kepribadian+\'</td>\';
-                            row += \'<td>\'+obj.angka_sosial+\'</td>\';
-                            row += \'<td>\'+obj.overall+\'</td>\';
-                            row += \'<td>\'+obj.huruf+\'</td>\';
-                            if(obj.huruf == "A")
-                                row += \'<td>Dilaporkan kepada Rektor untuk diberi reward sertifikat dan insentif tertentu penambah semangat kerja</td>\';
-                            else if(obj.huruf == "B")
-                                row += \'<td>Dilaporkan kepada Rektor untuk diberi reward sertifikat.</td>\';
-                            else if(obj.huruf == "C")
-                                row += \'<td>Dilaporkan kepada Rektor bahwa yang bersangkutan telah mencukupi kinerjanya</td>\';
-                            else if(obj.huruf == "D")
-                                row += \'<td>Dilaporkan kepada Rektor untuk diberi peringatan.</td>\';
-                            else if(obj.huruf == "E")
-                                row += \'<td>Dilaporkan kepada Rektor untuk diberikan sanksi tertentu yang mendukung peningkatan kinerjanya</td>\';
-                            else
-                                row += \'<td>-</td>\';
-
+                            row += \'<td>\'+obj.angka+\'</td>\';
+                            row += \'<td>\'+angka_pro+\'</td>\';
+                            row += \'<td>\'+angka_pri+\'</td>\';
+                            row += \'<td>\'+angka_sos+\'</td>\';
+                            row += \'<td>\'+skor+\'</td>\';
+                            row += \'<td>\'+huruf+\'</td>\';
+                            row += \'<td>\'+ket+\'</td>\';
                             row += \'</tr>\';
                         }
                     });
