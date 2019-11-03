@@ -3,9 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\BarangOpname */
-/* @var $form yii\widgets\ActiveForm */
+/* @$$this yii\web\View */
+/* @$$model app\models\BarangOpname */
+/* @$$form yii\widgets\ActiveForm */
 
 
 $tanggal = !empty($_POST['tanggal']) ? $_POST['tanggal'] : date('Y-m-d');
@@ -26,8 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <div class="barang-opname-form">
-<form class="form-horizontal" id="form-ekd">
-    
+ <?php $form = ActiveForm::begin([
+        
+        'options' => [
+            'class' => 'form-horizontal'
+        ]
+    ]); ?> 
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Tahun</label>
         <div class="col-sm-2">
@@ -35,7 +39,8 @@ $this->params['breadcrumbs'][] = $this->title;
               <option>Pilih tahun</option>
               <?php 
               for($i=2014;$i<date('Y')+10;$i++){
-                echo '<option value="'.$i.'">'.$i.'</option>';
+                $selected = !empty($_POST['tahun']) && $_POST['tahun'] == $i ? 'selected' : '';
+                echo '<option '.$selected.' value="'.$i.'">'.$i.'</option>';
               }
               ?>
           </select>
@@ -46,7 +51,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Semester</label>
         <div class="col-sm-2">
-          <?= Html::dropDownList('semester','',['1'=>'Gasal','2'=>'Genap'], ['prompt'=>'..Pilih Semester..','id'=>'semester']);?>
+            <?php 
+            $selected = !empty($_POST['semester']) ? $_POST['semester'] : '';
+            ?>
+          <?= Html::dropDownList('semester',$selected,['1'=>'Gasal','2'=>'Genap'], ['prompt'=>'..Pilih Semester..','id'=>'semester']);?>
         </div>
     </div>
     
@@ -60,14 +68,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> </label>
             <div class="col-sm-2">
- <?= Html::button(' <i class="ace-icon fa fa-check bigger-110"></i>Cari', ['class' => 'btn btn-info','name'=>'search','value'=>1,'id'=>'btn-search']) ?>    
-<span id="loading" style="display: none">Loading...</span>
+ <?= Html::submitButton(' <i class="ace-icon fa fa-check bigger-110"></i>Cari', ['class' => 'btn btn-info','name'=>'search','value'=>1,'id'=>'btn-search']) ?>    
+<!-- <span id="loading" style="display: none">Loading...</span> -->
             </div>
   
         </div>
-     
-</form>
-
+<?php ActiveForm::end(); ?>
 <div class="row">
     <div class="col-sm-12">
         <table class="table table-striped" id="tabel_ekd">
@@ -86,7 +92,78 @@ $this->params['breadcrumbs'][] = $this->title;
                 </tr>
             </thead>
             <tbody>
+                <?php 
+                $counter = 0;
+                
 
+                if(!empty($results['pedagogik']))
+                {
+                    $i = 0;
+                    foreach($results['pedagogik'] as $q => $obj)
+                    {
+
+
+                        $counter++;
+                        $angka_pro = $results['profesional'][$q]['angka'];
+                        $angka_pri = $results['kepribadian'][$q]['angka'];
+                        $angka_sos = $results['sosial'][$q]['angka'];
+                        
+                        $huruf = "";
+                        $ket = "";
+                        $skor = ($obj['angka'] + $angka_pro + $angka_pri + $angka_sos) / 4;
+                        
+                        if($skor >= 126){
+                            $huruf = "A";
+                            $ket = "Dilaporkan kepada Rektor untuk diberi reward sertifikat dan insentif tertentu penambah semangat kerja";
+                        }
+                        else if($skor >= 101){
+                            $huruf = "B";
+                            $ket = "Dilaporkan kepada Rektor untuk diberi reward sertifikat";
+                        }
+                        else if($skor >= 76){
+                            $huruf = "C";
+                            $ket = "Dilaporkan kepada Rektor bahwa yang bersangkutan telah mencukupi kinerjanya";
+                        }
+                        else if($skor >= 51){
+                            $huruf = "D";
+                            $ket = "<td>Dilaporkan kepada Rektor untuk diberi peringatan.</td>";
+                        }
+                        else if($skor >= 30){
+                            $huruf = "E";
+                            $ket = "Dilaporkan kepada Rektor untuk diberikan sanksi tertentu yang mendukung peningkatan kinerjanya";
+                        }
+                        else{
+                            $huruf = "F";
+                            $ket = "-";
+                        }
+
+                        // print_r($results['sosial'][$q]);
+                        // print_r($skor);
+                        // print_r($huruf);
+                        // exit;
+                        if($huruf != "F"){
+                        
+                            $i++;
+                ?>
+                
+                <tr>
+                <td><?=($i);?></td>
+                <td><?=$obj['kd_dsn'];?></td>
+                <td><?=$obj['nm_dsn'];?></td>
+                <td><?=$obj['angka'];?></td>
+                <td><?=$angka_pro;?></td>
+                <td><?=$angka_pri;?></td>
+                <td><?=$angka_sos;?></td>
+                <td><?=$skor;?></td>
+                <td><?=$huruf;?></td>
+                <td><?=$ket;?></td>
+                </tr>
+                <?php
+                            
+                        }
+                    }
+                }
+                ?>
             </tbody>
         </table>
     </div>
@@ -97,96 +174,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $this->registerJs(' 
     $(document.body).on(\'click\', \'.ui-datepicker-close\', function (e) {
-        var value = $(\'.ui-datepicker-year :selected\').text();
+        $value = $(\'.ui-datepicker-year :selected\').text();
         $(\'#tahun\').val(value);
     });
 
-
-    $(document).ready(function(){
-        $(\'#btn-search\').click(function(){
-            
-            var tahun = $(\'#tahun\').val();
-            var semester = $(\'#semester\').val();
-            var prodi = $(\'#prodi\').val();
-
-
-            $.ajax({
-                type : \'POST\',
-                url : \'/api/ajax-get-ekd\',
-                data  : $("#form-ekd").serialize(),
-                timeout : 15000,
-                beforeSend : function(){
-                    $("#loading").show();
-                },
-                error: function(e){
-                    console.log(e);
-                    $("#loading").hide();
-                },
-                success : function(data){
-                    $("#loading").hide();
-                    // var hsl = $.parseJSON(data);
-                    $(\'#tabel_ekd > tbody\').empty();
-                    var row = \'\';
-                    var index = 0;
-                    console.log(data);
-                    // data = (array) data;
-                    $.each(data[\'pedagogik\'],function(i,obj){
-                        var angka_pro = data[\'profesional\'][i][\'angka\'];
-                        var angka_pri = data[\'kepribadian\'][i][\'angka\'];
-                        var angka_sos = data[\'sosial\'][i][\'angka\'];
-                        
-                        var huruf = "";
-                        var ket = "";
-                        var skor = (obj.angka + angka_pro + angka_pri + angka_sos) / 4;
-                        
-                        
-                        if(skor >= 126){
-                            huruf = "A";
-                            ket = "Dilaporkan kepada Rektor untuk diberi reward sertifikat dan insentif tertentu penambah semangat kerja";
-                        }
-                        else if(skor >= 101){
-                            huruf = "B";
-                            ket = "Dilaporkan kepada Rektor untuk diberi reward sertifikat";
-                        }
-                        else if(obj.huruf == "C"){
-                            huruf = "C";
-                            ket = "Dilaporkan kepada Rektor bahwa yang bersangkutan telah mencukupi kinerjanya";
-                        }
-                        else if(obj.huruf == "D"){
-                            huruf = "D";
-                            ket = "<td>Dilaporkan kepada Rektor untuk diberi peringatan.</td>";
-                        }
-                        else if(obj.huruf == "E"){
-                            huruf = "E";
-                            ket = "Dilaporkan kepada Rektor untuk diberikan sanksi tertentu yang mendukung peningkatan kinerjanya";
-                        }
-                        else{
-                            huruf = "F";
-                            ket = "-";
-                        }
-
-                        if(huruf != "F"){
-                            index++;
-                            row += \'<tr>\';
-                            row += \'<td>\'+(index)+\'</td>\';
-                            row += \'<td>\'+obj.kd_dsn+\'</td>\';
-                            row += \'<td>\'+obj.nm_dsn+\'</td>\';
-                            row += \'<td>\'+obj.angka+\'</td>\';
-                            row += \'<td>\'+angka_pro+\'</td>\';
-                            row += \'<td>\'+angka_pri+\'</td>\';
-                            row += \'<td>\'+angka_sos+\'</td>\';
-                            row += \'<td>\'+skor+\'</td>\';
-                            row += \'<td>\'+huruf+\'</td>\';
-                            row += \'<td>\'+ket+\'</td>\';
-                            row += \'</tr>\';
-                        }
-                    });
-
-                    $(\'#tabel_ekd > tbody\').append(row);
-                }
-            });
-        });
-    });
 
 
     ', \yii\web\View::POS_READY);

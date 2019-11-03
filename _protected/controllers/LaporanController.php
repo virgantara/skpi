@@ -83,47 +83,34 @@ class LaporanController extends Controller
 
         $out = \yii\helpers\ArrayHelper::map($out,'kode','nama');
 
-        if(!empty($_POST['tanggal']) && !empty($_POST['dept_id']))
+        if(!empty($_POST['tahun']) && !empty($_POST['semester']) && !empty($_POST['prodi']))
         {
+            $tahun = $_POST['tahun'];
+            $semester = $_POST['semester'];
+            $prodi = $_POST['prodi'];
+            $ta = $tahun.$semester;
+            
+            // $list = Pasien::find()->addFilterWhere(['like',])
+            $api_baseurl = Yii::$app->params['api_baseurl'];
+            $client = new Client(['baseUrl' => $api_baseurl]);
+            $response = $client->get('/d/ekd', ['tahun' => $ta,'prodi'=>$prodi,'dosen'=>''])->send();
+            
+            // $out = [];
+            if ($response->isOk) {
 
-
-            $tanggal = date('d',strtotime($_POST['tanggal']));
-            $bulan = date('m',strtotime($_POST['tanggal']));
-            $tahun = date('Y',strtotime($_POST['tanggal']));
-            $query = \app\models\EvaluasiDiri::find();
-            $query->where(['departemen_id'=>$_POST['dept_id']]);
-            // $query->orderBy(['depa'=>SORT_ASC]);
-            $list = $query->all();
-
-            $total = 0;
-            foreach($list as $q => $m)
-            {
-                
-                $results[] = [
-                    'id' => $m->id,
-                    'unit' => $m->namaDepartemen,
-                    'strength' => $m->strength,
-                    'weakness' => $m->weakness,
-                    'opportunity' => $m->opportunity,
-                    'threat' => $m->threat,
-                    
-                ];
+                $result = $response->data['values'];
+                $results['pedagogik'] = $result[0];
+                $results['profesional'] = $result[1];
+                $results['kepribadian'] = $result[2];
+                $results['sosial'] = $result[3];    
+              
             }
 
-
-            if(!empty($_POST['export']) && empty($_POST['search']))
-            {
-                return $this->renderPartial('_tabel_swot', [
-                    'list' => $results,
-                    'model' => $model,
-                    'export' => 1
-                ]); 
-            }
-
+            
         }
 
         return $this->render('ekd', [
-            'list' => $results,
+            'results' => $results,
             'model' => $model,
             'listProdi' => $out
         ]);
