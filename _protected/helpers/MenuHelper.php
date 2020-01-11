@@ -23,34 +23,20 @@ class MenuHelper
 
 	    if (Yii::$app->user->can('operatorCabang'))
 	    {
-	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Profil </span><i class="caret"></i>', 'url' => '#',
+	        
+	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Pelanggaran </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-	         'visible' => Yii::$app->user->can('operatorCabang') && !Yii::$app->user->can('admin'),
 	        'items'=>[
-	           
-	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i>Visi & Misi',  
-	                'url' => ['/departemen/profile','p'=>'visi-misi'],	        
+	           	[
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Pelanggaran',  
+	                'url' => ['/riwayat-pelanggaran/index'],	        
 	                'visible' => Yii::$app->user->can('operatorCabang'),
 	               
 	            ],
 	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i>Tujuan & Sasaran',  
-	                'url' => ['/departemen/profile','p'=>'sasaran-tujuan'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang'),
-	               
-	            ],
-	        ]];
-
-	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> SPMI </span><i class="caret"></i>', 'url' => '#',
-	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-	        'items'=>[
-	           
-	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Isian Evaluasi Diri',  
-	                'url' => ['/evaluasi-diri/index'],	        
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Pelanggaran',  
+	                'url' => ['/riwayat-pelanggaran/create'],	        
 	                'visible' => Yii::$app->user->can('operatorCabang'),
 	               
 	            ],
@@ -89,8 +75,77 @@ class MenuHelper
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	        'items'=>[
-	     
-	           
+	     		 [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Kategori Pelanggaran <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['kategori-pelanggaran/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['kategori-pelanggaran/create']]
+	                ],
+	            ],
+
+	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Pelanggaran <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['pelanggaran/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['pelanggaran/create']]
+	                ],
+	            ],
+
+	            [
+	            	'label' => '<hr style="padding:0px;margin:0px">'
+	            ],
+
+	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Kategori Hukuman <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['kategori-hukuman/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['kategori-hukuman/create']]
+	                ],
+	            ],
+
+	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Hukuman <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['hukuman/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['hukuman/create']]
+	                ],
+	            ],
+	           	 [
+	            	'label' => '<hr style="padding:0px;margin:0px">'
+	            ],
+
 	            [
 	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Unit <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",

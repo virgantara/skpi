@@ -9,7 +9,7 @@ $params = array_merge(
 
 $config = [
     'id' => 'basic',
-    'name' => 'SPMI Online | Universitas Darussalam Gontor',
+    'name' => 'SIMPEL Online | Universitas Darussalam Gontor',
     'language' => 'en',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'app\components\Aliases'],
@@ -163,8 +163,10 @@ if (YII_ENV_DEV) {
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',      
-        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*', '192.168.178.20'],  
+        'class' => 'yii\gii\Module',
+        'newFileMode' => 0644,
+        'newDirMode' => 0755,      
+        'allowedIPs' => ['127.0.0.1', '::1', '192.168.0.*'],  
         'generators' => [ //here
             'crud' => [ // generator name
                 'class' => 'yii\gii\generators\crud\Generator', // generator class

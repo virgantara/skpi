@@ -136,11 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             $huruf = "F";
                             $ket = "-";
                         }
-
-                        // print_r($results['sosial'][$q]);
-                        // print_r($skor);
-                        // print_r($huruf);
-                        // exit;
+                        
                         if($huruf != "F"){
                         
                             $i++;

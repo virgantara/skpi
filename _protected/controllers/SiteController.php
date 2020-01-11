@@ -93,22 +93,22 @@ class SiteController extends Controller
 
         else
         {
-            $api_baseurl = Yii::$app->params['api_baseurl'];
-            $client = new Client(['baseUrl' => $api_baseurl]);
+            // $api_baseurl = Yii::$app->params['api_baseurl'];
+            // $client = new Client(['baseUrl' => $api_baseurl]);
 
-            $tahun = $_POST['tahun'] ?: date('Y');
-            $tahun = $_POST['tahun'] ?: date('Y');
-            $semester = $_POST['semester'] ?: 1;
-            $ta = $tahun.$semester;
+            // $tahun = $_POST['tahun'] ?: date('Y');
+            // $tahun = $_POST['tahun'] ?: date('Y');
+            // $semester = $_POST['semester'] ?: 1;
+            // $ta = $tahun.$semester;
 
-            $response = $client->get('/ekd/univ', ['tahun' => $ta])->send();
+            // $response = $client->get('/ekd/univ', ['tahun' => $ta])->send();
             
             $out = [];
-            if ($response->isOk) {
+            // if ($response->isOk) {
 
-                $out = $response->data['values'][0];
+            //     $out = $response->data['values'][0];
                 
-            }
+            // }
 
             return $this->render('index',[
                 'data'=>$out
