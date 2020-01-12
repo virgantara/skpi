@@ -19,14 +19,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Kategori Hukuman', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+    <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            // 'id',
             'nama',
             'created_at',
             'updated_at',
@@ -34,5 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+</div>
     <?php Pjax::end(); ?>
 </div>

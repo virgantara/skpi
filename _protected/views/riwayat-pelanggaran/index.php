@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\RiwayatPelanggaranSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Riwayat Pelanggarans';
+$this->title = 'Riwayat Pelanggaran';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="riwayat-pelanggaran-index">
@@ -15,20 +15,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Riwayat Pelanggaran', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Pelanggaran', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+     <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'pelanggaran_id',
+            // 'id',
+            'pelanggaran.nama',
             'nim',
             'nama_mahasiswa',
             'tahun_id',
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-
+</div>
     <?php Pjax::end(); ?>
 
 </div>
