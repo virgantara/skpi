@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\KategoriHukuman */
 
 $this->title = 'Update Kategori Hukuman: ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Kategori Hukumen', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Kategori Hukuman', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

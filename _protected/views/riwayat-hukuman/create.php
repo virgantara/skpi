@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\RiwayatHukuman */
 
 $this->title = 'Create Riwayat Hukuman';
-$this->params['breadcrumbs'][] = ['label' => 'Riwayat Hukumen', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Riwayat Hukuman', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="riwayat-hukuman-create">

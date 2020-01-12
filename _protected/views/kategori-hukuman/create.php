@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model app\models\KategoriHukuman */
 
 $this->title = 'Create Kategori Hukuman';
-$this->params['breadcrumbs'][] = ['label' => 'Kategori Hukumen', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Kategori Hukuman', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="kategori-hukuman-create">

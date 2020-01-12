@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\KategoriHukumanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Kategori Hukumen';
+$this->title = 'Kategori Hukuman';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="kategori-hukuman-index">

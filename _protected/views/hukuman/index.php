@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\HukumanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Hukumen';
+$this->title = 'Hukuman';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="hukuman-index">

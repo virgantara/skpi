@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\KategoriHukuman */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Kategori Hukumen', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Kategori Hukuman', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="kategori-hukuman-view">
