@@ -59,7 +59,7 @@ class MenuHelper
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran',  
-	                'url' => ['/laporan/ekd'],	        
+	                'url' => ['/laporan/rekap-pelanggaran'],	        
 	                
 	               
 	            ],

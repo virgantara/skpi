@@ -25,7 +25,7 @@ $config = [
      
     ],
     'aliases' => [
-        '@bower' => '@vendor/bower-asset',
+        '@bower' => '@vendor/bower',
         '@npm'   => '@vendor/npm-asset',
     ],
     'timeZone' => 'Asia/Jakarta',

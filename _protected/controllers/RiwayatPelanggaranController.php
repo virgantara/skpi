@@ -100,8 +100,31 @@ class RiwayatPelanggaranController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+        $model = $this->findModel($id);
+        $mahasiswa = [];
+        if(!empty($model->nim))
+        {
+            $api_baseurl = Yii::$app->params['api_baseurl'];
+            $client = new Client(['baseUrl' => $api_baseurl]);
+            $response = $client->get('/m/profil/nim', ['nim' => $model->nim])->send();
+            
+            if ($response->isOk) {
+                $mahasiswa = $response->data['values'][0];
+            }    
+        }
+
+        $query = RiwayatPelanggaran::find()->where([
+            'nim'=> $nim
+        ]);
+
+        $query->orderBy(['created_at'=>SORT_DESC]);
+
+        $riwayat = $query->all();
+            
+        return $this->render('view',[
+            'model' => $model,
+            'mahasiswa' => $mahasiswa,
+            'riwayat' => $riwayat
         ]);
     }
 

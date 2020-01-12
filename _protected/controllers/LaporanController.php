@@ -3,17 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Cart;
-use app\models\PenjualanItem;
-use app\models\Penjualan;
-use app\models\PenjualanSearch;
-use app\models\SalesFaktur;
-use app\models\SalesFakturSearch;
-use app\models\RequestOrder;
-use app\models\RequestOrderSearch;
-use app\models\Pasien;
-use app\models\SalesMasterBarang;
-use app\models\SalesStokGudang;
+use app\models\RiwayatPelanggaranSearch;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -103,8 +93,8 @@ class LaporanController extends Controller
         ]);
     }
 
-    public function actionEkd(){
-
+    public function actionRekapPelanggaran(){
+        
         $results = [];
         $out = [];
         $api_baseurl = Yii::$app->params['api_baseurl'];
@@ -133,7 +123,7 @@ class LaporanController extends Controller
         }
 
         $out = \yii\helpers\ArrayHelper::map($out,'kode','nama');
-
+        
         if(!empty($_POST['tahun']) && !empty($_POST['semester']) && !empty($_POST['prodi']))
         {
             $tahun = $_POST['tahun'];
@@ -142,107 +132,17 @@ class LaporanController extends Controller
             $ta = $tahun.$semester;
             
             // $list = Pasien::find()->addFilterWhere(['like',])
-            $api_baseurl = Yii::$app->params['api_baseurl'];
-            $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/d/ekd', ['tahun' => $ta,'prodi'=>$prodi,'dosen'=>''])->send();
-            
-            // $out = [];
-            if ($response->isOk) {
-
-                $result = $response->data['values'];
-                $results['pedagogik'] = $result[0];
-                $results['profesional'] = $result[1];
-                $results['kepribadian'] = $result[2];
-                $results['sosial'] = $result[3];    
-              
-            }
+            $results = RiwayatPelanggaranSearch::getRekapPelanggaran();
 
             
         }
 
-        return $this->render('ekd', [
+        return $this->render('rekap_pelanggaran', [
             'results' => $results,
             'model' => $model,
             'listProdi' => $out
         ]);
     }
-
-    
-    public function actionEdTahunan(){
-
-        $results = [];
-        if(!empty($_POST['tanggal_awal']) && !empty($_POST['tanggal_akhir']) && !empty($_POST['gudang_id']))
-        {
-
-
-            $tanggal_awal = $_POST['tanggal_awal'];
-            $tanggal_akhir = $_POST['tanggal_akhir'];
-            $a = $tanggal_awal;
-            $b = $tanggal_akhir;
-
-            $i = date("Ym", strtotime($a));
-            $list_bulan = [];
-            while($i <= date("Ym", strtotime($b))){
-                $list_bulan[] = $i;
-                if(substr($i, 4, 2) == "12")
-                    $i = (date("Y", strtotime($i."01")) + 1)."01";
-                else
-                    $i++;
-            }
-
-
-            foreach($list_bulan as $bln)
-            {
-                $y = substr($bln, 0,4);
-                $mm = substr($bln,4,2);
-                $ds = $y.'-'.$mm.'-01';
-                $de = $y.'-'.$mm.'-31';
-                $query = SalesStokGudang::find();
-                $query->joinWith(['barang as barang']);
-                $query->where(['id_gudang'=>$_POST['gudang_id']]);
-                $query->andWhere(['barang.is_hapus'=>0]);
-                // $query->andWhere(['id_barang'=>$obat->id_barang]);
-                $query->andWhere(['between','exp_date',$ds,$de]);
-                $query->orderBy(['exp_date'=>SORT_ASC]);
-                $list = $query->all();
-                
-                $total = 0;
-                foreach($list as $q => $m)
-                {
-                    
-                    if($m->jumlah > 0)
-                    {
-                        $subtotal = $m->jumlah * $m->barang->harga_beli;
-                        $total += $subtotal;
-                        $results[] = [
-                            'bulan' => date('M',strtotime($m->exp_date)),
-                            'tahun' => $y, 
-                            'stok_id' => $m->id_stok,
-                            'kode' => $m->barang->kode_barang,
-                            'nama' => $m->barang->nama_barang,
-                            'satuan' => $obat->id_satuan,
-                            'ed' => $m->exp_date,
-                            'jumlah' => $m->jumlah,
-                            'hb' => \app\helpers\MyHelper::formatRupiah($m->barang->harga_beli,2),
-                            'hj' => \app\helpers\MyHelper::formatRupiah($m->barang->harga_jual,2),
-                            'subtotal' => \app\helpers\MyHelper::formatRupiah($subtotal,2),
-                        ];
-                    }
-                    
-                }
-            }
-
-            $results['total'] = $total;
-
-        }
-
-        return $this->render('ed_tahunan', [
-            'list' => $results,
-            'model' => $model,
-
-        ]);
-    }
-
     
 
     /**

@@ -70,4 +70,17 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
 
         return $dataProvider;
     }
+
+    public static function getRekapPelanggaran()
+    {   
+        $query=new \yii\db\Query(); 
+
+        $rows=$query->select(['kp.nama','count(*) as total']) //specify required columns in an array
+         ->from('erp_kategori_pelanggaran kp') 
+         ->innerJoin('erp_pelanggaran as p','p.kategori_id = kp.id')
+         ->innerJoin('erp_riwayat_pelanggaran as rp','rp.pelanggaran_id = p.id')
+         ->groupBy('kp.nama')
+         ->all(); //returns an
+        return $rows;
+    }
 }
