@@ -42,13 +42,64 @@ class LaporanController extends Controller
         ];
     }
 
-    public function actionEkdDetil($tahun, $semester, $prodi, $kode){
+    public function actionRincianPelanggaran(){
         
-        $ta = $tahun.$semester;
-        return $this->render('ekd_detil', [
-            'ta' => $ta,
-            'kode' => $kode,
-            'prodi' => $prodi
+        $results = [];
+        $out = [];
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        try {
+            $client = new Client(['baseUrl' => $api_baseurl]);
+            $response = $client->get('/p/list', ['tahun' => date("Y")])->send();
+            
+            
+            
+            if ($response->isOk) {
+                $result = $response->data['values'];
+                foreach ($result as $d) {
+                    $out[] = [
+                        'kode' => $d['kode_prodi'],
+                        'nama'=> $d['nama_prodi'],
+                        'singkatan'=> $d['singkatan'],
+                       
+                    ];
+                }
+            }
+        } catch (\Exception $e) {
+            $out = [
+                'kode' => 500,
+                'nama' =>  'Data Tidak Ditemukan'
+            ];
+        }
+
+        $out = \yii\helpers\ArrayHelper::map($out,'kode','nama');
+        
+        if(!empty($_POST['tahun']) && !empty($_POST['semester']) && !empty($_POST['prodi']))
+        {
+            $tahun = $_POST['tahun'];
+            $semester = $_POST['semester'];
+            $prodi = $_POST['prodi'];
+            $ta = $tahun.$semester;
+            
+            // $list = Pasien::find()->addFilterWhere(['like',])
+            $api_baseurl = Yii::$app->params['api_baseurl'];
+            $client = new Client(['baseUrl' => $api_baseurl]);
+            $response = $client->get('/p/mhs', ['kode' => $prodi])->send();
+            
+            // $out = [];
+            if ($response->isOk) {
+
+                $results = $response->data['values'];
+               
+              
+            }
+
+            
+        }
+
+        return $this->render('rincian_pelanggaran', [
+            'results' => $results,
+            'model' => $model,
+            'listProdi' => $out
         ]);
     }
 

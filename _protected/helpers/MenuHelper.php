@@ -52,13 +52,13 @@ class MenuHelper
 	         'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('operatorCabang'),
 	        'items'=>[
 	           [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Laporan Evaluasi Diri',  
-	                'url' => ['/evaluasi-diri/rekap'],	        
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rincian Pelanggaran',  
+	                'url' => ['/laporan/rincian-pelanggaran'],	        
 	                
 	               
 	            ],
 	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Laporan EKD',  
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran',  
 	                'url' => ['/laporan/ekd'],	        
 	                
 	               
