@@ -114,7 +114,7 @@ class RiwayatPelanggaranController extends Controller
         }
 
         $query = RiwayatPelanggaran::find()->where([
-            'nim'=> $nim
+            'nim'=> $model->nim
         ]);
 
         $query->orderBy(['created_at'=>SORT_DESC]);
