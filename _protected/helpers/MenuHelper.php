@@ -36,7 +36,7 @@ class MenuHelper
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Pelanggaran',  
-	                'url' => ['/riwayat-pelanggaran/create'],	        
+	                'url' => ['/riwayat-pelanggaran/cari-mahasiswa'],	        
 	                'visible' => Yii::$app->user->can('operatorCabang'),
 	               
 	            ],

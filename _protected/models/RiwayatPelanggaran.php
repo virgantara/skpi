@@ -14,6 +14,9 @@ use Yii;
  * @property int $tahun_id
  * @property string $created_at
  * @property string $updated_at
+ *
+ * @property RiwayatHukuman[] $riwayatHukumen
+ * @property Pelanggaran $pelanggaran
  */
 class RiwayatPelanggaran extends \yii\db\ActiveRecord
 {
@@ -36,6 +39,7 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
             [['created_at', 'updated_at'], 'safe'],
             [['nim'], 'string', 'max' => 25],
             [['nama_mahasiswa'], 'string', 'max' => 255],
+            [['pelanggaran_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pelanggaran::className(), 'targetAttribute' => ['pelanggaran_id' => 'id']],
         ];
     }
 
@@ -46,12 +50,28 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'pelanggaran_id' => 'Pelanggaran',
-            'nim' => 'NIM',
+            'pelanggaran_id' => 'Pelanggaran ID',
+            'nim' => 'Nim',
             'nama_mahasiswa' => 'Nama Mahasiswa',
-            'tahun_id' => 'Tahun',
+            'tahun_id' => 'Tahun ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRiwayatHukumen()
+    {
+        return $this->hasMany(RiwayatHukuman::className(), ['pelanggaran_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPelanggaran()
+    {
+        return $this->hasOne(Pelanggaran::className(), ['id' => 'pelanggaran_id']);
     }
 }

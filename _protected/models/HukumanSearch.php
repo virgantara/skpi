@@ -68,4 +68,13 @@ class HukumanSearch extends Hukuman
 
         return $dataProvider;
     }
+
+    public static function searchByNama($nama)
+    {
+        $query = Hukuman::find();
+
+        $query->andFilterWhere(['like', 'nama', $nama]);
+
+        return $query->all();
+    }
 }

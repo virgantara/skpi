@@ -67,6 +67,7 @@ class KategoriHukumanController extends Controller
         $model = new KategoriHukuman();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Data tersimpan");
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -87,6 +88,7 @@ class KategoriHukumanController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Data tersimpan");
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

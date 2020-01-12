@@ -8,6 +8,8 @@ use app\models\RiwayatPelanggaranSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\httpclient\Client;
+use app\models\RiwayatHukuman;
 
 /**
  * RiwayatPelanggaranController implements the CRUD actions for RiwayatPelanggaran model.
@@ -27,6 +29,52 @@ class RiwayatPelanggaranController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionProfil($nim)
+    {
+        $model = new RiwayatPelanggaran;
+        $mahasiswa = [];
+        if(!empty($nim))
+        {
+            $api_baseurl = Yii::$app->params['api_baseurl'];
+            $client = new Client(['baseUrl' => $api_baseurl]);
+            $response = $client->get('/m/profil/nim', ['nim' => $nim])->send();
+            
+            if ($response->isOk) {
+                $mahasiswa = $response->data['values'][0];
+            }    
+        }
+
+        $query = RiwayatPelanggaran::find()->where([
+            'nim'=> $nim
+        ]);
+
+        $query->orderBy(['created_at'=>SORT_DESC]);
+
+        $riwayat = $query->all();
+            
+        return $this->render('profil',[
+            'model' => $model,
+            'mahasiswa' => $mahasiswa,
+            'riwayat' => $riwayat
+        ]);
+    }
+
+    public function actionCariMahasiswa()
+    {
+
+        $model = new RiwayatPelanggaran;
+        if($model->load($_POST))
+        {
+            $this->redirect(['profil','nim'=>$model->nim]);
+
+        }
+        
+        return $this->render('cariMahasiswa',[
+            'model' => $model
+        ]);
+        
     }
 
     /**
@@ -62,12 +110,61 @@ class RiwayatPelanggaranController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($nim)
     {
         $model = new RiwayatPelanggaran();
+        $mahasiswa = [];
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        if(!empty($nim))
+        {
+        
+            $response = $client->get('/m/profil/nim', ['nim' => $nim])->send();
+            
+            if ($response->isOk) {
+                $mahasiswa = $response->data['values'][0];
+            }    
+        }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $response = $client->get('/tahun/aktif')->send();
+        $tahun_aktif = [];
+        if ($response->isOk) {
+            $tahun_aktif = $response->data['values'][0];
+        }
+
+        $model->tahun_id = $tahun_aktif['tahun_id'];
+
+        $model->nim = $mahasiswa['nim_mhs'] ?: '';
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        try 
+        {
+            if ($model->load(Yii::$app->request->post())) 
+            {
+                $model->nama_mahasiswa = $mahasiswa['nama_mahasiswa'];
+                $model->save();
+
+                foreach($_POST['tindakan_id'] as $item)
+                {
+                    if(empty($item)) continue;
+
+                    $rh = new RiwayatHukuman;
+                    $rh->pelanggaran_id = $model->id;
+                    $rh->hukuman_id = $item;
+                    $rh->save();
+
+                }
+                
+
+                $transaction->commit();
+                return $this->redirect(['profil', 'nim' => $nim]);
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
         }
 
         return $this->render('create', [

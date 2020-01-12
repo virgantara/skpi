@@ -24,6 +24,7 @@ $config = [
         ],
      
     ],
+    'timeZone' => 'Asia/Jakarta',
     'components' => [
         'pdf' => [
             'class' => \kartik\mpdf\Pdf::classname(),

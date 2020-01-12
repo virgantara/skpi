@@ -10,7 +10,11 @@ use yii\widgets\ActiveForm;
 
 <div class="kategori-hukuman-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+    	'options' => [
+    		'class' => 'form-horizontal'
+    	]
+    ]); ?>
 
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
 

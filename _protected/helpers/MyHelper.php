@@ -9,6 +9,24 @@ use Yii;
 class MyHelper
 {
 
+	function hitungDurasi($date1, $date2)
+	{
+		$date1 = new \DateTime($date1);
+		$date2 = new \DateTime($date2);
+		$interval = $date1->diff($date2);
+
+		$elapsed = '';
+		if($interval->d > 0)
+			$elapsed = $interval->format('%a hari %h jam %i menit %s detik');
+		else if($interval->h > 0)
+			$elapsed = $interval->format('%h jam %i menit %s detik');
+		else
+			$elapsed = $interval->format('%i menit %s detik');
+		
+
+		return $elapsed;
+	}
+
 	public static function logError($model)
 	{
 		$errors = '';
