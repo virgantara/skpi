@@ -11,6 +11,8 @@ use app\models\RiwayatPelanggaran;
  */
 class RiwayatPelanggaranSearch extends RiwayatPelanggaran
 {
+
+
     /**
      * {@inheritdoc}
      */
@@ -18,7 +20,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     {
         return [
             [['id', 'pelanggaran_id', 'tahun_id'], 'integer'],
-            [['nim', 'nama_mahasiswa', 'created_at', 'updated_at'], 'safe'],
+            [['tanggal', 'nim', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -60,13 +62,13 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         $query->andFilterWhere([
             'id' => $this->id,
             'pelanggaran_id' => $this->pelanggaran_id,
+            'tanggal' => $this->tanggal,
             'tahun_id' => $this->tahun_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'nim', $this->nim])
-            ->andFilterWhere(['like', 'nama_mahasiswa', $this->nama_mahasiswa]);
+        $query->andFilterWhere(['like', 'nim', $this->nim]);
 
         return $dataProvider;
     }
@@ -83,4 +85,6 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
          ->all(); //returns an
         return $rows;
     }
+
+    
 }

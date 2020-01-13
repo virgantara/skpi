@@ -9,6 +9,16 @@ use Yii;
 class MyHelper
 {
 
+	function dmYtoYmd($tgl){
+		$date = str_replace('/', '-', $tgl);
+	    return date('Y-m-d H:i:s',strtotime($date));
+	}
+
+	function YmdtodmY($tgl){
+		return date('d-m-Y H:i:s',strtotime($tgl));
+	}
+
+
 	function hitungDurasi($date1, $date2)
 	{
 		$date1 = new \DateTime($date1);

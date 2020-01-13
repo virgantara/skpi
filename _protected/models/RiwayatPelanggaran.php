@@ -9,17 +9,22 @@ use Yii;
  *
  * @property int $id
  * @property int $pelanggaran_id
+ * @property string $tanggal
  * @property string $nim
- * @property string $nama_mahasiswa
  * @property int $tahun_id
- * @property string $created_at
- * @property string $updated_at
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property RiwayatHukuman[] $riwayatHukumen
  * @property Pelanggaran $pelanggaran
+ * @property SimakMastermahasiswa $nim0
  */
 class RiwayatPelanggaran extends \yii\db\ActiveRecord
 {
+
+    
+    public $tanggal_awal;
+    public $tanggal_akhir;
     /**
      * {@inheritdoc}
      */
@@ -34,12 +39,12 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pelanggaran_id', 'nim', 'nama_mahasiswa', 'tahun_id'], 'required'],
+            [['pelanggaran_id', 'tanggal', 'nim', 'tahun_id'], 'required'],
             [['pelanggaran_id', 'tahun_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['tanggal', 'created_at', 'updated_at'], 'safe'],
             [['nim'], 'string', 'max' => 25],
-            [['nama_mahasiswa'], 'string', 'max' => 255],
             [['pelanggaran_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pelanggaran::className(), 'targetAttribute' => ['pelanggaran_id' => 'id']],
+            [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::className(), 'targetAttribute' => ['nim' => 'nim_mhs']],
         ];
     }
 
@@ -51,8 +56,8 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'pelanggaran_id' => 'Pelanggaran ID',
+            'tanggal' => 'Tanggal',
             'nim' => 'Nim',
-            'nama_mahasiswa' => 'Nama Mahasiswa',
             'tahun_id' => 'Tahun ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -73,5 +78,13 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     public function getPelanggaran()
     {
         return $this->hasOne(Pelanggaran::className(), ['id' => 'pelanggaran_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNim0()
+    {
+        return $this->hasOne(SimakMastermahasiswa::className(), ['nim_mhs' => 'nim']);
     }
 }

@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\RiwayatPelanggaran;
 use app\models\RiwayatPelanggaranSearch;
+use app\models\SimakMastermahasiswa;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -34,6 +36,7 @@ class LaporanController extends Controller
 
     public function actionRincianPelanggaran(){
         
+        $model = new RiwayatPelanggaran;
         $results = [];
         $out = [];
         $api_baseurl = Yii::$app->params['api_baseurl'];
@@ -63,26 +66,16 @@ class LaporanController extends Controller
 
         $out = \yii\helpers\ArrayHelper::map($out,'kode','nama');
         
-        if(!empty($_POST['tahun']) && !empty($_POST['semester']) && !empty($_POST['prodi']))
+        if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
         {
-            $tahun = $_POST['tahun'];
-            $semester = $_POST['semester'];
-            $prodi = $_POST['prodi'];
-            $ta = $tahun.$semester;
+            $tanggal_awal = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_awal'].' 00:00:00');
+            $tanggal_akhir = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_akhir'].' 23:59:59');
+            // $prodi = $_POST['prodi'];
             
-            // $list = Pasien::find()->addFilterWhere(['like',])
-            $api_baseurl = Yii::$app->params['api_baseurl'];
-            $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/p/mhs', ['kode' => $prodi])->send();
-            
-            // $out = [];
-            if ($response->isOk) {
+            $query = RiwayatPelanggaran::find();
 
-                $results = $response->data['values'];
-               
-              
-            }
-
+            $query->where(['between','tanggal',$tanggal_awal,$tanggal_akhir]);
+            $results = $query->all();
             
         }
 
@@ -94,53 +87,75 @@ class LaporanController extends Controller
     }
 
     public function actionRekapPelanggaran(){
-        
+        $model = new RiwayatPelanggaran;
         $results = [];
-        $out = [];
-        $api_baseurl = Yii::$app->params['api_baseurl'];
-        try {
-            $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/p/list', ['tahun' => date("Y")])->send();
-            
-            
-            
-            if ($response->isOk) {
-                $result = $response->data['values'];
-                foreach ($result as $d) {
-                    $out[] = [
-                        'kode' => $d['kode_prodi'],
-                        'nama'=> $d['nama_prodi'],
-                        'singkatan'=> $d['singkatan'],
-                       
-                    ];
-                }
-            }
-        } catch (\Exception $e) {
-            $out = [
-                'kode' => 500,
-                'nama' =>  'Data Tidak Ditemukan'
-            ];
-        }
-
-        $out = \yii\helpers\ArrayHelper::map($out,'kode','nama');
+        $resultsProdi = [];
+        // $out = [];
         
-        if(!empty($_POST['tahun']) && !empty($_POST['semester']) && !empty($_POST['prodi']))
+        if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
         {
-            $tahun = $_POST['tahun'];
-            $semester = $_POST['semester'];
-            $prodi = $_POST['prodi'];
-            $ta = $tahun.$semester;
+            $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+            $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
             
             // $list = Pasien::find()->addFilterWhere(['like',])
-            $results = RiwayatPelanggaranSearch::getRekapPelanggaran();
+            // $out = [];
+            $api_baseurl = Yii::$app->params['api_baseurl'];
+            try {
+                $client = new Client(['baseUrl' => $api_baseurl]);
+                $response = $client->get('/simpel/rekap/semester', [
+                    'sd' => MyHelper::dmYtoYmd($sd),
+                    'ed' => MyHelper::dmYtoYmd($ed)
+                ])->send();
+
+                $responseProdi = $client->get('/simpel/rekap/prodi', [
+                    'sd' => MyHelper::dmYtoYmd($sd),
+                    'ed' => MyHelper::dmYtoYmd($ed)
+                ])->send();
+
+                if ($response->isOk) {
+                    $result = $response->data['values'];
+                    // print_r($result);exit;
+                    foreach ($result as $d) {
+                        $results[] = [
+                            'smt' => $d['semester'],
+                            'total'=> $d['total'],
+                            // 'singkatan'=> $d['singkatan'],
+                           
+                        ];
+                    }
+
+
+                }
+
+                if ($responseProdi->isOk) {
+                    $result = $responseProdi->data['values'];
+                    // print_r($result);exit;
+                    foreach ($result as $d) {
+                        $resultsProdi[] = [
+                            'prodi' => $d['singkatan'],
+                            'total'=> $d['total'],
+                            // 'singkatan'=> $d['singkatan'],
+                           
+                        ];
+                    }
+
+
+                }
+            } catch (\Exception $e) {
+                $results = [
+                    'kode' => 500,
+                    'nama' =>  'Data Tidak Ditemukan'
+                ];
+            }
 
             
         }
 
         return $this->render('rekap_pelanggaran', [
             'results' => $results,
+            'resultsProdi' => $resultsProdi,
             'model' => $model,
-            'listProdi' => $out
+            // 'listProdi' => $out
         ]);
     }
     

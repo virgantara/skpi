@@ -164,7 +164,7 @@ class RiwayatPelanggaranController extends Controller
         {
             if ($model->load(Yii::$app->request->post())) 
             {
-                $model->nama_mahasiswa = $mahasiswa['nama_mahasiswa'];
+                $model->tanggal = \app\helpers\MyHelper::dmYtoYmd($model->tanggal);
                 $model->save();
 
                 foreach($_POST['tindakan_id'] as $item)
@@ -206,8 +206,43 @@ class RiwayatPelanggaranController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+       
+
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        try 
+        {
+            if ($model->load(Yii::$app->request->post())) 
+            {
+                $model->tanggal = \app\helpers\MyHelper::dmYtoYmd($model->tanggal);
+                $model->save();
+
+                foreach ($model->riwayatHukumen as $key => $value) 
+                {
+                    $value->delete();
+                }     
+                
+                foreach($_POST['tindakan_id'] as $item)
+                {
+                    if(empty($item)) continue;
+
+                    $rh = new RiwayatHukuman;
+                    $rh->pelanggaran_id = $model->id;
+                    $rh->hukuman_id = $item;
+                    $rh->save();
+
+                }
+                
+
+                $transaction->commit();
+                return $this->redirect(['profil', 'nim' => $model->nim]);
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
         }
 
         return $this->render('update', [

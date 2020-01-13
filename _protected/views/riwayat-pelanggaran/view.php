@@ -3,11 +3,12 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
+use app\helpers\MyHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\RiwayatPelanggaran */
 
-$this->title = $model->nama_mahasiswa;
+$this->title = $model->nim0->nama_mahasiswa;
 $this->params['breadcrumbs'][] = ['label' => 'Riwayat Pelanggarans', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -284,7 +285,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php 
                         foreach ($riwayat as $key => $value) {
                             # code...
-                        }
+                        
                         ?>
                         <div class="widget-body">
                             <div class="widget-main padding-8">
@@ -292,9 +293,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <div class="profile-activity clearfix">
                                         <div>
                                             <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
-                                            <a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
+                                           <a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
                                             melakukan pelanggaran <?=$value->pelanggaran->kategori->nama;?>
-                                            yaitu <?=$value->pelanggaran->nama;?>
+                                            yaitu <?=$value->pelanggaran->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->tanggal);?>
 
                                             <div class="time">
                                                 <i class="ace-icon fa fa-clock-o bigger-110"></i>
@@ -316,6 +317,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </div>
                             </div>
                         </div>
+                        <?php
+                    }
+                         ?>
                     </div>
 
                     <div class="hr hr2 hr-double"></div>

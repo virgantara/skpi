@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
-
+use app\helpers\MyHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\RiwayatPelanggaran */
@@ -269,7 +269,7 @@ $this->title = Yii::t('app', Yii::$app->name);
 						<?php 
 						foreach ($riwayat as $key => $value) {
 							# code...
-						}
+						
 						?>
 						<div class="widget-body">
 							<div class="widget-main padding-8">
@@ -279,7 +279,7 @@ $this->title = Yii::t('app', Yii::$app->name);
 											<img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
 											<a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
 											melakukan pelanggaran <?=$value->pelanggaran->kategori->nama;?>
-											yaitu <?=$value->pelanggaran->nama;?>
+											yaitu <?=$value->pelanggaran->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->tanggal);?>
 
 											<div class="time">
 												<i class="ace-icon fa fa-clock-o bigger-110"></i>
@@ -288,7 +288,7 @@ $this->title = Yii::t('app', Yii::$app->name);
 										</div>
 
 										<div class="tools action-buttons">
-											<a href="#" class="blue">
+											<a href="<?=Url::to(['riwayat-pelanggaran/update','id'=>$value->id]);?>" class="blue">
 												<i class="ace-icon fa fa-pencil bigger-125"></i>
 											</a>
 
@@ -301,6 +301,9 @@ $this->title = Yii::t('app', Yii::$app->name);
 								</div>
 							</div>
 						</div>
+						<?php 
+					}
+						?>
 					</div>
 
 					<div class="hr hr2 hr-double"></div>
