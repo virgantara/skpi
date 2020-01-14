@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Pelanggaran', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Pelanggaran', ['cari-mahasiswa'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -29,8 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             // 'id',
             'nim',
-            
-            // 'tahun_id',
+            'namaMahasiswa',
+            'namaProdi',
+            'semester',
+            'namaPelanggaran',
+            'namaKategori',
             'tanggal',
 
             //'created_at',

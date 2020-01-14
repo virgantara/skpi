@@ -259,9 +259,15 @@ class RiwayatPelanggaranController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        foreach ($model->riwayatHukumen as $key => $value) 
+        {
+            $value->delete();
+        }    
 
-        return $this->redirect(['index']);
+        $model->delete();
+
+        return $this->redirect(['cariMahasiswa']);
     }
 
     /**

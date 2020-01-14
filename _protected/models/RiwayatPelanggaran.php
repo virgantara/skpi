@@ -56,11 +56,14 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'pelanggaran_id' => 'Pelanggaran ID',
-            'tanggal' => 'Tanggal',
-            'nim' => 'Nim',
+            'tanggal' => 'Tgl Pelanggaran',
+            'nim' => 'NIM',
             'tahun_id' => 'Tahun ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'namaMahasiswa' => 'Nama',
+            'namaPelanggaran' => 'Pelanggaran',
+            'namaKategori' => 'Kategori'
         ];
     }
 
@@ -86,5 +89,30 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     public function getNim0()
     {
         return $this->hasOne(SimakMastermahasiswa::className(), ['nim_mhs' => 'nim']);
+    }
+
+    public function getNamaMahasiswa()
+    {
+        return $this->nim0->nama_mahasiswa;
+    }
+
+    public function getNamaProdi()
+    {
+        return $this->nim0->kodeProdi->nama_prodi;
+    }
+
+    public function getSemester()
+    {
+        return $this->nim0->semester;
+    }
+
+    public function getNamaPelanggaran()
+    {
+        return $this->pelanggaran->nama;
+    }
+
+    public function getNamaKategori()
+    {
+        return $this->pelanggaran->kategori->nama;
     }
 }

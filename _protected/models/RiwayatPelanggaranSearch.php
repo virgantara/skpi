@@ -12,6 +12,11 @@ use app\models\RiwayatPelanggaran;
 class RiwayatPelanggaranSearch extends RiwayatPelanggaran
 {
 
+    public $namaMahasiswa;
+    public $namaProdi;
+    public $namaPelanggaran;
+    public $namaKategori;
+    public $semester;
 
     /**
      * {@inheritdoc}
@@ -20,7 +25,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     {
         return [
             [['id', 'pelanggaran_id', 'tahun_id'], 'integer'],
-            [['tanggal', 'nim', 'created_at', 'updated_at'], 'safe'],
+            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori'], 'safe'],
         ];
     }
 
@@ -50,6 +55,38 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['namaMahasiswa'] = [
+            'asc' => ['mhs.nama_mahasiswa'=>SORT_ASC],
+            'desc' => ['mhs.nama_mahasiswa'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaProdi'] = [
+            'asc' => ['p.nama_prodi'=>SORT_ASC],
+            'desc' => ['p.nama_prodi'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['semester'] = [
+            'asc' => ['mhs.semester'=>SORT_ASC],
+            'desc' => ['mhs.semester'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaKategori'] = [
+            'asc' => ['k.nama'=>SORT_ASC],
+            'desc' => ['k.nama'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaPelanggaran'] = [
+            'asc' => ['pl.nama'=>SORT_ASC],
+            'desc' => ['pl.nama'=>SORT_DESC]
+        ];
+
+        $query->joinWith([
+            'nim0 as mhs',
+            'nim0.kodeProdi as p',
+            'pelanggaran as pl',
+            'pelanggaran.kategori as k'
+        ]);
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -69,6 +106,9 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         ]);
 
         $query->andFilterWhere(['like', 'nim', $this->nim]);
+        $query->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->namaMahasiswa]);
+        $query->andFilterWhere(['like', 'p.nama_prodi', $this->namaProdi]);
+        $query->andFilterWhere(['like', 'mhs.semester', $this->semester]);
 
         return $dataProvider;
     }
