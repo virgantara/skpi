@@ -42,7 +42,7 @@ class LaporanController extends Controller
         $api_baseurl = Yii::$app->params['api_baseurl'];
         try {
             $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/p/list', ['tahun' => date("Y")])->send();
+            $response = $client->get('/p/list', ['tahun' => date("Y")],['x-access-token'=>Yii::$app->params['client_token']])->send();
             
             
             
@@ -105,12 +105,12 @@ class LaporanController extends Controller
                 $response = $client->get('/simpel/rekap/semester', [
                     'sd' => MyHelper::dmYtoYmd($sd),
                     'ed' => MyHelper::dmYtoYmd($ed)
-                ])->send();
+                ],['x-access-token'=>Yii::$app->params['client_token']])->send();
 
                 $responseProdi = $client->get('/simpel/rekap/prodi', [
                     'sd' => MyHelper::dmYtoYmd($sd),
                     'ed' => MyHelper::dmYtoYmd($ed)
-                ])->send();
+                ],['x-access-token'=>Yii::$app->params['client_token']])->send();
 
                 if ($response->isOk) {
                     $result = $response->data['values'];

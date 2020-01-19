@@ -39,7 +39,7 @@ class RiwayatPelanggaranController extends Controller
         {
             $api_baseurl = Yii::$app->params['api_baseurl'];
             $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/m/profil/nim', ['nim' => $nim])->send();
+            $response = $client->get('/m/profil/nim', ['nim' => $nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
             
             if ($response->isOk) {
                 $mahasiswa = $response->data['values'][0];
@@ -106,7 +106,7 @@ class RiwayatPelanggaranController extends Controller
         {
             $api_baseurl = Yii::$app->params['api_baseurl'];
             $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/m/profil/nim', ['nim' => $model->nim])->send();
+            $response = $client->get('/m/profil/nim', ['nim' => $model->nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
             
             if ($response->isOk) {
                 $mahasiswa = $response->data['values'][0];
@@ -142,14 +142,14 @@ class RiwayatPelanggaranController extends Controller
         if(!empty($nim))
         {
         
-            $response = $client->get('/m/profil/nim', ['nim' => $nim])->send();
+            $response = $client->get('/m/profil/nim', ['nim' => $nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
             
             if ($response->isOk) {
                 $mahasiswa = $response->data['values'][0];
             }    
         }
 
-        $response = $client->get('/tahun/aktif')->send();
+        $response = $client->get('/tahun/aktif',[],['x-access-token'=>Yii::$app->params['client_token']])->send();
         $tahun_aktif = [];
         if ($response->isOk) {
             $tahun_aktif = $response->data['values'][0];
