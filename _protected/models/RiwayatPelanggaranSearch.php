@@ -14,8 +14,11 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
 
     public $namaMahasiswa;
     public $namaProdi;
+    public $namaFakultas;
     public $namaPelanggaran;
     public $namaKategori;
+    public $namaAsrama;
+    public $namaKamar;
     public $semester;
 
     /**
@@ -25,7 +28,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     {
         return [
             [['id', 'pelanggaran_id', 'tahun_id'], 'integer'],
-            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori'], 'safe'],
+            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori','namaFakultas','namaAsrama','namaKamar','pelapor'], 'safe'],
         ];
     }
 
@@ -65,6 +68,11 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             'desc' => ['p.nama_prodi'=>SORT_DESC]
         ];
 
+        $dataProvider->sort->attributes['namaFakultas'] = [
+            'asc' => ['f.nama_fakultas'=>SORT_ASC],
+            'desc' => ['f.nama_fakultas'=>SORT_DESC]
+        ];
+
         $dataProvider->sort->attributes['semester'] = [
             'asc' => ['mhs.semester'=>SORT_ASC],
             'desc' => ['mhs.semester'=>SORT_DESC]
@@ -80,11 +88,24 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             'desc' => ['pl.nama'=>SORT_DESC]
         ];
 
+        $dataProvider->sort->attributes['namaAsrama'] = [
+            'asc' => ['a.nama'=>SORT_ASC],
+            'desc' => ['a.nama'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaKamar'] = [
+            'asc' => ['kk.nama'=>SORT_ASC],
+            'desc' => ['kk.nama'=>SORT_DESC]
+        ];
+
         $query->joinWith([
             'nim0 as mhs',
             'nim0.kodeProdi as p',
+            'nim0.kamar as kk',
+            'nim0.kamar.asrama as a',
             'pelanggaran as pl',
-            'pelanggaran.kategori as k'
+            'pelanggaran.kategori as k',
+            'nim0.kodeProdi.kodeFakultas as f'
         ]);
 
         $this->load($params);
@@ -107,7 +128,10 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
 
         $query->andFilterWhere(['like', 'nim', $this->nim]);
         $query->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->namaMahasiswa]);
+        $query->andFilterWhere(['like', 'a.nama', $this->namaAsrama]);
+        $query->andFilterWhere(['like', 'kk.nama', $this->namaKamar]);
         $query->andFilterWhere(['like', 'p.nama_prodi', $this->namaProdi]);
+        $query->andFilterWhere(['like', 'f.nama_fakultas', $this->namaFakultas]);
         $query->andFilterWhere(['like', 'mhs.semester', $this->semester]);
 
         return $dataProvider;

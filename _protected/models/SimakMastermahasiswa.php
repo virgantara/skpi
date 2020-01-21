@@ -79,13 +79,16 @@ use Yii;
  * @property int|null $is_synced
  * @property string|null $kode_pd
  * @property string|null $va_code
+ * @property int|null $kamar_id
  * @property int|null $is_eligible
  * @property string|null $created_at
  * @property string|null $updated_at
  *
+ * @property RiwayatPelanggaran[] $riwayatPelanggarans
  * @property SimakMahasiswaOrtu[] $simakMahasiswaOrtus
  * @property SimakMahasiswaProgramTambahan[] $simakMahasiswaProgramTambahans
  * @property SimakMasterprogramstudi $kodeProdi
+ * @property Kamar $kamar
  * @property SimakPencekalan[] $simakPencekalans
  * @property SimakTahfidzKelompokAnggota[] $simakTahfidzKelompokAnggotas
  * @property SimakTahfidzNilai[] $simakTahfidzNilais
@@ -109,7 +112,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['nim_mhs', 'nama_mahasiswa'], 'required'],
             [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at'], 'safe'],
             [['keterangan'], 'string'],
-            [['status_bayar', 'status_mahasiswa', 'is_synced', 'is_eligible'], 'integer'],
+            [['status_bayar', 'status_mahasiswa', 'is_synced', 'kamar_id', 'is_eligible'], 'integer'],
             [['kode_pt', 'asal_prodi', 'kode_pos'], 'string', 'max' => 6],
             [['kode_fakultas', 'kode_prodi', 'kode_jenjang_studi', 'jenis_kelamin', 'semester_awal', 'batas_studi', 'status_awal', 'asal_jenjang_studi', 'semester', 'rt', 'rw'], 'string', 'max' => 5],
             [['nim_mhs', 'nama_asal_pt', 'telepon', 'hp'], 'string', 'max' => 25],
@@ -130,6 +133,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['gol_darah', 'kampus'], 'string', 'max' => 2],
             [['nim_mhs'], 'unique'],
             [['kode_prodi'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterprogramstudi::className(), 'targetAttribute' => ['kode_prodi' => 'kode_prodi']],
+            [['kamar_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kamar::className(), 'targetAttribute' => ['kamar_id' => 'id']],
         ];
     }
 
@@ -211,10 +215,29 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             'is_synced' => 'Is Synced',
             'kode_pd' => 'Kode Pd',
             'va_code' => 'Va Code',
+            'kamar_id' => 'Kamar ID',
             'is_eligible' => 'Is Eligible',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios['asrama'] = ['kampus', 'kode_fakultas', 'kode_prodi'];
+        return $scenarios;
+    }
+
+  
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRiwayatPelanggarans()
+    {
+        return $this->hasMany(RiwayatPelanggaran::className(), ['nim' => 'nim_mhs']);
     }
 
     /**
@@ -239,6 +262,14 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     public function getKodeProdi()
     {
         return $this->hasOne(SimakMasterprogramstudi::className(), ['kode_prodi' => 'kode_prodi']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKamar()
+    {
+        return $this->hasOne(Kamar::className(), ['id' => 'kamar_id']);
     }
 
     /**

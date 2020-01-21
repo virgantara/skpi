@@ -57,6 +57,28 @@ use kartik\datetime\DateTimePicker;
 				<label class="error_tanggal"></label>
 				</div>
 			</div>
+				<div class="row">
+		   		<label class="col-sm-2 control-label no-padding-right">Pelapor</label>
+				<div class="col-sm-10">
+				<?= $form->field($model,'pelapor')->textInput(['class'=>'form-control'])->label(false) ?>
+				<label class="error_diagnosis"></label>
+				</div>
+			</div>
+			<div class="row">
+		   		<label class="col-sm-2 control-label no-padding-right">Bukti (Foto)</label>
+				<div class="col-sm-10">
+				<?= $form->field($model,'bukti')->textInput(['class'=>'form-control','placeholder'=>'Link to Google Drive'])->label(false) ?>
+				<label class="error_diagnosis"></label>
+				</div>
+			</div>
+			<div class="row">
+		   		<label class="col-sm-2 control-label no-padding-right">Surat Pernyataan</label>
+				<div class="col-sm-10">
+				<?= $form->field($model,'surat_pernyataan')->textInput(['class'=>'form-control','placeholder'=>'Link to Google Drive'])->label(false) ?>
+
+				<label class="error_diagnosis"></label>
+				</div>
+			</div>
 		   	<?php
 		   	$index =1 ;
 

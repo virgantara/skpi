@@ -37,14 +37,29 @@ class MenuHelper
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Pelanggaran',  
 	                'url' => ['/riwayat-pelanggaran/cari-mahasiswa'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang'),
-	               
+	                'visible' => Yii::$app->user->can('operatorCabang'), 
 	            ],
-
-
-	           
-	            
 	        ]];
+
+	         $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span>', 
+	         'url' => ['asrama/mahasiswa'],
+	        //  'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	        //  'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	        // 'items'=>[
+	        //    	[
+	        //     	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Pelanggaran',  
+	        //         'url' => ['/riwayat-pelanggaran/index'],	        
+	        //         'visible' => Yii::$app->user->can('operatorCabang'),
+	               
+	        //     ],
+	        //     [
+	        //     	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Pelanggaran',  
+	        //         'url' => ['/riwayat-pelanggaran/cari-mahasiswa'],	        
+	        //         'visible' => Yii::$app->user->can('operatorCabang'), 
+	        //     ],
+	        // ]
+	    ];
+
 
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Laporan </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
@@ -147,18 +162,34 @@ class MenuHelper
 	            ],
 
 	            [
-	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Unit <b class="arrow fa fa-angle-down"></b>',  
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Asrama <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	                'visible' => Yii::$app->user->can('admin'),
 	                'url' => ['#'],
 	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	                'items' => [
 
-	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['departemen/index']],
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['asrama/index']],
 	                     [
 	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
 	                        'visible' => Yii::$app->user->can('admin'),
-	                        'url' => ['departemen/create']]
+	                        'url' => ['asrama/create']]
+	                ],
+	            ],
+	           
+	           	[
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Kamar <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['kamar/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['kamar/create']]
 	                ],
 	            ],
 	           

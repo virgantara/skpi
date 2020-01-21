@@ -39,7 +39,7 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pelanggaran_id', 'tanggal', 'nim', 'tahun_id'], 'required'],
+            [['pelanggaran_id', 'tanggal', 'nim', 'tahun_id','pelapor','bukti','surat_pernyataan'], 'required'],
             [['pelanggaran_id', 'tahun_id'], 'integer'],
             [['tanggal', 'created_at', 'updated_at'], 'safe'],
             [['nim'], 'string', 'max' => 25],
@@ -63,7 +63,9 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'namaMahasiswa' => 'Nama',
             'namaPelanggaran' => 'Pelanggaran',
-            'namaKategori' => 'Kategori'
+            'namaKategori' => 'Kategori',
+            'namaAsrama' => 'Asrama',
+            'namaKamar' => 'Kamar'
         ];
     }
 
@@ -101,6 +103,11 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
         return $this->nim0->kodeProdi->nama_prodi;
     }
 
+    public function getNamaFakultas()
+    {
+        return $this->nim0->kodeProdi->kodeFakultas->nama_fakultas;
+    }
+
     public function getSemester()
     {
         return $this->nim0->semester;
@@ -114,5 +121,20 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     public function getNamaKategori()
     {
         return $this->pelanggaran->kategori->nama;
+    }
+
+    public function getNamaAsrama()
+    {
+        return !empty($this->nim0->kamar) ? $this->nim0->kamar->asrama->nama : '';
+    }
+
+    public function getNamaKamar()
+    {
+        return !empty($this->nim0->kamar) ? $this->nim0->kamar->nama : '';
+    }
+
+    public function getStatusAktif()
+    {
+        return $this->nim0->status_aktivitas;
     }
 }

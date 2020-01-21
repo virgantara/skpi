@@ -245,6 +245,13 @@ $this->title = Yii::t('app', Yii::$app->name);
 								<span class="editable" ><?=$mahasiswa['nama_prodi'];?></span>
 							</div>
 						</div>
+						<div class="profile-info-row">
+							<div class="profile-info-name"> Status Aktif </div>
+
+							<div class="profile-info-value">
+								<span class="editable" ><?=$mahasiswa['status_aktivitas'];?></span>
+							</div>
+						</div>
 					</div>
 
 					<div class="space-20"></div>
