@@ -76,7 +76,8 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> </label>
             <div class="col-sm-2">
- <?= Html::submitButton(' <i class="ace-icon fa fa-check bigger-110"></i>Cari', ['class' => 'btn btn-info','name'=>'search','value'=>1,'id'=>'btn-search']) ?>&nbsp;
+ <button type="submit" class ='btn btn-info' name='btn-search' value='1' > <i class="ace-icon fa fa-search bigger-110"></i>Cari </button>
+ <button type="submit" class ='btn btn-success' name='btn-export' value='1'> <i class="ace-icon fa fa-download bigger-110"></i>Export XLS </button>
  <?php
 
   // Html::submitButton(' <i class="ace-icon fa fa-download bigger-110"></i>Export', ['class' => 'btn btn-success','name'=>'search','value'=>1,'id'=>'btn-export'])
@@ -96,11 +97,14 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
                     <th>NIM</th>
                     <th>Nama</th>
                     <th>Semester</th>
+                    <th>Asrama-Kamar</th>
+
                     <th>Kampus</th>
                     <th>Prodi</th>
                     <th>Kategori<br>Pelanggaran</th>
                     <th>Pelanggaran</th>
                     <th>Hukuman</th>
+                    <th>Status<br>MHS</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,10 +114,6 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
                 $i = 0;
                 foreach($results as $q=> $item)
                 {
-                    $kampus=SimakKampus::find()->where(['kode_kampus'=>$item->nim0->kampus])->one();
-                    $pelanggaran = RiwayatPelanggaran::find()->where(['nim'=>$item->nim0->nim_mhs])->all();
-                    foreach($pelanggaran as $qq=> $pp)
-                    {
                         $i++;
                 ?>
                 <tr>
@@ -122,17 +122,24 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
                 <td><?=$item->nim0->nim_mhs;?></td>
                 <td><?=$item->nim0->nama_mahasiswa;?></td>
                 <td><?=$item->nim0->semester;?></td>
-                <td><?=$kampus->nama_kampus;?></td>
-                <td><?=$item->nim0->kodeProdi->singkatan;?></td>
-                <td><?=$pp->pelanggaran->kategori->nama;?></td>
-                <td><?=$pp->pelanggaran->nama;?></td>
                 <td><?php
-                foreach($pp->riwayatHukumen as $h)
+                if(!empty($item->nim0->kamar))
+                {
+                    echo $item->nim0->kamar->asrama->nama.' - '.$item->nim0->kamar->nama;
+                }
+                ;?></td>
+                <td><?=$item->nim0->kampus0->nama_kampus;?></td>
+                <td><?=$item->nim0->kodeProdi->singkatan;?></td>
+                <td><?=$item->pelanggaran->kategori->nama;?></td>
+                <td><?=$item->pelanggaran->nama;?></td>
+                <td><?php
+                foreach($item->riwayatHukumen as $h)
                     echo $h->hukuman->nama.', ';
                 ?></td>
+                <td><?=$item->nim0->status_aktivitas;?></td>
                 </tr>
                 <?php
-                    }
+                    
                 }
                 ?>
             </tbody>

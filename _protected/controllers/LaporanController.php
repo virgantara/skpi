@@ -38,34 +38,8 @@ class LaporanController extends Controller
         
         $model = new RiwayatPelanggaran;
         $results = [];
-        $out = [];
-        $api_baseurl = Yii::$app->params['api_baseurl'];
-        try {
-            $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/p/list', ['tahun' => date("Y")],['x-access-token'=>Yii::$app->params['client_token']])->send();
-            
-            
-            
-            if ($response->isOk) {
-                $result = $response->data['values'];
-                foreach ($result as $d) {
-                    $out[] = [
-                        'kode' => $d['kode_prodi'],
-                        'nama'=> $d['nama_prodi'],
-                        'singkatan'=> $d['singkatan'],
-                       
-                    ];
-                }
-            }
-        } catch (\Exception $e) {
-            $out = [
-                'kode' => 500,
-                'nama' =>  'Data Tidak Ditemukan'
-            ];
-        }
-
-        $out = \yii\helpers\ArrayHelper::map($out,'kode','nama');
         
+
         if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
         {
             $tanggal_awal = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_awal'].' 00:00:00');
@@ -82,7 +56,7 @@ class LaporanController extends Controller
         return $this->render('rincian_pelanggaran', [
             'results' => $results,
             'model' => $model,
-            'listProdi' => $out
+            // 'listProdi' => $out
         ]);
     }
 

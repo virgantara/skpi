@@ -84,13 +84,16 @@ use Yii;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
+ * @property BillTagihan[] $billTagihans
+ * @property BillTransaksi[] $billTransaksis
  * @property RiwayatPelanggaran[] $riwayatPelanggarans
  * @property SimakMahasiswaOrtu[] $simakMahasiswaOrtus
  * @property SimakMahasiswaProgramTambahan[] $simakMahasiswaProgramTambahans
  * @property SimakMasterprogramstudi $kodeProdi
  * @property Kamar $kamar
+ * @property SimakKampus $kampus0
  * @property SimakPencekalan[] $simakPencekalans
- * @property SimakTahfidzKelompokAnggota[] $simakTahfidzKelompokAnggotas
+ * @property SimakTahfidzKelompokAnggotum[] $simakTahfidzKelompokAnggota
  * @property SimakTahfidzNilai[] $simakTahfidzNilais
  */
 class SimakMastermahasiswa extends \yii\db\ActiveRecord
@@ -134,6 +137,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['nim_mhs'], 'unique'],
             [['kode_prodi'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterprogramstudi::className(), 'targetAttribute' => ['kode_prodi' => 'kode_prodi']],
             [['kamar_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kamar::className(), 'targetAttribute' => ['kamar_id' => 'id']],
+            [['kampus'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus' => 'kode_kampus']],
         ];
     }
 
@@ -222,15 +226,21 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
         ];
     }
 
-
-    public function scenarios()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBillTagihans()
     {
-        $scenarios = parent::scenarios();
-        $scenarios['asrama'] = ['kampus', 'kode_fakultas', 'kode_prodi'];
-        return $scenarios;
+        return $this->hasMany(BillTagihan::className(), ['nim' => 'nim_mhs']);
     }
 
-  
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBillTransaksis()
+    {
+        return $this->hasMany(BillTransaksi::className(), ['CUSTID' => 'nim_mhs']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -275,6 +285,14 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getKampus0()
+    {
+        return $this->hasOne(SimakKampus::className(), ['kode_kampus' => 'kampus']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getSimakPencekalans()
     {
         return $this->hasMany(SimakPencekalan::className(), ['nim' => 'nim_mhs']);
@@ -283,9 +301,9 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSimakTahfidzKelompokAnggotas()
+    public function getSimakTahfidzKelompokAnggota()
     {
-        return $this->hasMany(SimakTahfidzKelompokAnggota::className(), ['nim' => 'nim_mhs']);
+        return $this->hasMany(SimakTahfidzKelompokAnggotum::className(), ['nim' => 'nim_mhs']);
     }
 
     /**
