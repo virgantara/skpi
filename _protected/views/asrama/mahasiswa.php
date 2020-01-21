@@ -164,7 +164,7 @@ $this->registerJs('
 	$("#fakultas_id").trigger("change");
 
 	setTimeout(function(){
-		$("#kode_prodi").val('.$model->kode_prodi.');
+		$("#kode_prodi").val('.$params['kode_prodi'].');
 	},500)
 
     ', \yii\web\View::POS_READY);

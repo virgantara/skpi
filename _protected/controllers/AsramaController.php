@@ -75,15 +75,18 @@ class AsramaController extends Controller
         $model->setScenario('asrama');
         $listAsrama = Asrama::find()->all();
         $results = [];
-        if($model->load(Yii::$app->request->post()))
+        $params = [];
+        if(!empty($_POST['SimakMastermahasiswa']))
         {
-            
+            $params = $_POST['SimakMastermahasiswa'];
             $results = SimakMastermahasiswa::find()->where([
-                'kampus' => $model->kampus,
-                'kode_prodi' => $model->kode_prodi,
-                'kode_fakultas' => $model->kode_fakultas,
+                'kampus' => $params['kampus'],
+                'kode_prodi' => $params['kode_prodi'],
+                'kode_fakultas' => $params['kode_fakultas'],
                 'status_aktivitas' => 'A'
             ])->all();          
+
+            
             if(!empty($_POST['btn-submit']))
             {
                 foreach($results as $item)
@@ -102,6 +105,7 @@ class AsramaController extends Controller
         return $this->render('mahasiswa',[
             'model' => $model,
             'results' => $results,
+            'params' => $params,
             'listAsrama' => $listAsrama
         ]);
     }
