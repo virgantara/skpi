@@ -125,6 +125,11 @@ class LaporanController extends Controller
                 
             }       
 
+            foreach(range('A','L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                    ->setAutoSize(true);
+            }
+
             // Set worksheet title
             $objPHPExcel->getActiveSheet()->setTitle('Rincian Pelanggaran');
             
