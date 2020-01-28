@@ -138,6 +138,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['kode_prodi'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterprogramstudi::className(), 'targetAttribute' => ['kode_prodi' => 'kode_prodi']],
             [['kamar_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kamar::className(), 'targetAttribute' => ['kamar_id' => 'id']],
             [['kampus'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus' => 'kode_kampus']],
+            [['kode_fakultas'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterfakultas::className(), 'targetAttribute' => ['kode_fakultas' => 'kode_fakultas']],
         ];
     }
 
@@ -312,5 +313,34 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     public function getSimakTahfidzNilais()
     {
         return $this->hasMany(SimakTahfidzNilai::className(), ['nim' => 'nim_mhs']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKodeFakultas()
+    {
+        return $this->hasOne(SimakMasterfakultas::className(), ['kode_fakultas' => 'kode_fakultas']);
+    }
+
+    public function getNamaProdi()
+    {
+        return $this->kodeProdi->nama_prodi;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNamaFakultas()
+    {
+        return $this->kodeFakultas->nama_fakultas;
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNamaKampus()
+    {
+        return $this->kampus0->nama_kampus;
     }
 }
