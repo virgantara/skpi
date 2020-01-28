@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'kodeFakultas.nama_fakultas',
             'kodeProdi.nama_prodi',
             'status_aktivitas',
+            'semester',
             // 'status_mahasiswa',            
             // 'kampus',
             // 'kode_fakultas',

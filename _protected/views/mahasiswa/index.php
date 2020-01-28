@@ -30,6 +30,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'namaKampus',
             'namaFakultas',
             'namaProdi',
+            'status_aktivitas',
+            'semester',
+            
             // 'kampus',
             // 'kode_fakultas',
             // 'kode_prodi',
