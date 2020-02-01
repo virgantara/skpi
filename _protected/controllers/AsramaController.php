@@ -76,9 +76,9 @@ class AsramaController extends Controller
         $listAsrama = Asrama::find()->all();
         $results = [];
         $params = [];
-        if(!empty($_POST['SimakMastermahasiswa']))
+        if(!empty($_GET['SimakMastermahasiswa']))
         {
-            $params = $_POST['SimakMastermahasiswa'];
+            $params = $_GET['SimakMastermahasiswa'];
             $results = SimakMastermahasiswa::find()->where([
                 'kampus' => $params['kampus'],
                 'kode_prodi' => $params['kode_prodi'],
@@ -87,13 +87,13 @@ class AsramaController extends Controller
             ])->all();          
 
             
-            if(!empty($_POST['btn-submit']))
+            if(!empty($_GET['btn-submit']))
             {
                 foreach($results as $item)
                 {
-                    if(!empty($_POST['kamar_id_'.$item->nim_mhs]))
+                    if(!empty($_GET['kamar_id_'.$item->nim_mhs]))
                     {
-                        $item->kamar_id = $_POST['kamar_id_'.$item->nim_mhs];
+                        $item->kamar_id = $_GET['kamar_id_'.$item->nim_mhs];
                         $item->save(false,['kamar_id']);
 
                     }

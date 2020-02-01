@@ -6,7 +6,10 @@ use yii\helpers\Url;
 use kartik\depdrop\DepDrop;
 $this->title = 'Asrama';
 $this->params['breadcrumbs'][] = $this->title;
+$model->kampus = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kampus'] : '';
+$model->kode_fakultas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_fakultas'] : '';
 
+$model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_prodi'] : '';
 ?>
 
 <div class="row">
@@ -17,7 +20,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	            'tag' => false,
 	        ],
 	    ],
+	    'method' => 'GET',
     	'options' => [
+    		
+    		'action' => Url::to(['asrama/mahasiswa']),
     		'class' => 'form-horizontal'
     	]
     ]); ?>
@@ -99,38 +105,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		<td><?=$m->jenis_kelamin;?></td>
 		<td><?=$m->semester;?></td>
 		<td>
-			<div class="form-group">
-				<label class="col-sm-3 control-label no-padding-right">Asrama</label>
-				<div class="col-sm-9">
-			<?= Html::dropDownList('asrama','',ArrayHelper::map($listAsrama,'id','nama'),['id'=>'asrama_'.$m->nim_mhs,'class'=>'form-control','prompt'=>'- Pilih Asrama -']);?>
-		</div>
-		</div>
-		<div class="form-group">
-				<label class="col-sm-3 control-label no-padding-right">Kamar</label>
-				<div class="col-sm-4">
-			<?php 
-			echo DepDrop::widget([
-				'name' => 'kamar_id_'.$m->nim_mhs,
-                'options' => ['id'=>'kode_prodi_'.$m->nim_mhs],
-                // 'pluginEvents'=> [
-                //     "depdrop.afterChange"=>"function(event, id, value) { 
-                //         console.log('value: ' + value + ' id: ' + id); 
-                //     }"
-                // ],
-                'pluginOptions'=>[
-                    'depends'=>['asrama_'.$m->nim_mhs],
-                    
-                    'placeholder' => '...Pilih Kamar...',
-                    'url' => Url::to(['/kamar/kamar-list'])
-                ]   
-            ])
-			?>
-			</div>
-			<div class="col-sm-5">
+	
 				<span class="btn btn-info btn-sm">
 				<?=!empty($m->kamar) ? $m->kamar->namaAsrama.' - '.$m->kamar->nama : '';?>
 			</span>
-			</div>
 		</div>
 		</td>
 	</tr>

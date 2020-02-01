@@ -6,6 +6,7 @@ use Yii;
 use app\models\RiwayatPelanggaran;
 use app\models\RiwayatPelanggaranSearch;
 use app\models\SimakMastermahasiswa;
+use app\models\SimakMasterfakultas;
 
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -152,11 +153,60 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function actionRekapFakultas()
+    {
+        
+
+        $model = new RiwayatPelanggaran;
+        $results = [];
+        // $resultsProdi = [];
+        // $out = [];
+
+
+        
+        if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+        {
+            $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+            $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+            
+            $listFakultas = SimakMasterfakultas::find()->all();
+
+            // $results = [];
+            foreach($listFakultas as $f)
+            {
+                $count = 0;
+                foreach($f->simakMasterprogramstudis as $prodi)
+                {
+                    foreach($prodi->simakMastermahasiswas as $m)
+                    {
+                        $count += count($m->riwayatPelanggarans);
+                    }
+                }
+                $results[] = [
+                    'kode' => $f->kode_fakultas,
+                    'nama' => $f->nama_fakultas,
+                    'total' => $count
+
+                ];
+            }
+            
+        }
+
+        return $this->render('rekap_fakultas', [
+            'results' => $results,
+            // 'resultsProdi' => $resultsProdi,
+            'model' => $model,
+            // 'listProdi' => $out
+        ]);
+    }
+
     public function actionRekapPelanggaran(){
         $model = new RiwayatPelanggaran;
         $results = [];
         $resultsProdi = [];
         // $out = [];
+
+
         
         if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
         {
