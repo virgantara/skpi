@@ -169,26 +169,39 @@ class LaporanController extends Controller
             $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
             $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
             
-            $listFakultas = SimakMasterfakultas::find()->all();
+            $api_baseurl = Yii::$app->params['api_baseurl'];
+            try {
+                $client = new Client(['baseUrl' => $api_baseurl]);
+        
+                $response = $client->get('/simpel/rekap/fakultas', [
+                    'sd' => MyHelper::dmYtoYmd($sd),
+                    'ed' => MyHelper::dmYtoYmd($ed)
+                ],['x-access-token'=>Yii::$app->params['client_token']])->send();
 
-            // $results = [];
-            foreach($listFakultas as $f)
-            {
-                $count = 0;
-                foreach($f->simakMasterprogramstudis as $prodi)
-                {
-                    foreach($prodi->simakMastermahasiswas as $m)
-                    {
-                        $count += count($m->riwayatPelanggarans);
+                if ($response->isOk) {
+                    $result = $response->data['values'];
+                    // print_r($result);exit;
+                    foreach ($result as $d) {
+                        $results[] = [
+                            'nama' => $d['nama'],
+                            'total'=> $d['total'],
+                            // 'singkatan'=> $d['singkatan'],
+                           
+                        ];
                     }
-                }
-                $results[] = [
-                    'kode' => $f->kode_fakultas,
-                    'nama' => $f->nama_fakultas,
-                    'total' => $count
 
+
+                }
+
+
+             
+            } catch (\Exception $e) {
+                $results = [
+                    'kode' => 500,
+                    'nama' =>  'Data Tidak Ditemukan'
                 ];
             }
+
             
         }
 
