@@ -33,6 +33,62 @@ class AsramaController extends Controller
         ];
     }
 
+    public function actionUpload()
+    {
+        $penghunis = \app\models\AsramaRaw::find()->all();
+
+        foreach ($penghunis as $key => $value) {
+
+            
+
+            $m = SimakMastermahasiswa::find()->where(['nim_mhs'=>$value->nim])->one();
+            $notfound = 0;
+            $saved = 0;
+
+
+            if(!empty($m))
+            {        
+
+
+                if(!empty($value->kamar) && !empty($value->asrama_id))
+                {
+
+            
+
+                    $kamar = new \app\models\Kamar;
+                    $kamar->nama = $value->kamar;
+                    $kamar->asrama_id = $value->asrama_id;
+                    $kamar->kapasitas = 0;
+                    if($kamar->validate())
+                    {
+                        $kamar->save();
+                        $m->kamar_id = $kamar->id;
+                        $m->save(false,['kamar_id']);
+                        $saved++;
+                    }
+
+                    else
+                    {
+                        print_r($kamar->getErrors());exit;
+                        
+                    }
+                }
+                // if($value->status_aktivitas != 'A')
+                // {
+                    $m->status_aktivitas = $value->status_aktivitas;
+                    $m->save(false,['status_aktivitas']);
+                // }
+            }
+
+            else{
+                $notfound++;
+            }
+        }
+        echo 'NotFound: '.$notfound;
+        echo 'Saved: '.$saved;
+        die();
+    }
+
     private function getProdiList($id){
         $list = SimakMasterprogramstudi::find()->where(['kode_fakultas'=>$id])->all();
         $result = [];

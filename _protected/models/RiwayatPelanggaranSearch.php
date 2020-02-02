@@ -134,6 +134,8 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         $query->andFilterWhere(['like', 'f.nama_fakultas', $this->namaFakultas]);
         $query->andFilterWhere(['like', 'mhs.semester', $this->semester]);
 
+        
+
         return $dataProvider;
     }
 

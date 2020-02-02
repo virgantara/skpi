@@ -41,23 +41,24 @@ class MenuHelper
 	            ],
 	        ]];
 
-	         $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span>', 
-	         'url' => ['asrama/mahasiswa'],
-	        //  'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	        //  'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-	        // 'items'=>[
-	        //    	[
-	        //     	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Pelanggaran',  
-	        //         'url' => ['/riwayat-pelanggaran/index'],	        
-	        //         'visible' => Yii::$app->user->can('operatorCabang'),
+	         $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span><i class="caret"></i>', 
+	         'url' => '#',
+	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	        'items'=>[
+	           	
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Penghuni Asrama',  
+	                'url' => ['asrama/mahasiswa'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang'), 
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pindah Kamar',  
+	                'url' => ['/asrama/pindah'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang'),
 	               
-	        //     ],
-	        //     [
-	        //     	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Pelanggaran',  
-	        //         'url' => ['/riwayat-pelanggaran/cari-mahasiswa'],	        
-	        //         'visible' => Yii::$app->user->can('operatorCabang'), 
-	        //     ],
-	        // ]
+	            ],
+	        ]
 	    ];
 
 
