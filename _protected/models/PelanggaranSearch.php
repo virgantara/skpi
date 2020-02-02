@@ -42,6 +42,7 @@ class PelanggaranSearch extends Pelanggaran
     public function search($params)
     {
         $query = Pelanggaran::find();
+        $query->joinWith(['kategori as k']);
 
         // add conditions that should always apply here
 
@@ -49,14 +50,10 @@ class PelanggaranSearch extends Pelanggaran
             'query' => $query,
         ]);
 
-        // $dataProvider->sort->attributes['namaKategori'] = [
-        //     'asc' => ['k.nama'=>SORT_ASC],
-        //     'desc' => ['k.nama'=>SORT_DESC]
-        // ];
-
-        // $query->joinWith([
-        //     'kategori as k',
-        // ]);
+        $dataProvider->sort->attributes['namaKategori'] = [
+            'asc' => ['k.nama'=>SORT_ASC],
+            'desc' => ['k.nama'=>SORT_DESC]
+        ];
 
 
         $this->load($params);
@@ -75,8 +72,9 @@ class PelanggaranSearch extends Pelanggaran
             'updated_at' => $this->updated_at,
         ]);
 
-        // $query->andFilterWhere(['like', 'k.nama', $this->namaKategori]);
-        $query->andFilterWhere(['like', 'nama', $this->nama]);
+
+        $query->andFilterWhere(['like', 'erp_pelanggaran.nama', $this->nama]);
+        $query->andFilterWhere(['like', 'k.nama', $this->namaKategori]);
 
         return $dataProvider;
     }
