@@ -73,7 +73,7 @@ class MenuHelper
 	               
 	            ],
 	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran Persemester',  
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran Per Semester',  
 	                'url' => ['/laporan/rekap-pelanggaran'],	        
 	                
 	               
