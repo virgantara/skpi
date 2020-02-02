@@ -11,6 +11,7 @@ use app\models\Pelanggaran;
  */
 class PelanggaranSearch extends Pelanggaran
 {
+    public $namaKategori;
     /**
      * {@inheritdoc}
      */
@@ -18,7 +19,7 @@ class PelanggaranSearch extends Pelanggaran
     {
         return [
             [['id', 'kategori_id'], 'integer'],
-            [['nama', 'created_at', 'updated_at'], 'safe'],
+            [['nama', 'created_at', 'updated_at', 'namaKategori'], 'safe'],
         ];
     }
 
@@ -48,6 +49,16 @@ class PelanggaranSearch extends Pelanggaran
             'query' => $query,
         ]);
 
+        // $dataProvider->sort->attributes['namaKategori'] = [
+        //     'asc' => ['k.nama'=>SORT_ASC],
+        //     'desc' => ['k.nama'=>SORT_DESC]
+        // ];
+
+        // $query->joinWith([
+        //     'kategori as k',
+        // ]);
+
+
         $this->load($params);
 
         if (!$this->validate()) {
@@ -64,6 +75,7 @@ class PelanggaranSearch extends Pelanggaran
             'updated_at' => $this->updated_at,
         ]);
 
+        // $query->andFilterWhere(['like', 'k.nama', $this->namaKategori]);
         $query->andFilterWhere(['like', 'nama', $this->nama]);
 
         return $dataProvider;

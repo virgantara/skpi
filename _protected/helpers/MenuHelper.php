@@ -73,14 +73,20 @@ class MenuHelper
 	               
 	            ],
 	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran Persemester',  
-	                'url' => ['/laporan/rekap-pelanggaran'],	        
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran Per Semester',  
+	                'url' => ['/laporan/rekap-semester'],	        
 	                
 	               
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran Per Fakultas',  
 	                'url' => ['/laporan/rekap-fakultas'],	        
+	                
+	               
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran Per Prodi',  
+	                'url' => ['/laporan/rekap-prodi'],	        
 	                
 	               
 	            ],
