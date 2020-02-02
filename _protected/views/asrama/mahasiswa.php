@@ -86,6 +86,7 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 		<th>JK</th>
 		<th>Semester</th>
 		<th>Asrama</th>
+		<th>Kamar</th>
 	</tr>
 </thead>
 <tbody>
@@ -106,10 +107,17 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 		<td><?=$m->semester;?></td>
 		<td>
 	
-				<span class="btn btn-info btn-sm">
-				<?=!empty($m->kamar) ? $m->kamar->namaAsrama.' - '.$m->kamar->nama : '';?>
-			</span>
-		</div>
+		<strong>
+			<?=!empty($m->kamar) ? $m->kamar->namaAsrama: '';?>
+		</strong>
+		
+		</td>
+		<td>
+	
+		<strong>
+			<?=!empty($m->kamar) ? $m->kamar->nama : '';?>
+		</strong>
+		
 		</td>
 	</tr>
 	<?php 
@@ -118,20 +126,7 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 	?>
 </tbody>
 </table>
-<div class="row">
-	<div class="col-xs-12">
-		<div class="clearfix form-actions">
-        <div class="col-md-offset-3 col-md-9">
 
-          <button class="btn btn-info" type="submit" name="btn-submit" value="1">
-            <i class="ace-icon glyphicon glyphicon-save bigger-110"></i>
-            Simpan Data
-          </button>
-      
-		</div>
-	</div>
-	</div>
-</div>
 	 <?php ActiveForm::end(); ?>
 	</div>
 </div>
