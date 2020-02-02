@@ -74,10 +74,10 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
         <div class="form-group">
             <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> </label>
             <div class="col-sm-2">
- <?= Html::submitButton(' <i class="ace-icon fa fa-check bigger-110"></i>Cari', ['class' => 'btn btn-info','name'=>'search','value'=>1,'id'=>'btn-search']) ?>&nbsp;
+ <?= Html::submitButton(' <i class="ace-icon fa fa-check bigger-110"></i>Cari', ['class' => 'btn btn-info','name'=>'btn-search','value'=>1,'id'=>'btn-search']) ?>&nbsp;
  <?php
 
- echo Html::submitButton(' <i class="ace-icon fa fa-download bigger-110"></i>Export', ['class' => 'btn btn-success','name'=>'search','value'=>1,'id'=>'btn-export'])
+ echo Html::submitButton(' <i class="ace-icon fa fa-download bigger-110"></i>Export', ['class' => 'btn btn-success','name'=>'btn-export','value'=>1,'id'=>'btn-export'])
   ?>    
 <!-- <span id="loading" style="display: none">Loading...</span> -->
             </div>
@@ -87,13 +87,13 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
 
 <div class="row">
     <div class="col-sm-12">
-        <h3>Rekap Per Prodi</h3>
+        <h3>Rekap Per Fakultas</h3>
         <table class="table table-striped table-bordered table-hover" id="tabel_ekd">
             
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Prodi</th>
+                    <th>Fakultas</th>
                     <th>Total</th>    
                 </tr>
             </thead>
