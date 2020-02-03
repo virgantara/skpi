@@ -34,6 +34,29 @@ class ApiController extends Controller
         ];
     }
 
+    public function actionAjaxGetKapasitasAsrama() {
+
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token'=>$client_token];
+        $response = $client->get('/simpel/asrama/kapasitas', [],$headers)->send();
+        
+        $results = [];
+        
+        if ($response->isOk) {
+            $results = $response->data['values'];
+            // print_r($result);exit;
+            
+        }
+        
+
+        echo \yii\helpers\Json::encode($results);
+
+      
+    }
+
+
     public function actionAjaxGetJumlahPelanggaranByKategori() {
 
         // $tahun = 2019;
