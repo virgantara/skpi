@@ -73,7 +73,7 @@ class KamarSearch extends Kamar
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'erp_kamar.nama', $this->nama]);
+        $query->andFilterWhere(['like', self::tableName().'.nama', $this->nama]);
         $query->andFilterWhere(['like', 'a.nama', $this->namaAsrama]);
 
         return $dataProvider;
@@ -83,7 +83,7 @@ class KamarSearch extends Kamar
     {
         $query = Kamar::find();
         $query->joinWith(['asrama as a']);
-        $query->andFilterWhere(['like', 'nama', $nama]);
+        $query->andFilterWhere(['like', self::tableName().'.nama', $nama]);
         $query->andFilterWhere(['like', 'a.nama', $nama]);
 
         return $query->all();
