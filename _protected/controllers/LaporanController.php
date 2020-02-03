@@ -142,8 +142,6 @@ class LaporanController extends Controller
             exit();           
 
         }
-
-
         
 
         return $this->render('rincian_pelanggaran', [
@@ -306,46 +304,136 @@ class LaporanController extends Controller
         // $out = [];
 
 
-        
-        if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+        if(!empty($_POST['btn-search']))
         {
-            $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
-            $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+                $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+                
+                $api_baseurl = Yii::$app->params['api_baseurl'];
+                try {
+                    $client = new Client(['baseUrl' => $api_baseurl]);
             
-            $api_baseurl = Yii::$app->params['api_baseurl'];
-            try {
-                $client = new Client(['baseUrl' => $api_baseurl]);
-        
-                $response = $client->get('/simpel/rekap/fakultas', [
-                    'sd' => MyHelper::dmYtoYmd($sd),
-                    'ed' => MyHelper::dmYtoYmd($ed)
-                ],['x-access-token'=>Yii::$app->params['client_token']])->send();
-
-                if ($response->isOk) {
-                    $result = $response->data['values'];
-                    // print_r($result);exit;
-                    foreach ($result as $d) {
-                        $results[] = [
-                            'nama' => $d['nama'],
-                            'total'=> $d['total'],
-                            // 'singkatan'=> $d['singkatan'],
-                           
-                        ];
+                    $response = $client->get('/simpel/rekap/fakultas', [
+                        'sd' => MyHelper::dmYtoYmd($sd),
+                        'ed' => MyHelper::dmYtoYmd($ed)
+                    ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+    
+                    if ($response->isOk) {
+                        $result = $response->data['values'];
+                        // print_r($result);exit;
+                        foreach ($result as $d) {
+                            $results[] = [
+                                'nama' => $d['nama'],
+                                'total'=> $d['total'],
+                                // 'singkatan'=> $d['singkatan'],
+                               
+                            ];
+                        }
+    
+    
                     }
-
-
+                 
+                } catch (\Exception $e) {
+                    $results = [
+                        'kode' => 500,
+                        'nama' =>  'Data Tidak Ditemukan'
+                    ];
                 }
+                
+            }
+        }
 
+        else if(!empty($_POST['btn-export']))
+        {
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+                $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+                
+                $api_baseurl = Yii::$app->params['api_baseurl'];
+                try {
+                    $client = new Client(['baseUrl' => $api_baseurl]);
+            
+                    $response = $client->get('/simpel/rekap/fakultas', [
+                        'sd' => MyHelper::dmYtoYmd($sd),
+                        'ed' => MyHelper::dmYtoYmd($ed)
+                    ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+    
+                    if ($response->isOk) {
+                        $result = $response->data['values'];
+                        // print_r($result);exit;
+                        foreach ($result as $d) {
+                            $results[] = [
+                                'nama' => $d['nama'],
+                                'total'=> $d['total'],
+                                // 'singkatan'=> $d['singkatan'],
+                               
+                            ];
+                        }
+    
+    
+                    }
+                 
+                } catch (\Exception $e) {
+                    $results = [
+                        'kode' => 500,
+                        'nama' =>  'Data Tidak Ditemukan'
+                    ];
+                }
+                
+            }
+            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+            $objPHPExcel = new \PHPExcel();
 
-             
-            } catch (\Exception $e) {
-                $results = [
-                    'kode' => 500,
-                    'nama' =>  'Data Tidak Ditemukan'
-                ];
+            //prepare the records to be added on the excel file in an array
+           
+            // Set document properties
+            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
+
+            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Add column headers
+            $objPHPExcel->getActiveSheet()
+                        ->setCellValue('A1', 'No')
+                        ->setCellValue('B1', 'Fakultas')
+                        ->setCellValue('C1', 'Total');
+
+            //Put each record in a new cell
+
+            $i= 1;
+            $ii = 2;
+            
+            foreach($results as $row)
+            {
+
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['nama']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $i++;
+                $ii++;
+                
+
+                
+            }       
+
+            foreach(range('A','C') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                    ->setAutoSize(true);
             }
 
+            // Set worksheet title
+            $objPHPExcel->getActiveSheet()->setTitle('Rekap Pelanggaran Per Fakultas');
             
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Rekap_Pelanggaran_PerFakultas.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+            $objWriter->save('php://output');
+            exit();           
+
         }
 
         return $this->render('rekap_fakultas', [
