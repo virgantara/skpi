@@ -52,13 +52,19 @@ class AsramaController extends Controller
 
                 if(!empty($value->kamar) && !empty($value->asrama_id))
                 {
+                    $kamar = \app\models\Kamar::find()->where([
+                        'nama' => $value->kamar,
+                        'asrama_id' => $value->asrama_id
+                    ])->one();
+                    
+                    if(empty($kamar)){
+                        $kamar = new \app\models\Kamar;
+                        $kamar->kapasitas = 0;
+                    }
 
-            
-
-                    $kamar = new \app\models\Kamar;
                     $kamar->nama = $value->kamar;
                     $kamar->asrama_id = $value->asrama_id;
-                    $kamar->kapasitas = 0;
+                    
                     if($kamar->validate())
                     {
                         $kamar->save();
