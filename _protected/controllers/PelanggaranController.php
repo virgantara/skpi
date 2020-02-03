@@ -29,6 +29,29 @@ class PelanggaranController extends Controller
         ];
     }
 
+    public function actionGetPelanggaran()
+    {
+        $result = [];
+        // if(Yii::app()->request->isAjaxRequest)
+        // {
+        $q = $_GET['term'];
+        $model = PelanggaranSearch::searchByNama($q);
+
+        
+        foreach($model as $m)
+        {
+            $result[] = array(
+                'id' => $m->id,
+                'value' => $m->nama.' - '.$m->asrama->nama,
+
+            );
+        }
+        // }
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON; 
+        \Yii::$app->response->data  =  $result;
+        // echo CJSON::encode($result);
+    }
+
     /**
      * Lists all Pelanggaran models.
      * @return mixed

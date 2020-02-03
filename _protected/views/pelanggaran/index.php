@@ -28,7 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
-            'kategori.nama',
+            // 'kategori.nama',
+            'namaKategori',
             'nama',
             'created_at',
             'updated_at',

@@ -151,6 +151,149 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function actionRekapSemester()
+    {
+        $model = new RiwayatPelanggaran;
+        $results = [];
+        // $resultsProdi = [];
+        // $out = [];
+
+
+        if (!empty($_POST['search'])) {
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+                $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+                
+                // $list = Pasien::find()->addFilterWhere(['like',])
+                // $out = [];
+                $api_baseurl = Yii::$app->params['api_baseurl'];
+                try {
+                    $client = new Client(['baseUrl' => $api_baseurl]);
+                    $response = $client->get('/simpel/rekap/semester', [
+                        'sd' => MyHelper::dmYtoYmd($sd),
+                        'ed' => MyHelper::dmYtoYmd($ed)
+                    ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+                    if ($response->isOk) {
+                        $result = $response->data['values'];
+                        // print_r($result);exit;
+                        foreach ($result as $d) {
+                            $results[] = [
+                                'smt' => $d['semester'],
+                                'total'=> $d['total'],
+                                // 'singkatan'=> $d['singkatan'],
+                               
+                            ];
+                        }
+
+
+                    }
+
+                } catch (\Exception $e) {
+                    $results = [
+                        'kode' => 500,
+                        'nama' =>  'Data Tidak Ditemukan'
+                    ];
+                }          
+
+            }
+        }
+        
+        
+
+        else if (!empty($_POST['export'])) {
+
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+                $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+                
+                // $list = Pasien::find()->addFilterWhere(['like',])
+                // $out = [];
+                $api_baseurl = Yii::$app->params['api_baseurl'];
+                try {
+                    $client = new Client(['baseUrl' => $api_baseurl]);
+                    $response = $client->get('/simpel/rekap/semester', [
+                        'sd' => MyHelper::dmYtoYmd($sd),
+                        'ed' => MyHelper::dmYtoYmd($ed)
+                    ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+                    if ($response->isOk) {
+                        $result = $response->data['values'];
+                        // print_r($result);exit;
+                        foreach ($result as $d) {
+                            $results[] = [
+                                'smt' => $d['semester'],
+                                'total'=> $d['total'],
+                                // 'singkatan'=> $d['singkatan'],
+                               
+                            ];
+                        }
+
+
+                    }
+
+                } catch (\Exception $e) {
+                    $results = [
+                        'kode' => 500,
+                        'nama' =>  'Data Tidak Ditemukan'
+                    ];
+                }          
+
+            }
+            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+            $objPHPExcel = new \PHPExcel();
+
+            //prepare the records to be added on the excel file in an array
+           
+            // Set document properties
+            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
+
+            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Add column headers
+            $objPHPExcel->getActiveSheet()
+                        ->setCellValue('A1', 'No')
+                        ->setCellValue('B1', 'Semester')
+                        ->setCellValue('C1', 'Total');
+
+            //Put each record in a new cell
+
+            $i= 1;
+            $ii = 2;
+            
+            foreach($results as $row)
+            {
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['smt']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $i++;
+                $ii++;              
+            }       
+
+            foreach(range('A','C') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                    ->setAutoSize(true);
+            }
+
+            // Set worksheet title
+            $objPHPExcel->getActiveSheet()->setTitle('Pelanggaran Per Semester');
+            
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Rincian_Pelanggaran_Per_Semester.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+            $objWriter->save('php://output');
+            exit();
+        }
+
+        return $this->render('rekap_semester', [
+            'results' => $results,
+            // 'resultsProdi' => $resultsProdi,
+            'model' => $model,
+            // 'listProdi' => $out
+        ]);
+    }
     public function actionRekapFakultas()
     {
         
@@ -301,80 +444,224 @@ class LaporanController extends Controller
         ]);
     }
 
-    public function actionRekapPelanggaran(){
+    public function actionRekapProdi(){
         $model = new RiwayatPelanggaran;
         $results = [];
-        $resultsProdi = [];
+        // $resultsProdi = [];
         // $out = [];
 
+        if (!empty($_POST['search'])) {
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+                $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+                
+                // $list = Pasien::find()->addFilterWhere(['like',])
+                // $out = [];
+                $api_baseurl = Yii::$app->params['api_baseurl'];
+                try {
+                    $client = new Client(['baseUrl' => $api_baseurl]);
 
-        
-        if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
-        {
-            $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
-            $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
-            
-            // $list = Pasien::find()->addFilterWhere(['like',])
-            // $out = [];
-            $api_baseurl = Yii::$app->params['api_baseurl'];
-            try {
-                $client = new Client(['baseUrl' => $api_baseurl]);
-                $response = $client->get('/simpel/rekap/semester', [
-                    'sd' => MyHelper::dmYtoYmd($sd),
-                    'ed' => MyHelper::dmYtoYmd($ed)
-                ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+                    $response = $client->get('/simpel/rekap/prodi', [
+                        'sd' => MyHelper::dmYtoYmd($sd),
+                        'ed' => MyHelper::dmYtoYmd($ed)
+                    ],['x-access-token'=>Yii::$app->params['client_token']])->send();
 
-                $responseProdi = $client->get('/simpel/rekap/prodi', [
-                    'sd' => MyHelper::dmYtoYmd($sd),
-                    'ed' => MyHelper::dmYtoYmd($ed)
-                ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+                    if ($response->isOk) {
+                        $result = $response->data['values'];
+                        // print_r($result);exit;
+                        foreach ($result as $d) {
+                            $results[] = [
+                                'prodi' => $d['singkatan'],
+                                'total'=> $d['total'],
+                                // 'singkatan'=> $d['singkatan'],
+                               
+                            ];
+                        }
 
-                if ($response->isOk) {
-                    $result = $response->data['values'];
-                    // print_r($result);exit;
-                    foreach ($result as $d) {
-                        $results[] = [
-                            'smt' => $d['semester'],
-                            'total'=> $d['total'],
-                            // 'singkatan'=> $d['singkatan'],
-                           
-                        ];
+
                     }
-
-
+                } catch (\Exception $e) {
+                    $results = [
+                        'kode' => 500,
+                        'nama' =>  'Data Tidak Ditemukan'
+                    ];
                 }
 
-                if ($responseProdi->isOk) {
-                    $result = $responseProdi->data['values'];
-                    // print_r($result);exit;
-                    foreach ($result as $d) {
-                        $resultsProdi[] = [
-                            'prodi' => $d['singkatan'],
-                            'total'=> $d['total'],
-                            // 'singkatan'=> $d['singkatan'],
-                           
-                        ];
-                    }
-
-
-                }
-            } catch (\Exception $e) {
-                $results = [
-                    'kode' => 500,
-                    'nama' =>  'Data Tidak Ditemukan'
-                ];
+                
             }
 
+        }
+        else if (!empty($_POST['export'])) {
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+                $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+                
+                // $list = Pasien::find()->addFilterWhere(['like',])
+                // $out = [];
+                $api_baseurl = Yii::$app->params['api_baseurl'];
+                try {
+                    $client = new Client(['baseUrl' => $api_baseurl]);
+
+                    $response = $client->get('/simpel/rekap/prodi', [
+                        'sd' => MyHelper::dmYtoYmd($sd),
+                        'ed' => MyHelper::dmYtoYmd($ed)
+                    ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+
+                    if ($response->isOk) {
+                        $result = $response->data['values'];
+                        // print_r($result);exit;
+                        foreach ($result as $d) {
+                            $results[] = [
+                                'prodi' => $d['singkatan'],
+                                'total'=> $d['total'],
+                                // 'singkatan'=> $d['singkatan'],
+                               
+                            ];
+                        }
+
+
+                    }
+                } catch (\Exception $e) {
+                    $results = [
+                        'kode' => 500,
+                        'nama' =>  'Data Tidak Ditemukan'
+                    ];
+                }
+
+            }
+
+            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+            $objPHPExcel = new \PHPExcel();
+
+            //prepare the records to be added on the excel file in an array
+           
+            // Set document properties
+            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
+
+            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Add column headers
+            $objPHPExcel->getActiveSheet()
+                        ->setCellValue('A1', 'No')
+                        ->setCellValue('B1', 'Nama Prodi')
+                        ->setCellValue('C1', 'Total');
+
+            //Put each record in a new cell
+
+            $i= 1;
+            $ii = 2;
             
+            foreach($results as $row)
+            {
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['prodi']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $i++;
+                $ii++;              
+            }       
+
+            foreach(range('A','C') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                    ->setAutoSize(true);
+            }
+
+            // Set worksheet title
+            $objPHPExcel->getActiveSheet()->setTitle('Pelanggaran Per Prodi');
+            
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Rincian_Pelanggaran_Per_Prodi.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+            $objWriter->save('php://output');
+            exit();
+        
         }
 
-        return $this->render('rekap_pelanggaran', [
+        return $this->render('rekap_prodi', [
             'results' => $results,
-            'resultsProdi' => $resultsProdi,
+            // 'resultsProdi' => $resultsProdi,
             'model' => $model,
             // 'listProdi' => $out
         ]);
     }
+
+    // public function actionRekapPelanggaran(){
+    //     $model = new RiwayatPelanggaran;
+    //     $results = [];
+    //     $resultsProdi = [];
+    //     // $out = [];
+
+
+        
+    //     if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+    //     {
+    //         $sd = $_POST['RiwayatPelanggaran']['tanggal_awal'];
+    //         $ed = $_POST['RiwayatPelanggaran']['tanggal_akhir'];
+            
+    //         // $list = Pasien::find()->addFilterWhere(['like',])
+    //         // $out = [];
+    //         $api_baseurl = Yii::$app->params['api_baseurl'];
+    //         try {
+    //             $client = new Client(['baseUrl' => $api_baseurl]);
+    //             $response = $client->get('/simpel/rekap/semester', [
+    //                 'sd' => MyHelper::dmYtoYmd($sd),
+    //                 'ed' => MyHelper::dmYtoYmd($ed)
+    //             ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+
+    //             $responseProdi = $client->get('/simpel/rekap/prodi', [
+    //                 'sd' => MyHelper::dmYtoYmd($sd),
+    //                 'ed' => MyHelper::dmYtoYmd($ed)
+    //             ],['x-access-token'=>Yii::$app->params['client_token']])->send();
+
+    //             if ($response->isOk) {
+    //                 $result = $response->data['values'];
+    //                 // print_r($result);exit;
+    //                 foreach ($result as $d) {
+    //                     $results[] = [
+    //                         'smt' => $d['semester'],
+    //                         'total'=> $d['total'],
+    //                         // 'singkatan'=> $d['singkatan'],
+                           
+    //                     ];
+    //                 }
+
+
+    //             }
+
+    //             if ($responseProdi->isOk) {
+    //                 $result = $responseProdi->data['values'];
+    //                 // print_r($result);exit;
+    //                 foreach ($result as $d) {
+    //                     $resultsProdi[] = [
+    //                         'prodi' => $d['singkatan'],
+    //                         'total'=> $d['total'],
+    //                         // 'singkatan'=> $d['singkatan'],
+                           
+    //                     ];
+    //                 }
+
+
+    //             }
+    //         } catch (\Exception $e) {
+    //             $results = [
+    //                 'kode' => 500,
+    //                 'nama' =>  'Data Tidak Ditemukan'
+    //             ];
+    //         }
+
+            
+    //     }
+
+    //     return $this->render('rekap_pelanggaran', [
+    //         'results' => $results,
+    //         'resultsProdi' => $resultsProdi,
+    //         'model' => $model,
+    //         // 'listProdi' => $out
+    //     ]);
+    // }
     
 
     /**

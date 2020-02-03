@@ -47,7 +47,7 @@ class Pelanggaran extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'kategori_id' => 'Kategori ID',
-            'nama' => 'Nama',
+            'nama' => 'Nama Pelanggaran',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -60,4 +60,13 @@ class Pelanggaran extends \yii\db\ActiveRecord
     {
         return $this->hasOne(KategoriPelanggaran::className(), ['id' => 'kategori_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNamaKategori()
+    {
+        return $this->kategori->nama;
+    }
+
 }
