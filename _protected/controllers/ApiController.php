@@ -34,6 +34,62 @@ class ApiController extends Controller
         ];
     }
 
+    public function actionAjaxGetJumlahPelanggaranByKategori() {
+
+        // $tahun = 2019;
+        
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token'=>$client_token];
+        $tahun = !empty($_POST['tahun']) ? $_POST['tahun'] : date('Y');
+        $results = [];
+        for ($m=1; $m<=12; $m++) {
+            $month = date('m', mktime(0,0,0,$m, 1, $tahun));
+            $label = date('F', mktime(0,0,0,$m, 1, $tahun));
+            
+            $sd = date('Y-m-d',strtotime($tahun.'-'.$m.'-01'));
+            $ed = date('Y-m-t',strtotime($sd));
+
+            $response = $client->get('/simpel/rekap/pelanggaran/tahunan', [
+                'sd' => $sd,
+                'ed' => $ed
+            ],$headers)->send();
+
+            
+            if ($response->isOk) {
+                $ringan = $response->data['values'][0];
+                
+                $sedang = $response->data['values'][1];
+                $berat = $response->data['values'][2];
+                $results['ringan'][] = [
+                    'bulan' => $label,
+                    'jumlah' => round(!empty($ringan) ? $ringan['total'] : 0,2)
+                ];   
+
+                $results['sedang'][] = [
+                    'bulan' => $label,
+                    'jumlah' => round(!empty($sedang) ? $sedang['total'] : 0,2)
+                ];   
+
+                $results['berat'][] = [
+                    'bulan' => $label,
+                    'jumlah' => round(!empty($berat) ? $berat['total'] : 0,2)
+                ];   
+            }
+
+
+            
+        }
+        // exit;
+        
+
+        echo \yii\helpers\Json::encode($results);
+
+      
+    }
+
+
     public function actionAjaxCariMahasiswa() {
 
         $q = $_GET['term'];

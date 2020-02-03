@@ -1,0 +1,22 @@
+{
+  "name": "simpel",
+  "version": "1.0.0",
+  "description": "Ini adalah project mini dari ERP.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/virgantara/unida-simpel.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/virgantara/unida-simpel/issues"
+  },
+  "homepage": "https://gitlab.com/virgantara/unida-simpel#readme",
+  "dependencies": {
+    "highcharts": "^8.0.0"
+  }
+}
