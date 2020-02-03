@@ -33,7 +33,7 @@ class AsramaController extends Controller
         ];
     }
 
-    public function actionUpload()
+    public function actionSync()
     {
         $penghunis = \app\models\AsramaRaw::find()->all();
 
@@ -75,8 +75,8 @@ class AsramaController extends Controller
                 }
                 // if($value->status_aktivitas != 'A')
                 // {
-                    $m->status_aktivitas = $value->status_aktivitas;
-                    $m->save(false,['status_aktivitas']);
+                    // $m->status_aktivitas = $value->status_aktivitas;
+                    // $m->save(false,['status_aktivitas']);
                 // }
             }
 
