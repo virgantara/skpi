@@ -22,9 +22,10 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 	        ],
 	    ],
 	    'method' => 'GET',
+	    'action' => Url::to(['asrama/mahasiswa']),
     	'options' => [
     		
-    		'action' => Url::to(['asrama/mahasiswa']),
+    		
     		'class' => 'form-horizontal'
     	]
     ]); ?>
@@ -71,11 +72,11 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 	<div class="clearfix form-actions">
         <div class="col-md-offset-3 col-md-9">
 
-          <button class="btn btn-info" type="submit" name="btn-search">
+          <button class="btn btn-info" value="1" type="submit" name="btn-search">
             <i class="ace-icon glyphicon glyphicon-search bigger-110"></i>
             Tampilkan Mahasiswa
           </button>
-          <button class="btn btn-success" type="submit" name="btn-export">
+          <button class="btn btn-success" value="1" type="submit" name="btn-export">
             <i class="ace-icon glyphicon glyphicon-download-alt bigger-110"></i>
             Export XLS
           </button>

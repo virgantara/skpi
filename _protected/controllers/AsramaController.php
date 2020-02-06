@@ -139,7 +139,7 @@ class AsramaController extends Controller
         $results = [];
         $params = [];
 
-        if (isset($_GET['btn-search'])) {
+        if (!empty($_GET['btn-search'])) {
             if(!empty($_GET['SimakMastermahasiswa']))
             {
                 $params = $_GET['SimakMastermahasiswa'];
@@ -151,22 +151,10 @@ class AsramaController extends Controller
                 ])->all();          
 
 
-                // if(!empty($_GET['btn-submit']))
-                // {
-                //     foreach($results as $item)
-                //     {
-                //         if(!empty($_GET['kamar_id_'.$item->nim_mhs]))
-                //         {
-                //             $item->kamar_id = $_GET['kamar_id_'.$item->nim_mhs];
-                //             $item->save(false,['kamar_id']);
-
-                //         }
-                //     }
-                // }
             }
         }
 
-        if (isset($_GET['btn-export'])) {
+        else if (!empty($_GET['btn-export'])) {
             if(!empty($_GET['SimakMastermahasiswa']))
             {
                 $params = $_GET['SimakMastermahasiswa'];
@@ -219,7 +207,8 @@ class AsramaController extends Controller
                 header('Content-Disposition: attachment;filename="Rincian_Penghuni_Kamar.xlsx"');              
                 header('Cache-Control: max-age=0');
                 $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-                $objWriter->save('php://output');      
+                $objWriter->save('php://output');   
+                die();   
             }
 
         }
