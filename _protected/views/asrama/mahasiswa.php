@@ -4,6 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use kartik\depdrop\DepDrop;
+
 $this->title = 'Asrama';
 $this->params['breadcrumbs'][] = $this->title;
 $model->kampus = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kampus'] : '';
@@ -21,9 +22,10 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 	        ],
 	    ],
 	    'method' => 'GET',
+	    'action' => Url::to(['asrama/mahasiswa']),
     	'options' => [
     		
-    		'action' => Url::to(['asrama/mahasiswa']),
+    		
     		'class' => 'form-horizontal'
     	]
     ]); ?>
@@ -70,9 +72,13 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 	<div class="clearfix form-actions">
         <div class="col-md-offset-3 col-md-9">
 
-          <button class="btn btn-info" type="submit" name="btn-cari">
+          <button class="btn btn-info" value="1" type="submit" name="btn-search">
             <i class="ace-icon glyphicon glyphicon-search bigger-110"></i>
             Tampilkan Mahasiswa
+          </button>
+          <button class="btn btn-success" value="1" type="submit" name="btn-export">
+            <i class="ace-icon glyphicon glyphicon-download-alt bigger-110"></i>
+            Export XLS
           </button>
       
 		</div>
@@ -139,7 +145,7 @@ $this->registerJs('
 	setTimeout(function(){
 		$("#kode_prodi").val('.$params['kode_prodi'].');
 	},500)
-
+	
     ', \yii\web\View::POS_READY);
 
 ?>
