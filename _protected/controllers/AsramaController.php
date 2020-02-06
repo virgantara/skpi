@@ -39,7 +39,7 @@ class AsramaController extends Controller
 
         foreach ($penghunis as $key => $value) {
 
-            
+
 
             $m = SimakMastermahasiswa::find()->where(['nim_mhs'=>$value->nim])->one();
             $notfound = 0;
@@ -138,29 +138,90 @@ class AsramaController extends Controller
         $listAsrama = Asrama::find()->all();
         $results = [];
         $params = [];
-        if(!empty($_GET['SimakMastermahasiswa']))
-        {
-            $params = $_GET['SimakMastermahasiswa'];
-            $results = SimakMastermahasiswa::find()->where([
-                'kampus' => $params['kampus'],
-                'kode_prodi' => $params['kode_prodi'],
-                'kode_fakultas' => $params['kode_fakultas'],
-                'status_aktivitas' => 'A'
-            ])->all();          
 
-            
-            if(!empty($_GET['btn-submit']))
+        if (isset($_GET['btn-search'])) {
+            if(!empty($_GET['SimakMastermahasiswa']))
             {
-                foreach($results as $item)
-                {
-                    if(!empty($_GET['kamar_id_'.$item->nim_mhs]))
-                    {
-                        $item->kamar_id = $_GET['kamar_id_'.$item->nim_mhs];
-                        $item->save(false,['kamar_id']);
+                $params = $_GET['SimakMastermahasiswa'];
+                $results = SimakMastermahasiswa::find()->where([
+                    'kampus' => $params['kampus'],
+                    'kode_prodi' => $params['kode_prodi'],
+                    'kode_fakultas' => $params['kode_fakultas'],
+                    'status_aktivitas' => 'A'
+                ])->all();          
 
-                    }
-                }
+
+                // if(!empty($_GET['btn-submit']))
+                // {
+                //     foreach($results as $item)
+                //     {
+                //         if(!empty($_GET['kamar_id_'.$item->nim_mhs]))
+                //         {
+                //             $item->kamar_id = $_GET['kamar_id_'.$item->nim_mhs];
+                //             $item->save(false,['kamar_id']);
+
+                //         }
+                //     }
+                // }
             }
+        }
+
+        if (isset($_GET['btn-export'])) {
+            if(!empty($_GET['SimakMastermahasiswa']))
+            {
+                $params = $_GET['SimakMastermahasiswa'];
+                $results = SimakMastermahasiswa::find()->where([
+                    'kampus' => $params['kampus'],
+                    'kode_prodi' => $params['kode_prodi'],
+                    'kode_fakultas' => $params['kode_fakultas'],
+                    'status_aktivitas' => 'A'
+                ])->all();          
+
+                $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+                $objPHPExcel = new \PHPExcel();
+
+                $objPHPExcel->setActiveSheetIndex(0);
+
+                $objPHPExcel->getActiveSheet()
+                            ->setCellValue('A1', 'No')
+                            ->setCellValue('B1', 'NIM')
+                            ->setCellValue('C1', 'Nama Mahasiswa')
+                            ->setCellValue('D1', 'JK')
+                            ->setCellValue('E1', 'Semester')
+                            ->setCellValue('F1', 'Asrama')
+                            ->setCellValue('G1', 'Kamar');
+
+                $i= 1;
+                $ii = 2;
+
+                foreach($results as $row)
+                {
+                    $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
+                    $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row->nim_mhs);
+                    $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row->nama_mahasiswa);
+                    $objPHPExcel->getActiveSheet()->setCellValue('D'.$ii, $row->jenis_kelamin);
+                    $objPHPExcel->getActiveSheet()->setCellValue('E'.$ii, $row->semester);
+                    $objPHPExcel->getActiveSheet()->setCellValue('F'.$ii, $row->kamar->namaAsrama);
+                    $objPHPExcel->getActiveSheet()->setCellValue('G'.$ii, $row->kamar->nama);
+
+                    $i++;
+                    $ii++;
+                }       
+
+                foreach(range('A','G') as $columnID) {
+                    $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                    ->setAutoSize(true);
+                }
+
+                $objPHPExcel->getActiveSheet()->setTitle('Rincian Penghuni Kamar');
+
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="Rincian_Penghuni_Kamar.xlsx"');              
+                header('Cache-Control: max-age=0');
+                $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+                $objWriter->save('php://output');      
+            }
+
         }
 
 
