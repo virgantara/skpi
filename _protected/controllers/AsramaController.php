@@ -8,6 +8,7 @@ use app\models\AsramaSearch;
 
 use app\models\SimakMastermahasiswa;
 use app\models\SimakMasterprogramstudi;
+use app\models\RiwayatKamar;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -131,6 +132,67 @@ class AsramaController extends Controller
         return ['output'=>'', 'selected'=>''];
     }
 
+    // public function wow($nim_ku, $kamar_id)
+    // {
+
+    // }
+
+    public function actionPindah()
+    {
+        $model = new SimakMastermahasiswa;
+        // $skuy = new SimakMastermahasiswa;
+        $model->setScenario('asrama');
+        $listAsrama = Asrama::find()->all();
+        $results = [];
+        $params = [];
+        
+        if (!empty($_GET['btn-search'])) {
+            if(!empty($_GET['SimakMastermahasiswa']))
+            {
+                $params = $_GET['SimakMastermahasiswa'];
+                $results = SimakMastermahasiswa::find()->where([
+                    'kampus' => $params['kampus'],
+                    'kode_prodi' => $params['kode_prodi'],
+                    'kode_fakultas' => $params['kode_fakultas'],
+                    'status_aktivitas' => 'A'
+                ])->all();          
+            }
+        }
+        if (!empty($_GET['btn-submit'])) 
+        {   
+
+            $skuy = 'kamar_id_'.$_GET['btn-submit'];  
+            if (!empty($_GET[$skuy])) {
+                $wow = SimakMastermahasiswa::find()->where([ 'nim_mhs' => $_GET['btn-submit'] ])->all();
+                foreach ($wow as $value) {
+                    $value->kamar_id = $_GET[$skuy];
+                    $value->save();
+                }
+
+                $wow2 = new RiwayatKamar;
+                $wow2->nim_mhs = $_GET['btn-submit'];
+                $wow2->kamar_id = $_GET[$skuy];
+                $wow2->save();
+            }
+            else{
+                echo ("<script language='javascript'>
+                    window.alert('Masukan Asrama, Kamar dan Klik simpan ditempat yang sama');
+                    window.location = 'pindah';
+                    </script>");
+
+            }
+        }
+        
+        return $this->render('pindah',[
+            'model' => $model,
+            'results' => $results,
+            'params' => $params,
+            // 'skuy' => $skuy,
+            'listAsrama' => $listAsrama
+        ]);
+        
+    }
+
     public function actionMahasiswa()
     {
         $model = new SimakMastermahasiswa;
@@ -171,13 +233,13 @@ class AsramaController extends Controller
                 $objPHPExcel->setActiveSheetIndex(0);
 
                 $objPHPExcel->getActiveSheet()
-                            ->setCellValue('A1', 'No')
-                            ->setCellValue('B1', 'NIM')
-                            ->setCellValue('C1', 'Nama Mahasiswa')
-                            ->setCellValue('D1', 'JK')
-                            ->setCellValue('E1', 'Semester')
-                            ->setCellValue('F1', 'Asrama')
-                            ->setCellValue('G1', 'Kamar');
+                ->setCellValue('A1', 'No')
+                ->setCellValue('B1', 'NIM')
+                ->setCellValue('C1', 'Nama Mahasiswa')
+                ->setCellValue('D1', 'JK')
+                ->setCellValue('E1', 'Semester')
+                ->setCellValue('F1', 'Asrama')
+                ->setCellValue('G1', 'Kamar');
 
                 $i= 1;
                 $ii = 2;
