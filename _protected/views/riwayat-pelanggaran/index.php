@@ -39,17 +39,34 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
     'nim',
     'namaMahasiswa',
-    'namaFakultas',
-    'namaProdi',
+   [
+        'attribute' => 'namaFakultas',
+        'label' => 'Fakultas',
+        'format' => 'raw',
+        'filter'=>$fakultas,
+        'value'=>function($model,$url){
+            return $model->namaFakultas;
+            
+        },
+    ],
+   [
+        'attribute' => 'namaProdi',
+        'label' => 'Prodi',
+        'format' => 'raw',
+        'filter'=>$prodis,
+        'value'=>function($model,$url){
+            return $model->namaProdi;
+            
+        },
+    ],
     'semester',
     [
         'attribute' => 'namaAsrama',
-        'label' => 'Kategori',
+        'label' => 'Asrama',
         'format' => 'raw',
         'filter'=>$asramas,
         'value'=>function($model,$url){
-            $label = $model->namaAsrama;
-            return '<span class="label label-info " >'.$label.'</span>';
+            return $model->namaAsrama;
             
         },
     ],
@@ -83,7 +100,16 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
     
     'pelapor',
-    'statusAktif',
+    [
+        'attribute' => 'statusAktif',
+        'label' => 'Status Aktif',
+        'format' => 'raw',
+        'filter'=>$status_aktif,
+        'value'=>function($model,$url){
+            return $model->statusAktif;
+            
+        },
+    ],
     
 
     //'created_at',
@@ -97,8 +123,50 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'pjax'=>true,
         'columns' => $gridColumns,
+        'containerOptions' => ['style' => 'overflow: auto'], 
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+        'summary'=>'',
+        'containerOptions' => ['style'=>'overflow: auto'], 
+        'beforeHeader'=>[
+            [
+                'columns'=>[
+                    ['content'=> $this->title, 'options'=>['colspan'=>14, 'class'=>'text-center warning']], //cuma satu kolom header
+            //        ['content'=>'', 'options'=>['colspan'=>0, 'class'=>'text-center warning']], //uncomment kalau mau membuat header kolom-2
+              //      ['content'=>'', 'options'=>['colspan'=>0, 'class'=>'text-center warning']],
+                ], //uncomment kalau mau membuat header kolom-3
+                'options'=>['class'=>'skip-export'] 
+            ]
+        ],
+        'exportConfig' => [
+              // GridView::PDF => ['label' => 'Save as PDF'],
+              GridView::EXCEL => ['label' => 'Save as EXCEL'], //untuk menghidupkan button export ke Excell
+              // GridView::HTML => ['label' => 'Save as HTML'], //untuk menghidupkan button export ke HTML
+              GridView::CSV => ['label' => 'Save as CSV'], //untuk menghidupkan button export ke CVS
+          ],
+          
+        'toolbar' =>  [
+            '{export}', 
+
+           '{toggleData}' //uncoment untuk menghidupkan button menampilkan semua data..
+        ],
+        'toggleDataContainer' => ['class' => 'btn-group mr-2'],
+    // set export properties
+        'export' => [
+            'fontAwesome' => true
+        ],
+        'pjax' => true,
+        'bordered' => true,
+        'striped' => true,
+        // 'condensed' => false,
+        // 'responsive' => false,
+        'hover' => true,
+        // 'floatHeader' => true,
+        // 'showPageSummary' => true, //true untuk menjumlahkan nilai di suatu kolom, kebetulan pada contoh tidak ada angka.
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
+        ],
     ]); ?>
 </div>
     
