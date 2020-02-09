@@ -57,6 +57,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['tanggal'=>SORT_DESC]]
         ]);
 
         $dataProvider->sort->attributes['namaMahasiswa'] = [
@@ -118,14 +119,14 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'pelanggaran_id' => $this->pelanggaran_id,
-            'tanggal' => $this->tanggal,
-            'tahun_id' => $this->tahun_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ]);
+        // $query->andFilterWhere([
+        //     'id' => $this->id,
+        //     'pelanggaran_id' => $this->pelanggaran_id,
+        //     'tanggal' => $this->tanggal,
+        //     'tahun_id' => $this->tahun_id,
+        //     'created_at' => $this->created_at,
+        //     'updated_at' => $this->updated_at,
+        // ]);
 
         $query->andFilterWhere(['like', 'nim', $this->nim]);
         $query->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->namaMahasiswa]);
@@ -147,6 +148,15 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             $query->andWhere(['a.id'=> $this->namaAsrama]);
         }
         
+        if(!empty($this->tanggal)){
+
+            list($sd, $ed) = explode(' - ', $this->tanggal);
+            $sd = $sd.' 00:00:01';
+            $ed = $ed.' 23:59:59';
+            // print_r($sd);exit;
+            $query->andFilterWhere(['between','tanggal',$sd, $ed]);
+            $this->tanggal = null;
+        }
 
         return $dataProvider;
     }
