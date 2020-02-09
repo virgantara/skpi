@@ -19,7 +19,7 @@
         "mdmsoft/yii2-autonumber": "~1.0",
         "kartik-v/yii2-nav-x": "dev-master",
         "kartik-v/yii2-widget-depdrop": "@dev",
-        "kartik-v/yii2-grid": "@dev",
+        "kartik-v/yii2-grid": "dev-master",
         "kartik-v/yii2-widget-select2": "@dev",
         "kartik-v/yii2-checkbox-x": "@dev",
         "kartik-v/yii2-widget-datetimepicker": "*",
@@ -34,7 +34,8 @@
         "yiisoft/yii2-httpclient": "^2.0",
         "kartik-v/yii2-field-range": "*",
         "2amigos/yii2-ckeditor-widget": "^2.1",
-        "2amigos/yii2-chartjs-widget" : "~2.0"
+        "2amigos/yii2-chartjs-widget" : "~2.0",
+        "kartik-v/yii2-date-range": "dev-master"
     
     },
     "require-dev": {
