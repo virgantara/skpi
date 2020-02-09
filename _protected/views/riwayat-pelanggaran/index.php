@@ -32,10 +32,46 @@ $this->params['breadcrumbs'][] = $this->title;
             'namaFakultas',
             'namaProdi',
             'semester',
-            'namaAsrama',
+            [
+                'attribute' => 'namaAsrama',
+                'label' => 'Kategori',
+                'format' => 'raw',
+                'filter'=>$asramas,
+                'value'=>function($model,$url){
+                    $label = $model->namaAsrama;
+                    return '<span class="label label-info " >'.$label.'</span>';
+                    
+                },
+            ],
             'namaKamar',
             'namaPelanggaran',
-            'namaKategori',
+            [
+                'attribute' => 'namaKategori',
+                'label' => 'Kategori',
+                'format' => 'raw',
+                'filter'=>["RINGAN"=>"RINGAN","SEDANG"=>"SEDANG","BERAT"=>"BERAT"],
+                'value'=>function($model,$url){
+
+                    $st = '';
+                    $label = '';
+
+                    $label = $model->namaKategori;
+                    if($model->namaKategori == 'RINGAN')
+                        $st = 'success';
+                    else if($model->namaKategori == 'SEDANG')
+                        $st = 'warning';
+                    else if($model->namaKategori == 'BERAT')
+                        $st = 'danger';
+                    
+                    
+                    
+                    return '<button type="button" class="btn btn-'.$st.' btn-sm" >
+                               <span>'.$label.'</span>
+                            </button>';
+                    
+                },
+            ],
+            
             'pelapor',
             'statusAktif',
             

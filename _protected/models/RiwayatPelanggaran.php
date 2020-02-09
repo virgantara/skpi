@@ -25,6 +25,7 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     
     public $tanggal_awal;
     public $tanggal_akhir;
+     public $kategori_id;
     /**
      * {@inheritdoc}
      */
