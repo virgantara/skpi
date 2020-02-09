@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Asrama;
 use app\models\RiwayatPelanggaran;
 use app\models\RiwayatPelanggaranSearch;
 use yii\web\Controller;
@@ -83,12 +84,19 @@ class RiwayatPelanggaranController extends Controller
      */
     public function actionIndex()
     {
+        $query = Asrama::find()->all();
         $searchModel = new RiwayatPelanggaranSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $asramas = [];
+        foreach ($query as $key => $value) {
+            $asramas[$value->id] = $value->nama;
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'asramas' => $asramas
         ]);
     }
 

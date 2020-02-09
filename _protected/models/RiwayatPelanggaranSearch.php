@@ -20,6 +20,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     public $namaAsrama;
     public $namaKamar;
     public $semester;
+   
 
     /**
      * {@inheritdoc}
@@ -78,10 +79,10 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             'desc' => ['mhs.semester'=>SORT_DESC]
         ];
 
-        $dataProvider->sort->attributes['namaKategori'] = [
-            'asc' => ['k.nama'=>SORT_ASC],
-            'desc' => ['k.nama'=>SORT_DESC]
-        ];
+        // $dataProvider->sort->attributes['namaKategori'] = [
+        //     'asc' => ['k.nama'=>SORT_ASC],
+        //     'desc' => ['k.nama'=>SORT_DESC]
+        // ];
 
         $dataProvider->sort->attributes['namaPelanggaran'] = [
             'asc' => ['pl.nama'=>SORT_ASC],
@@ -128,12 +129,23 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
 
         $query->andFilterWhere(['like', 'nim', $this->nim]);
         $query->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->namaMahasiswa]);
-        $query->andFilterWhere(['like', 'a.nama', $this->namaAsrama]);
+       
         $query->andFilterWhere(['like', 'kk.nama', $this->namaKamar]);
         $query->andFilterWhere(['like', 'p.nama_prodi', $this->namaProdi]);
         $query->andFilterWhere(['like', 'f.nama_fakultas', $this->namaFakultas]);
         $query->andFilterWhere(['like', 'mhs.semester', $this->semester]);
+        $query->andFilterWhere(['like', 'pl.nama', $this->namaPelanggaran]);
+        $query->andFilterWhere(['like', 'kk.nama', $this->namaKamar]);
 
+        if(!empty($this->namaKategori))
+        {
+            $query->andWhere(['k.nama'=>$this->namaKategori]);
+        }
+
+        if(!empty($this->namaAsrama))
+        {
+            $query->andWhere(['a.id'=> $this->namaAsrama]);
+        }
         
 
         return $dataProvider;
