@@ -17,6 +17,7 @@
   },
   "homepage": "https://gitlab.com/virgantara/unida-simpel#readme",
   "dependencies": {
-    "highcharts": "^8.0.0"
+    "highcharts": "^8.0.0",
+    "sweetalert2": "^9.7.2"
   }
 }

@@ -3,7 +3,8 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
-use app\widgets\Alert;
+use app\assets\SweetalertAsset;
+use app\widgets\Alet;
 use yii\widgets\Menu;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -13,6 +14,7 @@ use kartik\nav\NavX;
 use yii\helpers\Url;
 
 AppAsset::register($this);
+SweetalertAsset::register($this);
 
 $theme = $this->theme;
 ?>
