@@ -30,7 +30,7 @@ class KamarController extends Controller
     }
 
     private function getKamarList($id){
-        $list = Kamar::find()->where(['asrama_id'=>$id])->all();
+        $list = Kamar::find()->where(['asrama_id'=>$id])->orderBy('nama')->all();
         $result = [];
         foreach($list as $item)
         {

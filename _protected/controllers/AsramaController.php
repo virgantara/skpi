@@ -132,20 +132,49 @@ class AsramaController extends Controller
         return ['output'=>'', 'selected'=>''];
     }
 
-    // public function wow($nim_ku, $kamar_id)
-    // {
+    public function actionKamar()
+    {
+        $dataku = $_POST['dataku'];
+        $nim = $dataku['nimku'];
+        $kamar = $dataku['kamarku'];
+        if (!empty($dataku['nimku'])) {
+            if (!empty($dataku['kamarku'])) {
+                $data = SimakMastermahasiswa::find()->where([ 'nim_mhs' => $nim ])->one();
+                $data->kamar_id = $kamar;
+                $data->save();
 
-    // }
+                $data2 = new RiwayatKamar;
+                $data2->nim = $dataku['nimku'];
+                $data2->kamar_id = $dataku['kamarku'];
+                $data2->save();
+                
+                $results = [
+                    'code' => 200,
+                    'msg' => "Perpindahan Berhasil",
+                    'kamar' => $data->kamar->nama,
+                    'asrama' => $data->kamar->namaAsrama,
+                ];
+                echo json_encode($results);
+
+            }
+            else{
+                echo "Kamar kosong, Isi terlebih dahulu";
+            }
+        }
+        else {
+            echo "Kamar kosong, Isi terlebih dahulu";
+        }
+        die();
+    }
 
     public function actionPindah()
     {
         $model = new SimakMastermahasiswa;
-        // $skuy = new SimakMastermahasiswa;
         $model->setScenario('asrama');
         $listAsrama = Asrama::find()->all();
         $results = [];
         $params = [];
-        
+
         if (!empty($_GET['btn-search'])) {
             if(!empty($_GET['SimakMastermahasiswa']))
             {
@@ -156,42 +185,17 @@ class AsramaController extends Controller
                     'kode_fakultas' => $params['kode_fakultas'],
                     'status_aktivitas' => 'A'
                 ])->all();          
-            }
-        }
-        if (!empty($_GET['btn-submit'])) 
-        {   
 
-            $skuy = 'kamar_id_'.$_GET['btn-submit'];  
-            if (!empty($_GET[$skuy])) {
-                $wow = SimakMastermahasiswa::find()->where([ 'nim_mhs' => $_GET['btn-submit'] ])->all();
-                foreach ($wow as $value) {
-                    $value->kamar_id = $_GET[$skuy];
-                    $value->save();
-                }
-
-                $wow2 = new RiwayatKamar;
-                $wow2->nim_mhs = $_GET['btn-submit'];
-                $wow2->kamar_id = $_GET[$skuy];
-                $wow2->save();
-            }
-            else{
-                echo ("<script language='javascript'>
-                    window.alert('Masukan Asrama, Kamar dan Klik simpan ditempat yang sama');
-                    window.location = 'pindah';
-                    </script>");
 
             }
         }
-        
         return $this->render('pindah',[
             'model' => $model,
             'results' => $results,
             'params' => $params,
-            // 'skuy' => $skuy,
             'listAsrama' => $listAsrama
         ]);
-        
-    }
+    } 
 
     public function actionMahasiswa()
     {

@@ -107,8 +107,10 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 							</td>
 							<td><?=$m->nama_mahasiswa;?></td>
 							<td><?=$m->jenis_kelamin;?></td>
-                            <td><?=$m->semester;?></td>
-							<td><?=$m->kamar->namaAsrama.' - '.$m->kamar->nama;?></td>
+							<td><?=$m->semester;?></td>
+							<td>
+								<span class="datakamar"><?=$m->kamar->namaAsrama.' - '.$m->kamar->nama;?></span>
+							</td>
 							<td>
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right">Asrama</label>
@@ -121,20 +123,23 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 									<div class="col-sm-4">
 										<?php echo DepDrop::widget([
 											'name' => 'kamar_id_'.$m->nim_mhs,
+											'options' => [
+												'class'=> 'kamar_id'
+											],
 											'pluginOptions'=>[
 												'depends'=>['asrama_'.$m->nim_mhs],
 												'placeholder' => '...Pilih Kamar...',
 												'url' => Url::to(['/kamar/kamar-list']),
-												
+
 											]   
 										])?>
 									</div>
 									<div class="col-sm-5">
-										<button type="submit" class="btn btn-info" name="btn-submit" value="<?php echo $m->nim_mhs ?>">
-                                            Simpan
-                                        </button>
+										<button type="button" class="btn btn-info btn-pindah" value="<?php echo $m->nim_mhs ?>">
+											Pindah
+										</button>
 									</div>
-									
+
 								</div>
 							</td>
 						</tr>
@@ -168,12 +173,43 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 
 $this->registerJs(' 
 
+	
+	
+	$(".btn-pindah").click(function(){
+		var nim_mahasiswa = $(this).val();
+		var kamar_id = $(this).parent().prev().find(".kamar_id").val();
+		var viewkamar = $(this).parent().parent().parent().prev().find(".datakamar");
+		// console.log(viewkamar);
+		var obj = new Object;
+		obj.nimku = nim_mahasiswa;
+		obj.kamarku = kamar_id;
+		// console.log(obj);
+		$.ajax({
+
+			type : "POST",
+			url : "'.Url::to(['/asrama/kamar']).'",
+			data : {
+				dataku : obj
+			},
+			success: function(data){
+				var hasil = $.parseJSON(data);
+
+				viewkamar.html(hasil.asrama + " - " + hasil.kamar);
+				Swal.fire(
+				\'Good job!\',
+				  hasil.msg,
+				  \'success\'
+				)
+			}
+		});
+	});
+
 	$("#fakultas_id").trigger("change");
 
 	setTimeout(function(){
 		$("#kode_prodi").val('.$params['kode_prodi'].');
-		},500)
+	},500);
 
-		', \yii\web\View::POS_READY);
+', \yii\web\View::POS_READY);
 
-		?>
+?>
