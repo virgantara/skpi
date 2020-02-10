@@ -136,7 +136,7 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 									</div>
 									<div class="col-sm-5">
 										<button type="button" class="btn btn-info btn-pindah" value="<?php echo $m->nim_mhs ?>">
-											Pindah
+											<i class="fa fa-paper-plane"></i> Pindah
 										</button>
 									</div>
 
@@ -176,7 +176,17 @@ $this->registerJs('
 	
 	
 	$(".btn-pindah").click(function(){
-		var nim_mahasiswa = $(this).val();
+		Swal.fire({
+		  title: \'Do you want to migrate this person?\',
+		  text: "You won\'t be able to revert this!",
+		  icon: \'warning\',
+		  showCancelButton: true,
+		  confirmButtonColor: \'#3085d6\',
+		  cancelButtonColor: \'#d33\',
+		  confirmButtonText: \'Yes, move him/her!\'
+		}).then((result) => {
+		  if (result.value) {
+		    var nim_mahasiswa = $(this).val();
 		var kamar_id = $(this).parent().prev().find(".kamar_id").val();
 		var viewkamar = $(this).parent().parent().parent().prev().find(".datakamar");
 		// console.log(viewkamar);
@@ -202,6 +212,9 @@ $this->registerJs('
 				)
 			}
 		});
+		  }
+		})
+		
 	});
 
 	$("#fakultas_id").trigger("change");

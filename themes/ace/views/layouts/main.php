@@ -29,6 +29,11 @@ $theme = $this->theme;
 
     <?php $this->head(); ?>
 </head>
+<style type="text/css">
+.swal2-popup {
+  font-size: 1.6rem !important;
+}
+</style>
 <body class="no-skin">
      <div id="navbar" class="navbar navbar-default    navbar-collapse       h-navbar ace-save-state">
             <div class="navbar-container ace-save-state" id="navbar-container">
