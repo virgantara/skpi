@@ -20,7 +20,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     public $namaAsrama;
     public $namaKamar;
     public $semester;
-   
+    public $statusAktif;
 
     /**
      * {@inheritdoc}
@@ -29,7 +29,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     {
         return [
             [['id', 'pelanggaran_id', 'tahun_id'], 'integer'],
-            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori','namaFakultas','namaAsrama','namaKamar','pelapor'], 'safe'],
+            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori','namaFakultas','namaAsrama','namaKamar','pelapor','statusAktif'], 'safe'],
         ];
     }
 
@@ -80,10 +80,10 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             'desc' => ['mhs.semester'=>SORT_DESC]
         ];
 
-        // $dataProvider->sort->attributes['namaKategori'] = [
-        //     'asc' => ['k.nama'=>SORT_ASC],
-        //     'desc' => ['k.nama'=>SORT_DESC]
-        // ];
+        $dataProvider->sort->attributes['statusAktif'] = [
+            'asc' => ['mhs.status_aktivitas'=>SORT_ASC],
+            'desc' => ['mhs.status_aktivitas'=>SORT_DESC]
+        ];
 
         $dataProvider->sort->attributes['namaPelanggaran'] = [
             'asc' => ['pl.nama'=>SORT_ASC],
@@ -118,22 +118,13 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        // $query->andFilterWhere([
-        //     'id' => $this->id,
-        //     'pelanggaran_id' => $this->pelanggaran_id,
-        //     'tanggal' => $this->tanggal,
-        //     'tahun_id' => $this->tahun_id,
-        //     'created_at' => $this->created_at,
-        //     'updated_at' => $this->updated_at,
-        // ]);
 
         $query->andFilterWhere(['like', 'nim', $this->nim]);
         $query->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->namaMahasiswa]);
        
         $query->andFilterWhere(['like', 'kk.nama', $this->namaKamar]);
-        $query->andFilterWhere(['like', 'p.nama_prodi', $this->namaProdi]);
-        $query->andFilterWhere(['like', 'f.nama_fakultas', $this->namaFakultas]);
+        
+        // $query->andFilterWhere(['like', 'f.nama_fakultas', $this->namaFakultas]);
         $query->andFilterWhere(['like', 'mhs.semester', $this->semester]);
         $query->andFilterWhere(['like', 'pl.nama', $this->namaPelanggaran]);
         $query->andFilterWhere(['like', 'kk.nama', $this->namaKamar]);
@@ -156,6 +147,18 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             // print_r($sd);exit;
             $query->andFilterWhere(['between','tanggal',$sd, $ed]);
             $this->tanggal = null;
+        }
+
+        if(!empty($this->namaProdi)){
+            $query->andWhere(['p.kode_prodi'=>$this->namaProdi]);
+        }
+
+        if(!empty($this->namaFakultas)){
+            $query->andWhere(['f.kode_fakultas'=>$this->namaFakultas]);
+        }
+
+        if(!empty($this->statusAktif)){
+            $query->andWhere(['mhs.status_aktivitas'=>$this->statusAktif]);
         }
 
         return $dataProvider;

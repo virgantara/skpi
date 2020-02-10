@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\httpclient\Client;
 use app\models\RiwayatHukuman;
+use yii\helpers\ArrayHelper;
 
 /**
  * RiwayatPelanggaranController implements the CRUD actions for RiwayatPelanggaran model.
@@ -84,19 +85,21 @@ class RiwayatPelanggaranController extends Controller
      */
     public function actionIndex()
     {
-        $query = Asrama::find()->all();
+        $asramas = ArrayHelper::map(Asrama::find()->all(),'id','nama');
+        $prodis = ArrayHelper::map(\app\models\SimakMasterprogramstudi::find()->all(),'kode_prodi','nama_prodi');
+        $fakultas = ArrayHelper::map(\app\models\SimakMasterfakultas::find()->all(),'kode_fakultas','nama_fakultas');
+
+        $status_aktif = ArrayHelper::map(\app\models\SimakPilihan::find()->where(['kode'=>'05'])->all(),'value','label');
         $searchModel = new RiwayatPelanggaranSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        $asramas = [];
-        foreach ($query as $key => $value) {
-            $asramas[$value->id] = $value->nama;
-        }
-
+        
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'asramas' => $asramas
+            'asramas' => $asramas,
+            'prodis' => $prodis,
+            'fakultas' => $fakultas,
+            'status_aktif' =>$status_aktif
         ]);
     }
 
