@@ -140,13 +140,17 @@ class AsramaController extends Controller
         if (!empty($dataku['nimku'])) {
             if (!empty($dataku['kamarku'])) {
                 $data = SimakMastermahasiswa::find()->where([ 'nim_mhs' => $nim ])->one();
-                $data->kamar_id = $kamar;
-                $data->save();
+                $kamarLama = $data->kamar;
+                
 
                 $data2 = new RiwayatKamar;
                 $data2->nim = $dataku['nimku'];
                 $data2->kamar_id = $dataku['kamarku'];
+                $data2->dari_kamar_id = $kamarLama->id;
                 $data2->save();
+
+                $data->kamar_id = $kamar;
+                $data->save();
                 
                 $results = [
                     'code' => 200,

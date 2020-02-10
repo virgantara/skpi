@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\RiwayatKamar;
+use app\models\RiwayatPelanggaran;
 use app\models\SimakMastermahasiswa;
 use app\models\MahasiswaSearch;
 use yii\web\Controller;
@@ -52,8 +54,26 @@ class MahasiswaController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $query = RiwayatPelanggaran::find()->where([
+            'nim'=> $model->nim_mhs
+        ]);
+
+        $query->orderBy(['created_at'=>SORT_DESC]);
+
+        $riwayat = $query->all();
+
+        $query = RiwayatKamar::find()->where([
+            'nim'=> $model->nim_mhs
+        ]);
+
+        $query->orderBy(['created_at'=>SORT_DESC]);
+
+        $riwayatKamar = $query->all();
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'riwayat' => $riwayat,
+            'riwayatKamar' => $riwayatKamar
         ]);
     }
 

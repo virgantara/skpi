@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Asrama;
+use app\models\RiwayatKamar;
 use app\models\RiwayatPelanggaran;
 use app\models\RiwayatPelanggaranSearch;
 use yii\web\Controller;
@@ -131,11 +132,20 @@ class RiwayatPelanggaranController extends Controller
         $query->orderBy(['created_at'=>SORT_DESC]);
 
         $riwayat = $query->all();
+
+        $query = RiwayatKamar::find()->where([
+            'nim'=> $model->nim
+        ]);
+
+        $query->orderBy(['created_at'=>SORT_DESC]);
+
+        $riwayatKamar = $query->all();
             
         return $this->render('view',[
             'model' => $model,
             'mahasiswa' => $mahasiswa,
-            'riwayat' => $riwayat
+            'riwayat' => $riwayat,
+            'riwayatKamar' => $riwayatKamar
         ]);
     }
 

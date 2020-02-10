@@ -276,7 +276,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         <div class="widget-header widget-header-small">
                             <h4 class="widget-title blue smaller">
                                 <i class="ace-icon fa fa-rss orange"></i>
-                                Recent Activities
+                                Recent Violations
                             </h4>
 
                             <div class="widget-toolbar action-buttons">
@@ -327,6 +327,58 @@ $this->params['breadcrumbs'][] = $this->title;
                         <?php
                     }
                          ?>
+
+                    </div>
+
+                         <div class="widget-box transparent">
+                        <div class="widget-header widget-header-small">
+                            <h4 class="widget-title blue smaller">
+                                <i class="ace-icon fa fa-rss orange"></i>
+                                Recent Dormitory Migrations
+                            </h4>
+
+                            <div class="widget-toolbar action-buttons">
+                                <a href="#" data-action="reload">
+                                    <i class="ace-icon fa fa-refresh blue"></i>
+                                </a>
+&nbsp;
+                                <a href="#" class="pink">
+                                    <i class="ace-icon fa fa-trash-o"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <?php 
+                        foreach ($riwayatKamar as $key => $value) {
+                            # code...
+                        
+                        ?>
+                        <div class="widget-body">
+                            <div class="widget-main padding-8">
+                                <div id="profile-feed-1" class="profile-feed">
+                                    <div class="profile-activity clearfix">
+                                        <div>
+                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+                                           <a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
+                                            pindah dari <?=$value->dariKamar->namaAsrama;?>
+                                            kamar <?=$value->dariKamar->nama;?> ke <?=$value->kamar->namaAsrama;?>
+                                            kamar <?=$value->kamar->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->created_at);?>
+
+                                            <div class="time">
+                                                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                                <?=\app\helpers\MyHelper::hitungDurasi(date('Y-m-d H:i:s'),$value->created_at);?> yang lalu
+                                            </div>
+                                        </div>
+
+                                       
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                         ?>
+
                     </div>
 
                     <div class="hr hr2 hr-double"></div>

@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-
+use app\helpers\MyHelper;
 /* @var $this yii\web\View */
 /* @var $model app\models\SimakMastermahasiswa */
 
@@ -101,4 +101,118 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+</div>
+<div class="row">
+      <div class="col-xs-12">
+            <div class="space-20"></div>
+
+                    <div class="widget-box transparent">
+                        <div class="widget-header widget-header-small">
+                            <h4 class="widget-title blue smaller">
+                                <i class="ace-icon fa fa-rss orange"></i>
+                                Recent Violations
+                            </h4>
+
+                            <div class="widget-toolbar action-buttons">
+                                <a href="#" data-action="reload">
+                                    <i class="ace-icon fa fa-refresh blue"></i>
+                                </a>
+&nbsp;
+                                <a href="#" class="pink">
+                                    <i class="ace-icon fa fa-trash-o"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <?php 
+                        foreach ($riwayat as $key => $value) {
+                            # code...
+                        
+                        ?>
+                        <div class="widget-body">
+                            <div class="widget-main padding-8">
+                                <div id="profile-feed-1" class="profile-feed">
+                                    <div class="profile-activity clearfix">
+                                        <div>
+                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+                                           <a class="user" href="#"><?=$model->nama_mahasiswa;?></a>
+                                            melakukan pelanggaran <?=$value->pelanggaran->kategori->nama;?>
+                                            yaitu <?=$value->pelanggaran->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->tanggal);?>
+
+                                            <div class="time">
+                                                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                                <?=\app\helpers\MyHelper::hitungDurasi(date('Y-m-d H:i:s'),$value->created_at);?> yang lalu
+                                            </div>
+                                        </div>
+
+                                        <div class="tools action-buttons">
+                                            <a href="#" class="blue">
+                                                <i class="ace-icon fa fa-pencil bigger-125"></i>
+                                            </a>
+
+                                            <a href="#" class="red">
+                                                <i class="ace-icon fa fa-times bigger-125"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                         ?>
+
+                    </div>
+
+                         <div class="widget-box transparent">
+                        <div class="widget-header widget-header-small">
+                            <h4 class="widget-title blue smaller">
+                                <i class="ace-icon fa fa-rss orange"></i>
+                                Recent Dormitory Migrations
+                            </h4>
+
+                            <div class="widget-toolbar action-buttons">
+                                <a href="#" data-action="reload">
+                                    <i class="ace-icon fa fa-refresh blue"></i>
+                                </a>
+&nbsp;
+                                <a href="#" class="pink">
+                                    <i class="ace-icon fa fa-trash-o"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <?php 
+                        foreach ($riwayatKamar as $key => $value) {
+                            # code...
+                        
+                        ?>
+                        <div class="widget-body">
+                            <div class="widget-main padding-8">
+                                <div id="profile-feed-1" class="profile-feed">
+                                    <div class="profile-activity clearfix">
+                                        <div>
+                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+                                           <a class="user" href="#"><?=$model->nama_mahasiswa;?></a>
+                                            pindah dari <?=$value->dariKamar->namaAsrama;?>
+                                            kamar <?=$value->dariKamar->nama;?> ke <?=$value->kamar->namaAsrama;?>
+                                            kamar <?=$value->kamar->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->created_at);?>
+
+                                            <div class="time">
+                                                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                                <?=\app\helpers\MyHelper::hitungDurasi(date('Y-m-d H:i:s'),$value->created_at);?> yang lalu
+                                            </div>
+                                        </div>
+
+                                       
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                         ?>
+
+                    </div>
+      </div>
 </div>
