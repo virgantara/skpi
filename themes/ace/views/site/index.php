@@ -94,8 +94,89 @@ $listAsrama = \app\models\Asrama::find()->all();
         </div><!-- /.col -->
 
 </div>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+    <div class="widget-box transparent">
+      <div class="widget-header">
+        <h4 class="widget-title lighter smaller">
+          <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Ringan
+        </h4>
+         <div id="loadinga" style="display: none">Fetching...</div>
+      </div>
+
+      <div class="widget-body">
+        <div class="widget-main padding-4">
+          <div class="tab-content padding-8">
+           
+
+            <div class="table-responsive">
+                 <div class="containerringan" id="containerringan" style="min-width: 200;  margin: 0 auto">
+                   
+                 </div> 
+            </div>
+
+          </div>
+        </div><!-- /.widget-main -->
+      </div><!-- /.widget-body -->
+    </div><!-- /.widget-box -->
+  </div><!-- /.col -->
+  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+    <div class="widget-box transparent">
+      <div class="widget-header">
+        <h4 class="widget-title lighter smaller">
+          <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Sedang
+        </h4>
+         <div id="loadingb" style="display: none">Fetching...</div>
+      </div>
+
+      <div class="widget-body">
+        <div class="widget-main padding-4">
+          <div class="tab-content padding-8">
+           
+
+            <div class="table-responsive">
+                 <div class="containersedang" id="containersedang" style="min-width: 200;  margin: 0 auto">
+                   
+                 </div> 
+            </div>
+
+          </div>
+        </div><!-- /.widget-main -->
+      </div><!-- /.widget-body -->
+    </div><!-- /.widget-box -->
+  </div><!-- /.col -->
+  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+    <div class="widget-box transparent">
+      <div class="widget-header">
+        <h4 class="widget-title lighter smaller">
+          <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Berat
+        </h4>
+         <div id="loadingc" style="display: none">Fetching...</div>
+      </div>
+
+      <div class="widget-body">
+        <div class="widget-main padding-4">
+          <div class="tab-content padding-8">
+           
+
+            <div class="table-responsive">
+                 <div class="containerberat" id="containerberat" style="min-width: 200;  margin: 0 auto">
+                   
+                 </div> 
+            </div>
+
+          </div>
+        </div><!-- /.widget-main -->
+      </div><!-- /.widget-body -->
+    </div><!-- /.widget-box -->
+  </div><!-- /.col -->
+
+</div>
+
+
 <?php
 $script = '
+
 
 function getPelanggaran(tahun){
 
@@ -253,6 +334,7 @@ function generateDataAsrama(id, kategori, kapasitas, nilai){
         }
     });
 }
+
 $.ajax({
       type : "POST",
       data : "tahun="+tahun,
@@ -268,7 +350,6 @@ $.ajax({
       success : function(data){
          $("#loadingGauge").hide();
         var hasil = $.parseJSON(data);
-       
 
         $.each(hasil,function(i,obj){
             generateDataAsrama(obj.id, obj.nama, obj.total, obj.terpakai)    
@@ -277,6 +358,229 @@ $.ajax({
     }
 });
 
+$.ajax({
+    type: "POST",
+    url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak"]).'",
+    data : {
+      kategori : "ringan"
+    },
+    async: true,
+    beforeSend : function(){
+      $("#loadinga").show();
+    },
+    error: function(e){
+        console.log(e.responseText);
+       $("#loadinga").hide();
+    },
+    success : function(data){
+      $("#loadinga").hide();
+      var hasil = $.parseJSON(data);
+
+      var kategori = [];
+      var jumlah = [];
+      
+      $.each(hasil,function(i,obj){
+          jumlah.push(obj.total);
+          kategori.push(obj.nama); 
+      }); 
+
+      Highcharts.chart("containerringan", {
+        chart: {
+            type: "bar"
+        },
+        title: {
+            text: null
+        },
+        subtitle: {
+            text: null
+        },
+        xAxis: {
+            categories: kategori,
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: "Banyak Pelanggaran",
+                align: \'high\'
+            },
+            labels: {
+                overflow: \'justify\'
+            }
+        },
+        tooltip: {
+            valueSuffix: " Pelanggaran"
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: "Jumlah",
+            data: jumlah
+        }]
+      });
+
+    }
+});
+
+$.ajax({
+    type: "POST",
+    url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak"]).'",
+    data : {
+      kategori : "sedang"
+    },
+    async: true,
+    beforeSend : function(){
+      $("#loadingb").show();
+    },
+    error: function(e){
+        console.log(e.responseText);
+       $("#loadingb").hide();
+    },
+    success : function(data){
+      $("#loadingb").hide();
+      var hasil = $.parseJSON(data);
+
+      var kategori = [];
+      var jumlah = [];
+      
+      $.each(hasil,function(i,obj){
+          jumlah.push(obj.total);
+          kategori.push(obj.nama); 
+      }); 
+
+      Highcharts.chart("containersedang", {
+        chart: {
+            type: "bar"
+        },
+        title: {
+            text: null
+        },
+        subtitle: {
+            text: null
+        },
+        xAxis: {
+            categories: kategori,
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: "Banyak Pelanggaran",
+                align: \'high\'
+            },
+            labels: {
+                overflow: \'justify\'
+            }
+        },
+        tooltip: {
+            valueSuffix: " Pelanggaran"
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: "Jumlah",
+            data: jumlah,
+            color: "#e58b31"
+        }]
+      });
+
+    }
+}); 
+
+$.ajax({
+    type: "POST",
+    url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak"]).'",
+    data : {
+      kategori : "berat"
+    },
+    async: true,
+    beforeSend : function(){
+      $("#loadingc").show();
+    },
+    error: function(e){
+        console.log(e.responseText);
+       $("#loadingc").hide();
+    },
+    success : function(data){
+      $("#loadingc").hide();
+      var hasil = $.parseJSON(data);
+
+      var kategori = [];
+      var jumlah = [];
+      
+      $.each(hasil,function(i,obj){
+          jumlah.push(obj.total);
+          kategori.push(obj.nama); 
+      }); 
+
+      Highcharts.chart("containerberat", {
+        chart: {
+            type: "bar"
+        },
+        title: {
+            text: null
+        },
+        subtitle: {
+            text: null
+        },
+        xAxis: {
+            categories: kategori,
+            title: {
+                text: null
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: "Banyak Pelanggaran",
+                align: \'high\'
+            },
+            labels: {
+                overflow: \'justify\'
+            }
+        },
+        tooltip: {
+            valueSuffix: " Pelanggaran"
+        },
+        plotOptions: {
+            bar: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: "Jumlah",
+            data: jumlah,
+            color: "#d31414"
+        }]
+      });
+
+    }
+});   
 
 
 ';
