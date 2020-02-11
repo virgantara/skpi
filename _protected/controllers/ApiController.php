@@ -34,6 +34,23 @@ class ApiController extends Controller
         ];
     }
 
+    public function actionAjaxGetPelanggaranJumlahTerbanyak(){
+        $kategori = $_POST['kategori'];
+        $query = new \yii\db\Query();
+        $rows = $query->select(['a.nama', 'COUNT(*) as total'])
+                ->from('erp_riwayat_pelanggaran b')
+                ->innerJoin('erp_pelanggaran a', 'b.pelanggaran_id = a.id')
+                ->innerJoin('erp_kategori_pelanggaran c', 'a.kategori_id = c.id')
+                ->where(['c.nama' => $kategori])
+                ->groupBy('a.nama')
+                ->orderBy('total DESC')
+                ->limit(10)
+                ->all();
+
+        echo \yii\helpers\Json::encode($rows, JSON_NUMERIC_CHECK);
+        
+    }
+
     public function actionAjaxGetKapasitasAsrama() {
 
         $api_baseurl = Yii::$app->params['api_baseurl'];
@@ -53,14 +70,14 @@ class ApiController extends Controller
 
         echo \yii\helpers\Json::encode($results);
 
-      
+
     }
 
 
     public function actionAjaxGetJumlahPelanggaranByKategori() {
 
         // $tahun = 2019;
-        
+
         $api_baseurl = Yii::$app->params['api_baseurl'];
         $client = new Client(['baseUrl' => $api_baseurl]);
         $client_token = Yii::$app->params['client_token'];
@@ -109,7 +126,7 @@ class ApiController extends Controller
 
         echo \yii\helpers\Json::encode($results);
 
-      
+
     }
 
 
@@ -135,7 +152,7 @@ class ApiController extends Controller
                     $out[] = [
                         'id' => $d['nim_mhs'],
                         'label'=> $d['nim_mhs'].' - '.$d['nama_mahasiswa'],
-                      
+
                     ];
                 }
             }
@@ -145,7 +162,7 @@ class ApiController extends Controller
                 $out[] = [
                     'id' => 0,
                     'label'=> 'Data mahasiswa tidak ditemukan',
-                   
+
                 ];
             }
         }
@@ -153,7 +170,7 @@ class ApiController extends Controller
 
         echo \yii\helpers\Json::encode($out);
 
-      
+
     }
 
     public function actionGetHukuman()
