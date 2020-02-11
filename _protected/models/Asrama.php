@@ -30,9 +30,11 @@ class Asrama extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama'], 'required'],
+            [['kampus_id', 'nama'], 'required'],
+            [['kampus_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['nama'], 'string', 'max' => 255],
+            [['kampus_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus_id' => 'id']],
         ];
     }
 
@@ -43,10 +45,21 @@ class Asrama extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+              'kampus_id' => 'Kampus',
             'nama' => 'Nama',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    public function getNamaKampus()
+    {
+        return $this->kampus->nama_kampus;
+    }
+
+    public function getKampus()
+    {
+        return $this->hasOne(SimakKampus::className(), ['id' => 'kampus_id']);
     }
 
     /**
