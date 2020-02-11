@@ -91,6 +91,12 @@ class MenuHelper
 	                
 	               
 	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran Per Asrama',  
+	                'url' => ['/laporan/rekap-asrama'],	        
+	                
+	               
+	            ],
 	      
 	            
 	        ]];
