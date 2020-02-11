@@ -63,38 +63,6 @@ $listAsrama = \app\models\Asrama::find()->all();
 
 </div>
 <div class="row">
-     <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-          <div class="widget-box transparent">
-            <div class="widget-header">
-              <h4 class="widget-title lighter smaller">
-                <i class="ace-icon fa fa-rss orange"></i>Kapasitas Asrama
-              </h4>
-               <div id="loadingGauge" style="display: none">Fetching...</div>
-            </div>
-
-            <div class="widget-body">
-              <div class="widget-main padding-4">
-                <div class="tab-content padding-8">
-                 
-
-                    <?php 
-                    
-                    foreach($listAsrama as $a)
-                    {
-                    ?><div class="table-responsive">
-                 <div class="containerAsrama" id="containerAsrama<?=$a->id;?>" style="min-width: 200;  margin: 0 auto"></div> </div>
-                 <?php 
-             }
-                 ?>
-            
-                </div>
-              </div><!-- /.widget-main -->
-            </div><!-- /.widget-body -->
-          </div><!-- /.widget-box -->
-        </div><!-- /.col -->
-
-</div>
-<div class="row">
   <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
     <div class="widget-box transparent">
       <div class="widget-header">
@@ -170,6 +138,39 @@ $listAsrama = \app\models\Asrama::find()->all();
       </div><!-- /.widget-body -->
     </div><!-- /.widget-box -->
   </div><!-- /.col -->
+
+</div>
+
+<div class="row">
+     <div class="col-xs-12 col-sm-12 col-lg-4 col-md-6">
+          <div class="widget-box transparent">
+            <div class="widget-header">
+              <h4 class="widget-title lighter smaller">
+                <i class="ace-icon fa fa-rss orange"></i>Kapasitas Asrama
+              </h4>
+               <div id="loadingGauge" style="display: none">Fetching...</div>
+            </div>
+
+            <div class="widget-body">
+              <div class="widget-main padding-4">
+                <div class="tab-content padding-8">
+                 
+
+                    <?php 
+                    
+                    foreach($listAsrama as $a)
+                    {
+                    ?><div class="table-responsive">
+                 <div class="containerAsrama" id="containerAsrama<?=$a->id;?>" style="min-width: 200;  margin: 0 auto"></div> </div>
+                 <?php 
+             }
+                 ?>
+            
+                </div>
+              </div><!-- /.widget-main -->
+            </div><!-- /.widget-body -->
+          </div><!-- /.widget-box -->
+        </div><!-- /.col -->
 
 </div>
 
