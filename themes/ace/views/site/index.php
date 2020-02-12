@@ -142,59 +142,7 @@ $listAsrama = \app\models\Asrama::find()->all();
   </div><!-- /.col -->
 
 </div>
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-    <div class="widget-box transparent">
-      <div class="widget-header">
-        <h4 class="widget-title lighter smaller">
-          <i class="ace-icon fa fa-rss orange"></i>Grafik Jumlah Pelanggaran
-        </h4>
-        <div id="loadingBuy" style="display: none">Fetching...</div>
-      </div>
 
-      <div class="widget-body">
-        <div class="widget-main padding-4">
-          <div class="tab-content padding-8">
-            <select name="year"  id="tahun_pelanggan_kategori">
-              <option value=''>Select Year</option>
-              <?php
-              for ($year = 2014; $year <= 2030; $year++) {
-                $selected = (date('Y')==$year) ? 'selected' : '';
-                echo "<option value=$year $selected>$year</option>";
-
-              }
-              ?>
-            </select>
-            <div class="table-responsive">
-             <div id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
-           </div>
-         </div>
-       </div><!-- /.widget-main -->
-     </div><!-- /.widget-body -->
-   </div><!-- /.widget-box -->
-  </div><!-- /.col -->
-  <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-    <div class="widget-box transparent">
-      <div class="widget-header">
-        <h4 class="widget-title lighter smaller">
-          <i class="ace-icon fa fa-rss orange"></i>Grafik Jumlah Pelanggaran
-        </h4>
-        <div id="loadingBuy" style="display: none">Fetching...</div>
-      </div>
-
-      <div class="widget-body">
-        <div class="widget-main padding-4">
-          <div class="tab-content padding-8">
-            <div class="table-responsive">
-             <div id="containerdrop" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
-           </div>
-         </div>
-       </div><!-- /.widget-main -->
-     </div><!-- /.widget-body -->
-   </div><!-- /.widget-box -->
-  </div><!-- /.col -->
-
-</div>
 <div class="row">
      <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
           <div class="widget-box transparent">
