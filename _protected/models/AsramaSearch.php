@@ -11,6 +11,8 @@ use app\models\Asrama;
  */
 class AsramaSearch extends Asrama
 {
+
+    public $namaKampus;
     /**
      * {@inheritdoc}
      */
@@ -18,7 +20,7 @@ class AsramaSearch extends Asrama
     {
         return [
             [['id'], 'integer'],
-            [['nama', 'created_at', 'updated_at'], 'safe'],
+            [['nama', 'created_at', 'updated_at','namaKampus'], 'safe'],
         ];
     }
 
@@ -41,7 +43,7 @@ class AsramaSearch extends Asrama
     public function search($params)
     {
         $query = Asrama::find();
-
+        $query->joinWith(['kampus as k']);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -56,14 +58,13 @@ class AsramaSearch extends Asrama
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ]);
+        $dataProvider->sort->attributes['namaKampus'] = [
+            'asc' => ['k.nama_kampus'=>SORT_ASC],
+            'desc' => ['k.nama_kampus'=>SORT_DESC]
+        ];
 
         $query->andFilterWhere(['like', 'nama', $this->nama]);
+        $query->andFilterWhere(['like', 'k.nama_kampus', $this->namaKampus]);
 
         return $dataProvider;
     }
