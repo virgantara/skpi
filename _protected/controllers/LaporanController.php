@@ -295,6 +295,106 @@ class LaporanController extends Controller
         ]);
     }
 
+    public function actionRekapKategori()
+    {
+        
+
+        $model = new RiwayatPelanggaran;
+        $results = [];
+
+
+        if(!empty($_POST['btn-search']))
+        {
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $tanggal_awal = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_awal'].' 00:00:00');
+                $tanggal_akhir = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_akhir'].' 23:59:59');
+                
+                $query = new \yii\db\Query();
+                $results = $query->select(['a.nama', 'COUNT(*) as total'])
+                ->from('erp_kategori_pelanggaran a')
+                ->innerJoin('erp_pelanggaran b', 'a.id = b.kategori_id')
+                ->innerJoin('erp_riwayat_pelanggaran c', 'b.id = c.pelanggaran_id')
+                ->where(['between','c.tanggal', $tanggal_awal,$tanggal_akhir])
+                ->groupBy('a.nama')
+                ->all();
+                
+            }
+        }
+
+        else if(!empty($_POST['btn-export']))
+        {
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $tanggal_awal = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_awal'].' 00:00:00');
+                $tanggal_akhir = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_akhir'].' 23:59:59');
+                
+                $query = new \yii\db\Query();
+                $results = $query->select(['a.nama', 'COUNT(*) as total'])
+                ->from('erp_kategori_pelanggaran a')
+                ->innerJoin('erp_pelanggaran b', 'a.id = b.kategori_id')
+                ->innerJoin('erp_riwayat_pelanggaran c', 'b.id = c.pelanggaran_id')
+                ->where(['between','c.tanggal', $tanggal_awal,$tanggal_akhir])
+                ->groupBy('a.nama')
+                ->all();
+                
+            }
+            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+            $objPHPExcel = new \PHPExcel();
+
+            //prepare the records to be added on the excel file in an array
+           
+            // Set document properties
+            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
+
+            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Add column headers
+            $objPHPExcel->getActiveSheet()
+                        ->setCellValue('A1', 'No')
+                        ->setCellValue('B1', 'Kategori')
+                        ->setCellValue('C1', 'Total');
+
+            //Put each record in a new cell
+
+            $i= 1;
+            $ii = 2;
+            
+            foreach($results as $row)
+            {
+
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['nama']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $i++;
+                $ii++;
+                  
+            }       
+
+            foreach(range('A','C') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                    ->setAutoSize(true);
+            }
+
+            // Set worksheet title
+            $objPHPExcel->getActiveSheet()->setTitle('Rekap Pelanggaran Per Kategori');
+            
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Rekap_Pelanggaran_PerKategori.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+            $objWriter->save('php://output');
+            exit();           
+
+        }
+
+        return $this->render('rekap_kategori', [
+            'results' => $results,
+            'model' => $model,
+        ]);
+    }
+    
     public function actionRekapAsrama()
     {
         

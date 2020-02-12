@@ -97,6 +97,12 @@ class MenuHelper
 	                
 	               
 	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Pelanggaran Per Kategori',  
+	                'url' => ['/laporan/rekap-kategori'],	        
+	                
+	               
+	            ],
 	      
 	            
 	        ]];
