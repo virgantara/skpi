@@ -102,6 +102,12 @@ class MenuHelper
 	                'url' => ['/laporan/rekap-kategori'],	        
 	                
 	               
+				],
+				[
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Penghuni Per Asrama',  
+	                'url' => ['/laporan/rekap-penghuni-asrama'],	        
+	                
+	               
 	            ],
 	      
 	            
