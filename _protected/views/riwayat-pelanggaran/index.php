@@ -127,7 +127,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'containerOptions' => ['style' => 'overflow: auto'], 
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
-        'summary'=>'',
         'containerOptions' => ['style'=>'overflow: auto'], 
         'beforeHeader'=>[
             [

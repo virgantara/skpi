@@ -96,14 +96,20 @@ class MahasiswaSearch extends SimakMastermahasiswa
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
+        
+        if(!empty($this->namaProdi))
+            $query->andWhere(['p.kode_prodi'=>$this->namaProdi]);
+        
+        if(!empty($this->namaFakultas))
+            $query->andWhere(['f.kode_fakultas'=> $this->namaFakultas]);
+        
+        if(!empty($this->namaKampus))
+            $query->andWhere(['k.nama_kampus' => $this->namaKampus]);
 
-        $query->andFilterWhere(['like', 'p.nama_prodi', $this->namaProdi]);
-        $query->andFilterWhere(['like', 'f.nama_fakultas', $this->namaFakultas]);
-        $query->andFilterWhere(['like', 'k.nama_kampus', $this->namaKampus]);
+        if(!empty($this->status_aktivitas))
+            $query->andWhere(['status_aktivitas' => $this->status_aktivitas]);
 
         $query->andFilterWhere(['like', 'kode_pt', $this->kode_pt])
-            ->andFilterWhere(['like', 'kode_fakultas', $this->kode_fakultas])
-            ->andFilterWhere(['like', 'kode_prodi', $this->kode_prodi])
             ->andFilterWhere(['like', 'kode_jenjang_studi', $this->kode_jenjang_studi])
             ->andFilterWhere(['like', 'nim_mhs', $this->nim_mhs])
             ->andFilterWhere(['like', 'nama_mahasiswa', $this->nama_mahasiswa])
@@ -113,7 +119,7 @@ class MahasiswaSearch extends SimakMastermahasiswa
             ->andFilterWhere(['like', 'semester_awal', $this->semester_awal])
             ->andFilterWhere(['like', 'batas_studi', $this->batas_studi])
             ->andFilterWhere(['like', 'asal_propinsi', $this->asal_propinsi])
-            ->andFilterWhere(['like', 'status_aktivitas', $this->status_aktivitas])
+            // ->andFilterWhere(['like', 'status_aktivitas', $this->status_aktivitas])
             ->andFilterWhere(['like', 'status_awal', $this->status_awal])
             ->andFilterWhere(['like', 'jml_sks_diakui', $this->jml_sks_diakui])
             ->andFilterWhere(['like', 'nim_asal', $this->nim_asal])
