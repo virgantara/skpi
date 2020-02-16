@@ -26,7 +26,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'namaAsrama',
+           [
+        'attribute' => 'namaAsrama',
+        'label' => 'Asrama',
+        'format' => 'raw',
+        'filter'=>$asramas,
+        'value'=>function($model,$url){
+            return $model->namaAsrama;
+            
+        },
+    ],
             'nama',
             
             'kapasitas',

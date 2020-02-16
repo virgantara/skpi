@@ -395,229 +395,110 @@ $.ajax({
     }
 });
 
-$.ajax({
-    type: "POST",
-    url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak"]).'",
-    data : {
-      kategori : "ringan"
-    },
-    async: true,
-    beforeSend : function(){
-      $("#loadinga").show();
-    },
-    error: function(e){
-        console.log(e.responseText);
-       $("#loadinga").hide();
-    },
-    success : function(data){
-      $("#loadinga").hide();
-      var hasil = $.parseJSON(data);
+function getTopPelanggaran(kat,warna){
 
-      var kategori = [];
-      var jumlah = [];
+  $.ajax({
+      type: "POST",
+      url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak"]).'",
+      data : {
+        kategori : kat
+      },
+      async: true,
+      beforeSend : function(){
+        $("#loadinga").show();
+      },
+      error: function(e){
+          console.log(e.responseText);
+         $("#loadinga").hide();
+      },
+      success : function(data){
+        $("#loadinga").hide();
+        var hasil = $.parseJSON(data);
+
+        var kategori = [];
+        var dataitems = [];
       
-      $.each(hasil,function(i,obj){
-          jumlah.push(obj.total);
-          kategori.push(obj.nama); 
-      }); 
+        var drilldown_items = [];
+        $.each(hasil,function(i,obj){
+            var tmp = new Object;
+            tmp.y = obj.total;
+            tmp.name = obj.nama;
+            tmp.drilldown = obj.nama;
 
-      Highcharts.chart("containerringan", {
-        chart: {
-            type: "bar"
-        },
-        title: {
-            text: null
-        },
-        subtitle: {
-            text: null
-        },
-        xAxis: {
-            categories: kategori,
-            title: {
-                text: null
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: "Banyak Pelanggaran",
-                align: \'high\'
-            },
-            labels: {
-                overflow: \'justify\'
-            }
-        },
-        tooltip: {
-            valueSuffix: " Pelanggaran"
-        },
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: "Jumlah",
-            data: jumlah
-        }]
-      });
+            dataitems.push(tmp);
+            kategori.push(obj.nama); 
 
-    }
-});
+            var tmps = new Object;
+            tmps.name = obj.nama;
+            tmps.id = obj.nama;
+            var datas = [];
+            $.each(obj.items,function(j,ob){
+              var r = [ob.nama,ob.total];
+              
+              datas.push(r);
 
-$.ajax({
-    type: "POST",
-    url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak"]).'",
-    data : {
-      kategori : "sedang"
-    },
-    async: true,
-    beforeSend : function(){
-      $("#loadingb").show();
-    },
-    error: function(e){
-        console.log(e.responseText);
-       $("#loadingb").hide();
-    },
-    success : function(data){
-      $("#loadingb").hide();
-      var hasil = $.parseJSON(data);
+            });
 
-      var kategori = [];
-      var jumlah = [];
-      
-      $.each(hasil,function(i,obj){
-          jumlah.push(obj.total);
-          kategori.push(obj.nama); 
-      }); 
+            tmps.data = datas;
+            drilldown_items.push(tmps);
+        }); 
 
-      Highcharts.chart("containersedang", {
-        chart: {
-            type: "bar"
-        },
-        title: {
-            text: null
-        },
-        subtitle: {
-            text: null
-        },
-        xAxis: {
-            categories: kategori,
-            title: {
-                text: null
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: "Banyak Pelanggaran",
-                align: \'high\'
-            },
-            labels: {
-                overflow: \'justify\'
-            }
-        },
-        tooltip: {
-            valueSuffix: " Pelanggaran"
-        },
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: "Jumlah",
-            data: jumlah,
-            color: "#e58b31"
-        }]
-      });
 
-    }
-}); 
+        Highcharts.chart("container"+kat, {
+          chart: {
+              type: "bar"
+          },
+          title: {
+              text: null
+          },
+          subtitle: {
+              text: null
+          },
+          xAxis: {
+             type: \'category\'
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: "Banyak Pelanggaran",
+                  align: \'high\'
+              },
+              labels: {
+                  overflow: \'justify\'
+              }
+          },
+          tooltip: {
+              valueSuffix: " Pelanggaran"
+          },
+          plotOptions: {
+              bar: {
+                  dataLabels: {
+                      enabled: true
+                  }
+              },
+              
+          },
+          credits: {
+              enabled: false
+          },
+          series: [{
+              name: "Pelanggaran",
+              data: dataitems,
+              color: warna
+          }],
+          drilldown: {
+            series: drilldown_items
+          }
+        });
 
-$.ajax({
-    type: "POST",
-    url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak"]).'",
-    data : {
-      kategori : "berat"
-    },
-    async: true,
-    beforeSend : function(){
-      $("#loadingc").show();
-    },
-    error: function(e){
-        console.log(e.responseText);
-       $("#loadingc").hide();
-    },
-    success : function(data){
-      $("#loadingc").hide();
-      var hasil = $.parseJSON(data);
+      }
+  });
+}
 
-      var kategori = [];
-      var jumlah = [];
-      
-      $.each(hasil,function(i,obj){
-          jumlah.push(obj.total);
-          kategori.push(obj.nama); 
-      }); 
 
-      Highcharts.chart("containerberat", {
-        chart: {
-            type: "bar"
-        },
-        title: {
-            text: null
-        },
-        subtitle: {
-            text: null
-        },
-        xAxis: {
-            categories: kategori,
-            title: {
-                text: null
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: "Banyak Pelanggaran",
-                align: \'high\'
-            },
-            labels: {
-                overflow: \'justify\'
-            }
-        },
-        tooltip: {
-            valueSuffix: " Pelanggaran"
-        },
-        plotOptions: {
-            bar: {
-                dataLabels: {
-                    enabled: true
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: "Jumlah",
-            data: jumlah,
-            color: "#d31414"
-        }]
-      });
-
-    }
-});   
+getTopPelanggaran("ringan","#5890e8");
+getTopPelanggaran("sedang","#e58b31");
+getTopPelanggaran("berat","#d31414");
 
 
 ';

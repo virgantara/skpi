@@ -8,6 +8,8 @@ use app\models\KamarSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use app\models\Asrama;
 
 /**
  * KamarController implements the CRUD actions for Kamar model.
@@ -95,10 +97,11 @@ class KamarController extends Controller
     {
         $searchModel = new KamarSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $asramas = ArrayHelper::map(Asrama::find()->all(),'nama','nama');
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'asramas' => $asramas
         ]);
     }
 
