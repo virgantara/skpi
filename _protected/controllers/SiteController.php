@@ -24,6 +24,8 @@ use Yii;
  */
 class SiteController extends Controller
 {
+
+    public $successUrl = '';
     /**
      * Returns a list of behaviors that this component should behave as.
      *
@@ -75,6 +77,7 @@ class SiteController extends Controller
             'auth' => [
                 'class' => 'yii\authclient\AuthAction',
                 'successCallback' => [$this, 'successCallback'],
+                'successUrl' => $this->successUrl
             ],
         ];
     }
@@ -82,7 +85,21 @@ class SiteController extends Controller
     public function successCallback($client)
     {
         $attributes = $client->getUserAttributes();
-        // user login or signup comes here
+        $user = \app\models\User::find()
+            ->where([
+                'email'=>$attributes['email'],
+            ])
+            ->one();
+        if(!empty($user)){
+            Yii::$app->user->login($user);
+        }
+        else{
+            //Simpen disession attribute user dari Google
+            $session = Yii::$app->session;
+            $session['attributes']=$attributes;
+            // redirect ke form signup, dengan mengset nilai variabell global successUrl
+            $this->successUrl = \yii\helpers\Url::to(['site/index']);
+        }   
     }
 
 //------------------------------------------------------------------------------------------------//

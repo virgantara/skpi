@@ -46,19 +46,28 @@ $this->title = Yii::t('app', 'Login');
 </label>
 
 <div class="space"></div>
-<?= \yii\authclient\widgets\AuthChoice::widget([
-     'baseAuthUrl' => ['site/auth']
-]) ?>
+
 <div class="clearfix">
 
  <?= Html::submitButton(Yii::t('app', '<i class="ace-icon fa fa-key"></i>
     <span class="bigger-110">Login</span>'), ['class' => 'width-35 pull-right btn btn-sm btn-primary', 'name' => 'login-button']) ?>
 
 </div>
-
+<div class="space-4"></div>
 
         <?php ActiveForm::end(); ?>
+<div class="social-or-login center">
+                        <span class="bigger-110">Or Login Using</span>
+                      </div>
 
+                      <div class="space-6"></div>
+
+                      <div class="social-login center">
+                        
+                        <a class="btn btn-danger" href="<?=\yii\helpers\Url::to(['/site/auth','authclient'=>'google']);?>">
+                          <i class="ace-icon fa fa-google-plus"></i>
+                        </a>
+                      </div>
         </div><!-- /.widget-main -->
               <div class="toolbar clearfix">
           <div>
@@ -70,7 +79,7 @@ $this->title = Yii::t('app', 'Login');
 
         
         </div>
-  
+    
       </div><!-- /.widget-body -->
     </div><!-- /.login-box -->
 
