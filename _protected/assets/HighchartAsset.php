@@ -28,7 +28,9 @@ class HighchartAsset extends AssetBundle
     	'highcharts.js',
         'highcharts-more.js',
         'modules/solid-gauge.js',
-        'modules/bullet.js'
+        'modules/bullet.js',
+        'modules/drilldown.js',
+        'modules/data.js'
     ];
 
     public $depends = [

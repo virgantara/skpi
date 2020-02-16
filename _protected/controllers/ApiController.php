@@ -34,20 +34,73 @@ class ApiController extends Controller
         ];
     }
 
+    public function actionAjaxGetPelanggaranJumlahTerbanyakFakultas(){
+        $kategori = $_POST['kategori'];
+        $pel_nama = $_POST['pel_nama'];
+        $query = new \yii\db\Query();
+        $rows = $query->select(['f.nama_fakultas as nama','f.kode_fakultas', 'COUNT(*) as total'])
+                ->from('erp_riwayat_pelanggaran rp')
+                ->innerJoin('erp_pelanggaran p', 'rp.pelanggaran_id = p.id')
+                ->innerJoin('erp_kategori_pelanggaran kp', 'p.kategori_id = kp.id')
+                ->innerJoin('simak_mastermahasiswa m', 'm.nim_mhs = rp.nim')
+                ->innerJoin('simak_masterfakultas f', 'f.kode_fakultas = m.kode_fakultas')
+                ->where(['kp.nama' => $kategori,'p.nama'=>$pel_nama])
+                ->groupBy(['f.nama_fakultas','f.kode_fakultas'])
+                ->orderBy('total DESC')
+                // ->limit(10)
+                ->all();
+
+        echo \yii\helpers\Json::encode($rows, JSON_NUMERIC_CHECK);
+        
+    }
+
     public function actionAjaxGetPelanggaranJumlahTerbanyak(){
         $kategori = $_POST['kategori'];
         $query = new \yii\db\Query();
-        $rows = $query->select(['a.nama', 'COUNT(*) as total'])
+        $rows = $query->select(['a.nama','a.id', 'COUNT(*) as total'])
                 ->from('erp_riwayat_pelanggaran b')
                 ->innerJoin('erp_pelanggaran a', 'b.pelanggaran_id = a.id')
                 ->innerJoin('erp_kategori_pelanggaran c', 'a.kategori_id = c.id')
                 ->where(['c.nama' => $kategori])
-                ->groupBy('a.nama')
+                ->groupBy(['a.nama','a.id'])
                 ->orderBy('total DESC')
                 ->limit(10)
                 ->all();
 
-        echo \yii\helpers\Json::encode($rows, JSON_NUMERIC_CHECK);
+        $results = [];
+        foreach($rows as $r)
+        {
+            $query = new \yii\db\Query();
+            $pel_nama = $r['nama'];
+            $rowss = $query->select(['f.nama_fakultas as nama','f.kode_fakultas', 'COUNT(*) as total'])
+                ->from('erp_riwayat_pelanggaran rp')
+                ->innerJoin('erp_pelanggaran p', 'rp.pelanggaran_id = p.id')
+                ->innerJoin('erp_kategori_pelanggaran kp', 'p.kategori_id = kp.id')
+                ->innerJoin('simak_mastermahasiswa m', 'm.nim_mhs = rp.nim')
+                ->innerJoin('simak_masterfakultas f', 'f.kode_fakultas = m.kode_fakultas')
+                ->where(['kp.nama' => $kategori,'p.nama'=>$pel_nama])
+                ->groupBy(['f.nama_fakultas','f.kode_fakultas'])
+                ->orderBy('total DESC')
+                // ->limit(10)
+                ->all();
+
+            $tmp = [];
+            foreach($rowss as $rr)
+            {
+                $tmp[] = [
+                    'nama' => $rr['nama'],
+                    'total' => $rr['total']
+                ];
+            }
+
+            $results[] = [
+                'nama' => $r['nama'],
+                'total' => $r['total'],
+                'items' => $tmp
+            ];
+        }
+
+        echo \yii\helpers\Json::encode($results, JSON_NUMERIC_CHECK);
         
     }
 
