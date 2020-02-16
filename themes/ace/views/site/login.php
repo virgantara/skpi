@@ -46,7 +46,9 @@ $this->title = Yii::t('app', 'Login');
 </label>
 
 <div class="space"></div>
-
+<?= \yii\authclient\widgets\AuthChoice::widget([
+     'baseAuthUrl' => ['site/auth']
+]) ?>
 <div class="clearfix">
 
  <?= Html::submitButton(Yii::t('app', '<i class="ace-icon fa fa-key"></i>
