@@ -10,7 +10,7 @@ use app\models\MahasiswaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\helpers\ArrayHelper;
 /**
  * MahasiswaController implements the CRUD actions for SimakMastermahasiswa model.
  */
@@ -39,10 +39,18 @@ class MahasiswaController extends Controller
     {
         $searchModel = new MahasiswaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $listKampus = ArrayHelper::map(\app\models\SimakKampus::find()->all(),'nama_kampus','nama_kampus');
+        $prodis = ArrayHelper::map(\app\models\SimakMasterprogramstudi::find()->all(),'kode_prodi','nama_prodi');
+        $fakultas = ArrayHelper::map(\app\models\SimakMasterfakultas::find()->all(),'kode_fakultas','nama_fakultas');
 
+        $status_aktif = ArrayHelper::map(\app\models\SimakPilihan::find()->where(['kode'=>'05'])->all(),'value','label');
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'listKampus' => $listKampus,
+            'prodis' => $prodis,
+            'fakultas' => $fakultas,
+            'status_aktif' => $status_aktif
         ]);
     }
 

@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\MahasiswaSearch */
@@ -26,11 +26,56 @@ $this->params['breadcrumbs'][] = $this->title;
             'nama_mahasiswa',
             'tempat_lahir',
             'tgl_lahir',
-            'jenis_kelamin',
-            'namaKampus',
-            'namaFakultas',
-            'namaProdi',
-            'status_aktivitas',
+            [
+                'attribute' => 'jenis_kelamin',
+                'label' => 'JK',
+                'format' => 'raw',
+                'filter'=>['L'=>'Laki-laki','P'=>'Perempuan'],
+                'value'=>function($model,$url){
+                    return $model->jenis_kelamin;
+                    
+                },
+            ],
+            [
+                'attribute' => 'namaKampus',
+                'label' => 'Kampus',
+                'format' => 'raw',
+                'filter'=>$listKampus,
+                'value'=>function($model,$url){
+                    return $model->namaKampus;
+                    
+                },
+            ],
+            [
+        'attribute' => 'namaFakultas',
+        'label' => 'Fakultas',
+        'format' => 'raw',
+        'filter'=>$fakultas,
+        'value'=>function($model,$url){
+            return $model->namaFakultas;
+            
+        },
+    ],
+   [
+        'attribute' => 'namaProdi',
+        'label' => 'Prodi',
+        'format' => 'raw',
+        'filter'=>$prodis,
+        'value'=>function($model,$url){
+            return $model->namaProdi;
+            
+        },
+    ],
+             [
+        'attribute' => 'status_aktivitas',
+        'label' => 'Status Aktif',
+        'format' => 'raw',
+        'filter'=>$status_aktif,
+        'value'=>function($model,$url){
+            return $model->status_aktivitas;
+            
+        },
+    ],
             'semester',
             
             // 'kampus',
