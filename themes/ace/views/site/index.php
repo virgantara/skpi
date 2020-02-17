@@ -411,6 +411,8 @@ $(document).on("click","#kembalilv2ringan",function(e){
   var dataWarna = $(this).attr("data-warna");
   var dataCategory = $(this).attr("data-category");
   getTopPelanggaran("ringan","#5890e8");
+  $(this).hide();
+
 });
 
 $(document).on("click","#kembalilv3ringan",function(e){
@@ -428,6 +430,7 @@ $(document).on("click","#kembalilv2sedang",function(e){
   var dataWarna = $(this).attr("data-warna");
   var dataCategory = $(this).attr("data-category");
   getTopPelanggaran("sedang","#e58b31");
+  $(this).hide();
 });
 
 $(document).on("click","#kembalilv3sedang",function(e){
@@ -445,6 +448,7 @@ $(document).on("click","#kembalilv2berat",function(e){
   var dataWarna = $(this).attr("data-warna");
   var dataCategory = $(this).attr("data-category");
   getTopPelanggaran("berat","#d31414");
+  $(this).hide();
 });
 
 $(document).on("click","#kembalilv3berat",function(e){
