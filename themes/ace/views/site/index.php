@@ -70,8 +70,13 @@ $listAsrama = \app\models\Asrama::find()->all();
       <div class="widget-header">
         <h4 class="widget-title lighter smaller">
           <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Ringan
+          <span id="loadingringan" style="display: none">Fetching...</span>
         </h4>
-         <div id="loadinga" style="display: none">Fetching...</div>
+         
+         <div class="pull-right">
+          <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv2ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+          <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv3ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+        </div>
       </div>
 
       <div class="widget-body">
@@ -79,12 +84,10 @@ $listAsrama = \app\models\Asrama::find()->all();
           <div class="tab-content padding-8">
            
 
-            <div class="table-responsive">
-                 <div class="containerringan" id="containerringan" style="min-width: 200;  margin: 0 auto">
-                   
-                 </div> 
-            </div>
-
+               <div class="containerringan" id="containerringan" style="min-width: 200;  margin: 0 auto">
+                 
+               </div> 
+            
           </div>
         </div><!-- /.widget-main -->
       </div><!-- /.widget-body -->
@@ -95,8 +98,12 @@ $listAsrama = \app\models\Asrama::find()->all();
       <div class="widget-header">
         <h4 class="widget-title lighter smaller">
           <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Sedang
+          <span id="loadingsedang" style="display: none">Fetching...</span>
         </h4>
-         <div id="loadingb" style="display: none">Fetching...</div>
+          <div class="pull-right">
+          <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv2sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+          <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv3sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+        </div>
       </div>
 
       <div class="widget-body">
@@ -120,8 +127,12 @@ $listAsrama = \app\models\Asrama::find()->all();
       <div class="widget-header">
         <h4 class="widget-title lighter smaller">
           <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Berat
+          <span id="loadingberat" style="display: none">Fetching...</span>
         </h4>
-         <div id="loadingc" style="display: none">Fetching...</div>
+         <div class="pull-right">
+          <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv2berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+          <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv3berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+        </div>
       </div>
 
       <div class="widget-body">
@@ -395,6 +406,56 @@ $.ajax({
     }
 });
 
+$(document).on("click","#kembalilv2ringan",function(e){
+  var dataJenis = $(this).attr("data-jenis");
+  var dataWarna = $(this).attr("data-warna");
+  var dataCategory = $(this).attr("data-category");
+  getTopPelanggaran("ringan","#5890e8");
+});
+
+$(document).on("click","#kembalilv3ringan",function(e){
+  var dataJenis = $("#kembalilv2ringan").attr("data-jenis");
+  var dataWarna = $("#kembalilv2ringan").attr("data-warna");
+  var dataCategory = $("#kembalilv2ringan").attr("data-category");
+  getTopPelanggaranFakultas(dataJenis,dataCategory,"#5890e8");
+  $("#kembalilv2ringan").show();
+  $("#kembalilv3ringan").hide();
+});
+
+
+$(document).on("click","#kembalilv2sedang",function(e){
+  var dataJenis = $(this).attr("data-jenis");
+  var dataWarna = $(this).attr("data-warna");
+  var dataCategory = $(this).attr("data-category");
+  getTopPelanggaran("sedang","#e58b31");
+});
+
+$(document).on("click","#kembalilv3sedang",function(e){
+  var dataJenis = $("#kembalilv2sedang").attr("data-jenis");
+  var dataWarna = $("#kembalilv2sedang").attr("data-warna");
+  var dataCategory = $("#kembalilv2sedang").attr("data-category");
+  getTopPelanggaranFakultas(dataJenis,dataCategory,"#e58b31");
+  $("#kembalilv2sedang").show();
+  $("#kembalilv3sedang").hide();
+});
+
+
+$(document).on("click","#kembalilv2berat",function(e){
+  var dataJenis = $(this).attr("data-jenis");
+  var dataWarna = $(this).attr("data-warna");
+  var dataCategory = $(this).attr("data-category");
+  getTopPelanggaran("berat","#d31414");
+});
+
+$(document).on("click","#kembalilv3berat",function(e){
+  var dataJenis = $("#kembalilv2berat").attr("data-jenis");
+  var dataWarna = $("#kembalilv2berat").attr("data-warna");
+  var dataCategory = $("#kembalilv2berat").attr("data-category");
+  getTopPelanggaranFakultas(dataJenis,dataCategory,"#d31414");
+  $("#kembalilv2berat").show();
+  $("#kembalilv3berat").hide();
+});
+
 function getTopPelanggaran(kat,warna){
 
   $.ajax({
@@ -405,42 +466,27 @@ function getTopPelanggaran(kat,warna){
       },
       async: true,
       beforeSend : function(){
-        $("#loadinga").show();
+        $("#loading"+kat).show();
       },
       error: function(e){
           console.log(e.responseText);
-         $("#loadinga").hide();
+         $("#loading"+kat).hide();
       },
       success : function(data){
-        $("#loadinga").hide();
+        $("#loading"+kat).hide();
         var hasil = $.parseJSON(data);
 
         var kategori = [];
         var dataitems = [];
-      
-        var drilldown_items = [];
+        
         $.each(hasil,function(i,obj){
             var tmp = new Object;
             tmp.y = obj.total;
             tmp.name = obj.nama;
-            tmp.drilldown = obj.nama;
 
             dataitems.push(tmp);
             kategori.push(obj.nama); 
 
-            var tmps = new Object;
-            tmps.name = obj.nama;
-            tmps.id = obj.nama;
-            var datas = [];
-            $.each(obj.items,function(j,ob){
-              var r = [ob.nama,ob.total];
-              
-              datas.push(r);
-
-            });
-
-            tmps.data = datas;
-            drilldown_items.push(tmps);
         }); 
 
 
@@ -455,7 +501,210 @@ function getTopPelanggaran(kat,warna){
               text: null
           },
           xAxis: {
-             type: \'category\'
+            categories: kategori,
+            title : {
+              text : \'Pelanggaran\'
+            }
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: "Jumlah",
+                  align: \'high\'
+              },
+              labels: {
+                  overflow: \'justify\'
+              }
+          },
+          tooltip: {
+              valueSuffix: " Pelanggaran"
+          },
+          plotOptions: {
+              bar: {
+                  dataLabels: {
+                      enabled: true
+                  }
+              },
+              series: {
+                  cursor: \'pointer\',
+                  point: {
+                      events: {
+                          click: function() {
+                            getTopPelanggaranFakultas(kat,this.category,warna);
+                            $("#kembalilv2"+kat).attr("data-jenis",kat);
+                            $("#kembalilv2"+kat).attr("data-category",this.category);
+                            $("#kembalilv2"+kat).attr("data-warna",warna);
+                            $("#kembalilv2"+kat).show();
+                          }
+                      }
+                  }
+              }
+          },
+          credits: {
+              enabled: false
+          },
+          series: [{
+              name: "Pelanggaran",
+              data: dataitems,
+              color: warna
+          }],
+          
+        });
+
+      }
+  });
+}
+
+function getTopPelanggaranFakultas(kat,pel, warna){
+
+  $.ajax({
+      type: "POST",
+      url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak-fakultas"]).'",
+      data : {
+        kategori : kat,
+        pel_nama : pel
+      },
+      async: true,
+      beforeSend : function(){
+        $("#loading"+kat).show();
+      },
+      error: function(e){
+          console.log(e.responseText);
+         $("#loading"+kat).hide();
+      },
+      success : function(data){
+        $("#loading"+kat).hide();
+        var hasil = $.parseJSON(data);
+
+        var kategori = [];
+        var dataitems = [];
+        
+        $.each(hasil,function(i,obj){
+            var tmp = new Object;
+            tmp.y = obj.total;
+            tmp.name = obj.nama;
+
+            dataitems.push(tmp);
+            kategori.push(obj.nama); 
+
+        }); 
+
+
+        Highcharts.chart("container"+kat, {
+          chart: {
+              type: "bar"
+          },
+          title: {
+              text: null
+          },
+          subtitle: {
+              text: null
+          },
+          xAxis: {
+            categories: kategori,
+            title : {
+              text : \'Pelanggaran\'
+            }
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: "Banyak Pelanggaran",
+                  align: \'high\'
+              },
+              labels: {
+                  overflow: \'justify\'
+              }
+          },
+          tooltip: {
+              valueSuffix: " Pelanggaran"
+          },
+          plotOptions: {
+              bar: {
+                  dataLabels: {
+                      enabled: true
+                  }
+              },
+              series: {
+                  cursor: \'pointer\',
+                  point: {
+                      events: {
+                          click: function() {
+                            getTopPelanggaranProdi(kat,pel,this.category,warna);
+                            $("#kembalilv3"+kat).show();
+                            $("#kembalilv2"+kat).hide();
+                          }
+                      }
+                  }
+              }
+          },
+          credits: {
+              enabled: false
+          },
+          series: [{
+              name: "Pelanggaran",
+              data: dataitems,
+              color: warna
+          }],
+          
+        });
+
+      }
+  });
+}
+
+
+function getTopPelanggaranProdi(kat,pel,fak, warna){
+
+  $.ajax({
+      type: "POST",
+      url: "'.Url::to(["/api/ajax-get-pelanggaran-jumlah-terbanyak-prodi"]).'",
+      data : {
+        kategori : kat,
+        pel_nama : pel,
+        fakultas : fak
+      },
+      async: true,
+      beforeSend : function(){
+        $("#loading"+kat).show();
+      },
+      error: function(e){
+          console.log(e.responseText);
+         $("#loading"+kat).hide();
+      },
+      success : function(data){
+        $("#loading"+kat).hide();
+        var hasil = $.parseJSON(data);
+
+        var kategori = [];
+        var dataitems = [];
+        
+        $.each(hasil,function(i,obj){
+            var tmp = new Object;
+            tmp.y = obj.total;
+            tmp.name = obj.nama;
+
+            dataitems.push(tmp);
+            kategori.push(obj.nama); 
+
+        }); 
+
+
+        Highcharts.chart("container"+kat, {
+          chart: {
+              type: "bar"
+          },
+          title: {
+              text: null
+          },
+          subtitle: {
+              text: null
+          },
+          xAxis: {
+            categories: kategori,
+            title : {
+              text : \'Pelanggaran\'
+            }
           },
           yAxis: {
               min: 0,
@@ -486,9 +735,7 @@ function getTopPelanggaran(kat,warna){
               data: dataitems,
               color: warna
           }],
-          drilldown: {
-            series: drilldown_items
-          }
+          
         });
 
       }
