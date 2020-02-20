@@ -11,6 +11,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use app\helpers\MyHelper;
+use yii\httpclient\Client;
 /**
  * MahasiswaController implements the CRUD actions for SimakMastermahasiswa model.
  */
@@ -78,10 +80,31 @@ class MahasiswaController extends Controller
         $query->orderBy(['created_at'=>SORT_DESC]);
 
         $riwayatKamar = $query->all();
+
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token'=>$client_token];
+        $response = $client->get('/b/tagihan/mahasiswa', ['nim' => $model->nim_mhs],$headers)->send();
+        
+        $riwayatPembayaran = [];
+       
+        if ($response->isOk) {
+            $result = $response->data['values'];
+            // print_r($result);exit;
+            if(!empty($result))
+            {
+                $riwayatPembayaran = $result;
+            }
+
+          
+        }
+
         return $this->render('view', [
             'model' => $model,
             'riwayat' => $riwayat,
-            'riwayatKamar' => $riwayatKamar
+            'riwayatKamar' => $riwayatKamar,
+            'riwayatPembayaran' => $riwayatPembayaran
         ]);
     }
 
