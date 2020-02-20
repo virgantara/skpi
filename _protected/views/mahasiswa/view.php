@@ -207,10 +207,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                                    echo '<button class="btn btn-danger">BELUM LUNAS</button>';
                                                    break;
                                                case 1:
-                                                echo '<button class="btn btn-warning">CICILAN</button>';
+                                                echo '<button class="btn btn-warning">LUNAS</button>';
                                                 break;
                                                case 2:
-                                               echo '<button class="btn btn-success">LUNAS</button>';
+                                               echo '<button class="btn btn-success">CICILAN</button>';
                                                break;
                                                default:
                                                    # code...
