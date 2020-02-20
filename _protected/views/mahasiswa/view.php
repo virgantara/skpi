@@ -214,5 +214,312 @@ $this->params['breadcrumbs'][] = $this->title;
                          ?>
 
                     </div>
+
+                    <div class="widget-box transparent">
+                        <div class="widget-header widget-header-small">
+                            <h4 class="widget-title blue smaller">
+                                <i class="ace-icon fa fa-rss orange"></i>
+                                Nilai Raport Kesantrian
+                            </h4>
+
+                            <div class="widget-toolbar action-buttons">
+                                <a href="#" data-action="reload">
+                                    <i class="ace-icon fa fa-refresh blue"></i>
+                                </a>
+&nbsp;
+                                <a href="#" class="pink">
+                                    <i class="ace-icon fa fa-trash-o"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="kesantrian table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <h3><strong>NILAI RAPORT KEMAHASISWAAN</strong></h3>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="3">
+                                            <h4><strong>A. Data Pribadi Mahasiswa</strong></h4>
+                                        </td>                                    
+                                    </tr>
+                                    <tr class="success">
+                                        <td>1.</td>
+                                        <td>Nama</td>
+                                        <td><?= $model->nama_mahasiswa?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2.</td>
+                                        <td>Nama Arab</td>
+                                        <td><?= $model->nama_mahasiswa?></td>
+                                    </tr>
+                                    <tr class="success">
+                                        <td>3.</td>
+                                        <td>No KTP</td>
+                                        <td><?= $model->ktp?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4.</td>
+                                        <td>Kewarganegaraan</td>
+                                        <td><?= $model->labelNegara()?></td>
+                                    </tr>
+                                    <tr class="success">
+                                        <td>5.</td>
+                                        <td colspan="2">Alamat Lengkap</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">a.</td>
+                                        <td>Jalan</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">b.</td>
+                                        <td>No Rumah</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">c.</td>
+                                        <td>RT / RW</td>
+                                        <td>RT <?= $model->rt ?> RW <?= $model->rw ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">d.</td>
+                                        <td>Desa/Kel/Dusun</td>
+                                        <td>DUSUN <?= strtoupper($model->dusun)?> DESA <?= strtoupper($model->desa)?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">e.</td>
+                                        <td>Kecamatan</td>
+                                        <td><?= $model->kecamatan?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">f.</td>
+                                        <td>Kab/Kodya</td>
+                                        <td><?= $model->kabupaten?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">g.</td>
+                                        <td>Provinsi</td>
+                                        <td><?= $model->provinsi?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">h.</td>
+                                        <td>Kode POS</td>
+                                        <td><?= $model->kode_pos?></td>
+                                    </tr>
+                                    <tr class="success">
+                                        <td>6.</td>
+                                        <td>Contact</td>
+                                        <td><?= $model->hp?> </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <h4><strong>B. Data Keluarga</strong></h4>
+                                        </td>
+                                    </tr>
+                                <?php foreach ($model->ortuAyah as $row) { ?>
+                                    <tr class="success">
+                                        <td>1.</td>
+                                        <td colspan="2">Ayah</td>  
+                                    </tr>
+                                    <tr>
+                                        <td class="center">a.</td>
+                                        <td>Nama</td>
+                                        <td><?= strtoupper($row['nama']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">b.</td>
+                                        <td>Pekerjaan</td>
+                                        <td><?= $row['namaPekerjaan']->label ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">c.</td>
+                                        <td>Pendidikan Terakhir</td>
+                                        <td><?= $row['namaPendidikan']->label ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">d.</td>
+                                        <td>Kewarganegaraan</td>
+                                        <td><?= strtoupper($row['negara']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">e.</td>
+                                        <td>Kedudukan di Masyarakat</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">f.</td>
+                                        <td>Contact</td>
+                                        <td>TELP : <?= $row['telepon'] ?> / HP : <?= $row['hp'] ?></td>
+                                    </tr>
+                                <?php } ?>
+                                    <tr class="success">
+                                        <td>2.</td>
+                                        <td colspan="2">Ibu</td>
+                                    </tr>
+                                <?php foreach ($model->ortuIbu as $row) { ?>
+                                    <tr>
+                                        <td class="center">a.</td>
+                                        <td>Nama</td>
+                                        <td><?= strtoupper($row['nama']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">b.</td>
+                                        <td>Pekerjaan</td>
+                                        <td><?= $row['namaPekerjaan']->label ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">c.</td>
+                                        <td>Pendidikan Terakhir</td>
+                                        <td><?= $row['namaPendidikan']->label ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">d.</td>
+                                        <td>Kewarganegaraan</td>
+                                        <td><?= strtoupper($row['negara']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">e.</td>
+                                        <td>Kedudukan di Masyarakat</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">f.</td>
+                                        <td>Contact</td>
+                                        <td>TELP : <?= $row['telepon'] ?> / HP : <?= $row['hp'] ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">g.</td>
+                                        <td>Anak ke</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">h.</td>
+                                        <td>Yang Membiayai Pendidikan</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">i.</td>
+                                        <td>Kesanggupan Membiayai</td>
+                                        <td></td>
+                                    </tr>
+                                <?php } ?>
+                                <?php if (!empty($model->ortuWali)) { ?>
+                                    <tr class="success">
+                                        <td>1.</td>
+                                        <td colspan="2">Wali</td>  
+                                    </tr>
+                                    <tr>
+                                        <td class="center">a.</td>
+                                        <td>Nama</td>
+                                        <td><?= $row['nama'] ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">b.</td>
+                                        <td>Pekerjaan</td>
+                                        <td><?= $row['namaPekerjaan']->label ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">c.</td>
+                                        <td>Pendidikan Terakhir</td>
+                                        <td><?= $row['namaPendidikan']->label ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">d.</td>
+                                        <td>Kewarganegaraan</td>
+                                        <td><?= strtoupper($row['negara']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">e.</td>
+                                        <td>Kedudukan di Masyarakat</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">f.</td>
+                                        <td>Contact</td>
+                                        <td>TELP : <?= $row['telepon'] ?> / HP : <?= $row['hp'] ?></td>
+                                    </tr>
+                                <?php }
+                                else{
+                                ?>
+                                    <tr class="success">
+                                        <td>3.</td>
+                                        <td>Wali</td>
+                                        <td> Tidak Ada Wali</td>
+                                    </tr>
+                                <?php 
+                                }
+
+                                ?>
+                                </tbody>
+                            </table>
+                            <!-- <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <h4><strong>C. Latar Belakang Pendidikan</strong></h4>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table> -->
+                            <table class="table table-bordered">
+                                <h4><strong>D. Riwayat Perkulihan</strong></h4>
+                                <?php if (!empty($dataKrs)) { ?>
+                                <thead>
+                                    
+                                     <tr align="center" class="success">
+                                        <td><strong>SEMESTER</strong></td>
+                                        <td><strong>TAHUN AKADEMIK</strong></td>
+                                        <td><strong>SKS</strong></td>
+                                        <td><strong>IPS</strong></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php 
+                                $a = 1;
+                                foreach ($dataKrs as $value) { ?>
+                                    <tr class="center">
+                                        <td><?= $a ?></td>
+                                        <td><?= $value['tahun'] ?></td>
+                                        <td><?= $value['jumlah'] ?></td>
+                                        <td><?= number_format($value['ip'], 2) ?></td>
+                                    </tr>
+
+                                <?php $a++; } ?>
+                                    <tr class="center">
+                                        <td colspan="3" class="info"><strong>IPK</strong></td>
+                                        <td class="info"><strong>
+                                            <?php 
+                                                $b = 0;
+                                                $c = 0;
+                                                foreach ($dataKrs as $value) {
+                                                    $b += $value['jumlah'];
+                                                    $c += $value['nilai'];
+                                                }
+                                                $d = $c/$b;
+                                                echo number_format($d, 2);
+                                            ?>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr class="center">
+                                        <td colspan="3" class="info"><strong>STATUS MAHASISWA</strong></td>
+                                        <td class="info">
+                                            <strong><?= $model->labelStatus() ?></strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            <?php } else{ ?>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>TIDAK ADA RECORD</strong></td>
+                                    </tr>
+                                </tbody>
+                            <?php } ?>
+                            </table>
+                        </div>
+
+                    </div>
       </div>
 </div>

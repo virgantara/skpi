@@ -75,13 +75,48 @@ class MahasiswaController extends Controller
             'nim'=> $model->nim_mhs
         ]);
 
+        $querykrs = new \yii\db\Query();
+        $querykrsmhs = $querykrs->select(['c.label as tahun','SUM(a.sks) as jumlah','SUM(a.sks * b.angka) as nilai', 'SUM(a.sks * b.angka) / SUM(a.sks) as ip'])
+                ->from('simak_datakrs a')
+                ->innerJoin('simak_konversi b', 'a.nilai_huruf = b.huruf')
+                ->innerJoin('simak_pilihan c', 'a.tahun_akademik = c.value')
+                ->where(['a.mahasiswa' => $model->nim_mhs])
+                ->andWhere(['!=', 'a.nilai_huruf', "NULL" ])
+                ->andWhere(['>', 'a.sks', '0'])
+                ->groupBy(['c.label'])
+                ->orderBy('c.label ASC')
+                ->all();
+
         $query->orderBy(['created_at'=>SORT_DESC]);
 
         $riwayatKamar = $query->all();
         return $this->render('view', [
             'model' => $model,
             'riwayat' => $riwayat,
-            'riwayatKamar' => $riwayatKamar
+            'riwayatKamar' => $riwayatKamar,
+            'dataKrs' => $querykrsmhs
+        ]);
+    }
+
+    public function actionRaport($id)
+    {
+        $model = $this->findModel($id);
+        $querykrs = new \yii\db\Query();
+        $querykrsmhs = $querykrs->select(['c.label as tahun','SUM(a.sks) as jumlah','SUM(a.sks * b.angka) as nilai', 'SUM(a.sks * b.angka) / SUM(a.sks) as ip'])
+                ->from('simak_datakrs a')
+                ->innerJoin('simak_konversi b', 'a.nilai_huruf = b.huruf')
+                ->innerJoin('simak_pilihan c', 'a.tahun_akademik = c.value')
+                ->where(['a.mahasiswa' => $model->nim_mhs])
+                ->andWhere(['!=', 'a.nilai_huruf', "NULL" ])
+                ->andWhere(['>', 'a.sks', '0'])
+                ->groupBy(['c.label'])
+                ->orderBy('c.label ASC')
+                ->all();
+
+        $query->orderBy(['created_at'=>SORT_DESC]);
+        return $this->render('view', [
+            'model' => $model,
+            'dataKrs' => $querykrsmhs
         ]);
     }
 

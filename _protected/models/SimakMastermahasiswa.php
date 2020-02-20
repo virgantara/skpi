@@ -343,4 +343,56 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     {
         return $this->kampus0->nama_kampus;
     }
+
+    public function getKodeOrtu()
+    {
+        return $this->hasMany(SimakMahasiswaOrtu::className(), ['nim' => 'nim_mhs']);
+    }
+
+    public function getOrtuAyah()
+    {
+        return $this->getKodeOrtu()->where(['hubungan' => 'ayah']);
+    }
+    public function getOrtuIbu()
+    {
+        return $this->getKodeOrtu()->where(['hubungan' => 'ibu']);
+    }
+    public function getOrtuWali()
+    {
+        return $this->getKodeOrtu()->where(['hubungan' => 'wali']);
+    }
+
+    public function labelNegara(){
+        if ($this->warga_negara == 'ID') {
+            return 'INDONESIA';
+        }elseif ($this->warga_negara == 'MY') {
+            return 'MALAYSIA';
+        }elseif ($this->warga_negara == 'TH') {
+            return 'THAILAND';
+        }
+        else{
+            return $this->warga_negara;
+        }
+    }
+
+    public function labelStatus(){
+        if ($this->status_aktivitas =='A') {
+            return 'AKTIF';
+        }elseif ($this->status_aktivitas =='C') {
+            return 'CUTI';
+        }elseif ($this->status_aktivitas =='D') {
+            return 'DROP OUT / PUTUS STUDI';
+        }elseif ($this->status_aktivitas =='K') {
+            return 'KELUAR';
+        }elseif ($this->status_aktivitas =='L') {
+            return 'LULUS';
+        }elseif ($this->status_aktivitas =='N') {
+            return 'NON AKTIF';
+        }elseif ($this->status_aktivitas =='G') {
+            return 'SEDANG DOUBLE DEGREE';
+        }
+        else{
+            return $this->status_aktivitas;
+        }
+    }
 }
