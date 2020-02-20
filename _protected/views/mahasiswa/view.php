@@ -202,20 +202,23 @@ $this->params['breadcrumbs'][] = $this->title;
                             <td><?=$value['nama'];?></td>
                             <td><?=$value['tahun'];?></td>
                             <td><?php
-                             switch ($value['status_bayar']) {
-                                               case 0:
-                                                   echo '<button class="btn btn-danger">BELUM LUNAS</button>';
-                                                   break;
-                                               case 1:
-                                                echo '<button class="btn btn-warning">CICILAN</button>';
-                                                break;
-                                               case 2:
-                                               echo '<button class="btn btn-success">LUNAS</button>';
-                                               break;
-                                               default:
-                                                   # code...
-                                                   break;
-                                           }
+                            $nilai = $value['nilai'];
+                            $terbayar = $value['terbayar'];
+                            $nilai_minimal = $value['nilai_minimal'];
+                            if($terbayar >= $nilai)
+                            {
+                                echo '<button class="btn btn-success">LUNAS</button>';
+                            }
+
+                            else if($terbayar >= $nilai_minimal && $terbayar > 0)
+                            {
+                                echo '<button class="btn btn-success">CICILAN</button>';
+                            }
+
+                            else{
+                                echo '<button class="btn btn-danger">BELUM LUNAS</button>';
+                            }
+                            
                              ?>
                                 
                             </td>
