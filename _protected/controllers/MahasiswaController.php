@@ -116,7 +116,8 @@ class MahasiswaController extends Controller
             'model' => $model,
             'riwayat' => $riwayat,
             'riwayatKamar' => $riwayatKamar,
-            'dataKrs' => $querykrsmhs
+            'dataKrs' => $querykrsmhs,
+            'riwayatPembayaran' => $riwayatPembayaran
         ]);
     }
 
