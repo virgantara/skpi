@@ -133,4 +133,14 @@ class SimakMahasiswaOrtu extends \yii\db\ActiveRecord
     {
         return $this->hasOne(SimakPilihan::className(), ['value' => 'penghasilan']);
     }
+
+    public function getNamaPekerjaan()
+    {
+        return $this->getPekerjaan0()->where(['kode' => '55']);
+    }
+
+    public function getNamaPendidikan()
+    {
+        return $this->getPendidikan0()->where(['kode' => '01']);
+    }
 }
