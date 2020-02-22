@@ -163,7 +163,74 @@ $this->params['breadcrumbs'][] = $this->title;
                          ?>
 
                     </div>
+                    <div class="widget-box transparent">
+                        <div class="widget-header widget-header-small">
+                            <h4 class="widget-title blue smaller">
+                                <i class="ace-icon fa fa-rss orange"></i>
+                                Recent Payment
+                            </h4>
 
+                            <div class="widget-toolbar action-buttons">
+                                <a href="#" data-action="reload">
+                                    <i class="ace-icon fa fa-refresh blue"></i>
+                                </a>
+&nbsp;
+                                <a href="#" class="pink">
+                                    <i class="ace-icon fa fa-trash-o"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Pembayaran</th>
+                                    <th>Tahun</th>
+                                    <th>Status Pembayaran</th>
+                                    <th>Last update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        <?php 
+                        foreach ($riwayatPembayaran as $key => $value) 
+                        {
+                            # code...
+                        
+                        ?>
+                        <tr>
+                            <td><?=$key+1;?></td>
+                            <td><?=$value['nama'];?></td>
+                            <td><?=$value['tahun'];?></td>
+                            <td><?php
+                            $nilai = $value['nilai'];
+                            $terbayar = $value['terbayar'];
+                            $nilai_minimal = $value['nilai_minimal'];
+                            if($terbayar >= $nilai)
+                            {
+                                echo '<button class="btn btn-success">LUNAS</button>';
+                            }
+
+                            else if($terbayar >= $nilai_minimal && $terbayar > 0)
+                            {
+                                echo '<button class="btn btn-success">CICILAN</button>';
+                            }
+
+                            else{
+                                echo '<button class="btn btn-danger">BELUM LUNAS</button>';
+                            }
+                            
+                             ?>
+                                
+                            </td>
+                            <td><?=date('d/m/Y H:i:s',strtotime($value['updated_at']));?></td>
+                        </tr>
+                        
+                        <?php
+                    }
+                         ?>
+                     </tbody>
+                     </table>
+                    </div>
                          <div class="widget-box transparent">
                         <div class="widget-header widget-header-small">
                             <h4 class="widget-title blue smaller">

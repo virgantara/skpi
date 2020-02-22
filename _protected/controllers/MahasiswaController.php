@@ -11,6 +11,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use app\helpers\MyHelper;
+use yii\httpclient\Client;
 /**
  * MahasiswaController implements the CRUD actions for SimakMastermahasiswa model.
  */
@@ -90,6 +92,26 @@ class MahasiswaController extends Controller
         $query->orderBy(['created_at'=>SORT_DESC]);
 
         $riwayatKamar = $query->all();
+
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token'=>$client_token];
+        $response = $client->get('/b/tagihan/mahasiswa', ['nim' => $model->nim_mhs],$headers)->send();
+        
+        $riwayatPembayaran = [];
+       
+        if ($response->isOk) {
+            $result = $response->data['values'];
+            // print_r($result);exit;
+            if(!empty($result))
+            {
+                $riwayatPembayaran = $result;
+            }
+
+          
+        }
+
         return $this->render('view', [
             'model' => $model,
             'riwayat' => $riwayat,
@@ -98,27 +120,6 @@ class MahasiswaController extends Controller
         ]);
     }
 
-    public function actionRaport($id)
-    {
-        $model = $this->findModel($id);
-        $querykrs = new \yii\db\Query();
-        $querykrsmhs = $querykrs->select(['c.label as tahun','SUM(a.sks) as jumlah','SUM(a.sks * b.angka) as nilai', 'SUM(a.sks * b.angka) / SUM(a.sks) as ip'])
-                ->from('simak_datakrs a')
-                ->innerJoin('simak_konversi b', 'a.nilai_huruf = b.huruf')
-                ->innerJoin('simak_pilihan c', 'a.tahun_akademik = c.value')
-                ->where(['a.mahasiswa' => $model->nim_mhs])
-                ->andWhere(['!=', 'a.nilai_huruf', "NULL" ])
-                ->andWhere(['>', 'a.sks', '0'])
-                ->groupBy(['c.label'])
-                ->orderBy('c.label ASC')
-                ->all();
-
-        $query->orderBy(['created_at'=>SORT_DESC]);
-        return $this->render('view', [
-            'model' => $model,
-            'dataKrs' => $querykrsmhs
-        ]);
-    }
 
     /**
      * Creates a new SimakMastermahasiswa model.
