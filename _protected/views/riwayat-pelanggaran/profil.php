@@ -76,11 +76,11 @@ $this->title = Yii::t('app', Yii::$app->name);
 								<i class="ace-icon fa fa-plus-circle bigger-120 green"></i>
 								Tambah Pelanggaran
 							</a>
-
-							<a href="#" class="btn btn-link">
-								<i class="ace-icon fa fa-envelope bigger-120 pink"></i>
-								Send a message
-							</a>
+							
+							   <a href="<?=Url::to(['izin-mahasiswa/create','nim'=>$mahasiswa['nim_mhs']]);?>" class="btn btn-link" id="btn-tambah-perizinan">
+                                <i class="ace-icon fa fa-plus-circle bigger-120 green"></i>
+                                Tambah Perizinan
+                            </a>
 
 						<!-- 	<a href="#" class="btn btn-link">
 								<i class="ace-icon fa fa-globe bigger-125 blue"></i>
@@ -300,6 +300,44 @@ $this->title = Yii::t('app', Yii::$app->name);
 											</a>
 
 											<a href="#" class="red">
+												<i class="ace-icon fa fa-times bigger-125"></i>
+											</a>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<?php 
+					}
+						?>
+						<?php 
+						foreach ($riwayatIzin as $key => $value) {
+							# code...
+						
+						?>
+						<div class="widget-body">
+							<div class="widget-main padding-8">
+								<div id="profile-feed-1" class="profile-feed">
+									<div class="profile-activity clearfix">
+										<div>
+											<img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+											<a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
+											izin <?=$value->keperluan_id == '1' ? 'Pribadi' : 'Kampus';?>
+											yaitu <?=$value->alasan;?>. Berangkat tanggal <?=MyHelper::YmdtodmY($value->tanggal_berangkat,true);?> dan pulang tanggal <?=MyHelper::YmdtodmY($value->tanggal_pulang,true);?> 
+
+											<div class="time">
+												<i class="ace-icon fa fa-clock-o bigger-110"></i>
+												<?=\app\helpers\MyHelper::hitungDurasi(date('Y-m-d H:i:s'),$value->created_at);?> yang lalu
+											</div>
+										</div>
+
+										<div class="tools action-buttons">
+											<a href="<?=Url::to(['izin-mahasiswa/update','id'=>$value->id]);?>" class="blue">
+												<i class="ace-icon fa fa-pencil bigger-125"></i>
+											</a>
+
+											<a onclick="return confirm('Hapus data ini?')" href="<?=Url::to(['izin-mahasiswa/delete','id'=>$value->id]);?>" class="red">
 												<i class="ace-icon fa fa-times bigger-125"></i>
 											</a>
 										</div>

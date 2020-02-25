@@ -7,6 +7,7 @@ use app\models\Asrama;
 use app\models\RiwayatKamar;
 use app\models\RiwayatPelanggaran;
 use app\models\RiwayatPelanggaranSearch;
+use app\models\IzinMahasiswa;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -56,11 +57,21 @@ class RiwayatPelanggaranController extends Controller
         $query->orderBy(['created_at'=>SORT_DESC]);
 
         $riwayat = $query->all();
+
+        $query = IzinMahasiswa::find()->where([
+            'nim'=> $nim
+        ]);
+
+        $query->orderBy(['created_at'=>SORT_DESC]);
+
+        $riwayatIzin = $query->all();
+
             
         return $this->render('profil',[
             'model' => $model,
             'mahasiswa' => $mahasiswa,
-            'riwayat' => $riwayat
+            'riwayat' => $riwayat,
+            'riwayatIzin' => $riwayatIzin
         ]);
     }
 

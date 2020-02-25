@@ -174,6 +174,48 @@ class ApiController extends Controller
 
     }
 
+    public function actionAjaxCariKota() {
+
+        $q = $_GET['term'];
+        
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token'=>$client_token];
+        $response = $client->get('/kota/search', ['key' => $q],$headers)->send();
+        
+        $out = [];
+
+        
+        if ($response->isOk) {
+            $result = $response->data['values'];
+            // print_r($result);exit;
+            if(!empty($result))
+            {
+                foreach ($result as $d) {
+                    $out[] = [
+                        'id' => $d['id'],
+                        'label'=> $d['kab'].' - '.$d['prov'],
+
+                    ];
+                }
+            }
+
+            else
+            {
+                $out[] = [
+                    'id' => 0,
+                    'label'=> 'Data kota tidak ditemukan',
+
+                ];
+            }
+        }
+        
+
+        echo \yii\helpers\Json::encode($out);
+
+
+    }
 
     public function actionAjaxCariMahasiswa() {
 

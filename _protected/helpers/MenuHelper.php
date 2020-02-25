@@ -41,6 +41,23 @@ class MenuHelper
 	            ],
 	        ]];
 
+	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Perizinan </span><i class="caret"></i>', 'url' => '#',
+	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	        'items'=>[
+	           	[
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Perizinan',  
+	                'url' => ['/izin-mahasiswa/index'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang'),
+	               
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Perizinan',  
+	                'url' => ['/riwayat-pelanggaran/cari-mahasiswa'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang'), 
+	            ],
+	        ]];
+
 	         $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span><i class="caret"></i>', 
 	         'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
@@ -109,7 +126,12 @@ class MenuHelper
 	                
 	               
 	            ],
-	      
+	      		  [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap Perizinan',  
+	                'url' => ['/laporan/rekap-perizinan'],	        
+	                
+	               
+	            ],
 	            
 	        ]];
 	    }
@@ -232,6 +254,19 @@ class MenuHelper
 	                'items' => [
 
 	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['mahasiswa/index']],
+	                ],
+	            ],
+
+	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Wilayah <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Provinsi'),'url' => ['simak-propinsi/index']],
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Kota/Kabupaten'),'url' => ['simak-kabupaten/index']],
 	                ],
 	            ],
 	           
