@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\IzinMahasiswa;
 use app\models\RiwayatPelanggaran;
 use app\models\RiwayatPelanggaranSearch;
 use app\models\SimakMastermahasiswa;
@@ -34,6 +35,251 @@ class LaporanController extends Controller
             ],
         ];
     }
+
+    public function actionRekapPerizinan()
+    {
+        
+        $model = new IzinMahasiswa;
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $list_prodi = [];
+        $response = $client->get('/f/prodi/list', [],['x-access-token'=>Yii::$app->params['client_token']])->send();
+        if ($response->isOk) {
+            $list_prodi = $response->data['values'];
+            // print_r($result);exit;
+            
+
+        }
+
+        $results = [];
+        $resultsBelumPulang = [];
+        $resultsSemua = [];
+        
+        if(!empty($_POST['btn-search'])) 
+        {
+            if(!empty($_POST['IzinMahasiswa']['tanggal_awal']) && !empty($_POST['IzinMahasiswa']['tanggal_akhir']))
+            {
+                $tanggal_awal = \app\helpers\MyHelper::dmYtoYmd($_POST['IzinMahasiswa']['tanggal_awal'],true);
+                $tanggal_akhir = \app\helpers\MyHelper::dmYtoYmd($_POST['IzinMahasiswa']['tanggal_akhir'],true);
+                // $prodi = $_POST['prodi'];
+                foreach($list_prodi as $q=> $item)
+                {
+
+                    for($smt = 1;$smt <=9; $smt++)
+                    {
+                        // total jml mhs
+                        $p = $item['items'][0]['kode_prodi'];
+                        $params = [
+                            'prodi' => $p,
+                            'semua' => 'semua',
+                            'semester' => $smt
+                        ];
+
+                        $hsl = $client->get('/m/izin/count', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+                        if ($hsl->isOk) {
+                            $total = $hsl->data['values'];
+                            // print_r($result);exit;
+                            $resultsSemua[$item['kode_fakultas']][$p][$smt] = $total;                
+
+                        }
+
+                        for($j=1;$j<count($item['items']);$j++)
+                        {
+                            $p = $item['items'][$j]['kode_prodi'];
+
+                            $params = [
+                                'prodi' => $p,
+                                'semua' => 'semua',
+                                'semester' => $smt
+                            ];
+
+                            $hsl = $client->get('/m/izin/count', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+                            if ($hsl->isOk) {
+                                $total = $hsl->data['values'];
+                                // print_r($result);exit;
+                                $resultsSemua[$item['kode_fakultas']][$p][$smt] = $total; 
+                            }
+                        }
+
+                        // total izin
+                        $p = $item['items'][0]['kode_prodi'];
+                        $params = [
+                            'prodi' => $p,
+                            'sd' => $tanggal_awal,
+                            'ed' => $tanggal_akhir,
+                            'semester' => $smt
+                        ];
+
+                        $hsl = $client->get('/m/izin/count', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+                        if ($hsl->isOk) {
+                            $total = $hsl->data['values'];
+                            // print_r($result);exit;
+                            $results[$item['kode_fakultas']][$p][$smt] = $total;                
+
+                        }
+
+                        for($j=1;$j<count($item['items']);$j++)
+                        {
+                            $p = $item['items'][$j]['kode_prodi'];
+
+                            $params = [
+                                'prodi' => $p,
+                                'sd' => $tanggal_awal,
+                                'ed' => $tanggal_akhir,
+                                'semester' => $smt
+                            ];
+
+                            $hsl = $client->get('/m/izin/count', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+                            if ($hsl->isOk) {
+                                $total = $hsl->data['values'];
+                                // print_r($result);exit;
+                                $results[$item['kode_fakultas']][$p][$smt] = $total; 
+                            }
+                        }
+
+
+                        // total belum pulang
+                        $p = $item['items'][0]['kode_prodi'];
+                        $params = [
+                            'prodi' => $p,
+                            'sd' => $tanggal_awal,
+                            'ed' => $tanggal_akhir,
+                            'semester' => $smt,
+                            'status' => 1
+                        ];
+
+                        $hsl = $client->get('/m/izin/count', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+                        if ($hsl->isOk) {
+                            $total = $hsl->data['values'];
+                            // print_r($result);exit;
+                            $resultsBelumPulang[$item['kode_fakultas']][$p][$smt] = $total;                
+
+                        }
+
+                        for($j=1;$j<count($item['items']);$j++)
+                        {
+                            $p = $item['items'][$j]['kode_prodi'];
+
+                            $params = [
+                                'prodi' => $p,
+                                'sd' => $tanggal_awal,
+                                'ed' => $tanggal_akhir,
+                                'semester' => $smt,
+                                'status' => 1
+                            ];
+
+                            $hsl = $client->get('/m/izin/count', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+                            if ($hsl->isOk) {
+                                $total = $hsl->data['values'];
+                                // print_r($result);exit;
+                                $resultsBelumPulang[$item['kode_fakultas']][$p][$smt] = $total; 
+                            }
+                        }
+                    }
+                }
+            }
+        }
+            
+        else if(!empty($_POST['btn-export'])){
+            if(!empty($_POST['RiwayatPelanggaran']['tanggal_awal']) && !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']))
+            {
+                $tanggal_awal = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_awal'].' 00:00:00');
+                $tanggal_akhir = \app\helpers\MyHelper::dmYtoYmd($_POST['RiwayatPelanggaran']['tanggal_akhir'].' 23:59:59');
+                // $prodi = $_POST['prodi'];
+                
+                $query = RiwayatPelanggaran::find();
+
+                $query->where(['between','tanggal',$tanggal_awal,$tanggal_akhir]);
+                $results = $query->all();
+            }
+            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+            $objPHPExcel = new \PHPExcel();
+
+            //prepare the records to be added on the excel file in an array
+           
+            // Set document properties
+            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
+
+            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Add column headers
+            $objPHPExcel->getActiveSheet()
+                        ->setCellValue('A1', 'No')
+                        ->setCellValue('B1', 'Tgl')
+                        ->setCellValue('C1', 'NIM')
+                        ->setCellValue('D1', 'Nama')
+                        ->setCellValue('E1', 'Semester')
+                        ->setCellValue('F1', 'Asrama-Kamar')
+                        ->setCellValue('G1', 'Kampus')
+                        ->setCellValue('H1', 'Prodi')
+                        ->setCellValue('I1', 'Kategori')
+                        ->setCellValue('J1', 'Pelanggaran')
+                        ->setCellValue('K1', 'Hukuman')
+                        ->setCellValue('L1', 'Status Mhs');
+
+            //Put each record in a new cell
+
+            $i= 1;
+            $ii = 2;
+            
+            foreach($results as $row)
+            {
+                $skuy = '';
+                foreach ($row->riwayatHukumen as $h) {
+                    $skuy .= $h->hukuman->nama.', ';
+                }
+
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, date('d/m/Y',strtotime($row->tanggal)));
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row->nim0->nim_mhs);
+                $objPHPExcel->getActiveSheet()->setCellValue('D'.$ii, $row->nim0->nama_mahasiswa);
+                $objPHPExcel->getActiveSheet()->setCellValue('E'.$ii, $row->nim0->semester);
+                $objPHPExcel->getActiveSheet()->setCellValue('F'.$ii, $row->nim0->kamar->asrama->nama.' - '.$row->nim0->kamar->nama);
+                $objPHPExcel->getActiveSheet()->setCellValue('G'.$ii, $row->nim0->kampus0->nama_kampus);
+                $objPHPExcel->getActiveSheet()->setCellValue('H'.$ii, $row->nim0->kodeProdi->singkatan);
+                $objPHPExcel->getActiveSheet()->setCellValue('I'.$ii, $row->pelanggaran->kategori->nama);
+               
+                $objPHPExcel->getActiveSheet()->setCellValue('J'.$ii, $row->pelanggaran->nama);
+                $objPHPExcel->getActiveSheet()->setCellValue('K'.$ii, $skuy);
+                $objPHPExcel->getActiveSheet()->setCellValue('L'.$ii, $row->nim0->status_aktivitas);
+                // $objPHPExcel->getActiveSheet()->setCellValue('H'.$ii, $row->subtotal);
+                $i++;
+                $ii++;
+                
+
+                
+            }       
+
+            foreach(range('A','L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                    ->setAutoSize(true);
+            }
+
+            // Set worksheet title
+            $objPHPExcel->getActiveSheet()->setTitle('Rincian Pelanggaran');
+            
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="Rincian_Pelanggaran.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+            $objWriter->save('php://output');
+            exit();           
+
+        }
+        
+
+
+        return $this->render('rekap_perizinan', [
+            'results' => $results,
+            'model' => $model,
+            'list_prodi' => $list_prodi,
+            'results' => $results,
+            'resultsBelumPulang' => $resultsBelumPulang,
+            'resultsSemua' => $resultsSemua
+        ]);
+    }
+
 
     public function actionRincianPelanggaran(){
         

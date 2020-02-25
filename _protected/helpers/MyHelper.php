@@ -9,13 +9,19 @@ use Yii;
 class MyHelper
 {
 
-	function dmYtoYmd($tgl){
+	function dmYtoYmd($tgl,$dateonly=false){
 		$date = str_replace('/', '-', $tgl);
-	    return date('Y-m-d H:i:s',strtotime($date));
+	    if($dateonly)
+	    	return date('Y-m-d',strtotime($date));
+	    else
+	    	return date('Y-m-d H:i:s',strtotime($date));
 	}
 
-	function YmdtodmY($tgl){
-		return date('d-m-Y H:i:s',strtotime($tgl));
+	function YmdtodmY($tgl,$dateonly=false){
+		if($dateonly)
+			return date('d-m-Y',strtotime($tgl));
+		else
+			return date('d-m-Y H:i:s',strtotime($tgl));
 	}
 
 

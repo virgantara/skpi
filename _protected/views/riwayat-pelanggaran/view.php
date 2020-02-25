@@ -93,9 +93,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 Tambah Pelanggaran
                             </a>
 
-                            <a href="#" class="btn btn-link">
-                                <i class="ace-icon fa fa-envelope bigger-120 pink"></i>
-                                Send a message
+                           <a href="<?=Url::to(['izin-mahasiswa/create','nim'=>$mahasiswa['nim_mhs']]);?>" class="btn btn-link" id="btn-tambah-perizinan">
+                                <i class="ace-icon fa fa-plus-circle bigger-120 green"></i>
+                                Tambah Perizinan
                             </a>
 
                         <!--    <a href="#" class="btn btn-link">
