@@ -997,17 +997,8 @@ class LaporanController extends Controller
                     ],['x-access-token'=>Yii::$app->params['client_token']])->send();
 
                     if ($response->isOk) {
-                        $result = $response->data['values'];
-                        // print_r($result);exit;
-                        foreach ($result as $d) {
-                            $results[] = [
-                                'prodi' => $d['singkatan'],
-                                'total'=> $d['total'],
-                                // 'singkatan'=> $d['singkatan'],
-                               
-                            ];
-                        }
-
+                        $results = $response->data['values'];
+                        
 
                     }
                 } catch (\Exception $e) {
@@ -1039,18 +1030,7 @@ class LaporanController extends Controller
                     ],['x-access-token'=>Yii::$app->params['client_token']])->send();
 
                     if ($response->isOk) {
-                        $result = $response->data['values'];
-                        // print_r($result);exit;
-                        foreach ($result as $d) {
-                            $results[] = [
-                                'prodi' => $d['singkatan'],
-                                'total'=> $d['total'],
-                                // 'singkatan'=> $d['singkatan'],
-                               
-                            ];
-                        }
-
-
+                        $results = $response->data['values'];
                     }
                 } catch (\Exception $e) {
                     $results = [
@@ -1075,8 +1055,9 @@ class LaporanController extends Controller
             // Add column headers
             $objPHPExcel->getActiveSheet()
                         ->setCellValue('A1', 'No')
-                        ->setCellValue('B1', 'Nama Prodi')
-                        ->setCellValue('C1', 'Total');
+                        ->setCellValue('B1', 'Kategori')
+                        ->setCellValue('C1', 'Prodi')
+                        ->setCellValue('D1', 'Total');
 
             //Put each record in a new cell
 
@@ -1085,14 +1066,26 @@ class LaporanController extends Controller
             
             foreach($results as $row)
             {
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['prodi']);
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
-                $i++;
-                $ii++;              
+                $size = count($row['items']);
+
+                for($j=0;$j<$size;$j++)
+                {
+
+                    $v = $row['items'][$j];
+                    $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
+                    $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $j==0?$row['kategori_nama']:'');
+                    $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $v['singkatan']);
+                    $objPHPExcel->getActiveSheet()->setCellValue('D'.$ii, $v['total']);
+                    $i++;
+                    $ii++;      
+                }
+
+                
+                
+                        
             }       
 
-            foreach(range('A','C') as $columnID) {
+            foreach(range('A','D') as $columnID) {
                 $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
