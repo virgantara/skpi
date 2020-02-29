@@ -6,7 +6,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = Yii::t('app', 'Login');
+$this->title = Yii::t('app', 'Login SIMPEL | '.Yii::$app->name);
 ?>
  <div class="position-relative">
     <div id="login-box" class="login-box visible widget-box no-border">

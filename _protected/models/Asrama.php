@@ -16,6 +16,9 @@ use Yii;
  */
 class Asrama extends \yii\db\ActiveRecord
 {
+
+    public $dataKamar;
+
     /**
      * {@inheritdoc}
      */
@@ -30,6 +33,7 @@ class Asrama extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['dataKamar'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xls, xlsx'],
             [['kampus_id', 'nama'], 'required'],
             [['kampus_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],

@@ -9,7 +9,7 @@ $params = array_merge(
 
 $config = [
     'id' => 'basic',
-    'name' => 'SIMPEL Online | Universitas Darussalam Gontor',
+    'name' => 'SIMPEL',
     'language' => 'en',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'app\components\Aliases'],
