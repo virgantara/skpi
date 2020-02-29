@@ -86,13 +86,14 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
 <?php ActiveForm::end(); ?>
 
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-6">
         <h3>Rekap Per Prodi</h3>
         <table class="table table-striped table-bordered table-hover" id="tabel_ekd">
             
             <thead>
                 <tr>
-                    <th>No</th>
+                    <th width="40px">No</th>
+                    <th width="140px">Kategori</th>
                     <th>Prodi</th>
                     <th>Total</th>    
                 </tr>
@@ -104,15 +105,26 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
                 $i = 0;
                 foreach($results as $q=> $item)
                 {
-                    $i++;
+                    
+
+                    $size = count($item['items']);
+
+
+                    for($j=0;$j<$size;$j++)
+                    {
+                        $v = $item['items'][$j];
+                        $i++;
                 ?>
                 <tr>
                 <td><?=$i;?></td>
-                <td><?=$item['prodi'];?></td>
-                <td><?=$item['total'];?></td>
+                <td><?=$j==0?$item['kategori_nama']:'';?></td>
+                <td><?=$v['singkatan'];?></td>
+                <td><?=$v['total'];?></td>
                 </tr>
                 <?php
-                    
+                    }
+
+
                 }
                 ?>
             </tbody>
