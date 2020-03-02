@@ -28,7 +28,8 @@ class AppAsset extends AssetBundle
         'css/fonts.googleapis.com.css',
         'css/ace-skins.min.css',
         'css/ace-rtl.min.css',
-        'css/jquery.datetextentry.css'
+        'css/jquery.datetextentry.css',
+        'css/bootstrap-datetimepicker.min.css'
     ];
 
     public $js = [
@@ -38,7 +39,9 @@ class AppAsset extends AssetBundle
         'js/ace.min.js',
         'js/jquery.mobile.custom.min.js',
         'js/jquery-ui.min.js',
-        'js/jquery.datetextentry.js'
+        'js/jquery.datetextentry.js',
+        'js/moment.min.js',
+        'js/bootstrap-datetimepicker.min.js'
     ];
 
     public $depends = [

@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 use yii\httpclient\Client;
 use yii\helpers\ArrayHelper;
 use app\models\Asrama;
+use app\models\RiwayatPelanggaran;
+
 /**
  * IzinMahasiswaController implements the CRUD actions for IzinMahasiswa model.
  */
@@ -117,7 +119,7 @@ class IzinMahasiswaController extends Controller
                         
                         if(empty($model->kota_id))
                             $model->kota_id = NULL;
-                        
+
 
                         if(!$model->save()){
                             $logs = \app\helpers\MyHelper::logError($model);
@@ -201,11 +203,67 @@ class IzinMahasiswaController extends Controller
             $dataku = $_POST['dataku'];
             $id = $dataku['id'];
             $kode = $dataku['kode'];
+            $tgl = $dataku['tgl'];
             $model = $this->findModel($id);
             
             $model->status = $kode;
-            $model->save(false,['status']);
+            $model->tanggal_pulang_sebenarnya = $tgl;
+            $model->save(false,['status','tanggal_pulang_sebenarnya']);
         
+            if($model->keperluan_id =='3')
+            {
+                $t1 = strtotime($tgl);
+                $t2 = strtotime(date('Y-m-d 22:00:00'));
+                
+                if($t1 > $t2){
+                    // Melanggara pulang kampus tengah malam
+                    $p = new RiwayatPelanggaran;
+                    $p->pelanggaran_id = 8;
+                    $p->nim = $model->nim;
+                    $p->tahun_id = $model->tahun_akademik;
+                    $p->tanggal = $tgl;
+                    if(!$p->save()){
+                        print_r($p->getErrors());exit;
+                    }
+                }
+            }
+
+            else if($model->durasi > 1){
+                $t1 = strtotime($tgl);
+                $t2 = strtotime($model->tanggal_pulang.' 00:00:01');
+                
+
+                
+                if($t1 > $t2)
+                {
+
+                    $interval = \app\helpers\MyHelper::hitungSelisihHari($tgl,$model->tanggal_pulang.' 00:00:01');
+                    if($interval->d <= 2)
+                    {
+                    // Terlambat melapor perizinan
+                        $p = new RiwayatPelanggaran;
+                        $p->pelanggaran_id = 6;
+                        $p->nim = $model->nim;
+                        $p->tahun_id = $model->tahun_akademik;
+                        $p->tanggal = $tgl;
+                        if(!$p->save()){
+                            print_r($p->getErrors());exit;
+                        }
+                    }
+
+                    else{
+                        $p = new RiwayatPelanggaran;
+                        $p->pelanggaran_id = 30;
+                        $p->nim = $model->nim;
+                        $p->tahun_id = $model->tahun_akademik;
+                        $p->tanggal = $tgl;
+                        if(!$p->save()){
+                            print_r($p->getErrors());exit;
+                        }
+                    }
+                }
+                
+            }
 
             $results = [
                 'code' => 200,

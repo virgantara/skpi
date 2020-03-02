@@ -24,6 +24,14 @@ class MyHelper
 			return date('d-m-Y H:i:s',strtotime($tgl));
 	}
 
+	function hitungSelisihHari($date1, $date2)
+	{
+		$date1 = new \DateTime($date1);
+		$date2 = new \DateTime($date2);
+		$interval = $date1->diff($date2);
+
+		return $interval;
+	}
 
 	function hitungDurasi($date1, $date2)
 	{
