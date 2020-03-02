@@ -40,7 +40,7 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pelanggaran_id', 'tanggal', 'nim', 'tahun_id','pelapor','bukti','surat_pernyataan'], 'required'],
+            [['pelanggaran_id', 'tanggal', 'nim', 'tahun_id'], 'required'],
             [['pelanggaran_id', 'tahun_id'], 'integer'],
             [['tanggal', 'created_at', 'updated_at'], 'safe'],
             [['nim'], 'string', 'max' => 25],

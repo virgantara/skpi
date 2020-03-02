@@ -299,7 +299,7 @@ class RiwayatPelanggaranController extends Controller
 
         $model->delete();
 
-        return $this->redirect(['cari-mahasiswa']);
+        return $this->redirect(['index']);
     }
 
     /**

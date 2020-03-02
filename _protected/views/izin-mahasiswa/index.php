@@ -11,6 +11,14 @@ use yii\helpers\Url;
 $this->title = 'Perizinan Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<style type="text/css">
+    .swal2-overflow {
+  overflow-x: visible;
+  overflow-y: visible;
+}
+</style>
+
 <div class="izin-mahasiswa-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -252,7 +260,7 @@ $html .= '<li class="divider"></li><li><a href="javascript:void(0)" class="btn-b
 
 $this->registerJs(' 
 
-$(".btn-approve").click(function(){
+$(document).on("click",".btn-approve",function(){
     Swal.fire({
       title: \'Do you want to approve this person?\',
       
@@ -292,20 +300,31 @@ $(".btn-approve").click(function(){
 
 $(document).on("click",".btn-kembali, .btn-batal-kembali",function(){
     var kode = $(this).attr("data-kode");
+    var tglNow = "'.date('Y-m-d H:i:s').'";
     Swal.fire({
-      title: \'Do you want to approve this person?\',
-      
-      icon: \'warning\',
-      showCancelButton: true,
-      confirmButtonColor: \'#3085d6\',
-      cancelButtonColor: \'#d33\',
-      confirmButtonText: \'Yes, approve this!\'
+        title: \'Konfirmasi kedatangan saat ini?\',
+        customClass: \'swal2-overflow\',
+        html: \'<input id="datepicker">\',
+        icon: \'warning\',
+        onOpen: function() {
+          $(\'#datepicker\').datetimepicker({
+            format: \'YYYY-MM-DD HH:mm:ss\',
+            defaultDate : tglNow
+        });
+        },
+        showLoaderOnConfirm : true,
+        showCancelButton: true,
+        confirmButtonColor: \'#3085d6\',
+        cancelButtonColor: \'#d33\',
+        confirmButtonText: \'Ya, konfirm data ini!\',
+
     }).then((result) => {
       if (result.value) {
         var id = $(this).attr("data-item");
     var obj = new Object;
     obj.id = id;
     obj.kode = kode;
+    obj.tgl = $("#datepicker").val();
     $.ajax({
 
         type : "POST",
