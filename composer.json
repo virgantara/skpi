@@ -29,14 +29,15 @@
         "yiisoft/yii2-jui": "^2.0",
         "kartik-v/yii2-widget-typeahead": "*",
         "hscstudio/yii2-export": "*",
-        "kartik-v/yii2-widget-fileinput": "@dev",
+        "kartik-v/yii2-widget-fileinput": "dev-master",
         "keygenqt/yii2-autocomplete-ajax": "@dev",
         "kartik-v/yii2-mpdf": "dev-master",
         "yiisoft/yii2-httpclient": "^2.0",
         "kartik-v/yii2-field-range": "*",
         "2amigos/yii2-ckeditor-widget": "^2.1",
         "2amigos/yii2-chartjs-widget" : "~2.0",
-        "kartik-v/yii2-date-range": "dev-master"
+        "kartik-v/yii2-date-range": "dev-master",
+        "phpoffice/phpspreadsheet": "^1.10"
     
     },
     "require-dev": {

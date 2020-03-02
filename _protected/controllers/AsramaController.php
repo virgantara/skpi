@@ -12,7 +12,7 @@ use app\models\RiwayatKamar;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\web\UploadedFile;
 
 /**
  * AsramaController implements the CRUD actions for Asrama model.
@@ -314,9 +314,63 @@ class AsramaController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {
+    {   
+
+        $model = $this->findModel($id);
+        if (Yii::$app->request->isPost) {
+            $uploadedFile = UploadedFile::getInstance($model, 'dataKamar');
+            $extension =$uploadedFile->extension;
+            if($extension=='xlsx'){
+                $inputFileType = 'Xlsx';
+            }else{
+                $inputFileType = 'Xls';
+            }
+
+            
+            $sheetname =$model->dataKamar;
+            $inputFileName = $uploadedFile->tempName;
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+/**  Create a new Reader of the type that has been identified  **/
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+            $reader->setLoadSheetsOnly($sheetname);
+            // print_r($sheetname);exit;
+            $spreadsheet = $reader->load($uploadedFile->tempName);
+            $worksheet = $spreadsheet->getActiveSheet();
+            $highestRow = $worksheet->getHighestRow();
+            $highestColumn = $worksheet->getHighestColumn();
+            $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+              
+            for ($row = 1; $row <= $highestRow; ++$row) 
+            { 
+                $asrama_id = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                $nama_kamar = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); // 10 artinya kolom 10
+                $kapasitas = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
+                // print_r($kapasitas);exit;
+                $kamar = \app\models\Kamar::find()->where([
+                    'nama' => $nama_kamar,
+                    'asrama_id' => $asrama_id
+                ])->one();
+
+                if(empty($kamar))
+                {
+                    $kamar = new \app\models\Kamar;
+                    $kamar->nama = (string)$nama_kamar;
+                    $kamar->asrama_id = $id;
+                }
+
+                $kamar->kapasitas = $kapasitas;
+                if(!$kamar->save()){
+                    print_r($kamar->getErrors());exit;
+                }
+
+            }
+            // return;
+            
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
         ]);
     }
 

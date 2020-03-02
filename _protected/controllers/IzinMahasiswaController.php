@@ -70,22 +70,22 @@ class IzinMahasiswaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($nim)
+    public function actionCreate()
     {
         $model = new IzinMahasiswa();
 
         $mahasiswa = [];
         $api_baseurl = Yii::$app->params['api_baseurl'];
         $client = new Client(['baseUrl' => $api_baseurl]);
-        if(!empty($nim))
-        {
+        // if(!empty($nim))
+        // {
         
-            $response = $client->get('/m/profil/nim', ['nim' => $nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
+        //     $response = $client->get('/m/profil/nim', ['nim' => $nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
             
-            if ($response->isOk) {
-                $mahasiswa = $response->data['values'][0];
-            }    
-        }
+        //     if ($response->isOk) {
+        //         $mahasiswa = $response->data['values'][0];
+        //     }    
+        // }
 
         $response = $client->get('/tahun/aktif',[],['x-access-token'=>Yii::$app->params['client_token']])->send();
         $tahun_aktif = [];
@@ -95,8 +95,8 @@ class IzinMahasiswaController extends Controller
 
         $model->tahun_akademik = $tahun_aktif['tahun_id'];
 
-        $model->nim = $mahasiswa['nim_mhs'] ?: '';
-        $model->semester = $mahasiswa['semester'];
+        // $model->nim = $mahasiswa['nim_mhs'] ?: '';
+        
         // print_r($mahasiswa);exit;
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
@@ -104,12 +104,23 @@ class IzinMahasiswaController extends Controller
         {
             if ($model->load(Yii::$app->request->post())) 
             {
+                if(!empty($model->nim))
+                {
+                
+                    $response = $client->get('/m/profil/nim', ['nim' => $model->nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
+                    
+                    if ($response->isOk) {
+                        $mahasiswa = $response->data['values'][0];
+                        $model->semester = $mahasiswa['semester'];
+                    }    
+                }
+
                 $model->tanggal_berangkat = \app\helpers\MyHelper::dmYtoYmd($model->tanggal_berangkat);
                 $model->tanggal_pulang = \app\helpers\MyHelper::dmYtoYmd($model->tanggal_pulang);
                 $model->save();
 
                 $transaction->commit();
-                return $this->redirect(['riwayat-pelanggaran/profil', 'nim' => $nim]);
+                return $this->redirect(['izin-mahasiswa/index']);
             }
         } catch (\Exception $e) {
             $transaction->rollBack();
@@ -169,6 +180,69 @@ class IzinMahasiswaController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionKembali()
+    {
+
+        if(Yii::$app->request->isPost)
+        {
+
+            $dataku = $_POST['dataku'];
+            $id = $dataku['id'];
+            $kode = $dataku['kode'];
+            $model = $this->findModel($id);
+            
+            $model->status = $kode;
+            $model->save(false,['status']);
+        
+
+            $results = [
+                'code' => 200,
+                'msg' => "Approval Berhasil"
+            ];
+            echo json_encode($results);        
+        }
+
+        die();
+    }
+
+    public function actionApproval()
+    {
+
+        if(Yii::$app->request->isPost)
+        {
+
+            $dataku = $_POST['dataku'];
+            $id = $dataku['id'];
+            $model = $this->findModel($id);
+            if(Yii::$app->user->can('stafBAPAK'))
+            {
+                $model->approved = 1;
+                $model->save(false,['approved']);
+            }
+
+            else if(Yii::$app->user->can('kaprodi'))
+            {
+
+                $model->prodi_approved = 1;
+                $model->save(false,['prodi_approved']);
+            }
+
+            else if(Yii::$app->user->can('kepalaBAAK'))
+            {
+                $model->baak_approved = 1;
+                $model->save(false,['baak_approved']);
+            }
+
+            $results = [
+                'code' => 200,
+                'msg' => "Approval Berhasil"
+            ];
+            echo json_encode($results);        
+        }
+
+        die();
     }
 
     /**

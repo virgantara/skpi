@@ -40,6 +40,8 @@ class MenuHelper
 	                'visible' => Yii::$app->user->can('operatorCabang'), 
 	            ],
 	        ]];
+	    }
+
 
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Perizinan </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
@@ -48,16 +50,18 @@ class MenuHelper
 	           	[
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Perizinan',  
 	                'url' => ['/izin-mahasiswa/index'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang'),
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK'),
 	               
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Perizinan',  
-	                'url' => ['/riwayat-pelanggaran/cari-mahasiswa'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang'), 
+	                'url' => ['/izin-mahasiswa/create'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('stafBAPAK'), 
 	            ],
 	        ]];
 
+	       if (Yii::$app->user->can('operatorCabang'))
+	    {
 	         $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span><i class="caret"></i>', 
 	         'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
@@ -78,7 +82,7 @@ class MenuHelper
 	        ]
 	    ];
 
-
+}
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Laporan </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
@@ -134,7 +138,7 @@ class MenuHelper
 	            ],
 	            
 	        ]];
-	    }
+	    
 
 	    // display Users to admin+ roles
 	    if (Yii::$app->user->can('admin') || Yii::$app->user->can('admSalesCab') || Yii::$app->user->can('adminSpbu') || Yii::$app->user->can('gudang')){

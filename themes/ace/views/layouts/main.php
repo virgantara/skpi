@@ -33,6 +33,11 @@ $theme = $this->theme;
 .swal2-popup {
   font-size: 1.6rem !important;
 }
+
+.ui-state-focus {
+background: none !important;
+background-color: #5090C1 !important;
+border: none !important;} 
 </style>
 <body class="no-skin">
      <div id="navbar" class="navbar navbar-default    navbar-collapse       h-navbar ace-save-state">

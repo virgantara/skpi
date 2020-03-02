@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Asrama */
@@ -35,5 +36,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'updated_at',
         ],
     ]) ?>
+
+
+
+</div>
+
+<div class="asrama-form">
+
+    <?php $form = ActiveForm::begin((['options' => ['enctype' => 'multipart/form-data']])); ?>
+
+     <?= $form->field($model, 'dataKamar')->fileInput() ?>
+  
+
+    <div class="form-group">
+        <?= Html::submitButton('Upload', ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
 
 </div>

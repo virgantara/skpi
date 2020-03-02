@@ -3,21 +3,26 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\IzinMahasiswaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Izin Mahasiswas';
+$this->title = 'Perizinan Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="izin-mahasiswa-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <?php 
+if(Yii::$app->user->can('admin')){
+    ?>
     <p>
-        <?= Html::a('Create Izin Mahasiswa', ['riwayat-pelanggaran/cari-mahasiswa'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Perizinan Mahasiswa', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-
+<?php 
+}
+?>
    <?php 
     $gridColumns = [
     [
@@ -32,16 +37,16 @@ $this->params['breadcrumbs'][] = $this->title;
     
     'nim',
     'namaMahasiswa',
-   [
-        'attribute' => 'namaFakultas',
-        'label' => 'Fakultas',
-        'format' => 'raw',
-        'filter'=>$fakultas,
-        'value'=>function($model,$url){
-            return $model->namaFakultas;
+   // [
+   //      'attribute' => 'namaFakultas',
+   //      'label' => 'Fakultas',
+   //      'format' => 'raw',
+   //      'filter'=>$fakultas,
+   //      'value'=>function($model,$url){
+   //          return $model->namaFakultas;
             
-        },
-    ],
+   //      },
+   //  ],
    [
         'attribute' => 'namaProdi',
         'label' => 'Prodi',
@@ -52,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
         },
     ],
-    'semester',
+    // 'semester',
     [
         'attribute' => 'namaAsrama',
         'label' => 'Asrama',
@@ -68,7 +73,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attribute' => 'namaKeperluan',
         'label' => 'Keperluan',
         'format' => 'raw',
-        'filter'=>["1"=>"Pribadi","2"=>"Kampus"],
+        'filter'=>["1"=>"Pribadi","2"=>"Kampus",'3'=>'Harian'],
         'value'=>function($model,$url){
 
             $label = $model->namaKeperluan;
@@ -103,14 +108,84 @@ $this->params['breadcrumbs'][] = $this->title;
             
         },
     ],
+    [
+        'attribute' => 'approved',
+        'label' => 'Dir. Kepengasuhan',
+        'format' => 'raw',
+        'filter'=>["1"=>"Disetujui","2"=>"Belum disetujui"],
+        'value'=>function($model,$url){
+            $label = $model->approved;
+        
+            return $model->approved == '1' ? '<label class="label label-success"><i class="fa fa-check"></i> Sudah Disetujui</label>' : '<label class="label label-danger"><i class="fa fa-ban"></i> Belum disetujui</label>';;
+            
+        },
+    ],
     
-
+    [
+        'attribute' => 'prodi_approved',
+        'label' => 'Prodi',
+        'format' => 'raw',
+        'filter'=>["1"=>"Disetujui","2"=>"Belum disetujui"],
+        'value'=>function($model,$url){
+            $label = $model->prodi_approved;
+            if($model->durasi > 2)
+                return $model->prodi_approved == '1' ? '<label class="label label-success"><i class="fa fa-check"></i> Sudah Disetujui</label>' : '<label class="label label-danger"><i class="fa fa-ban"></i> Belum disetujui</label>';
+            else
+                return '';
+        },
+    ],
+    [
+        'attribute' => 'baak_approved',
+        'label' => 'BAAK',
+        'format' => 'raw',
+        'filter'=>["1"=>"Disetujui","2"=>"Belum disetujui"],
+        'value'=>function($model,$url){
+            $label = $model->baak_approved;
+            
+            if($model->durasi > 2)
+                return $model->baak_approved == '1' ? '<label class="label label-success"><i class="fa fa-check"></i> Sudah Disetujui</label>' : '<label class="label label-danger"><i class="fa fa-ban"></i> Belum disetujui</label>';
+            else
+                return '';
+            
+        },
+    ],
     //'created_at',
     //'updated_at',
-
     [
-        'class' => 'yii\grid\ActionColumn'
+        'format' => 'raw',
+        'header' => 'Actions',
+        'value' => function($data){
+            $html = '<div class="btn-group">
+          <button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
+            Tindakan
+            <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+          </button>
+
+          <ul class="dropdown-menu dropdown-info dropdown-menu-right">';
+$html .= '<li><a href="#"><i class="ace-icon fa fa-eye bigger-120"></i> View</a></li>';
+if(Yii::$app->user->can('operatorCabang'))
+    $html .= '<li><a href="#"><i class="ace-icon fa fa-pencil-square-o bigger-120"></i> Update</a></li>';
+
+
+if($data->durasi > 2 && $data->approved == '1' && $data->baak_approved == '1' && $data->prodi_approved == '1'){
+    $html .= '<li><a href="#"><i class="ace-icon fa fa-print bigger-120"></i> Print</a></li>';
+}
+$html .= '<li><a href="javascript:void(0)" class="btn-approve" data-item="'.$data->id.'"><i class="ace-icon fa fa-pencil-square-o bigger-120"></i> Approval</a></li>';
+
+if($data->status == "1"){
+$html .= '<li class="divider"></li><li><a href="javascript:void(0)" class="btn-kembali" data-kode="2" data-item="'.$data->id.'"><i class="ace-icon fa fa-pencil-square-o bigger-120"></i> Kembali/Pulang</a></li>';
+}
+
+else if($data->status == '2'){
+$html .= '<li class="divider"></li><li><a href="javascript:void(0)" class="btn-batal-kembali" data-kode="1" data-item="'.$data->id.'"><i class="ace-icon fa fa-pencil-square-o bigger-120"></i> Batal Kembali/Pulang</a></li>';
+        }
+
+        return $html;
+        }
     ],
+    // [
+    //     'class' => 'yii\grid\ActionColumn'
+    // ],
 ];
     ?>
 
@@ -123,11 +198,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'containerOptions' => ['style' => 'overflow: auto'], 
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
-        'containerOptions' => ['style'=>'overflow: auto'], 
         'beforeHeader'=>[
             [
                 'columns'=>[
-                    ['content'=> $this->title, 'options'=>['colspan'=>14, 'class'=>'text-center warning']], //cuma satu kolom header
+                    ['content'=> $this->title, 'options'=>['colspan'=>16, 'class'=>'text-center warning']], //cuma satu kolom header
             //        ['content'=>'', 'options'=>['colspan'=>0, 'class'=>'text-center warning']], //uncomment kalau mau membuat header kolom-2
               //      ['content'=>'', 'options'=>['colspan'=>0, 'class'=>'text-center warning']],
                 ], //uncomment kalau mau membuat header kolom-3
@@ -152,6 +226,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'fontAwesome' => true
         ],
         'pjax' => true,
+        'pjaxSettings' =>[
+            'neverTimeout'=>true,
+            'options'=>[
+                'id'=>'pjax_id',
+            ]
+        ],  
         'bordered' => true,
         'striped' => true,
         // 'condensed' => false,
@@ -166,3 +246,89 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
     
 </div>
+
+<?php
+
+$this->registerJs(' 
+
+$(".btn-approve").click(function(){
+    Swal.fire({
+      title: \'Do you want to approve this person?\',
+      
+      icon: \'warning\',
+      showCancelButton: true,
+      confirmButtonColor: \'#3085d6\',
+      cancelButtonColor: \'#d33\',
+      confirmButtonText: \'Yes, approve this!\'
+    }).then((result) => {
+      if (result.value) {
+        var id = $(this).attr("data-item");
+    var obj = new Object;
+    obj.id = id;
+    $.ajax({
+
+        type : "POST",
+        url : "'.Url::to(['/izin-mahasiswa/approval']).'",
+        data : {
+            dataku : obj
+        },
+        success: function(data){
+            var hasil = $.parseJSON(data);
+
+            Swal.fire(
+            \'Good job!\',
+              hasil.msg,
+              \'success\'
+            );
+            $.pjax.reload({container:\'#pjax_id\'});
+        }
+    });
+      }
+    })
+    
+});
+
+
+$(document).on("click",".btn-kembali, .btn-batal-kembali",function(){
+    var kode = $(this).attr("data-kode");
+    Swal.fire({
+      title: \'Do you want to approve this person?\',
+      
+      icon: \'warning\',
+      showCancelButton: true,
+      confirmButtonColor: \'#3085d6\',
+      cancelButtonColor: \'#d33\',
+      confirmButtonText: \'Yes, approve this!\'
+    }).then((result) => {
+      if (result.value) {
+        var id = $(this).attr("data-item");
+    var obj = new Object;
+    obj.id = id;
+    obj.kode = kode;
+    $.ajax({
+
+        type : "POST",
+        url : "'.Url::to(['/izin-mahasiswa/kembali']).'",
+        data : {
+            dataku : obj
+        },
+        success: function(data){
+            var hasil = $.parseJSON(data);
+
+            Swal.fire(
+            \'Good job!\',
+              hasil.msg,
+              \'success\'
+            );
+            $.pjax.reload({container:\'#pjax_id\'});
+        }
+    });
+      }
+    })
+});
+
+
+
+    ', \yii\web\View::POS_READY);
+
+?>
