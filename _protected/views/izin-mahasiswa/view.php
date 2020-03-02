@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\IzinMahasiswa */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Izin Mahasiswas', 'url' => ['index']];
+$this->title = $model->namaMahasiswa;
+$this->params['breadcrumbs'][] = ['label' => 'Izin Mahasiswa', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -29,16 +29,46 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            // 'id',
             'nim',
+            'namaMahasiswa',
+            'namaFakultas',
+            'namaProdi',
+            [
+                'attribute' =>'Kamar dan Asrama',
+                'value' => function($data){
+                    return !empty($data->nim0->kamar) ? $data->nim0->kamar->nama.' - '.$data->nim0->kamar->asrama->nama : '';
+                }
+            ],
             'tahun_akademik',
             'semester',
-            'kota_id',
-            'keperluan_id',
+            'kota.kab',
+            'namaKeperluan',
             'alasan:ntext',
             'tanggal_berangkat',
             'tanggal_pulang',
-            'status',
+            'statusIzin',
+            [
+                'attribute'=>'BAAK Approval',
+                'format' => 'raw',
+                'value' => function($data){
+                    return $model->baak_approved == '1' ? '<label class="label label-success">Disetujui</label>' : '<label class="label label-danger">Belum disetujui</label>';
+                }
+            ],
+            [
+                'attribute'=>'Kaprodi Approval',
+                'format' => 'raw',
+                'value' => function($data){
+                    return $model->prodi_approved == '1' ? '<label class="label label-success">Disetujui</label>' : '<label class="label label-danger">Belum disetujui</label>';
+                }
+            ],
+            [
+                'attribute'=>'Kepengasuhan Approval',
+                'format' => 'raw',
+                'value' => function($data){
+                    return $model->approved == '1' ? '<label class="label label-success">Disetujui</label>' : '<label class="label label-danger">Belum disetujui</label>';
+                }
+            ],
             'created_at',
             'updated_at',
         ],

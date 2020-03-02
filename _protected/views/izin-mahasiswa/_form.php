@@ -30,13 +30,22 @@ use yii\web\JsExpression;
             </div>
             <div class="widget-body">
               <div class="widget-main">
-                <div class="row">
+                <div class="form-group">
+         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Ketik Nama Mahasiswa atau NIM</label>
+          <div class="col-sm-10">
+            <input name="nama_mahasiswa" class="form-control"  type="text" id="nama_mahasiswa" />
+
+            <?= $form->field($model, 'nim')->hiddenInput(['id'=>'nim'])->label(false) ?>
+          </div>
+    </div>
+                <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Keperluan</label>
                 <div class="col-sm-10">
-                <?= $form->field($model,'keperluan_id')->radioList(['1'=>'Pribadi','2'=>'Kampus'],['class'=>'form-control'])->label(false) ?>
-                <label class="error_diagnosis"></label>
+                <?= $form->field($model,'keperluan_id')->dropDownList(['1'=>'Pribadi','2'=>'Kampus','3'=>'Harian'],['class'=>'form-control'])->label(false) ?>
+                <!-- <label class="error_diagnosis"></label> -->
                 </div>
             </div>
+             
             <div class="form-group">
          <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Daerah Tujuan</label>
           <div class="col-sm-10">
@@ -63,12 +72,12 @@ use yii\web\JsExpression;
  ?>
           </div>
         </div>
-            <div class="row">
+            <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Tanggal Berangkat</label>
                 <div class="col-sm-10">
                 <?php 
                 echo $form->field($model, 'tanggal_berangkat')->widget(DatePicker::classname(), [
-    'options' => ['placeholder' => 'Input tanggal berangkat ...'],
+    'options' => ['placeholder' => 'Input tanggal berangkat ...','autocomplete'=>'off'],
     'pluginOptions' => [
         'autoclose' => true,
         'format' => 'dd-mm-yyyy'
@@ -78,12 +87,12 @@ use yii\web\JsExpression;
                 <label class="error_tanggal"></label>
                 </div>
             </div>
-            <div class="row">
+            <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Tanggal Pulang</label>
                 <div class="col-sm-10">
                 <?php 
                 echo $form->field($model, 'tanggal_pulang')->widget(DatePicker::classname(), [
-    'options' => ['placeholder' => 'Input tanggal pulang ...'],
+    'options' => ['placeholder' => 'Input tanggal pulang ...','autocomplete'=>'off'],
     'pluginOptions' => [
         'autoclose' => true,
         'format' => 'dd-mm-yyyy'
@@ -94,7 +103,7 @@ use yii\web\JsExpression;
                 </div>
             </div>
 
-                <div class="row">
+                <div class="form-group">
                 <label class="col-sm-2 control-label no-padding-right">Alasan</label>
                 <div class="col-sm-10">
                 <?= $form->field($model,'alasan')->textInput(['class'=>'form-control'])->label(false) ?>
@@ -128,3 +137,22 @@ $this->registerJs('
     ', \yii\web\View::POS_READY);
 
 ?>
+
+       
+    <?php 
+            AutoComplete::widget([
+    'name' => 'nama_mahasiswa',
+    'id' => 'nama_mahasiswa',
+    'clientOptions' => [
+    'source' => Url::to(['api/ajax-cari-mahasiswa']),
+    'autoFill'=>true,
+    'minLength'=>'1',
+    'select' => new JsExpression("function( event, ui ) {
+        $('#nim').val(ui.item.id);
+        
+     }")],
+    'options' => [
+        // 'size' => '40'
+    ]
+ ]); 
+ ?>

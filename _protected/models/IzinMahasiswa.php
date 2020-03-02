@@ -42,7 +42,7 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
     {
         return [
             [['nim', 'tahun_akademik', 'semester', 'kota_id', 'keperluan_id', 'alasan', 'tanggal_berangkat', 'tanggal_pulang'], 'required'],
-            [['tahun_akademik', 'semester', 'keperluan_id', 'status'], 'integer'],
+            [['tahun_akademik', 'semester', 'keperluan_id', 'status', 'baak_approved', 'prodi_approved', 'approved'], 'integer'],
             [['alasan'], 'string'],
             [['tanggal_berangkat', 'tanggal_pulang', 'created_at', 'updated_at'], 'safe'],
             [['nim'], 'string', 'max' => 25],
@@ -68,6 +68,9 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
             'tanggal_berangkat' => 'Tanggal Berangkat',
             'tanggal_pulang' => 'Tanggal Pulang',
             'status' => 'Status',
+            'baak_approved' => 'BAAK Approval',
+            'prodi_approved' => 'KAPRODI Approval',
+            'approved' => 'KEPENGASUHAN Approval',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -115,7 +118,21 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
 
     public function getNamaKeperluan()
     {
-        return $this->keperluan_id == "1" ? 'Pribadi' : 'Kampus';
+        switch ($this->keperluan_id) {
+            case 1:
+                return 'Pribadi';
+                break;
+            case 2:
+                return 'Kampus';
+                break;
+            case 3:
+                return 'Harian';
+                break;
+            default:
+                return '';
+                break;
+        }
+        // return $this->keperluan_id == "1" ? 'Pribadi' : 'Kampus';
     }
 
     public function getNamaKategori()
@@ -135,7 +152,7 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
 
     public function getStatusIzin()
     {
-        return $this->status == '1' ? 'Belum Pulang' : 'Sudah Pulang';
+        return $this->status == '1' ? '<label class="label label-danger"><i class="fa fa-ban"></i> Belum Pulang</label>' : '<label class="label label-success"><i class="fa fa-check"></i> Sudah Pulang</label>';
     }
 
     public function getNamaKota()

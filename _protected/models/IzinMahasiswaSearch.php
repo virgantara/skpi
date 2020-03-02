@@ -29,7 +29,7 @@ class IzinMahasiswaSearch extends IzinMahasiswa
     {
         return [
             [['id', 'tahun_akademik', 'semester', 'keperluan_id', 'status'], 'integer'],
-            [['nim', 'kota_id', 'alasan', 'tanggal_berangkat', 'tanggal_pulang', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaKota','namaKeperluan','namaFakultas','namaAsrama','namaKamar','statusIzin'], 'safe'],
+            [['nim', 'kota_id', 'alasan', 'tanggal_berangkat', 'tanggal_pulang', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaKota','namaKeperluan','namaFakultas','namaAsrama','namaKamar','statusIzin','approved','baak_approved','prodi_approved'], 'safe'],
         ];
     }
 
@@ -57,7 +57,7 @@ class IzinMahasiswaSearch extends IzinMahasiswa
 
          $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['tanggal_berangkat'=>SORT_DESC]]
+            'sort'=> ['defaultOrder' => ['created_at'=>SORT_DESC]]
         ]);
 
         $this->load($params);
@@ -165,6 +165,15 @@ class IzinMahasiswaSearch extends IzinMahasiswa
         if(!empty($this->statusIzin)){
             $query->andWhere(['status'=>$this->statusIzin]);
         }
+
+        if(!empty($this->approved))
+            $query->andWhere(['approved'=>$this->approved]);
+
+        if(!empty($this->baak_approved))
+            $query->andWhere(['baak_approved'=>$this->baak_approved]);
+
+        if(!empty($this->prodi_approved))
+            $query->andWhere(['prodi_approved'=>$this->prodi_approved]);
 
         return $dataProvider;
     }
