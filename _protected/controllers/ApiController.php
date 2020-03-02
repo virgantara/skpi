@@ -174,6 +174,49 @@ class ApiController extends Controller
 
     }
 
+     public function actionAjaxCariNegara() {
+
+        $q = $_GET['term'];
+        
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token'=>$client_token];
+        $response = $client->get('/negara/search', ['key' => $q],$headers)->send();
+        
+        $out = [];
+
+        
+        if ($response->isOk) {
+            $result = $response->data['values'];
+            // print_r($result);exit;
+            if(!empty($result))
+            {
+                foreach ($result as $d) {
+                    $out[] = [
+                        'id' => $d['id'],
+                        'label'=> $d['kode'].' - '.$d['nama'],
+
+                    ];
+                }
+            }
+
+            else
+            {
+                $out[] = [
+                    'id' => 0,
+                    'label'=> 'Data negara tidak ditemukan',
+
+                ];
+            }
+        }
+        
+
+        echo \yii\helpers\Json::encode($out);
+
+
+    }
+
     public function actionAjaxCariKota() {
 
         $q = $_GET['term'];

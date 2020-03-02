@@ -84,6 +84,7 @@ if(Yii::$app->user->can('admin')){
     ],
     'alasan',
     'namaKota',
+    'namaNegara',
     [
         'attribute' => 'tanggal_berangkat',
         'value' => 'tanggal_berangkat',

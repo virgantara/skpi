@@ -12,21 +12,17 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'id_provinsi')->dropDownList(\yii\helpers\ArrayHelper::map(\app\models\SimakPropinsi::find()->orderBy(['id'=>SORT_ASC])->all(),'id',function($data){
+        return $data->id.' - '.$data->prov;
+    })) ?>
+
     <?= $form->field($model, 'id')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'kab')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'keterangan')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'id_provinsi')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'date_created')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
-    <?= $form->field($model, 'last_updated')->textInput() ?>
+    
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

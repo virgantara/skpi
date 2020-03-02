@@ -20,13 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'map_id')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'date_created')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
-    <?= $form->field($model, 'last_updated')->textInput() ?>
+   
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

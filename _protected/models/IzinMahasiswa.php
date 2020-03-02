@@ -11,22 +11,30 @@ use Yii;
  * @property string $nim
  * @property int $tahun_akademik
  * @property int $semester
- * @property string $kota_id
+ * @property string|null $kota_id
+ * @property int|null $negara_id
  * @property int $keperluan_id
  * @property string $alasan
  * @property string $tanggal_berangkat
  * @property string $tanggal_pulang
+ * @property int|null $durasi
  * @property int|null $status 1= Belum pulang, 2= pulang
+ * @property int|null $baak_approved
+ * @property int|null $prodi_approved
+ * @property int|null $approved
  * @property string|null $created_at
  * @property string|null $updated_at
  *
  * @property SimakMastermahasiswa $nim0
  * @property SimakKabupaten $kota
+ * @property AppsCountriesDetailed $negara
  */
 class IzinMahasiswa extends \yii\db\ActiveRecord
 {
+
     public $tanggal_awal;
     public $tanggal_akhir;
+
     /**
      * {@inheritdoc}
      */
@@ -41,14 +49,15 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nim', 'tahun_akademik', 'semester', 'kota_id', 'keperluan_id', 'alasan', 'tanggal_berangkat', 'tanggal_pulang'], 'required'],
-            [['tahun_akademik', 'semester', 'keperluan_id', 'status', 'baak_approved', 'prodi_approved', 'approved'], 'integer'],
+            [['nim', 'tahun_akademik', 'semester', 'keperluan_id', 'alasan', 'tanggal_berangkat', 'tanggal_pulang'], 'required'],
+            [['tahun_akademik', 'semester', 'negara_id', 'keperluan_id', 'durasi', 'status', 'baak_approved', 'prodi_approved', 'approved'], 'integer'],
             [['alasan'], 'string'],
             [['tanggal_berangkat', 'tanggal_pulang', 'created_at', 'updated_at'], 'safe'],
             [['nim'], 'string', 'max' => 25],
             [['kota_id'], 'string', 'max' => 11],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::className(), 'targetAttribute' => ['nim' => 'nim_mhs']],
             [['kota_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKabupaten::className(), 'targetAttribute' => ['kota_id' => 'id']],
+            [['negara_id'], 'exist', 'skipOnError' => true, 'targetClass' => AppsCountriesDetailed::className(), 'targetAttribute' => ['negara_id' => 'id']],
         ];
     }
 
@@ -63,14 +72,16 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
             'tahun_akademik' => 'Tahun Akademik',
             'semester' => 'Semester',
             'kota_id' => 'Kota ID',
+            'negara_id' => 'Negara ID',
             'keperluan_id' => 'Keperluan ID',
             'alasan' => 'Alasan',
             'tanggal_berangkat' => 'Tanggal Berangkat',
             'tanggal_pulang' => 'Tanggal Pulang',
+            'durasi' => 'Durasi',
             'status' => 'Status',
-            'baak_approved' => 'BAAK Approval',
-            'prodi_approved' => 'KAPRODI Approval',
-            'approved' => 'KEPENGASUHAN Approval',
+            'baak_approved' => 'Baak Approved',
+            'prodi_approved' => 'Prodi Approved',
+            'approved' => 'Approved',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -94,6 +105,16 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
     public function getKota()
     {
         return $this->hasOne(SimakKabupaten::className(), ['id' => 'kota_id']);
+    }
+
+    /**
+     * Gets query for [[Negara]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getNegara()
+    {
+        return $this->hasOne(AppsCountriesDetailed::className(), ['id' => 'negara_id']);
     }
 
     public function getNamaMahasiswa()
@@ -157,6 +178,11 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
 
     public function getNamaKota()
     {
-        return $this->kota->kab.' - '.$this->kota->provinsi->prov;
+        return !empty($this->kota) ? $this->kota->kab.' - '.$this->kota->provinsi->prov : '';
+    }
+
+    public function getNamaNegara()
+    {
+        return !empty($this->negara) ? $this->negara->countryName : '';
     }
 }

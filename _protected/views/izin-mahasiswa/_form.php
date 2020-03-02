@@ -45,8 +45,42 @@ use yii\web\JsExpression;
                 <!-- <label class="error_diagnosis"></label> -->
                 </div>
             </div>
-             
-            <div class="form-group">
+             <div class="form-group">
+         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Dalam/Luar Negeri</label>
+          <div class="col-sm-10">
+
+            <label><input type="radio" name="dn_ln" class="dn_ln" value="DN" checked=""> Dalam Negeri</label>
+            <label><input type="radio" name="dn_ln" class="dn_ln" value="LN"> Luar Negeri</label>
+            
+          </div>
+    </div> 
+<div class="form-group" id="negara_tujuan" style="display: none;">
+         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Negara Tujuan</label>
+          <div class="col-sm-10">
+            <input name="nama_negara" class="form-control"  type="text" id="nama_negara" />
+
+            <?= $form->field($model, 'negara_id')->hiddenInput(['id'=>'negara_id'])->label(false) ?>
+        
+             <?php 
+            AutoComplete::widget([
+    'name' => 'nama_negara',
+    'id' => 'nama_negara',
+    'clientOptions' => [
+    'source' => Url::to(['api/ajax-cari-negara']),
+    'autoFill'=>true,
+    'minLength'=>'1',
+    'select' => new JsExpression("function( event, ui ) {
+        $('#negara_id').val(ui.item.id);
+        
+     }")],
+    'options' => [
+        // 'size' => '40'
+    ]
+ ]); 
+ ?>
+          </div>
+        </div>
+<div class="form-group" id="daerah_tujuan">
          <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Daerah Tujuan</label>
           <div class="col-sm-10">
             <input name="nama_kota" class="form-control"  type="text" id="nama_kota" />
@@ -132,7 +166,18 @@ use yii\web\JsExpression;
 
 $this->registerJs(' 
 
+    $(".dn_ln").change(function(){
+        var dn_ln = $(this);
+        if(dn_ln.val() == "DN"){
+            $("#daerah_tujuan").show();
+            $("#negara_tujuan").hide();
+        }
 
+        else{
+            $("#daerah_tujuan").hide();
+            $("#negara_tujuan").show();   
+        }
+    });
 
     ', \yii\web\View::POS_READY);
 

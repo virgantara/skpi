@@ -21,6 +21,7 @@ class IzinMahasiswaSearch extends IzinMahasiswa
     public $semester;
     public $statusIzin;
     public $namaKota;
+    public $namaNegara;
 
     /**
      * {@inheritdoc}
@@ -29,7 +30,7 @@ class IzinMahasiswaSearch extends IzinMahasiswa
     {
         return [
             [['id', 'tahun_akademik', 'semester', 'keperluan_id', 'status'], 'integer'],
-            [['nim', 'kota_id', 'alasan', 'tanggal_berangkat', 'tanggal_pulang', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaKota','namaKeperluan','namaFakultas','namaAsrama','namaKamar','statusIzin','approved','baak_approved','prodi_approved'], 'safe'],
+            [['nim', 'kota_id', 'alasan', 'tanggal_berangkat', 'tanggal_pulang', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaKota','namaKeperluan','namaFakultas','namaAsrama','namaKamar','statusIzin','approved','baak_approved','prodi_approved','namaNegara'], 'safe'],
         ];
     }
 
@@ -88,6 +89,11 @@ class IzinMahasiswaSearch extends IzinMahasiswa
             'desc' => ['k.kab'=>SORT_DESC]
         ];
 
+        $dataProvider->sort->attributes['namaNegara'] = [
+            'asc' => ['n.countryName'=>SORT_ASC],
+            'desc' => ['n.countryName'=>SORT_DESC]
+        ];
+
         $dataProvider->sort->attributes['semester'] = [
             'asc' => ['mhs.semester'=>SORT_ASC],
             'desc' => ['mhs.semester'=>SORT_DESC]
@@ -119,7 +125,8 @@ class IzinMahasiswaSearch extends IzinMahasiswa
             'nim0.kamar as kk',
             'nim0.kamar.asrama as a',
             'nim0.kodeProdi.kodeFakultas as f',
-            'kota as k'
+            'kota as k',
+            'negara as n'
         ]);
 
         $query->andFilterWhere(['like', 'nim', $this->nim]);
@@ -128,6 +135,7 @@ class IzinMahasiswaSearch extends IzinMahasiswa
         $query->andFilterWhere(['like', 'alasan', $this->alasan]);
         $query->andFilterWhere(['like', 'mhs.semester', $this->semester]);
         $query->andFilterWhere(['like', 'k.kab', $this->namaKota]);
+        $query->andFilterWhere(['like', 'n.countryName', $this->namaNegara]);
         $query->andFilterWhere(['like', 'kk.nama', $this->namaKamar]);
 
         if(!empty($this->namaKeperluan))

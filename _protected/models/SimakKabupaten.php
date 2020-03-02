@@ -53,10 +53,10 @@ class SimakKabupaten extends \yii\db\ActiveRecord
     {
         return [
             'kode' => 'Kode',
-            'id' => 'ID',
+            'id' => 'Kode Wilayah',
             'kab' => 'Kab',
             'keterangan' => 'Keterangan',
-            'id_provinsi' => 'Id Provinsi',
+            'id_provinsi' => 'Provinsi',
             'created_by' => 'Created By',
             'date_created' => 'Date Created',
             'updated_by' => 'Updated By',

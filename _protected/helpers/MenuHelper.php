@@ -268,7 +268,7 @@ class MenuHelper
 	                'url' => ['#'],
 	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	                'items' => [
-
+	                	['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Negara'),'url' => ['apps-countries-detailed/index']],
 	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Provinsi'),'url' => ['simak-propinsi/index']],
 	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Kota/Kabupaten'),'url' => ['simak-kabupaten/index']],
 	                ],

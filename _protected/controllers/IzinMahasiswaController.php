@@ -94,7 +94,7 @@ class IzinMahasiswaController extends Controller
         }
 
         $model->tahun_akademik = $tahun_aktif['tahun_id'];
-
+        $model->negara_id = 101;
         // $model->nim = $mahasiswa['nim_mhs'] ?: '';
         
         // print_r($mahasiswa);exit;
@@ -112,15 +112,25 @@ class IzinMahasiswaController extends Controller
                     if ($response->isOk) {
                         $mahasiswa = $response->data['values'][0];
                         $model->semester = $mahasiswa['semester'];
+                        $model->tanggal_berangkat = \app\helpers\MyHelper::dmYtoYmd($model->tanggal_berangkat);
+                        $model->tanggal_pulang = \app\helpers\MyHelper::dmYtoYmd($model->tanggal_pulang);
+                        
+                        if(empty($model->kota_id))
+                            $model->kota_id = NULL;
+                        
+
+                        if(!$model->save()){
+                            $logs = \app\helpers\MyHelper::logError($model);
+                            // $model->addError('nim',$logs);
+                            throw new \Exception($logs);
+                            
+                        }
+
+                        $transaction->commit();
+                        return $this->redirect(['izin-mahasiswa/index']);
                     }    
                 }
-
-                $model->tanggal_berangkat = \app\helpers\MyHelper::dmYtoYmd($model->tanggal_berangkat);
-                $model->tanggal_pulang = \app\helpers\MyHelper::dmYtoYmd($model->tanggal_pulang);
-                $model->save();
-
-                $transaction->commit();
-                return $this->redirect(['izin-mahasiswa/index']);
+                
             }
         } catch (\Exception $e) {
             $transaction->rollBack();
