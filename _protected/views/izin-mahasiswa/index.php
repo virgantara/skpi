@@ -17,6 +17,14 @@ $this->params['breadcrumbs'][] = $this->title;
   overflow-x: visible;
   overflow-y: visible;
 }
+/*.swal-wide{
+    width:850px !important;
+    height:850px !important;
+}*/
+
+.swal2-container {
+  z-index:10;
+}
 </style>
 
 <div class="izin-mahasiswa-index">
@@ -192,9 +200,11 @@ $html .= '<li class="divider"></li><li><a href="javascript:void(0)" class="btn-b
         return $html;
         }
     ],
-    // [
-    //     'class' => 'yii\grid\ActionColumn'
-    // ],
+    [
+        'class' => 'yii\grid\ActionColumn',
+        'template' => '{delete}',
+        
+    ],
 ];
     ?>
 
@@ -210,7 +220,7 @@ $html .= '<li class="divider"></li><li><a href="javascript:void(0)" class="btn-b
         'beforeHeader'=>[
             [
                 'columns'=>[
-                    ['content'=> $this->title, 'options'=>['colspan'=>16, 'class'=>'text-center warning']], //cuma satu kolom header
+                    ['content'=> $this->title, 'options'=>['colspan'=>18, 'class'=>'text-center warning']], //cuma satu kolom header
             //        ['content'=>'', 'options'=>['colspan'=>0, 'class'=>'text-center warning']], //uncomment kalau mau membuat header kolom-2
               //      ['content'=>'', 'options'=>['colspan'=>0, 'class'=>'text-center warning']],
                 ], //uncomment kalau mau membuat header kolom-3
@@ -303,7 +313,7 @@ $(document).on("click",".btn-kembali, .btn-batal-kembali",function(){
     var tglNow = "'.date('Y-m-d H:i:s').'";
     Swal.fire({
         title: \'Konfirmasi kedatangan saat ini?\',
-        customClass: \'swal2-overflow\',
+        customClass: \'swal2-overflow swal-wide\',
         html: \'<input id="datepicker">\',
         icon: \'warning\',
         onOpen: function() {

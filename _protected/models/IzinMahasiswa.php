@@ -34,6 +34,7 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
 
     public $tanggal_awal;
     public $tanggal_akhir;
+    public $bulk_upload;
 
     /**
      * {@inheritdoc}
@@ -49,6 +50,7 @@ class IzinMahasiswa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['bulk_upload'], 'file', 'skipOnEmpty' => true, 'extensions' => 'xls, xlsx'],
             [['nim', 'tahun_akademik', 'semester', 'keperluan_id', 'alasan', 'tanggal_berangkat', 'tanggal_pulang'], 'required'],
             [['tahun_akademik', 'semester', 'negara_id', 'keperluan_id', 'durasi', 'status', 'baak_approved', 'prodi_approved', 'approved'], 'integer'],
             [['alasan'], 'string'],
