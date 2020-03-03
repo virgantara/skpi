@@ -12,7 +12,7 @@ use yii\httpclient\Client;
 use yii\helpers\ArrayHelper;
 use app\models\Asrama;
 use app\models\RiwayatPelanggaran;
-
+use yii\web\UploadedFile;
 /**
  * IzinMahasiswaController implements the CRUD actions for IzinMahasiswa model.
  */
@@ -120,13 +120,55 @@ class IzinMahasiswaController extends Controller
                         if(empty($model->kota_id))
                             $model->kota_id = NULL;
 
+                        $uploadedFile = UploadedFile::getInstance($model, 'bulk_upload');
+                        $model->bulk_upload = $uploadedFile;
+                        $extension =$uploadedFile->extension;
+                        if($extension=='xlsx'){
+                            $inputFileType = 'Xlsx';
+                        }else{
+                            $inputFileType = 'Xls';
+                        }
 
+                        
+                        // $sheetname =$model->bulk_upload;
+                        $inputFileName = $uploadedFile->tempName;
+                        $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            
+                        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+                        // $reader->setLoadSheetsOnly($sheetname);
+            
+                        $spreadsheet = $reader->load($uploadedFile->tempName);
+                        $worksheet = $spreadsheet->getActiveSheet();
+                        $highestRow = $worksheet->getHighestRow();
+                        $highestColumn = $worksheet->getHighestColumn();
+                        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+                          
+                        for ($row = 1; $row <= $highestRow; ++$row) 
+                        { 
+                            $nim = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                            // print_r($nim);exit;
+                            if($nim == $model->nim || empty($nim)) 
+                                continue;
+
+                            $m = new IzinMahasiswa;
+                            $m->attributes = $model->attributes;
+                            $m->nim = (string) $nim;
+                            // print_r($m->attributes);exit;
+                            if(!$m->save()){
+                                $logs = \app\helpers\MyHelper::logError($m);
+                        
+                                throw new \Exception($logs);
+                            }
+
+                        }
                         if(!$model->save()){
                             $logs = \app\helpers\MyHelper::logError($model);
                             // $model->addError('nim',$logs);
                             throw new \Exception($logs);
                             
                         }
+
 
                         $transaction->commit();
                         return $this->redirect(['izin-mahasiswa/index']);

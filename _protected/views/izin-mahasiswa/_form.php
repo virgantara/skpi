@@ -19,7 +19,8 @@ use yii\web\JsExpression;
             ],
         ],
         'options' => [
-            'class' => 'form-horizontal'
+            'class' => 'form-horizontal',
+            'enctype' => 'multipart/form-data'
         ]
     ]); ?>
 <div class="row">
@@ -144,7 +145,14 @@ use yii\web\JsExpression;
                 <label class="error_diagnosis"></label>
                 </div>
             </div>
-           
+           <div class="form-group">
+                <label class="col-sm-2 control-label no-padding-right">Upload Peserta</label>
+                <div class="col-sm-10">
+                 <?= $form->field($model, 'bulk_upload')->fileInput()->label(false) ?>
+
+               
+                </div>
+            </div>
               </div>
           </div>
         </div>
