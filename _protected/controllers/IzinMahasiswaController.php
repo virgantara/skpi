@@ -104,6 +104,7 @@ class IzinMahasiswaController extends Controller
         $transaction = $connection->beginTransaction();
         try 
         {
+
             if ($model->load(Yii::$app->request->post())) 
             {
                 if(!empty($model->nim))
@@ -120,9 +121,11 @@ class IzinMahasiswaController extends Controller
                         if(empty($model->kota_id))
                             $model->kota_id = NULL;
 
-                        if(!empty($model->bulk_upload))
+                        $uploadedFile = UploadedFile::getInstance($model, 'bulk_upload');
+                        $model->bulk_upload = $uploadedFile;
+                        if($model->bulk_upload->extension)
                         {
-                            $uploadedFile = UploadedFile::getInstance($model, 'bulk_upload');
+                           
                             $model->bulk_upload = $uploadedFile;
                             $extension =$uploadedFile->extension;
                             if($extension=='xlsx'){
