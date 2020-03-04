@@ -22,15 +22,22 @@ use yii\web\JsExpression;
             'class' => 'form-horizontal',
             'enctype' => 'multipart/form-data'
         ]
-    ]); ?>
+    ]); 
+
+    ?>
+
+
 <div class="row">
     <div class="col-sm-12">
+
           <div class="widget-box widget-color-blue2">
             <div class="widget-header">
               <h4 class="widget-title lighter smaller">Data Perizinan</h4>
             </div>
             <div class="widget-body">
               <div class="widget-main">
+                <?=$form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);?>
+
                 <div class="form-group">
          <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Ketik Nama Mahasiswa atau NIM</label>
           <div class="col-sm-10">
