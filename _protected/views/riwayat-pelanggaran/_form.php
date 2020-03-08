@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 
 use app\models\Pelanggaran;
 use app\models\Hukuman;
-use kartik\datetime\DateTimePicker;
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\RiwayatPelanggaran */
@@ -45,15 +45,10 @@ use kartik\datetime\DateTimePicker;
 			<div class="row">
 		   		<label class="col-sm-2 control-label no-padding-right">Tanggal Pelanggaran</label>
 				<div class="col-sm-10">
-				<?php 
-				echo $form->field($model, 'tanggal')->widget(DateTimePicker::classname(), [
-	'options' => ['placeholder' => 'Input tanggal & jam pelanggaran ...'],
-	'pluginOptions' => [
-		'autoclose' => true,
-		'format' => 'dd-mm-yyyy hh:ii:ss'
-	]
-])->label(false);
-				 ?>
+					 <?php 
+                echo $form->field($model, 'tanggal',['options' => ['tag' => false]])->textInput(['class'=>'form-control datetimepicker','placeholder' => 'Input tanggal & jam pelanggaran ...'])->label(false);
+                 ?>
+				
 				<label class="error_tanggal"></label>
 				</div>
 			</div>
