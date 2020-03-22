@@ -160,7 +160,9 @@ class SiteController extends Controller
                     for ($row = 1; $row <= $highestRow; ++$row) 
                     { 
                         $nim = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
-                        $tgl_lulus = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); // 10 artinya kolom 
+                        $tgl_lulus = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); 
+                        $no_sk = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
+                        $tgl_sk = $worksheet->getCellByColumnAndRow(4, $row)->getValue();
                         $mhs = \app\models\SimakMastermahasiswa::find()->where(['nim_mhs'=>$nim])->one();
 
                         if(!empty($mhs))
@@ -168,8 +170,9 @@ class SiteController extends Controller
                             // echo $mhs->nim_mhs.' '.$mhs->tgl_lulus;
                             $mhs->status_aktivitas = 'L';
                             $mhs->tgl_lulus = $tgl_lulus;
-
-                            $mhs->save(false,['status_aktivitas','tgl_lulus']);
+                            $mhs->no_sk_yudisium = $no_sk;
+                            $mhs->tgl_sk_yudisium = $tgl_sk;
+                            $mhs->save(false,['status_aktivitas','tgl_lulus','no_sk_yudisium','tgl_sk_yudisium']);
                         }
 
                         else{
