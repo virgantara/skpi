@@ -113,7 +113,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     {
         return [
             [['nim_mhs', 'nama_mahasiswa'], 'required'],
-            [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at'], 'safe'],
+            [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at','no_sk_yudisium'], 'safe'],
             [['keterangan'], 'string'],
             [['status_bayar', 'status_mahasiswa', 'is_synced', 'kamar_id', 'is_eligible'], 'integer'],
             [['kode_pt', 'asal_prodi', 'kode_pos'], 'string', 'max' => 6],
@@ -129,7 +129,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['nip_co_promotor1'], 'string', 'max' => 11],
             [['nip_co_promotor2'], 'string', 'max' => 12],
             [['nip_co_promotor3'], 'string', 'max' => 33],
-            [['photo_mahasiswa', 'alamat', 'kecamatan_feeder', 'provinsi', 'kabupaten', 'warga_negara_feeder', 'no_ijazah'], 'string', 'max' => 255],
+            [['photo_mahasiswa', 'alamat', 'kecamatan_feeder', 'provinsi', 'kabupaten', 'warga_negara_feeder', 'no_ijazah','no_sk_yudisium'], 'string', 'max' => 255],
             [['berat', 'tinggi'], 'string', 'max' => 3],
             [['jenis_tinggal', 'no_kps', 'agama', 'va_code'], 'string', 'max' => 20],
             [['penerima_kps', 'masuk_kelas'], 'string', 'max' => 1],
