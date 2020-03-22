@@ -131,17 +131,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'beforeHeader'=>[
             [
                 'columns'=>[
-                    ['content'=> $this->title, 'options'=>['colspan'=>14, 'class'=>'text-center warning']], //cuma satu kolom header
-            //        ['content'=>'', 'options'=>['colspan'=>0, 'class'=>'text-center warning']], //uncomment kalau mau membuat header kolom-2
-              //      ['content'=>'', 'options'=>['colspan'=>0, 'class'=>'text-center warning']],
-                ], //uncomment kalau mau membuat header kolom-3
+                    ['content'=> $this->title, 'options'=>['colspan'=>14, 'class'=>'text-center warning']], //cuma satu 
+                ], 
                 'options'=>['class'=>'skip-export'] 
             ]
         ],
         'exportConfig' => [
-              // GridView::PDF => ['label' => 'Save as PDF'],
+              GridView::PDF => ['label' => 'Save as PDF'],
               GridView::EXCEL => ['label' => 'Save as EXCEL'], //untuk menghidupkan button export ke Excell
-              // GridView::HTML => ['label' => 'Save as HTML'], //untuk menghidupkan button export ke HTML
+              GridView::HTML => ['label' => 'Save as HTML'], //untuk menghidupkan button export ke HTML
               GridView::CSV => ['label' => 'Save as CSV'], //untuk menghidupkan button export ke CVS
           ],
           

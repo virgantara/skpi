@@ -82,6 +82,8 @@ class SiteController extends Controller
         ];
     }
 
+   
+
     public function successCallback($client)
     {
         $attributes = $client->getUserAttributes();
@@ -105,6 +107,116 @@ class SiteController extends Controller
 //------------------------------------------------------------------------------------------------//
 // STATIC PAGES
 //------------------------------------------------------------------------------------------------//
+
+    public function actionLulusan()
+    {
+        if(Yii::$app->user->can('theCreator'))
+        {
+            $model = new \app\models\LulusanForm;
+            $notes = '';
+            if (Yii::$app->request->isPost) 
+            {
+                $uploadedFile = \yii\web\UploadedFile::getInstance($model, 'dataLulusan');
+                $extension =$uploadedFile->extension;
+                if($extension=='xlsx')
+                {
+                    $inputFileType = 'Xlsx';
+                }
+
+                else if($extension=='xls')
+                {
+                    $inputFileType = 'Xls';
+                }
+                else
+                {
+                    $inputFileType = 'Csv';
+                }
+
+                
+                $sheetname =$model->dataLulusan;
+                $inputFileName = $uploadedFile->tempName;
+                $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+    /**  Create a new Reader of the type that has been identified  **/
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+                $reader->setLoadSheetsOnly($sheetname);
+                // print_r($sheetname);exit;
+                $spreadsheet = $reader->load($uploadedFile->tempName);
+                $worksheet = $spreadsheet->getActiveSheet();
+                $highestRow = $worksheet->getHighestRow();
+                $highestColumn = $worksheet->getHighestColumn();
+                $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
+                  
+                $connection = \Yii::$app->db;
+                $transaction = $connection->beginTransaction();
+
+               
+                try 
+                {
+
+                    $api_baseurl = Yii::$app->params['api_baseurl'];
+                    $client = new Client(['baseUrl' => $api_baseurl]);
+                    
+                    for ($row = 1; $row <= $highestRow; ++$row) 
+                    { 
+                        $nim = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
+                        $tgl_lulus = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); // 10 artinya kolom 
+                        $mhs = \app\models\SimakMastermahasiswa::find()->where(['nim_mhs'=>$nim])->one();
+
+                        if(!empty($mhs))
+                        {
+                            // echo $mhs->nim_mhs.' '.$mhs->tgl_lulus;
+                            $mhs->status_aktivitas = 'L';
+                            $mhs->tgl_lulus = $tgl_lulus;
+
+                            $mhs->save(false,['status_aktivitas','tgl_lulus']);
+                        }
+
+                        else{
+
+
+                            // $logs = 'NIM '.$nim.' tidak ada di dalam database siakad';
+                            $notes .= $nim.', ';
+                            // throw new \Exception($logs);
+                            
+                        }
+                    }
+
+                    $transaction->commit();
+                    if(!empty($notes))
+                    {
+                        $notes .= ' tidak ada di dalam database SIAKAD';
+                        Yii::$app->session->setFlash('warning', $notes);
+                    }
+                    else{
+                        Yii::$app->session->setFlash('success', 'Data updated');
+                    }
+                    return $this->redirect(['site/lulusan']);
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                    $model->addError('dataLulusan',$e->getMessage());
+                    // print_r($e->getMessage());
+                    // exit;
+                    // throw $e;
+                } catch (\Throwable $e) {
+                    // print_r($e->getMessage());
+                    $transaction->rollBack();
+                    $model->addError('dataLulusan',$e->getMessage());
+                    // exit;
+                    // throw $e;
+                }
+
+                // return;
+
+            }
+
+
+
+            return $this->render('lulusan',[
+                'model'=>$model
+            ]);
+        }
+    }
 
     /**
      * Displays the index (home) page.
