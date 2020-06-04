@@ -217,8 +217,8 @@ class AsramaController extends Controller
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
                     'kode_fakultas' => $params['kode_fakultas'],
-                    'status_aktivitas' => 'A'
-                ])->all();          
+                    'status_aktivitas' => $params['status_aktivitas']
+                ])->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC])->all();          
 
 
             }
@@ -232,7 +232,7 @@ class AsramaController extends Controller
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
                     'kode_fakultas' => $params['kode_fakultas'],
-                    'status_aktivitas' => 'A'
+                    'status_aktivitas' => $params['status_aktivitas']
                 ])->all();          
 
                 $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
