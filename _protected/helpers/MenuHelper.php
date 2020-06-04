@@ -25,21 +25,22 @@ class MenuHelper
 	    {
 	        
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Pelanggaran </span><i class="caret"></i>', 'url' => '#',
-	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-	        'items'=>[
-	           	[
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Pelanggaran',  
-	                'url' => ['/riwayat-pelanggaran/index'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang'),
-	               
-	            ],
-	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Pelanggaran',  
-	                'url' => ['/riwayat-pelanggaran/cari-mahasiswa'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang'), 
-	            ],
-	        ]];
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	[
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Pelanggaran',  
+		                'url' => ['/riwayat-pelanggaran/index'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'),
+		               
+		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Pelanggaran',  
+		                'url' => ['/riwayat-pelanggaran/cari-mahasiswa'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		            ],
+		        ]
+		    ];
 	    }
 
 

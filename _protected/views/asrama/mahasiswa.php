@@ -11,6 +11,8 @@ $model->kampus = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahas
 $model->kode_fakultas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_fakultas'] : '';
 
 $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_prodi'] : '';
+
+$model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['status_aktivitas'] : '';
 ?>
 
 <div class="row">
@@ -67,7 +69,12 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMasterm
 		</div>
 	</div>
 
-
+	<div class="form-group" >
+		<label class="col-sm-3 control-label no-padding-right">Status Mahasiswa</label>
+			<div class="col-sm-9 col-lg-4">
+		<?= $form->field($model,'status_aktivitas')->dropDownList(['A'=>'Aktif','N'=>'Non Aktif','C'=>'Cuti'],['class'=>'form-control','id'=>'status_aktivitas'])->label(false) ?>
+		</div>
+	</div>
 
 	<div class="clearfix form-actions">
         <div class="col-md-offset-3 col-md-9">
