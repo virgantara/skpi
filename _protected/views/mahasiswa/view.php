@@ -14,6 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="simak-mastermahasiswa-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+     <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        
+            
 
     <?= DetailView::widget([
         'model' => $model,
@@ -30,7 +33,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'kodeProdi.nama_prodi',
             'status_aktivitas',
             'semester',
-            // 'status_mahasiswa',            
+            [
+                'attribute' => 'konsulat',
+                'value' => function($data){
+                    return $data->konsulat0->name.' - '.$data->konsulat0->state->name.' - '.$data->konsulat0->country->name;
+                }
+            ],  
+            [
+                'attribute' => 'kamar_id',
+                'value' => function($data){
+                    return $data->kamar->asrama->nama.' - '.$data->kamar->nama;
+                }
+            ],            
             // 'kampus',
             // 'kode_fakultas',
             // 'kode_prodi',

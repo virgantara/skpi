@@ -61,29 +61,50 @@ class MenuHelper
 	            ],
 	        ]];
 
-	       if (Yii::$app->user->can('operatorCabang'))
+	    if (Yii::$app->user->can('operatorCabang'))
 	    {
-	         $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span><i class="caret"></i>', 
-	         'url' => '#',
-	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-	        'items'=>[
-	           	
-	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Penghuni Asrama',  
-	                'url' => ['asrama/mahasiswa'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang'), 
-	            ],
-	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pindah Kamar',  
-	                'url' => ['/asrama/pindah'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang'),
-	               
-	            ],
-	        ]
-	    ];
+         	$menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span><i class="caret"></i>', 
+		         'url' => '#',
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Penghuni Asrama',  
+		                'url' => ['asrama/mahasiswa'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pindah Kamar',  
+		                'url' => ['/asrama/pindah'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'),
+		               
+		            ],
+		        ]
+		    ];
 
-}
+		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Konsulat </span><i class="caret"></i>', 
+		         'url' => '#',
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan',  
+		                'url' => ['mahasiswa/konsulat'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		            ],
+		            // [
+		            // 	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pindah Kamar',  
+		            //     'url' => ['/asrama/pindah'],	        
+		            //     'visible' => Yii::$app->user->can('operatorCabang'),
+		               
+		            // ],
+		        ]
+		    ];
+
+
+		}
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Laporan </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
@@ -274,7 +295,18 @@ class MenuHelper
 	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Kota/Kabupaten'),'url' => ['simak-kabupaten/index']],
 	                ],
 	            ],
-	           
+	           	[
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Global <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+	                	['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Countries'),'url' => ['countries/index']],
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>States'),'url' => ['states/index']],
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Cities'),'url' => ['cities/index']],
+	                ],
+	            ],
 	            
 	        ]];
 
