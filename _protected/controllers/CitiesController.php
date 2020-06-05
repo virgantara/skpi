@@ -45,23 +45,9 @@ class CitiesController extends Controller
 
     public function actionCitiesList() {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = [];
-        if (isset($_POST['depdrop_parents'])) {
-            // print_r($_POST);
-            $parents = $_POST['depdrop_parents'];
-            if ($parents != null) {
-                $cat_id = $parents[0];
-                $out = self::getCitiesList($cat_id); 
-                // the getSubCatList function will query the database based on the
-                // cat_id and return an array like below:
-                // [
-                //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
-                //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
-                // ]
-                return ['output'=>$out, 'selected'=>''];
-            }
-        }
-        return ['output'=>'', 'selected'=>''];
+        $state_id = $_POST['sid'];
+        $out = self::getCitiesList($state_id); 
+        return $out;
     }
 
     /**

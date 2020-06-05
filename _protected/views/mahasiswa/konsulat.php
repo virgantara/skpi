@@ -8,17 +8,17 @@ use kartik\depdrop\DepDrop;
 use yii\jui\AutoComplete;
 use yii\web\JsExpression;
 
-$this->title = 'Konsulat';
+$this->title = 'Pemetaan Konsulat';
 $this->params['breadcrumbs'][] = $this->title;
 $country = !empty($_GET['countries']) ? $_GET['countries'] : '';
-$model->states_id = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['states_id'] : '';
+$states = !empty($_GET['states']) ? $_GET['states'] : '';
 
 $model->konsulat = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['konsulat'] : '';
 ?>
 
-<div class="row">
-	<div class="col-xs-12">
-		<?php $form = ActiveForm::begin([
+<h1><?=$this->title;?></h1>
+
+<?php $form = ActiveForm::begin([
 			'fieldConfig' => [
 				'options' => [
 					'tag' => false,
@@ -32,58 +32,51 @@ $model->konsulat = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermah
 				'class' => 'form-horizontal'
 			]
 		]); ?>
-		<div class="form-group">
-            <label class="control-label no-padding-right">Countries</label>
-        <div class="">
-            <?= Html::dropDownList('countries',$country,ArrayHelper::map(\app\models\Countries::find()->all(),'id','name'),['id'=>'negara','class'=>'form-control','prompt'=>'- Choose a Country -']);?>
 
-            
-            </div>
-        </div> 
-        <div class="form-group">
-            <label class="control-label no-padding-right">States</label>
-        <div class="">
-            <?php echo $form->field($model,'states_id')->widget(DepDrop::className(),[
-                'name' => 'states',
-                'options' => [
-                    'class'=> 'states',
-                    'id'=>'states'
-                ],
-                'pluginOptions'=>[
-                    'depends'=>['negara'],
-                    'initialize' => true,
-                    'placeholder' => '...Choose a state...',
-                    'url' => Url::to(['/states/states-list']),
-
-                ]   
-            ])->label(false)?>
-
-            
-            </div>
-        </div> 
-        <div class="form-group">
-            <label class="control-label no-padding-right">Cities</label>
-        <div class="">
-            <?php echo $form->field($model,'konsulat')->widget(DepDrop::className(),[
-                'name' => 'cities',
-                'options' => [
-                    'class'=> 'cities',
-                    'id' => 'city',
-                ],
-                'pluginOptions'=>[
-                    'depends'=>['states'],
-                    'initialize' => true,
-                    'placeholder' => '...Choose a city...',
-                    'url' => Url::to(['/cities/cities-list']),
-
-                ]   
-            ])->label(false);?>
-
-            
-            </div>
-        </div> 
-        <?php ActiveForm::end(); ?>
+<div class="row">
+	<div class="col-xs-12">
 		
+		<div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">Countries</label>
+        <div class="col-sm-9">
+            <?= Html::dropDownList('countries',$country,ArrayHelper::map(\app\models\Countries::find()->all(),'id','name'),['id'=>'negara','prompt'=>'- Choose a Country -']);?>
+
+            
+            </div>
+        </div> 
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">States</label>
+        <div class="col-sm-9">
+            
+        		<?= Html::dropDownList('states',$states,[],['id'=>'states','prompt'=>'- Choose a state -']);?>
+            
+            </div>
+        </div> 
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">Cities</label>
+        <div class="col-sm-9">
+            <?php echo $form->field($model,'konsulat')->dropDownList([],['prompt'=>'- Choose a city -','class'=>'','id' => 'konsulat'])->label(false);?>
+
+            
+            </div>
+        </div> 
+        <div class="clearfix form-actions">
+			<div class="col-md-offset-3 col-md-9">
+
+				<button class="btn btn-info" value="1" type="submit" name="btn-search">
+					<i class="ace-icon glyphicon glyphicon-search bigger-110"></i>
+					Tampilkan Mahasiswa
+				</button>
+
+			</div>
+		</div>
+       
+       
+	</div>
+</div>
+ <?php ActiveForm::end(); ?>
+<div class="row">
+	<div class="col-xs-12">
 		<div class="table-responsive">
 			<table id="tabel_mhs" class="table table-bordered table-hovered table-striped">
 				<thead>
@@ -109,21 +102,32 @@ $model->konsulat = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermah
 					        <td><?=$m->nama_mahasiswa;?></td>
 					        <td><?=$m->jenis_kelamin;?></td>
 					        <td><?=$m->semester;?></td>
-					        <td><?=$m->kode_prodi;?></td>
-					        <td><?=$m->kampus;?></td>
-					        <td><a class="delete" data-item="<?=$m->nim_mhs;?>" href="javascript:void(0)">Delete</a></td>
+					        <td><?=$m->kodeProdi->nama_prodi;?></td>
+					        <td><?=$m->kampus0->nama_kampus;?></td>
+					        <td><a class="delete btn btn-sm btn-danger" data-item="<?=$m->nim_mhs;?>" href="javascript:void(0)"><i class="fa fa-trash"></i> Delete</a></td>
 					    </tr>
 						<?php
 					}
 					?>
 					<tr>
-						<td colspan="8">
+						<td colspan="7">
 							<input name="nama_mahasiswa" class="form-control"  type="text" id="nama_mahasiswa" placeholder="ketik nama mahasiswa atau nim " />
 						</td>
-					</td></tr>
+						<td>
+							<input type="hidden" id="id">
+							<input type="hidden" id="nm">
+							<input type="hidden" id="jk">
+							<input type="hidden" id="smt">
+							<input type="hidden" id="nmp">
+							<input type="hidden" id="k">
+							<a class="btn btn-sm btn-success" id="add" href="javascript:void(0)"><i class="fa fa-plus"></i> Add</a>
+						</td>
+					</tr>
 				</tbody>
 			</table>
-     
+     	</div>
+    </div>
+</div>
     <?php 
             AutoComplete::widget([
     'name' => 'nama_mahasiswa',
@@ -134,40 +138,14 @@ $model->konsulat = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermah
     'minLength'=>'1',
     'select' => new JsExpression("function( event, ui ) {
         
-        var row = '<tr>';
-        row += '<td><span  class=\"numbering\"></span></td>';
-        row += '<td>'+ui.item.id+'</td>';
-        row += '<td>'+ui.item.nm+'</td>';
-        row += '<td>'+ui.item.jk+'</td>';
-        row += '<td>'+ui.item.smt+'</td>';
-        row += '<td>'+ui.item.nmp+'</td>';
-        row += '<td>'+ui.item.k+'</td>';
-        row += '<td><a class=\"delete\" data-item=\"'+ui.item.id+'\" href=\"javascript:void(0)\">Delete</a></td>';
-        row += '</tr>';
-
-        var nim_mahasiswa = ui.item.id;
-		var city = $(\"#city\").val();
-		
-		var obj = new Object;
-		obj.nim = nim_mahasiswa;
-		obj.city = city;
-		
-		$.ajax({
-
-			type : \"POST\",
-			url : \"".Url::to(['/mahasiswa/add-konsulat'])."\",
-			data : {
-				dataku : obj
-			},
-			success: function(data){
-				var hasil = $.parseJSON(data);
-
-				$(\"#tabel_mhs > tbody\").prepend(row);
-			}
-		});
-
+        $('#id').val(ui.item.id);
+        $('#nm').val(ui.item.nm);
+        $('#jk').val(ui.item.jk);
+        $('#smt').val(ui.item.smt);
+        $('#nmp').val(ui.item.nmp);
+        $('#k').val(ui.item.k);
         
-
+        $('#add').focus();
         
      }")],
     'options' => [
@@ -175,31 +153,138 @@ $model->konsulat = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermah
     ]
  ]); 
  ?>
-	</div>
-	<!-- <div class="row">
-		<div class="col-xs-12">
-			<div class="clearfix form-actions">
-				<div class="col-md-offset-3 col-md-9">
-
-					<button class="btn btn-info" type="submit" name="btn-submit" value="1">
-						<i class="ace-icon glyphicon glyphicon-save bigger-110"></i>
-						Simpan Data
-					</button>
-
-				</div>
-			</div>
-		</div>
-	</div> -->
-
-</div>
-</div>
+	
 <?php
 
 $this->registerJs(' 
 
+$(document).on("click","#add",function(){
+
+	var id = $(\'#id\').val();
+    var nm = $(\'#nm\').val();
+    var jk = $(\'#jk\').val();
+    var smt = $(\'#smt\').val();
+    var nmp = $(\'#nmp\').val();
+    var k = $(\'#k\').val();
+
+	var row = \'<tr>\';
+    row += \'<td><span  class="numbering"></span></td>\';
+    row += \'<td>\'+id+\'</td>\';
+    row += \'<td>\'+nm+\'</td>\';
+    row += \'<td>\'+jk+\'</td>\';
+    row += \'<td>\'+smt+\'</td>\';
+    row += \'<td>\'+nmp+\'</td>\';
+    row += \'<td>\'+k+\'</td>\';
+    row += \'<td><a class="delete  btn btn-sm btn-danger" data-item="\'+id+\'" href="javascript:void(0)"><i class="fa fa-trash"></i> Delete</a></td>\';
+    row += \'</tr>\';
+
+    var nim_mahasiswa = id;
+	var city = $("#konsulat").val();
 	
+	var obj = new Object;
+	obj.nim = nim_mahasiswa;
+	obj.city = city;
 	
-	$(".delete").click(function(){
+	$.ajax({
+
+		type : "POST",
+		url : "'.Url::to(['/mahasiswa/add-konsulat']).'",
+		data : {
+			dataku : obj
+		},
+		success: function(data){
+			var hasil = $.parseJSON(data);
+			if(hasil.code == 200){
+				$("#tabel_mhs > tbody").prepend(row);
+			}
+
+			else{
+				Swal.fire(
+				\'Oops!\',
+				  hasil.msg,
+				  \'error\'
+				)
+			}
+			$(\'#id\').val("");
+	        $(\'#nm\').val("");
+	        $(\'#jk\').val("");
+	        $(\'#smt\').val("");
+	        $(\'#nmp\').val("");
+	        $(\'#k\').val("");
+
+	        $("#nama_mahasiswa").focus();
+	        $("#nama_mahasiswa").val("");
+		}
+	});
+
+
+});
+
+getStates($("#negara").val());
+
+function getStates(cid){
+	$.ajax({
+
+		type : "POST",
+		url : "'.Url::to(['/states/states-list']).'",
+		data : "cid="+cid,
+		beforeSend : function(){
+			$("#states").empty();
+			var row = \'<option value="">Loading...</option>\';
+			$("#states").append(row);
+		},
+		success: function(hasil){
+			// var hasil = $.parseJSON(data);
+			$("#states").empty();
+			var row = \'<option value="">- Choose a state -</option>\';
+			$.each(hasil,function(i,obj){
+				row += \'<option value="\'+obj.id+\'">\'+obj.name+\'</option>\';
+			});
+
+			$("#states").append(row);
+
+			$("#states").val("'.$states.'");
+			getCities("'.$states.'");
+		}
+	});
+}
+
+function getCities(sid){
+	$.ajax({
+
+		type : "POST",
+		url : "'.Url::to(['/cities/cities-list']).'",
+		data : "sid="+sid,
+		beforeSend : function(){
+			$("#konsulat").empty();
+			var row = \'<option value="">Loading...</option>\';
+			$("#konsulat").append(row);
+		},
+		success: function(hasil){
+			$("#konsulat").empty();
+			var row = \'<option value="">- Choose a city -</option>\';
+			$.each(hasil,function(i,obj){
+				row += \'<option value="\'+obj.id+\'">\'+obj.name+\'</option>\';
+			});
+
+			$("#konsulat").append(row);
+			$("#konsulat").val("'.$model->konsulat.'");
+		}
+	});
+}
+	$("#negara").change(function(){
+		var cid = $(this).val();
+		
+		getStates(cid);
+	});
+
+	$("#states").change(function(){
+		var sid = $(this).val();
+		
+		getCities(sid);
+	});
+	
+	$(document).on("click",".delete",function(){
 		Swal.fire({
 		  title: \'Do you want to remove this person?\',
 		  text: "You won\'t be able to revert this!",
@@ -207,16 +292,14 @@ $this->registerJs('
 		  showCancelButton: true,
 		  confirmButtonColor: \'#3085d6\',
 		  cancelButtonColor: \'#d33\',
-		  confirmButtonText: \'Yes, move him/her!\'
+		  confirmButtonText: \'Yes, remove him/her!\'
 		}).then((result) => {
 		  if (result.value) {
 		    var nim_mahasiswa = $(this).data(\'item\');
-			var city = $(\'#city\').val();
 			var row = $(this).parent().parent();
 			row.remove();
 			var obj = new Object;
 			obj.nim = nim_mahasiswa;
-			obj.city = city;
 			
 			$.ajax({
 
@@ -240,7 +323,8 @@ $this->registerJs('
 		
 	});
 
-	$("#city").change(function(){
+	$("#btn-lihat").click(function(e){
+		e.preventDefault();
 		$(\'#form-konsulat\').submit();
 	});
 

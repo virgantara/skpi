@@ -28,17 +28,20 @@ $theme = $this->theme;
     <title><?= Html::encode($this->title) ?></title>
 
     <?php $this->head(); ?>
-</head>
-<style type="text/css">
-.swal2-popup {
-  font-size: 1.6rem !important;
-}
 
-.ui-state-focus {
-background: none !important;
-background-color: #5090C1 !important;
-border: none !important;} 
+<style type="text/css">
+    .swal2-popup {
+      font-size: 1.6rem !important;
+    }
+
+    .ui-state-focus {
+        background: none !important;
+        background-color: #5090C1 !important;
+        border: none !important;
+    } 
 </style>
+</head>
+
 <body class="no-skin">
      <div id="navbar" class="navbar navbar-default    navbar-collapse       h-navbar ace-save-state">
             <div class="navbar-container ace-save-state" id="navbar-container">
@@ -129,7 +132,7 @@ echo Menu::widget([
         ['label'=> '','itemOptions'=>['class'=>'divider']],
         ['label'=>'Pengguna', 'url'=>['/user/index']],
         ['label'=> '','itemOptions'=>['class'=>'divider']],
-        ['label'=>'<li><a data-method="POST" href="'.Url::to(['/site/logout']).'">Logout</a></li>'],
+        ['label'=>'<a data-method="POST" href="'.Url::to(['/site/logout']).'">Logout</a>'],
 
     ],
 ]);
@@ -297,6 +300,7 @@ echo Menu::widget([
         
         <!-- inline scripts related to this page -->
         <?php $this->endBody() ?>
+        
 <script type="text/javascript">
 
 function ajaxCountNotif(){

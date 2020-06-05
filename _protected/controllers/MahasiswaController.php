@@ -32,12 +32,12 @@ class MahasiswaController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['update','index','view'],
+                'only' => ['update','index','view','konsulat'],
                 'rules' => [
                     
                     [
                         'actions' => [
-                            'update','index','view'
+                            'update','index','view','konsulat'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator','admin'],
@@ -54,6 +54,22 @@ class MahasiswaController extends Controller
         ];
     }
 
+    public function actionKonsulatRekap()
+    {
+        $query = new \yii\db\Query();
+        $results = $query->select(['konsulat', 'c.name','c.latitude','c.longitude', 'count(*) as total'])
+        ->from('simak_mastermahasiswa m')
+        ->innerJoin('cities c', 'm.konsulat = c.id')
+        ->groupBy(['m.konsulat', 'c.name','c.latitude','c.longitude'])
+        ->orderBy('total DESC')
+        // ->limit(10)
+        ->all();
+
+        return $this->render('konsulat_rekap',[
+            'results' => $results 
+        ]);
+    }
+
     public function actionAddKonsulat()
     {
         $dataku = $_POST['dataku'];
@@ -62,21 +78,42 @@ class MahasiswaController extends Controller
         if (!empty($dataku['nim'])) {
             if (!empty($dataku['city'])) {
                 $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
-                $data->konsulat = $city;
-                $data->save(false,['konsulat']);
                 
-                $results = [
-                    'code' => 200,
-                    'msg' => "Berhasil",
-                    
-                ];
-               
+                if(empty($data->konsulat))
+                {
+                    $data->konsulat = $city;
+                    $data->save(false,['konsulat']);
+                
+                    $results = [
+                        'code' => 200,
+                        'msg' => "Berhasil",
+                        
+                    ];
+                }
+
+                else if($city == $data->konsulat)
+                {
+                    $results = [
+                        'code' => 500,
+                        'msg' => "Oops, mahasiswa ini sudah di konsulat ini",
+                        
+                    ];
+                }
+
+                else
+                {
+                    $results = [
+                        'code' => 500,
+                        'msg' => "Oops, mahasiswa ini sudah ada di konsulat lain",
+                        
+                    ];
+                }
 
             }
             else{
                 $results = [
                     'code' => 500,
-                    'msg' => "City kosong, Isi terlebih dahulu",
+                    'msg' => "Konsulat kosong, Isi terlebih dahulu",
                     
                 ];
 
@@ -85,7 +122,7 @@ class MahasiswaController extends Controller
         else {
             $results = [
                     'code' => 500,
-                    'msg' => "City kosong, Isi terlebih dahulu",
+                    'msg' => "NIM kosong, Isi terlebih dahulu",
                     
                 ];
         }
@@ -98,28 +135,25 @@ class MahasiswaController extends Controller
     {
         $dataku = $_POST['dataku'];
         $nim = $dataku['nim'];
-        $city = $dataku['city'];
         if (!empty($dataku['nim'])) {
-            if (!empty($dataku['city'])) {
-                $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
-                $data->konsulat = null;
-                $data->save(false,['konsulat']);
+            $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
+            $data->konsulat = null;
+            $data->save(false,['konsulat']);
+            $results = [
+                'code' => 200,
+                'msg' => "Berhasil",
                 
-                $results = [
-                    'code' => 200,
-                    'msg' => "Berhasil",
-                    
-                ];
-                echo json_encode($results);
-
-            }
-            else{
-                echo "City kosong, Isi terlebih dahulu";
-            }
+            ];
         }
         else {
-            echo "City kosong, Isi terlebih dahulu";
+            $results = [
+                'code' => 500,
+                'msg' => "NIM kosong, Isi terlebih dahulu",
+                
+            ];
         }
+
+        echo json_encode($results);
         die();
     }
 

@@ -94,12 +94,12 @@ class MenuHelper
 		                'url' => ['mahasiswa/konsulat'],	        
 		                'visible' => Yii::$app->user->can('operatorCabang'), 
 		            ],
-		            // [
-		            // 	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pindah Kamar',  
-		            //     'url' => ['/asrama/pindah'],	        
-		            //     'visible' => Yii::$app->user->can('operatorCabang'),
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap',  
+		                'url' => ['/mahasiswa/konsulat-rekap'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'),
 		               
-		            // ],
+		            ],
 		        ]
 		    ];
 
