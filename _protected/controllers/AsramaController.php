@@ -187,7 +187,7 @@ class AsramaController extends Controller
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
                     'kode_fakultas' => $params['kode_fakultas'],
-                    'status_aktivitas' => 'A'
+                    'status_aktivitas' => $params['status_aktivitas'],
                 ])->all();          
 
 

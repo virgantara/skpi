@@ -7,12 +7,15 @@ use app\models\RiwayatKamar;
 use app\models\RiwayatPelanggaran;
 use app\models\SimakMastermahasiswa;
 use app\models\MahasiswaSearch;
+use app\models\Asrama;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use app\helpers\MyHelper;
 use yii\httpclient\Client;
+use yii\filters\AccessControl;
+
 /**
  * MahasiswaController implements the CRUD actions for SimakMastermahasiswa model.
  */
@@ -24,14 +27,155 @@ class MahasiswaController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'denyCallback' => function ($rule, $action) {
+                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                },
+                'only' => ['update','index','view','konsulat'],
+                'rules' => [
+                    
+                    [
+                        'actions' => [
+                            'update','index','view','konsulat'
+                        ],
+                        'allow' => true,
+                        'roles' => ['theCreator','admin'],
+                    ],
+                    
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
     }
+
+    public function actionKonsulatRekap()
+    {
+        $query = new \yii\db\Query();
+        $results = $query->select(['konsulat', 'c.name','c.latitude','c.longitude', 'count(*) as total'])
+        ->from('simak_mastermahasiswa m')
+        ->innerJoin('cities c', 'm.konsulat = c.id')
+        ->groupBy(['m.konsulat', 'c.name','c.latitude','c.longitude'])
+        ->orderBy('total DESC')
+        // ->limit(10)
+        ->all();
+
+        return $this->render('konsulat_rekap',[
+            'results' => $results 
+        ]);
+    }
+
+    public function actionAddKonsulat()
+    {
+        $dataku = $_POST['dataku'];
+        $nim = $dataku['nim'];
+        $city = $dataku['city'];
+        if (!empty($dataku['nim'])) {
+            if (!empty($dataku['city'])) {
+                $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
+                
+                if(empty($data->konsulat))
+                {
+                    $data->konsulat = $city;
+                    $data->save(false,['konsulat']);
+                
+                    $results = [
+                        'code' => 200,
+                        'msg' => "Berhasil",
+                        
+                    ];
+                }
+
+                else if($city == $data->konsulat)
+                {
+                    $results = [
+                        'code' => 500,
+                        'msg' => "Oops, mahasiswa ini sudah di konsulat ini",
+                        
+                    ];
+                }
+
+                else
+                {
+                    $results = [
+                        'code' => 500,
+                        'msg' => "Oops, mahasiswa ini sudah ada di konsulat lain",
+                        
+                    ];
+                }
+
+            }
+            else{
+                $results = [
+                    'code' => 500,
+                    'msg' => "Konsulat kosong, Isi terlebih dahulu",
+                    
+                ];
+
+            }
+        }
+        else {
+            $results = [
+                    'code' => 500,
+                    'msg' => "NIM kosong, Isi terlebih dahulu",
+                    
+                ];
+        }
+
+         echo json_encode($results);
+        die();
+    }
+
+    public function actionRemoveKonsulat()
+    {
+        $dataku = $_POST['dataku'];
+        $nim = $dataku['nim'];
+        if (!empty($dataku['nim'])) {
+            $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
+            $data->konsulat = null;
+            $data->save(false,['konsulat']);
+            $results = [
+                'code' => 200,
+                'msg' => "Berhasil",
+                
+            ];
+        }
+        else {
+            $results = [
+                'code' => 500,
+                'msg' => "NIM kosong, Isi terlebih dahulu",
+                
+            ];
+        }
+
+        echo json_encode($results);
+        die();
+    }
+
+    public function actionKonsulat()
+    {
+        $model = new SimakMastermahasiswa;
+        $results = [];
+        
+        if (!empty($_GET['SimakMastermahasiswa']['konsulat'])) {
+            
+            $results = SimakMastermahasiswa::find()->where([
+                'konsulat' => $_GET['SimakMastermahasiswa']['konsulat'],
+            ])->all();          
+            
+        }
+
+        // print_r($_GET['SimakMastermahasiswa']['konsulat']);exit;
+        return $this->render('konsulat',[
+            'model' => $model,
+            'results' => $results,
+        ]);
+    } 
 
     /**
      * Lists all SimakMastermahasiswa models.
@@ -151,7 +295,11 @@ class MahasiswaController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            if(!$model->save())
+            {
+                print_r($model->getErrors());exit;
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

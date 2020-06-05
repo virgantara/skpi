@@ -280,8 +280,13 @@ class ApiController extends Controller
             {
                 foreach ($result as $d) {
                     $out[] = [
+                        'nm' => $d['nama_mahasiswa'],
+                        'jk' => $d['jenis_kelamin'],
+                        'smt' => $d['semester'],
+                        'nmp' => $d['nama_prodi'],
+                        'k' => $d['nama_kampus'],
                         'id' => $d['nim_mhs'],
-                        'label'=> $d['nim_mhs'].' - '.$d['nama_mahasiswa'],
+                        'label'=> $d['nim_mhs'].' - '.$d['nama_mahasiswa'].' - '.$d['nama_prodi'],
 
                     ];
                 }
