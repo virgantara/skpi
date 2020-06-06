@@ -57,11 +57,13 @@ class CitiesController extends Controller
     public function actionIndex()
     {
         $searchModel = new CitiesSearch();
+        // $searchModel->state_id =
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+
         ]);
     }
 
