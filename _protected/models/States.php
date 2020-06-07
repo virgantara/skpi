@@ -37,7 +37,7 @@ class States extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'country_id', 'country_code'], 'required'],
+            [['name', 'country_id', 'country_code','iso2'], 'required'],
             [['country_id', 'flag'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['name', 'fips_code', 'iso2', 'wikiDataId'], 'string', 'max' => 255],

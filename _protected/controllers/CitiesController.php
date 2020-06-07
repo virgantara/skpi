@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\States;
+use app\models\Countries;
 use app\models\Cities;
 use app\models\CitiesSearch;
 use yii\web\Controller;
@@ -89,8 +91,17 @@ class CitiesController extends Controller
     {
         $model = new Cities();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $state = States::findOne($model->state_id);
+            $country = Countries::findOne($model->country_id);
+            $model->state_code = $state->iso2;
+            $model->country_code = $country->iso2;
+            if($model->validate())
+            {
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -109,8 +120,17 @@ class CitiesController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $state = States::findOne($model->state_id);
+            $country = Countries::findOne($model->country_id);
+            $model->state_code = $state->iso2;
+            $model->country_code = $country->iso2;
+            if($model->validate())
+            {
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
