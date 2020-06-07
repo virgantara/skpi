@@ -12,6 +12,10 @@ use yii\widgets\ActiveForm;
 
 $this->title = 'Cities';
 $this->params['breadcrumbs'][] = $this->title;
+
+$state_id = !empty($searchModel->state_id) ? $searchModel->state_id : '';
+$country_id = !empty($searchModel->country_id) ? $searchModel->country_id : '';
+
 ?>
 <div class="cities-index">
 
@@ -144,11 +148,12 @@ function getStates(cid){
 
             $("#states").append(row);
 
-            $("#states").val("'.$states.'");
+            $("#states").val("'.$state_id.'");
         }
     });
 }
 
+getStates("'.$country_id.'");
 
     $("#negara").change(function(){
         var cid = $(this).val();

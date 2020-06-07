@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Countries;
 use app\models\States;
 use app\models\StatesSearch;
 use yii\web\Controller;
@@ -88,8 +89,14 @@ class StatesController extends Controller
     {
         $model = new States();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $country = Countries::findOne($model->country_id);
+            $model->country_code = $country->iso2;
+            if($model->validate())
+            {
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -108,8 +115,14 @@ class StatesController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            $country = Countries::findOne($model->country_id);
+            $model->country_code = $country->iso2;
+            if($model->validate())
+            {
+                $model->save();
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [

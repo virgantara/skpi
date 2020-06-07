@@ -32,16 +32,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'country_id',
                 'filter' => \yii\helpers\ArrayHelper::map(\app\models\Countries::find()->all(),'id','name'),
                 'value' => function ($data) {
-                    return $data->name;
+                    return $data->country->name;
                 },
                
             ],
-            'country_code',
-            'fips_code',
-            //'iso2',
+            // 'country_code',
+            // 'fips_code',
+            // 'iso2',
             //'created_at',
             //'updated_at',
-            //'flag',
+            // 'flag',
             //'wikiDataId',
 
             ['class' => 'yii\grid\ActionColumn'],

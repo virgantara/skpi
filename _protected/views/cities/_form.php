@@ -3,31 +3,37 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 \app\assets\LeafletAsset::register($this);
 /* @var $this yii\web\View */
 /* @var $model app\models\Cities */
 /* @var $form yii\widgets\ActiveForm */
+
+$model->latitude = $model->latitude ?: -7.8651;
+$model->longitude = $model->longitude ?: 111.4696;
+$lat = $model->latitude;
+$lng = $model->longitude;
+
 ?>
 
 <div class="cities-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
+
+    <?= $form->field($model,'country_id')->dropDownList(ArrayHelper::map(\app\models\Countries::find()->all(),'id','name'),['id'=>'negara','prompt'=>'- Choose a Country -']);?>
+
+    <?= $form->field($model,'state_id')->dropDownList([],['id'=>'states','prompt'=>'- Choose a state -']);?>
+
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'state_id')->textInput() ?>
 
-    <?= $form->field($model, 'state_code')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'country_id')->textInput() ?>
-
-    <?= $form->field($model, 'country_code')->textInput(['maxlength' => true]) ?>
-
+<div id="mapid" style="width: 50%; height: 400px;"></div>
     <?= $form->field($model, 'latitude')->textInput(['readonly' => true]) ?>
 
     <?= $form->field($model, 'longitude')->textInput(['readonly' => true]) ?>
 
-    <?= $form->field($model, 'wikiDataId')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -38,12 +44,9 @@ use yii\widgets\ActiveForm;
 </div>
 
 
-<div id="mapid" style="width: 50%; height: 400px;"></div>
     
 <?php
 
-$lat = $model->latitude;
-$lng = $model->longitude;
 
 $html = "
     var mymap = L.map('mapid').setView([".$lat.", ".$lng."], 10);
@@ -70,6 +73,45 @@ $html = "
     });
 
     
+";
+
+$html .= "
+
+
+function getStates(cid){
+    $.ajax({
+
+        type : \"POST\",
+        url : '".Url::to(['/states/states-list'])."',
+        data : \"cid=\"+cid,
+        beforeSend : function(){
+            $(\"#states\").empty();
+            var row = '<option value=\"\">Loading...</option>';
+            $(\"#states\").append(row);
+        },
+        success: function(hasil){
+            // var hasil = $.parseJSON(data);
+            $(\"#states\").empty();
+            var row = '<option value=\"\">- Choose a state -</option>';
+            $.each(hasil,function(i,obj){
+                row += '<option value='+obj.id+'>'+obj.name+'</option>';
+            });
+
+            $(\"#states\").append(row);
+
+            $(\"#states\").val(\"".$model->state_id."\");
+        }
+    });
+}
+
+getStates('".$model->country_id."');
+
+$(\"#negara\").change(function(){
+    var cid = $(this).val();
+    
+    getStates(cid);
+});
+
 ";
 
 $this->registerJs($html, \yii\web\View::POS_READY);
