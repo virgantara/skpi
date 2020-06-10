@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use kartik\depdrop\DepDrop;
 
-$this->title = 'Pindah Kamar';
+$this->title = 'Pemetaan Dapur';
 $this->params['breadcrumbs'][] = $this->title;
 $model->kampus = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kampus'] : '';
 $model->kode_fakultas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_fakultas'] : '';
@@ -24,7 +24,7 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 				],
 			],
 			'method' => 'GET',
-			'action' => Url::to(['asrama/pindah']),
+			'action' => Url::to(['asrama/dapur']),
 			'options' => [
 
 
@@ -95,9 +95,8 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 						<th>Nama Mahasiswa</th>
 						<th>JK</th>
 						<th>Semester</th>
-						<th>Konsulat</th>
 						
-						<th>Asrama dan Kamar</th>
+						<th>Dapur</th>
 						<th>Pindah</th>
 					</tr>
 				</thead>
@@ -117,40 +116,22 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 							<td><?=$m->nama_mahasiswa;?></td>
 							<td><?=$m->jenis_kelamin;?></td>
 							<td><?=$m->semester;?></td>
-							<td><?=$m->konsulat0->name;?> - <?=$m->konsulat0->state->name;?> - <?=$m->konsulat0->country->name;?></td>
+							
 							<td>
-								<span class="datakamar"><?=$m->kamar->namaAsrama.' - '.$m->kamar->nama;?></span>
+								<span class="datadapur"><?=$m->dapur->nama;?></span>
 							</td>
 							<td>
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right">Asrama</label>
-									<div class="col-sm-9">
-										<?= Html::dropDownList('asrama','',ArrayHelper::map($listAsrama,'id','nama'),['id'=>'asrama_'.$m->nim_mhs,'class'=>'form-control','prompt'=>'- Pilih Asrama -']);?>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right">Kamar</label>
-									<div class="col-sm-4">
-										<?php echo DepDrop::widget([
-											'name' => 'kamar_id_'.$m->nim_mhs,
-											'options' => [
-												'class'=> 'kamar_id'
-											],
-											'pluginOptions'=>[
-												'depends'=>['asrama_'.$m->nim_mhs],
-												'placeholder' => '...Pilih Kamar...',
-												'url' => Url::to(['/kamar/kamar-list']),
-
-											]   
-										])?>
+									<div class="col-sm-7">
+										<?= Html::dropDownList('dapur','',ArrayHelper::map($listDapur,'id','nama'),['id'=>'dapur_'.$m->nim_mhs,'class'=>'form-control dapur_id','prompt'=>'- Pilih Dapur -']);?>
 									</div>
 									<div class="col-sm-5">
 										<button type="button" class="btn btn-info btn-pindah" value="<?php echo $m->nim_mhs ?>">
-											<i class="fa fa-paper-plane"></i> Pindah
+											<i class="fa fa-paper-plane"></i> Simpan
 										</button>
 									</div>
-
 								</div>
+								
 							</td>
 						</tr>
 						<?php 
@@ -187,34 +168,33 @@ $this->registerJs('
 	
 	$(".btn-pindah").click(function(){
 		Swal.fire({
-		  title: \'Do you want to migrate this person?\',
+		  title: \'Do you want to apply this?\',
 		  text: "You won\'t be able to revert this!",
 		  icon: \'warning\',
 		  showCancelButton: true,
 		  confirmButtonColor: \'#3085d6\',
 		  cancelButtonColor: \'#d33\',
-		  confirmButtonText: \'Yes, move him/her!\'
+		  confirmButtonText: \'Yes, apply!\'
 		}).then((result) => {
 		  if (result.value) {
 		    var nim_mahasiswa = $(this).val();
-		var kamar_id = $(this).parent().prev().find(".kamar_id").val();
-		var viewkamar = $(this).parent().parent().parent().prev().find(".datakamar");
-		// console.log(viewkamar);
+		var dapur_id = $(this).parent().prev().find(".dapur_id").val();
+		var viewkamar = $(this).parent().parent().parent().prev().find(".datadapur");
 		var obj = new Object;
 		obj.nimku = nim_mahasiswa;
-		obj.kamarku = kamar_id;
+		obj.dapur_id = dapur_id;
 		// console.log(obj);
 		$.ajax({
 
 			type : "POST",
-			url : "'.Url::to(['/asrama/kamar']).'",
+			url : "'.Url::to(['/asrama/ajax-dapur']).'",
 			data : {
 				dataku : obj
 			},
 			success: function(data){
 				var hasil = $.parseJSON(data);
 
-				viewkamar.html(hasil.asrama + " - " + hasil.kamar);
+				viewkamar.html(hasil.dapur);
 				Swal.fire(
 				\'Good job!\',
 				  hasil.msg,

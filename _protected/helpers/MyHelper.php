@@ -9,7 +9,39 @@ use Yii;
 class MyHelper
 {
 
-	function dmYtoYmd($tgl,$dateonly=false){
+	public static function getStatusAktivitas()
+    {
+        $roles = [
+        	'A' => 'AKTIF','C' => 'CUTI', 'D' => 'DO','K' => 'KELUAR' ,'L' => 'LULUS','N' => 'NON-AKTIF', 'G'=>'DOUBLE DEGREE','M'=>'MUTASI'
+        ];
+        
+
+        return $roles;
+    }
+
+	public static function getKampusList()
+    {
+        $results = [];
+        $list = \app\models\SimakKampus::find()->all();
+        foreach ($list as $item_name) {
+            $results[$item_name->kode_kampus] = $item_name->nama_kampus;
+        }
+
+        return $results;
+    }
+
+	public static function getProdiList()
+    {
+        $roles = [];
+        $listProdi = \app\models\SimakMasterprogramstudi::find()->all();
+        foreach ($listProdi as $item_name) {
+            $roles[$item_name->kode_prodi] = $item_name->nama_prodi;
+        }
+
+        return $roles;
+    }
+
+	public static function dmYtoYmd($tgl,$dateonly=false){
 		$date = str_replace('/', '-', $tgl);
 	    if($dateonly)
 	    	return date('Y-m-d',strtotime($date));
@@ -17,14 +49,14 @@ class MyHelper
 	    	return date('Y-m-d H:i:s',strtotime($date));
 	}
 
-	function YmdtodmY($tgl,$dateonly=false){
+	public static function YmdtodmY($tgl,$dateonly=false){
 		if($dateonly)
 			return date('d-m-Y',strtotime($tgl));
 		else
 			return date('d-m-Y H:i:s',strtotime($tgl));
 	}
 
-	function hitungSelisihHari($date1, $date2)
+	public static function hitungSelisihHari($date1, $date2)
 	{
 		$date1 = new \DateTime($date1);
 		$date2 = new \DateTime($date2);
@@ -33,7 +65,7 @@ class MyHelper
 		return $interval;
 	}
 
-	function hitungDurasi($date1, $date2)
+	public static function hitungDurasi($date1, $date2)
 	{
 		$date1 = new \DateTime($date1);
 		$date2 = new \DateTime($date2);
@@ -76,7 +108,7 @@ class MyHelper
 
     }
 
-    function getRandomString($minlength=12, $maxlength=12, $useupper=true, $usespecial=false, $usenumbers=true)
+    public static function getRandomString($minlength=12, $maxlength=12, $useupper=true, $usespecial=false, $usenumbers=true)
 	{
 
 	    $charset = "abcdefghijklmnopqrstuvwxyz";
