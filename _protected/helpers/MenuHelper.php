@@ -83,6 +83,26 @@ class MenuHelper
 		        ]
 		    ];
 
+		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Dapur </span><i class="caret"></i>', 
+		         'url' => '#',
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Dapur',  
+		                'url' => ['dapur/index'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan Dapur',  
+		                'url' => ['/asrama/dapur'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'),
+		               
+		            ],
+		        ]
+		    ];
+
 		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Konsulat </span><i class="caret"></i>', 
 		         'url' => '#',
 		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
@@ -253,6 +273,21 @@ class MenuHelper
 	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
 	                        'visible' => Yii::$app->user->can('admin'),
 	                        'url' => ['asrama/create']]
+	                ],
+	            ],
+	           	[
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Dapur <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['dapur/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['dapur/create']]
 	                ],
 	            ],
 	           

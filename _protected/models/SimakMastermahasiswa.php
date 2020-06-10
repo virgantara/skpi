@@ -116,7 +116,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     {
         return [
             [['nim_mhs', 'nama_mahasiswa'], 'required'],
-            [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at','no_sk_yudisium','konsulat'], 'safe'],
+            [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at','no_sk_yudisium','konsulat','dapur_id'], 'safe'],
             [['keterangan'], 'string'],
             [['status_bayar', 'status_mahasiswa', 'is_synced', 'kamar_id', 'is_eligible'], 'integer'],
             [['kode_pt', 'asal_prodi', 'kode_pos'], 'string', 'max' => 6],
@@ -140,6 +140,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['nim_mhs'], 'unique'],
             [['kode_prodi'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterprogramstudi::className(), 'targetAttribute' => ['kode_prodi' => 'kode_prodi']],
             [['kamar_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kamar::className(), 'targetAttribute' => ['kamar_id' => 'id']],
+            [['dapur_id'], 'exist', 'skipOnError' => true, 'targetClass' => Dapur::className(), 'targetAttribute' => ['dapur_id' => 'id']],
             [['kampus'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus' => 'kode_kampus']],
             [['kode_fakultas'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterfakultas::className(), 'targetAttribute' => ['kode_fakultas' => 'kode_fakultas']],
             [['konsulat'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::className(), 'targetAttribute' => ['konsulat' => 'id']],
@@ -225,6 +226,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             'kode_pd' => 'Kode Pd',
             'va_code' => 'Va Code',
             'kamar_id' => 'Kamar ID',
+            'dapur_id' => 'Dapur',
             'is_eligible' => 'Is Eligible',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -291,6 +293,11 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     public function getKamar()
     {
         return $this->hasOne(Kamar::className(), ['id' => 'kamar_id']);
+    }
+
+    public function getDapur()
+    {
+        return $this->hasOne(Dapur::className(), ['id' => 'dapur_id']);
     }
 
     /**

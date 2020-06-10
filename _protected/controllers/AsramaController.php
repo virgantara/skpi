@@ -3,6 +3,9 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Dapur;
+use app\models\DapurSearch;
+
 use app\models\Asrama;
 use app\models\AsramaSearch;
 
@@ -33,6 +36,67 @@ class AsramaController extends Controller
             ],
         ];
     }
+
+    public function actionAjaxDapur()
+    {
+        $dataku = $_POST['dataku'];
+        $nim = $dataku['nimku'];
+        $dapur_id = $dataku['dapur_id'];
+        if (!empty($dataku['nimku'])) {
+            if (!empty($dataku['dapur_id'])) {
+                $data = SimakMastermahasiswa::find()->where([ 'nim_mhs' => $nim ])->one();
+                $kamarLama = $data->kamar;
+                
+                $data->dapur_id = $dapur_id;
+                $data->save();
+                
+                $results = [
+                    'code' => 200,
+                    'msg' => "Perpindahan Berhasil",
+                    'dapur' => $data->dapur->nama,
+                ];
+                echo json_encode($results);
+
+            }
+            else{
+                echo "Dapur kosong, Isi terlebih dahulu";
+            }
+        }
+        else {
+            echo "NIM kosong, Isi terlebih dahulu";
+        }
+        die();
+    }
+
+    public function actionDapur()
+    {
+        $model = new SimakMastermahasiswa;
+        $model->setScenario('asrama');
+        $listDapur = Dapur::find()->all();
+        $results = [];
+        $params = [];
+
+        if (!empty($_GET['btn-search'])) {
+            if(!empty($_GET['SimakMastermahasiswa']))
+            {
+                $params = $_GET['SimakMastermahasiswa'];
+                $results = SimakMastermahasiswa::find()->where([
+                    'kampus' => $params['kampus'],
+                    'kode_prodi' => $params['kode_prodi'],
+                    'kode_fakultas' => $params['kode_fakultas'],
+                    'status_aktivitas' => $params['status_aktivitas'],
+                ])->all();          
+
+
+            }
+        }
+        return $this->render('dapur',[
+            'model' => $model,
+            'results' => $results,
+            'params' => $params,
+            'listDapur' => $listDapur
+        ]);
+    } 
 
     public function actionSync()
     {
