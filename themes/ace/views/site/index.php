@@ -7,7 +7,11 @@ use app\assets\HighchartAsset;
 $this->title = Yii::t('app', Yii::$app->name);
 
 HighchartAsset::register($this);
-$listAsrama = \app\models\Asrama::find()->all();
+$query = \app\models\Asrama::find();
+if(Yii::$app->user->identity->access_role == 'operatorCabang'){
+  $query->where(['kampus_id'=>Yii::$app->user->identity->kampus]);
+}
+$listAsrama = $query->all();
 ?>
 <style type="text/css">
 .containerAsrama {

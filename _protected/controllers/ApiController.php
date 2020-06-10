@@ -80,15 +80,24 @@ class ApiController extends Controller
     public function actionAjaxGetPelanggaranJumlahTerbanyak(){
         $kategori = $_POST['kategori'];
         $query = new \yii\db\Query();
-        $rows = $query->select(['a.nama','a.id', 'COUNT(*) as total'])
+        $query->select(['a.nama','a.id', 'COUNT(*) as total'])
                 ->from('erp_riwayat_pelanggaran b')
                 ->innerJoin('erp_pelanggaran a', 'b.pelanggaran_id = a.id')
-                ->innerJoin('erp_kategori_pelanggaran c', 'a.kategori_id = c.id')
-                ->where(['c.nama' => $kategori])
-                ->groupBy(['a.nama','a.id'])
+                ->innerJoin('erp_kategori_pelanggaran c', 'a.kategori_id = c.id');
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->innerJoin('simak_mastermahasiswa m', 'm.nim_mhs = b.nim');
+                    $query->where(['m.kampus'=>Yii::$app->user->identity->kampus]);    
+                    $query->andWhere(['c.nama' => $kategori]);
+                }
+
+                else{
+                    $query->where(['c.nama' => $kategori]);
+                }
+                $query->groupBy(['a.nama','a.id'])
                 ->orderBy('total DESC')
-                ->limit(10)
-                ->all();
+                ->limit(10);
+        $rows = $query->all();
 
      
 
@@ -102,7 +111,10 @@ class ApiController extends Controller
         $client = new Client(['baseUrl' => $api_baseurl]);
         $client_token = Yii::$app->params['client_token'];
         $headers = ['x-access-token'=>$client_token];
-        $response = $client->get('/simpel/asrama/kapasitas', [],$headers)->send();
+        $params = [
+            'kampus' => Yii::$app->user->identity->kampus
+        ];
+        $response = $client->get('/simpel/asrama/kapasitas', $params,$headers)->send();
         
         $results = [];
         
@@ -138,7 +150,8 @@ class ApiController extends Controller
 
             $response = $client->get('/simpel/rekap/pelanggaran/tahunan', [
                 'sd' => $sd,
-                'ed' => $ed
+                'ed' => $ed,
+                'kampus' => Yii::$app->user->identity->kampus
             ],$headers)->send();
 
             

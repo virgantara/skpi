@@ -124,20 +124,7 @@ $negara = !empty($model->konsulat0) ? $model->konsulat0->country->name : '';
         <div class="form-group">
             <label class="control-label no-padding-right">States</label>
         <div class="">
-            <?php echo DepDrop::widget([
-                'name' => 'states',
-                'options' => [
-                    'class'=> 'states',
-                    'id'=>'states'
-                ],
-                'pluginOptions'=>[
-                    'depends'=>['negara'],
-                    'initialize' => true,
-                    'placeholder' => '...Choose a state...',
-                    'url' => Url::to(['/states/states-list']),
-
-                ]   
-            ])?>
+            <?= Html::dropDownList('states',$states,[],['id'=>'states','prompt'=>'- Choose a state -']);?>
 
             
             </div>
@@ -145,19 +132,7 @@ $negara = !empty($model->konsulat0) ? $model->konsulat0->country->name : '';
         <div class="form-group">
             <label class="control-label no-padding-right">Cities</label>
         <div class="">
-            <?php echo $form->field($model,'konsulat')->widget(DepDrop::className(),[
-                'name' => 'cities',
-                'options' => [
-                    'class'=> 'cities'
-                ],
-                'pluginOptions'=>[
-                    'depends'=>['states'],
-                    'initialize' => true,
-                    'placeholder' => '...Choose a city...',
-                    'url' => Url::to(['/cities/cities-list']),
-
-                ]   
-            ])->label(false);?>
+            <?php echo $form->field($model,'konsulat')->dropDownList([],['prompt'=>'- Choose a city -','class'=>'','id' => 'konsulat'])->label(false);?>
 
             
             </div>
@@ -170,6 +145,132 @@ $negara = !empty($model->konsulat0) ? $model->konsulat0->country->name : '';
 </div>
 <?php ActiveForm::end(); ?>
 
+
+<?php
+
+$this->registerJs(' 
+
+getStates($("#negara").val());
+
+function getStates(cid){
+    $.ajax({
+
+        type : "POST",
+        url : "'.Url::to(['/states/states-list']).'",
+        data : "cid="+cid,
+        beforeSend : function(){
+            $("#states").empty();
+            var row = \'<option value="">Loading...</option>\';
+            $("#states").append(row);
+        },
+        success: function(hasil){
+            // var hasil = $.parseJSON(data);
+            $("#states").empty();
+            var row = \'<option value="">- Choose a state -</option>\';
+            $.each(hasil,function(i,obj){
+                row += \'<option value="\'+obj.id+\'">\'+obj.name+\'</option>\';
+            });
+
+            $("#states").append(row);
+
+            $("#states").val("'.$states.'");
+            getCities("'.$states.'");
+        }
+    });
+}
+
+function getCities(sid){
+    $.ajax({
+
+        type : "POST",
+        url : "'.Url::to(['/cities/cities-list']).'",
+        data : "sid="+sid,
+        beforeSend : function(){
+            $("#konsulat").empty();
+            var row = \'<option value="">Loading...</option>\';
+            $("#konsulat").append(row);
+        },
+        success: function(hasil){
+            $("#konsulat").empty();
+            var row = \'<option value="">- Choose a city -</option>\';
+            $.each(hasil,function(i,obj){
+                row += \'<option value="\'+obj.id+\'">\'+obj.name+\'</option>\';
+            });
+
+            $("#konsulat").append(row);
+            $("#konsulat").val("'.$model->konsulat.'");
+        }
+    });
+}
+    $("#negara").change(function(){
+        var cid = $(this).val();
+        
+        getStates(cid);
+    });
+
+    $("#states").change(function(){
+        var sid = $(this).val();
+        
+        getCities(sid);
+    });
+    
+    $(document).on("click",".delete",function(){
+        Swal.fire({
+          title: \'Do you want to remove this person?\',
+          text: "You won\'t be able to revert this!",
+          icon: \'warning\',
+          showCancelButton: true,
+          confirmButtonColor: \'#3085d6\',
+          cancelButtonColor: \'#d33\',
+          confirmButtonText: \'Yes, remove him/her!\'
+        }).then((result) => {
+          if (result.value) {
+            var nim_mahasiswa = $(this).data(\'item\');
+            var row = $(this).parent().parent();
+            row.remove();
+            var obj = new Object;
+            obj.nim = nim_mahasiswa;
+            
+            $.ajax({
+
+                type : "POST",
+                url : "'.Url::to(['/mahasiswa/remove-konsulat']).'",
+                data : {
+                    dataku : obj
+                },
+                success: function(data){
+                    var hasil = $.parseJSON(data);
+
+                    Swal.fire(
+                    \'Good job!\',
+                      hasil.msg,
+                      \'success\'
+                    )
+                }
+            });
+          }
+        })
+        
+    });
+
+    $("#btn-lihat").click(function(e){
+        e.preventDefault();
+        $(\'#form-konsulat\').submit();
+    });
+
+    setTimeout(function(){
+        $("#kode_prodi").val('.$params['kode_prodi'].');
+    },500);
+
+    setInterval(function(){
+        $(\'.numbering\').each(function(i, obj) {
+            $(this).html(i+1);
+        });
+    },500);
+
+', \yii\web\View::POS_READY);
+
+?>
 
     
        

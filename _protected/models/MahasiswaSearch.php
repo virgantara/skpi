@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\SimakMastermahasiswa;
@@ -117,6 +118,13 @@ class MahasiswaSearch extends SimakMastermahasiswa
 
         if(!empty($this->kampus))
             $query->andWhere(['kampus'=>$this->kampus]);
+
+        if(Yii::$app->user->identity->access_role == 'operatorCabang')
+        {
+            $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+        }
+
+        
 
         $query->andFilterWhere(['like', 'kode_pt', $this->kode_pt])
             ->andFilterWhere(['like', 'kode_jenjang_studi', $this->kode_jenjang_studi])

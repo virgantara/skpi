@@ -38,7 +38,7 @@ class Asrama extends \yii\db\ActiveRecord
             [['kampus_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['nama'], 'string', 'max' => 255],
-            [['kampus_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus_id' => 'id']],
+            [['kampus_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus_id' => 'kode_kampus']],
         ];
     }
 
@@ -63,7 +63,7 @@ class Asrama extends \yii\db\ActiveRecord
 
     public function getKampus()
     {
-        return $this->hasOne(SimakKampus::className(), ['id' => 'kampus_id']);
+        return $this->hasOne(SimakKampus::className(), ['kode_kampus' => 'kampus_id']);
     }
 
     /**

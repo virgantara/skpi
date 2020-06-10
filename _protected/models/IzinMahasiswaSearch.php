@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\IzinMahasiswa;
@@ -182,6 +183,11 @@ class IzinMahasiswaSearch extends IzinMahasiswa
 
         if(!empty($this->prodi_approved))
             $query->andWhere(['prodi_approved'=>$this->prodi_approved]);
+
+        if(Yii::$app->user->identity->access_role == 'operatorCabang')
+        {
+            $query->andWhere(['mhs.kampus'=>Yii::$app->user->identity->kampus]);    
+        }
 
         return $dataProvider;
     }

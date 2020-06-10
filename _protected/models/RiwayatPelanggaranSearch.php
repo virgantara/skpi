@@ -1,7 +1,7 @@
 <?php
 
 namespace app\models;
-
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\RiwayatPelanggaran;
@@ -159,6 +159,11 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
 
         if(!empty($this->statusAktif)){
             $query->andWhere(['mhs.status_aktivitas'=>$this->statusAktif]);
+        }
+
+        if(Yii::$app->user->identity->access_role == 'operatorCabang')
+        {
+            $query->andWhere(['mhs.kampus'=>Yii::$app->user->identity->kampus]);    
         }
 
         return $dataProvider;

@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Dapur;
@@ -18,7 +19,7 @@ class DapurSearch extends Dapur
     {
         return [
             [['id', 'kapasitas'], 'integer'],
-            [['nama'], 'safe'],
+            [['nama','kampus'], 'safe'],
         ];
     }
 
@@ -63,6 +64,13 @@ class DapurSearch extends Dapur
         ]);
 
         $query->andFilterWhere(['like', 'nama', $this->nama]);
+
+        if(Yii::$app->user->identity->access_role == 'operatorCabang')
+        {
+            $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+        }
+                
+
 
         return $dataProvider;
     }

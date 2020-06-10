@@ -3,7 +3,7 @@ use app\rbac\models\AuthItem;
 use kartik\password\PasswordInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use app\models\SimakKampus;
 
 use yii\helpers\ArrayHelper;
 use app\models\Perusahaan;
@@ -41,6 +41,7 @@ $listData=ArrayHelper::map($list,'id_perusahaan','nama');
     <div class="col-md-6">
 
         <?= $form->field($user, 'status')->dropDownList($user->statusList) ?>
+        <?= $form->field($user, 'kampus')->dropDownList(\yii\helpers\ArrayHelper::map(SimakKampus::find()->all(),'kode_kampus','nama_kampus'),['prompt'=>'- Pilih Kampus -']) ?>
 
         <?php foreach (AuthItem::getRoles() as $item_name): ?>
             <?php $roles[$item_name->name] = $item_name->name ?>

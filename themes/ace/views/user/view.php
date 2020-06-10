@@ -47,6 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             </span>',
                 'format' => 'raw'
             ],
+            'kampus',
             //'auth_key',
             //'password_reset_token',
             //'account_activation_token',

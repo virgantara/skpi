@@ -10,7 +10,9 @@ use Yii;
  * @property int $id
  * @property string $nama
  * @property int $kapasitas
+ * @property int|null $kampus
  *
+ * @property SimakKampus $kampus0
  * @property SimakMastermahasiswa[] $simakMastermahasiswas
  */
 class Dapur extends \yii\db\ActiveRecord
@@ -30,8 +32,9 @@ class Dapur extends \yii\db\ActiveRecord
     {
         return [
             [['nama', 'kapasitas'], 'required'],
-            [['kapasitas'], 'integer'],
+            [['kapasitas', 'kampus'], 'integer'],
             [['nama'], 'string', 'max' => 255],
+            [['kampus'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus' => 'id']],
         ];
     }
 
@@ -44,7 +47,18 @@ class Dapur extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nama' => 'Nama',
             'kapasitas' => 'Kapasitas',
+            'kampus' => 'Kampus',
         ];
+    }
+
+    /**
+     * Gets query for [[Kampus0]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getKampus0()
+    {
+        return $this->hasOne(SimakKampus::className(), ['id' => 'kampus']);
     }
 
     /**
