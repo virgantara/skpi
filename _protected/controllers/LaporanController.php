@@ -295,8 +295,13 @@ class LaporanController extends Controller
                 // $prodi = $_POST['prodi'];
                 
                 $query = RiwayatPelanggaran::find();
-
+                $query->joinWith(['nim0 as mhs']);
                 $query->where(['between','tanggal',$tanggal_awal,$tanggal_akhir]);
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->andWhere(['mhs.kampus'=>Yii::$app->user->identity->kampus]);    
+                }
+                
                 $results = $query->all();
             }
         }
@@ -309,8 +314,13 @@ class LaporanController extends Controller
                 // $prodi = $_POST['prodi'];
                 
                 $query = RiwayatPelanggaran::find();
-
+                $query->joinWith(['nim0 as mhs']);
                 $query->where(['between','tanggal',$tanggal_awal,$tanggal_akhir]);
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->andWhere(['mhs.kampus'=>Yii::$app->user->identity->kampus]);    
+                }
+                
                 $results = $query->all();
             }
             $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
@@ -418,7 +428,8 @@ class LaporanController extends Controller
                     $client = new Client(['baseUrl' => $api_baseurl]);
                     $response = $client->get('/simpel/rekap/semester', [
                         'sd' => MyHelper::dmYtoYmd($sd),
-                        'ed' => MyHelper::dmYtoYmd($ed)
+                        'ed' => MyHelper::dmYtoYmd($ed),
+                        'kampus' => Yii::$app->user->identity->kampus
                     ],['x-access-token'=>Yii::$app->params['client_token']])->send();
                     if ($response->isOk) {
                         $result = $response->data['values'];
@@ -461,7 +472,8 @@ class LaporanController extends Controller
                     $client = new Client(['baseUrl' => $api_baseurl]);
                     $response = $client->get('/simpel/rekap/semester', [
                         'sd' => MyHelper::dmYtoYmd($sd),
-                        'ed' => MyHelper::dmYtoYmd($ed)
+                        'ed' => MyHelper::dmYtoYmd($ed),
+                        'kampus' => Yii::$app->user->identity->kampus
                     ],['x-access-token'=>Yii::$app->params['client_token']])->send();
                     if ($response->isOk) {
                         $result = $response->data['values'];
@@ -846,7 +858,8 @@ class LaporanController extends Controller
             
                     $response = $client->get('/simpel/rekap/fakultas', [
                         'sd' => MyHelper::dmYtoYmd($sd),
-                        'ed' => MyHelper::dmYtoYmd($ed)
+                        'ed' => MyHelper::dmYtoYmd($ed),
+                        'kampus' => Yii::$app->user->identity->kampus
                     ],['x-access-token'=>Yii::$app->params['client_token']])->send();
     
                     if ($response->isOk) {
@@ -887,7 +900,8 @@ class LaporanController extends Controller
             
                     $response = $client->get('/simpel/rekap/fakultas', [
                         'sd' => MyHelper::dmYtoYmd($sd),
-                        'ed' => MyHelper::dmYtoYmd($ed)
+                        'ed' => MyHelper::dmYtoYmd($ed),
+                        'kampus' => Yii::$app->user->identity->kampus
                     ],['x-access-token'=>Yii::$app->params['client_token']])->send();
     
                     if ($response->isOk) {
@@ -993,7 +1007,8 @@ class LaporanController extends Controller
 
                     $response = $client->get('/simpel/rekap/prodi', [
                         'sd' => MyHelper::dmYtoYmd($sd),
-                        'ed' => MyHelper::dmYtoYmd($ed)
+                        'ed' => MyHelper::dmYtoYmd($ed),
+                        'kampus' => Yii::$app->user->identity->kampus
                     ],['x-access-token'=>Yii::$app->params['client_token']])->send();
 
                     if ($response->isOk) {
@@ -1026,7 +1041,8 @@ class LaporanController extends Controller
 
                     $response = $client->get('/simpel/rekap/prodi', [
                         'sd' => MyHelper::dmYtoYmd($sd),
-                        'ed' => MyHelper::dmYtoYmd($ed)
+                        'ed' => MyHelper::dmYtoYmd($ed),
+                        'kampus' => Yii::$app->user->identity->kampus
                     ],['x-access-token'=>Yii::$app->params['client_token']])->send();
 
                     if ($response->isOk) {

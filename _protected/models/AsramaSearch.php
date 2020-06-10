@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Asrama;
@@ -65,6 +66,11 @@ class AsramaSearch extends Asrama
 
         $query->andFilterWhere(['like', 'nama', $this->nama]);
         $query->andFilterWhere(['like', 'k.nama_kampus', $this->namaKampus]);
+
+        if(Yii::$app->user->identity->access_role == 'operatorCabang')
+        {
+            $query->andWhere(['kampus_id' => Yii::$app->user->identity->kampus]);
+        }
 
         return $dataProvider;
     }

@@ -247,12 +247,20 @@ class AsramaController extends Controller
             if(!empty($_GET['SimakMastermahasiswa']))
             {
                 $params = $_GET['SimakMastermahasiswa'];
-                $results = SimakMastermahasiswa::find()->where([
+                $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
                     'kode_fakultas' => $params['kode_fakultas'],
-                    'status_aktivitas' => $params['status_aktivitas'],
-                ])->all();          
+                    'status_aktivitas' => $params['status_aktivitas']
+                ]);
+
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+                }
+                
+                $query->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]);          
+                $results = $query->all();
 
 
             }
@@ -277,13 +285,20 @@ class AsramaController extends Controller
             if(!empty($_GET['SimakMastermahasiswa']))
             {
                 $params = $_GET['SimakMastermahasiswa'];
-                $results = SimakMastermahasiswa::find()->where([
+                $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
                     'kode_fakultas' => $params['kode_fakultas'],
                     'status_aktivitas' => $params['status_aktivitas']
-                ])->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC])->all();          
+                ]);
 
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+                }
+
+                $query->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]);          
+                $results = $query->all();
 
             }
         }
@@ -292,12 +307,21 @@ class AsramaController extends Controller
             if(!empty($_GET['SimakMastermahasiswa']))
             {
                 $params = $_GET['SimakMastermahasiswa'];
-                $results = SimakMastermahasiswa::find()->where([
+                $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
                     'kode_fakultas' => $params['kode_fakultas'],
                     'status_aktivitas' => $params['status_aktivitas']
-                ])->all();          
+                ]);
+
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+                }
+                
+                $query->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]);          
+                $results = $query->all();
+    
 
                 $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
                 $objPHPExcel = new \PHPExcel();

@@ -72,7 +72,7 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 		<div class="form-group" >
 			<label class="col-sm-3 control-label no-padding-right">Status Mahasiswa</label>
 				<div class="col-sm-9 col-lg-4">
-			<?= $form->field($model,'status_aktivitas')->dropDownList(['A'=>'Aktif','N'=>'Non Aktif','C'=>'Cuti'],['class'=>'form-control','id'=>'status_aktivitas'])->label(false) ?>
+			<?= $form->field($model,'status_aktivitas')->dropDownList(['A'=>'Aktif'],['class'=>'form-control','id'=>'status_aktivitas'])->label(false) ?>
 			</div>
 		</div>
 

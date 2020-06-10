@@ -12,6 +12,8 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'kampus')->dropDownList(\yii\helpers\ArrayHelper::map(\app\models\SimakKampus::find()->all(),'kode_kampus','nama_kampus')) ?>
+
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'kapasitas')->textInput() ?>

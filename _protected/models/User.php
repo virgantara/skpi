@@ -65,6 +65,7 @@ class User extends UserIdentity
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
+            [['kampus'], 'safe'],
             ['email', 'unique', 
                 'message' => Yii::t('app', 'This email address has already been taken.')],
 

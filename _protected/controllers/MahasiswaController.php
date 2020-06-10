@@ -40,7 +40,7 @@ class MahasiswaController extends Controller
                             'update','index','view','konsulat'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator','admin'],
+                        'roles' => ['theCreator','admin','operatorCabang'],
                     ],
                     
                 ],
