@@ -33,7 +33,7 @@ class Asrama extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dataKamar'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xls, xlsx'],
+            [['dataKamar'], 'file', 'skipOnEmpty' => false, 'extensions' => 'xls, xlsx','on'=>'sce_upload_file'],
             [['kampus_id', 'nama'], 'required'],
             [['kampus_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
