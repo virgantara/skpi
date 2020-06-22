@@ -12,6 +12,8 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);?>
+
     <?= $form->field($model, 'kampus_id')->dropDownList(\yii\helpers\ArrayHelper::map(\app\models\SimakKampus::find()->all(),'id','nama_kampus')) ?>
 
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>

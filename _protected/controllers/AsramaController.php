@@ -405,6 +405,7 @@ class AsramaController extends Controller
     {   
 
         $model = $this->findModel($id);
+        $model->scenario = 'sce_upload_file';
         if (Yii::$app->request->isPost) {
             $uploadedFile = UploadedFile::getInstance($model, 'dataKamar');
             $extension =$uploadedFile->extension;

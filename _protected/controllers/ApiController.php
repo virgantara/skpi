@@ -111,6 +111,7 @@ class ApiController extends Controller
         $client = new Client(['baseUrl' => $api_baseurl]);
         $client_token = Yii::$app->params['client_token'];
         $headers = ['x-access-token'=>$client_token];
+        
         $params = [
             'kampus' => Yii::$app->user->identity->kampus
         ];
@@ -140,6 +141,7 @@ class ApiController extends Controller
         $client_token = Yii::$app->params['client_token'];
         $headers = ['x-access-token'=>$client_token];
         $tahun = !empty($_POST['tahun']) ? $_POST['tahun'] : date('Y');
+        $kampus = !empty($_POST['kampus']) ? $_POST['kampus'] : '';
         $results = [];
         for ($m=1; $m<=12; $m++) {
             $month = date('m', mktime(0,0,0,$m, 1, $tahun));
@@ -151,7 +153,7 @@ class ApiController extends Controller
             $response = $client->get('/simpel/rekap/pelanggaran/tahunan', [
                 'sd' => $sd,
                 'ed' => $ed,
-                'kampus' => Yii::$app->user->identity->kampus
+                'kampus' => $kampus
             ],$headers)->send();
 
             
