@@ -252,8 +252,26 @@ class SiteController extends Controller
                 
             // }
 
+            $query = new \yii\db\Query();
+            $query = $query->select(['konsulat', 'c.name','c.latitude','c.longitude', 'count(*) as total'])
+            ->from('simak_mastermahasiswa m')
+            ->innerJoin('cities c', 'm.konsulat = c.id');
+            if(Yii::$app->user->identity->access_role == 'operatorCabang')
+            {
+                $query->where(['m.kampus'=>Yii::$app->user->identity->kampus]);
+
+            }
+
+            $query->groupBy(['m.konsulat', 'c.name','c.latitude','c.longitude'])
+            ->orderBy('total DESC');
+            // ->limit(10)
+            $results = $query->all();
+
+            
+
             return $this->render('index',[
-                'data'=>$out
+                'data'=>$out,
+                'results' => $results
             ]);
         }
     }

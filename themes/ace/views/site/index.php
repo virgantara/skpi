@@ -7,6 +7,8 @@ use app\assets\HighchartAsset;
 $this->title = Yii::t('app', Yii::$app->name);
 
 HighchartAsset::register($this);
+
+\app\assets\LeafletAsset::register($this);
 $query = \app\models\Asrama::find();
 if(Yii::$app->user->identity->access_role == 'operatorCabang'){
   $query->where(['kampus_id'=>Yii::$app->user->identity->kampus]);
@@ -19,20 +21,30 @@ $listAsrama = $query->all();
 }
 
 </style>
-<div class="alert alert-block alert-success">
-    <button type="button" class="close" data-dismiss="alert">
-        <i class="ace-icon fa fa-times"></i>
-    </button>
 
-    <i class="ace-icon fa fa-check green"></i>
+<div class="row">
 
-    Welcome to
-    <strong class="green">
-        <?=Yii::$app->name;?>
-        <small>(v1.4)</small>
-    </strong>,
+  <div class="col-xs-12 ">
+          <div class="widget-box transparent">
+            <div class="widget-header">
+              <h4 class="widget-title lighter smaller">
+                <i class="ace-icon fa fa-rss orange"></i>Peta Sebaran Konsulat
+              </h4>
+            </div>
+
+            <div class="widget-body">
+              <div class="widget-main padding-4">
+                <div class="tab-content padding-8">
+<div class="col-lg-offset-1 col-lg-10 col-xs-12" id="mapid" style="height: 700px;"></div>
+  
+                </div>
+              </div><!-- /.widget-main -->
+            </div><!-- /.widget-body -->
+          </div><!-- /.widget-box -->
+        </div><!-- /.col -->
 
 </div>
+
 <div class="row">
 
 	<div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
@@ -729,5 +741,39 @@ $this->registerJs(
     \yii\web\View::POS_READY
 );
 
+
+?>
+
+
+<?php
+
+$html = "
+  var mymap = L.map('mapid').setView([-7.9023, 111.4923], 6.5);
+
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, ' +
+      '<a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, ' +
+      'Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>',
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1
+  }).addTo(mymap);
+
+
+  
+";
+
+foreach($results as $res)
+{
+  $html .= "
+
+  var marker = L.marker([".$res['latitude'].", ".$res['longitude']."]).addTo(mymap);
+  marker.bindPopup('".$res['name']." (".$res['total']." mahasiswa) ');
+
+  ";
+}
+
+$this->registerJs($html, \yii\web\View::POS_READY);
 
 ?>
