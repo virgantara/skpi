@@ -72,7 +72,16 @@ class AsramaController extends Controller
     {
         $model = new SimakMastermahasiswa;
         $model->setScenario('asrama');
-        $listDapur = Dapur::find()->all();
+
+
+        $query = Dapur::find();
+
+        if(Yii::$app->user->identity->access_role == 'operatorCabang')
+        {
+            $query->where(['kampus'=>Yii::$app->user->identity->kampus]);
+        }
+
+        $listDapur = $query->all();
         $results = [];
         $params = [];
 
