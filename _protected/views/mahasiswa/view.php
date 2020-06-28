@@ -541,16 +541,7 @@ $provinsi = SimakPropinsi::find()->where(['id'=>$model->provinsi])->one();
                                 ?>
                                 </tbody>
                             </table>
-                            <!-- <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <h4><strong>C. Latar Belakang Pendidikan</strong></h4>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table> -->
+   
                             <table class="table table-bordered">
                                 <h4><strong>D. Riwayat Perkulihan</strong></h4>
                                 <?php if (!empty($dataKrs)) { ?>
