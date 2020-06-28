@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\helpers\MyHelper;
+use app\models\SimakPropinsi;
+use app\models\SimakKabupaten;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\SimakMastermahasiswa */
 
@@ -10,6 +13,10 @@ $this->title = $model->nama_mahasiswa;
 $this->params['breadcrumbs'][] = ['label' => 'Master Mahasiswas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+
+$kabupaten = SimakKabupaten::find()->where(['id'=>$model->kabupaten])->one();
+$provinsi = SimakPropinsi::find()->where(['id'=>$model->provinsi])->one();
 ?>
 <div class="simak-mastermahasiswa-view">
 
@@ -376,12 +383,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <tr>
                                         <td class="center">f.</td>
                                         <td>Kab/Kodya</td>
-                                        <td><?= $model->kabupaten?></td>
+                                        <td><?= !empty($kabupaten) ? $kabupaten->kab : ''?></td>
                                     </tr>
                                     <tr>
                                         <td class="center">g.</td>
                                         <td>Provinsi</td>
-                                        <td><?= $model->provinsi?></td>
+                                        <td><?= !empty($provinsi) ? $provinsi->prov : ''?></td>
                                     </tr>
                                     <tr>
                                         <td class="center">h.</td>
