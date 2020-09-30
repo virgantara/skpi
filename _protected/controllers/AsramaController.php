@@ -259,7 +259,7 @@ class AsramaController extends Controller
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
-                    'kode_fakultas' => $params['kode_fakultas'],
+                    
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
 
@@ -297,7 +297,7 @@ class AsramaController extends Controller
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
-                    'kode_fakultas' => $params['kode_fakultas'],
+                    // 'kode_fakultas' => $params['kode_fakultas'],
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
 
@@ -319,7 +319,7 @@ class AsramaController extends Controller
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
                     'kode_prodi' => $params['kode_prodi'],
-                    'kode_fakultas' => $params['kode_fakultas'],
+                    // 'kode_fakultas' => $params['kode_fakultas'],
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
 
