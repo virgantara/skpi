@@ -13,6 +13,7 @@ $model->kode_fakultas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMast
 $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_prodi'] : '';
 
 $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['status_aktivitas'] : '';
+
 ?>
 
 <div class="row">
@@ -37,7 +38,7 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 			<div class="col-sm-9 col-lg-4">
 				<?= $form->field($model,'kampus')->dropDownList(ArrayHelper::map(\app\models\SimakKampus::find()->all(),'id',function($data){
 					return $data->kode_kampus.' - '.$data->nama_kampus;
-				}),['class'=>'form-control'])->label(false) ?>
+				}),['class'=>'form-control','id' => 'kampus'])->label(false) ?>
 			</div>
 		</div>	
 		<div class="form-group" >
@@ -125,7 +126,8 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right">Asrama</label>
 									<div class="col-sm-9">
-										<?= Html::dropDownList('asrama','',ArrayHelper::map($listAsrama,'id','nama'),['id'=>'asrama_'.$m->nim_mhs,'class'=>'form-control','prompt'=>'- Pilih Asrama -']);?>
+
+										<?= Html::dropDownList('asrama','',[],['id'=>'asrama_'.$m->nim_mhs,'class'=>'form-control list_asrama','prompt'=>'- Pilih Asrama -']);?>
 									</div>
 								</div>
 								<div class="form-group">
@@ -183,7 +185,40 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 
 $this->registerJs(' 
 
-	
+function getListAsrama(kampus_id){
+	$.ajax({
+
+		type : "POST",
+		url : "'.Url::to(['/asrama/list-asrama']).'",
+		data : "kampus_id="+kampus_id,
+		success: function(data){
+			var hasil = $.parseJSON(data);
+			
+			var row = "";
+			$.each(hasil, function(i,obj){
+				row += "<option value=\'"+obj.id+"\'>";
+				row += obj.nama;
+				row += "</option>";
+			});
+
+
+
+			$(".list_asrama").each(function(i,obj){
+				$(this).empty();
+
+				$(this).append(row)
+			})
+			
+		}
+	});
+}
+
+getListAsrama($("#kampus").val())
+
+	$("#kampus").change(function(){
+		getListAsrama($(this).val())
+		
+	});
 	
 	$(".btn-pindah").click(function(){
 		Swal.fire({
@@ -213,13 +248,24 @@ $this->registerJs('
 			},
 			success: function(data){
 				var hasil = $.parseJSON(data);
+				if(hasil.code == 200){
+					viewkamar.html(hasil.asrama + " - " + hasil.kamar);
+					Swal.fire(
+					\'Good job!\',
+					  hasil.msg,
+					  \'success\'
+					)
+				}
 
-				viewkamar.html(hasil.asrama + " - " + hasil.kamar);
-				Swal.fire(
-				\'Good job!\',
-				  hasil.msg,
-				  \'success\'
-				)
+				else{
+					viewkamar.html(hasil.asrama + " - " + hasil.kamar);
+					Swal.fire(
+					\'Oops\',
+					  hasil.msg,
+					  \'error\'
+					)
+				}
+				
 			}
 		});
 		  }
