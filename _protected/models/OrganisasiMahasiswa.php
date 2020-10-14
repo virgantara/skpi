@@ -8,17 +8,19 @@ use Yii;
  * This is the model class for table "erp_organisasi_mahasiswa".
  *
  * @property int $id
- * @property string|null $nim
  * @property int|null $organisasi_id
- * @property int|null $jabatan_id
- * @property string|null $peran
- * @property string|null $is_aktif
+ * @property int|null $pembimbing_id
  * @property string|null $tanggal_mulai
  * @property string|null $tanggal_selesai
+ * @property string|null $no_sk
+ * @property string|null $tanggal_sk
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
- * @property SimakMastermahasiswa $nim0
- * @property OrganisasiJabatan $jabatan
+ * @property OrganisasiAnggota[] $organisasiAnggotas
+ * @property SimakMastermahasiswa[] $nims
  * @property Organisasi $organisasi
+ * @property SimakMasterdosen $pembimbing
  */
 class OrganisasiMahasiswa extends \yii\db\ActiveRecord
 {
@@ -36,14 +38,11 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['organisasi_id', 'jabatan_id'], 'integer'],
-            [['peran'], 'string'],
-            [['tanggal_mulai', 'tanggal_selesai'], 'safe'],
-            [['nim'], 'string', 'max' => 25],
-            [['is_aktif'], 'string', 'max' => 1],
-            [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::className(), 'targetAttribute' => ['nim' => 'nim_mhs']],
-            [['jabatan_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrganisasiJabatan::className(), 'targetAttribute' => ['jabatan_id' => 'id']],
+            [['organisasi_id', 'pembimbing_id'], 'integer'],
+            [['tanggal_mulai', 'tanggal_selesai', 'tanggal_sk', 'created_at', 'updated_at'], 'safe'],
+            [['no_sk'], 'string', 'max' => 255],
             [['organisasi_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organisasi::className(), 'targetAttribute' => ['organisasi_id' => 'id']],
+            [['pembimbing_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterdosen::className(), 'targetAttribute' => ['pembimbing_id' => 'id']],
         ];
     }
 
@@ -54,34 +53,35 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nim' => 'Nim',
             'organisasi_id' => 'Organisasi ID',
-            'jabatan_id' => 'Jabatan ID',
-            'peran' => 'Peran',
-            'is_aktif' => 'Is Aktif',
+            'pembimbing_id' => 'Pembimbing ID',
             'tanggal_mulai' => 'Tanggal Mulai',
             'tanggal_selesai' => 'Tanggal Selesai',
+            'no_sk' => 'No Sk',
+            'tanggal_sk' => 'Tanggal Sk',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 
     /**
-     * Gets query for [[Nim0]].
+     * Gets query for [[OrganisasiAnggotas]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getNim0()
+    public function getOrganisasiAnggotas()
     {
-        return $this->hasOne(SimakMastermahasiswa::className(), ['nim_mhs' => 'nim']);
+        return $this->hasMany(OrganisasiAnggota::className(), ['organisasi_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Jabatan]].
+     * Gets query for [[Nims]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getJabatan()
+    public function getNims()
     {
-        return $this->hasOne(OrganisasiJabatan::className(), ['id' => 'jabatan_id']);
+        return $this->hasMany(SimakMastermahasiswa::className(), ['nim_mhs' => 'nim'])->viaTable('erp_organisasi_anggota', ['organisasi_id' => 'id']);
     }
 
     /**
@@ -92,5 +92,15 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
     public function getOrganisasi()
     {
         return $this->hasOne(Organisasi::className(), ['id' => 'organisasi_id']);
+    }
+
+    /**
+     * Gets query for [[Pembimbing]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPembimbing()
+    {
+        return $this->hasOne(SimakMasterdosen::className(), ['id' => 'pembimbing_id']);
     }
 }

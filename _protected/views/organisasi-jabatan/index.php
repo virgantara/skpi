@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\OrganisasiJabatanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Organisasi Jabatans';
+$this->title = 'Organisasi Jabatan';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="organisasi-jabatan-index">

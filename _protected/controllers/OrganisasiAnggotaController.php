@@ -3,19 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Organisasi;
-use app\models\OrganisasiJabatan;
-use app\models\OrganisasiMahasiswa;
-use app\models\OrganisasiMahasiswaSearch;
+use app\models\OrganisasiAnggota;
 use app\models\OrganisasiAnggotaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * OrganisasiMahasiswaController implements the CRUD actions for OrganisasiMahasiswa model.
+ * OrganisasiAnggotaController implements the CRUD actions for OrganisasiAnggota model.
  */
-class OrganisasiMahasiswaController extends Controller
+class OrganisasiAnggotaController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -32,13 +29,43 @@ class OrganisasiMahasiswaController extends Controller
         ];
     }
 
+    public function actionAjaxCreate()
+    {   
+        $results = [];
+        if(Yii::$app->request->isPost)
+        {
+            $dataPost = $_POST['dataPost'];
+
+            $model = new OrganisasiAnggota;
+            $model->attributes = $dataPost;
+            if($model->save())
+            {
+                $results = [
+                    'code' => 200,
+                    'message' => 'Data Added'
+                ];
+            }
+
+            else
+            {
+                $results = [
+                    'code' => 500,
+                    'message' => \app\helpers\MyHelper::logError($model)
+                ];
+            }
+        }
+
+        echo json_encode($results);
+        die();
+    }
+
     /**
-     * Lists all OrganisasiMahasiswa models.
+     * Lists all OrganisasiAnggota models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new OrganisasiMahasiswaSearch();
+        $searchModel = new OrganisasiAnggotaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,35 +75,29 @@ class OrganisasiMahasiswaController extends Controller
     }
 
     /**
-     * Displays a single OrganisasiMahasiswa model.
+     * Displays a single OrganisasiAnggota model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-
-        $searchModel = new OrganisasiAnggotaSearch();
-        $searchModel->organisasi_id = $id;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Creates a new OrganisasiMahasiswa model.
+     * Creates a new OrganisasiAnggota model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new OrganisasiMahasiswa();
+        $model = new OrganisasiAnggota();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Data tersimpan");
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -86,7 +107,7 @@ class OrganisasiMahasiswaController extends Controller
     }
 
     /**
-     * Updates an existing OrganisasiMahasiswa model.
+     * Updates an existing OrganisasiAnggota model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -97,6 +118,7 @@ class OrganisasiMahasiswaController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', "Data tersimpan");
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -106,7 +128,7 @@ class OrganisasiMahasiswaController extends Controller
     }
 
     /**
-     * Deletes an existing OrganisasiMahasiswa model.
+     * Deletes an existing OrganisasiAnggota model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -114,21 +136,25 @@ class OrganisasiMahasiswaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
 
-        return $this->redirect(['index']);
+        $parent = $model->organisasi;
+
+        $model->delete();
+
+        return $this->redirect(['organisasi-mahasiswa/view','id'=>$parent->id]);
     }
 
     /**
-     * Finds the OrganisasiMahasiswa model based on its primary key value.
+     * Finds the OrganisasiAnggota model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return OrganisasiMahasiswa the loaded model
+     * @return OrganisasiAnggota the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = OrganisasiMahasiswa::findOne($id)) !== null) {
+        if (($model = OrganisasiAnggota::findOne($id)) !== null) {
             return $model;
         }
 

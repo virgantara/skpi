@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\OrganisasiMahasiswaSearch */
+/* @var $model app\models\OrganisasiAnggotaSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="organisasi-mahasiswa-search">
+<div class="organisasi-anggota-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,15 +17,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
+    <?= $form->field($model, 'nim') ?>
+
     <?= $form->field($model, 'organisasi_id') ?>
 
-    <?= $form->field($model, 'tanggal_mulai') ?>
+    <?= $form->field($model, 'jabatan_id') ?>
 
-    <?= $form->field($model, 'tanggal_selesai') ?>
-
-    <?= $form->field($model, 'no_sk') ?>
-
-    <?php // echo $form->field($model, 'tanggal_sk') ?>
+    <?= $form->field($model, 'peran') ?>
 
     <?php // echo $form->field($model, 'created_at') ?>
 
@@ -33,7 +31,7 @@ use yii\widgets\ActiveForm;
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

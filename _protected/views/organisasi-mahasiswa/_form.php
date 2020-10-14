@@ -1,7 +1,13 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use kartik\date\DatePicker;
+
+$listOrganisasi = \app\models\Organisasi::find()->all();
+$listDosen = \app\models\SimakMasterdosen::find()->all();
 
 /* @var $this yii\web\View */
 /* @var $model app\models\OrganisasiMahasiswa */
@@ -11,21 +17,54 @@ use yii\widgets\ActiveForm;
 <div class="organisasi-mahasiswa-form">
 
     <?php $form = ActiveForm::begin(); ?>
+     <?= $form->field($model, 'organisasi_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map($listOrganisasi,'id','nama'),
 
-    <?= $form->field($model, 'nim')->textInput(['maxlength' => true]) ?>
+            'options'=>['id'=>'propinsi_id','placeholder'=>Yii::t('app','- Pilih Organisasi -')],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
+    <?= $form->field($model, 'pembimbing_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map($listDosen,'id','nama_dosen'),
 
-    <?= $form->field($model, 'organisasi_id')->textInput() ?>
+            'options'=>['id'=>'pembimbing_id','placeholder'=>Yii::t('app','- Pilih Dosen -')],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
+     <?= $form->field($model, 'tanggal_mulai')->widget(DatePicker::className(),[
+        // 'readonly' => true,
+        'pluginOptions' => [
+            'autoclose'=>true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd'
+        ]
+     ])
+     ?>
+     <?= $form->field($model, 'tanggal_selesai')->widget(DatePicker::className(),[
+        // 'readonly' => true,
+        'pluginOptions' => [
+            'autoclose'=>true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd'
+        ]
+     ])
+     ?>
+ 
+    <?= $form->field($model, 'no_sk')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'jabatan_id')->textInput() ?>
 
-    <?= $form->field($model, 'peran')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'is_aktif')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'tanggal_mulai')->textInput() ?>
-
-    <?= $form->field($model, 'tanggal_selesai')->textInput() ?>
-
+     <?= $form->field($model, 'tanggal_sk')->widget(DatePicker::className(),[
+        // 'readonly' => true,
+        'pluginOptions' => [
+            'autoclose'=>true,
+            'todayHighlight' => true,
+            'format' => 'yyyy-mm-dd'
+        ]
+     ])
+     ?>
+   
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>

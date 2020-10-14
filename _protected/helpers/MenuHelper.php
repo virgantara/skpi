@@ -123,6 +123,26 @@ class MenuHelper
 		        ]
 		    ];
 
+		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Organisasi </span><i class="caret"></i>', 
+		         'url' => '#',
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Manage',  
+		                'url' => ['organisasi-mahasiswa/index'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Tambah',  
+		                'url' => ['organisasi-mahasiswa/create'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'),
+		               
+		            ],
+		        ]
+		    ];
+
 
 		}
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Laporan </span><i class="caret"></i>', 'url' => '#',

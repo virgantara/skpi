@@ -17,8 +17,8 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
     public function rules()
     {
         return [
-            [['id', 'organisasi_id', 'jabatan_id'], 'integer'],
-            [['nim', 'peran', 'is_aktif', 'tanggal_mulai', 'tanggal_selesai'], 'safe'],
+            [['id', 'organisasi_id'], 'integer'],
+            [['tanggal_mulai', 'tanggal_selesai', 'no_sk', 'tanggal_sk', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -60,14 +60,14 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
         $query->andFilterWhere([
             'id' => $this->id,
             'organisasi_id' => $this->organisasi_id,
-            'jabatan_id' => $this->jabatan_id,
             'tanggal_mulai' => $this->tanggal_mulai,
             'tanggal_selesai' => $this->tanggal_selesai,
+            'tanggal_sk' => $this->tanggal_sk,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'nim', $this->nim])
-            ->andFilterWhere(['like', 'peran', $this->peran])
-            ->andFilterWhere(['like', 'is_aktif', $this->is_aktif]);
+        $query->andFilterWhere(['like', 'no_sk', $this->no_sk]);
 
         return $dataProvider;
     }
