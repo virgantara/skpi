@@ -241,6 +241,7 @@ class MenuHelper
 	                ],
 	            ],
 
+	            
 	            [
 	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Hukuman <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
@@ -257,6 +258,44 @@ class MenuHelper
 	                ],
 	            ],
 	           	 [
+	            	'label' => '<hr style="padding:0px;margin:0px">'
+	            ],
+
+
+
+	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Organisasi <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['organisasi/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['organisasi/create']]
+	                ],
+	            ],
+
+	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Jabatan Organisasi <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['organisasi-jabatan/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['organisasi-jabatan/create']]
+	                ],
+	            ],
+
+	            [
 	            	'label' => '<hr style="padding:0px;margin:0px">'
 	            ],
 
