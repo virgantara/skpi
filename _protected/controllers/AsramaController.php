@@ -37,6 +37,27 @@ class AsramaController extends Controller
         ];
     }
 
+    public function actionListAsrama()
+    {   
+        $kampus_id = $_POST['kampus_id'];
+        $results = [];
+        if (!empty($kampus_id)) 
+        {
+            $temp = Asrama::find()->where([ 'kampus_id' => $kampus_id ])->all();
+            foreach($temp as $t)
+            {
+                $results[] = [
+                    'id' => $t->id,
+                    'nama' => $t->nama
+                ];
+            }
+            echo json_encode($results);
+
+            
+        }
+        die();
+    }    
+
     public function actionAjaxDapur()
     {
         $dataku = $_POST['dataku'];
@@ -223,14 +244,28 @@ class AsramaController extends Controller
                 $data2->save();
 
                 $data->kamar_id = $kamar;
-                $data->save();
+                if($data->save())
+                {
+                    $results = [
+                        'code' => 200,
+                        'msg' => "Perpindahan Berhasil",
+                        'kamar' => $data->kamar->nama,
+                        'asrama' => $data->kamar->namaAsrama,
+                    ];
+                }
+
+                else
+                {
+                    $errors = \app\helpers\MyHelper::logError($data);
+                    $results = [
+                        'code' => 400,
+                        'msg' => $errors,
+                        'kamar' => '',
+                        'asrama' => '',
+                    ];
+                }
                 
-                $results = [
-                    'code' => 200,
-                    'msg' => "Perpindahan Berhasil",
-                    'kamar' => $data->kamar->nama,
-                    'asrama' => $data->kamar->namaAsrama,
-                ];
+                
                 echo json_encode($results);
 
             }
@@ -248,7 +283,7 @@ class AsramaController extends Controller
     {
         $model = new SimakMastermahasiswa;
         $model->setScenario('asrama');
-        $listAsrama = Asrama::find()->all();
+        
         $results = [];
         $params = [];
 
@@ -274,11 +309,11 @@ class AsramaController extends Controller
 
             }
         }
+
         return $this->render('pindah',[
             'model' => $model,
             'results' => $results,
             'params' => $params,
-            'listAsrama' => $listAsrama
         ]);
     } 
 
