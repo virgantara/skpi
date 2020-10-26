@@ -39,6 +39,13 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
+            
+            [
+                'attribute' => 'organisasi_id',
+                'value' => function($data){
+                    return $data->organisasi->nama;
+                }
+            ],
             [
                 'label' => 'Pembimbing',
                 'value' => function($data){

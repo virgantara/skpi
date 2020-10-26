@@ -53,12 +53,12 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'organisasi_id' => 'Organisasi ID',
-            'pembimbing_id' => 'Pembimbing ID',
+            'organisasi_id' => 'Organisasi',
+            'pembimbing_id' => 'Pembimbing',
             'tanggal_mulai' => 'Tanggal Mulai',
             'tanggal_selesai' => 'Tanggal Selesai',
-            'no_sk' => 'No Sk',
-            'tanggal_sk' => 'Tanggal Sk',
+            'no_sk' => 'No SK',
+            'tanggal_sk' => 'Tanggal SK',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
