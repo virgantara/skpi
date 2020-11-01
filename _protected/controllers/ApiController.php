@@ -80,23 +80,24 @@ class ApiController extends Controller
     public function actionAjaxGetPelanggaranJumlahTerbanyak(){
         $kategori = $_POST['kategori'];
         $query = new \yii\db\Query();
-        $query->select(['a.nama','a.id', 'COUNT(*) as total'])
-                ->from('erp_riwayat_pelanggaran b')
-                ->innerJoin('erp_pelanggaran a', 'b.pelanggaran_id = a.id')
-                ->innerJoin('erp_kategori_pelanggaran c', 'a.kategori_id = c.id');
-                if(Yii::$app->user->identity->access_role == 'operatorCabang')
-                {
-                    $query->innerJoin('simak_mastermahasiswa m', 'm.nim_mhs = b.nim');
-                    $query->where(['m.kampus'=>Yii::$app->user->identity->kampus]);    
-                    $query->andWhere(['c.nama' => $kategori]);
-                }
+        $query->select(['a.nama','a.id', 'a.kode', 'COUNT(*) as total'])
+            ->from('erp_riwayat_pelanggaran b')
+            ->innerJoin('erp_pelanggaran a', 'b.pelanggaran_id = a.id')
+            ->innerJoin('erp_kategori_pelanggaran c', 'a.kategori_id = c.id');
+            if(Yii::$app->user->identity->access_role == 'operatorCabang')
+            {
+                $query->innerJoin('simak_mastermahasiswa m', 'm.nim_mhs = b.nim');
+                $query->where(['m.kampus'=>Yii::$app->user->identity->kampus]);    
+                $query->andWhere(['c.nama' => $kategori]);
+            }
 
-                else{
-                    $query->where(['c.nama' => $kategori]);
-                }
-                $query->groupBy(['a.nama','a.id'])
-                ->orderBy('total DESC')
-                ->limit(10);
+            else
+            {
+                $query->where(['c.nama' => $kategori]);
+            }
+            $query->groupBy(['a.nama','a.id'])
+            ->orderBy('total DESC')
+            ->limit(10);
         $rows = $query->all();
 
      
