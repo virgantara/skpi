@@ -37,7 +37,7 @@ use app\models\Hukuman;
 		   		<label class="col-sm-2 control-label no-padding-right">Pelanggaran</label>
 				<div class="col-sm-10">
 				<?= $form->field($model,'pelanggaran_id')->dropDownList(ArrayHelper::map(Pelanggaran::find()->all(),'id',function($data){
-					return $data->kategori->nama.' - '.$data->nama;
+					return '['.$data->kategori->nama.'] '.$data->kode.' - '.$data->nama;
 				}),['class'=>'form-control'])->label(false) ?>
 				<label class="error_diagnosis"></label>
 				</div>
