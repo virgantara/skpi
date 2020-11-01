@@ -39,16 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
     'nim',
     'namaMahasiswa',
-   [
-        'attribute' => 'namaFakultas',
-        'label' => 'Fakultas',
-        'format' => 'raw',
-        'filter'=>$fakultas,
-        'value'=>function($model,$url){
-            return $model->namaFakultas;
-            
-        },
-    ],
+   
    [
         'attribute' => 'namaProdi',
         'label' => 'Prodi',
@@ -71,6 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
         },
     ],
     'namaKamar',
+    'kodePelanggaran',
     'namaPelanggaran',
     [
         'attribute' => 'namaKategori',

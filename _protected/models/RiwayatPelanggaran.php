@@ -119,6 +119,11 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
         return $this->pelanggaran->nama;
     }
 
+    public function getKodePelanggaran()
+    {
+        return $this->pelanggaran->kode;
+    }
+
     public function getNamaKategori()
     {
         return $this->pelanggaran->kategori->nama;
