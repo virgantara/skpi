@@ -37,7 +37,7 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 			<div class="col-sm-9 col-lg-4">
 		<?= $form->field($model,'kampus')->dropDownList(ArrayHelper::map(\app\models\SimakKampus::find()->all(),'id',function($data){
 					return $data->kode_kampus.' - '.$data->nama_kampus;
-				}),['class'=>'form-control'])->label(false) ?>
+				}),['class'=>'form-control','prompt'=>'- Pilih Kampus -'])->label(false) ?>
 		</div>
 	</div>	
 	<div class="form-group" >
@@ -45,7 +45,7 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 			<div class="col-sm-9 col-lg-4">
 		<?= $form->field($model,'kode_fakultas')->dropDownList(ArrayHelper::map(\app\models\SimakMasterfakultas::find()->all(),'id',function($data){
 					return $data->kode_fakultas.' - '.$data->nama_fakultas;
-				}),['class'=>'form-control','id'=>'fakultas_id'])->label(false) ?>
+				}),['class'=>'form-control','id'=>'fakultas_id','prompt'=>'- Pilih Fakultas -'])->label(false) ?>
 		</div>
 	</div>
 
@@ -151,7 +151,7 @@ $this->registerJs('
 
 	setTimeout(function(){
 		$("#kode_prodi").val('.$params['kode_prodi'].');
-	},500)
+	},100)
 	
     ', \yii\web\View::POS_READY);
 

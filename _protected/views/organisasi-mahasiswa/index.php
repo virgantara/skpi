@@ -26,7 +26,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'organisasi_id',
+            [
+                'attribute' => 'organisasi_id',
+                'value' => function($data){
+                    return $data->organisasi->nama;
+                }
+            ],
             
             'no_sk',
             'tanggal_sk',

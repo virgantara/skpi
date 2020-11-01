@@ -19,7 +19,7 @@ class PelanggaranSearch extends Pelanggaran
     {
         return [
             [['id', 'kategori_id'], 'integer'],
-            [['nama', 'created_at', 'updated_at', 'namaKategori'], 'safe'],
+            [['nama', 'created_at', 'updated_at', 'namaKategori','kode'], 'safe'],
         ];
     }
 
@@ -72,8 +72,8 @@ class PelanggaranSearch extends Pelanggaran
             'updated_at' => $this->updated_at,
         ]);
 
-
-        $query->andFilterWhere(['like', 'erp_pelanggaran.nama', $this->nama]);
+        $query->andFilterWhere(['like', self::tableName().'.kode', $this->kode]);
+        $query->andFilterWhere(['like', self::tableName().'.nama', $this->nama]);
         $query->andFilterWhere(['like', 'k.nama', $this->namaKategori]);
 
         return $dataProvider;

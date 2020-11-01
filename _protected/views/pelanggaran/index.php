@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\PelanggaranSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Pelanggarans';
+$this->title = 'Pelanggaran';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="pelanggaran-index">
@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'id',
             // 'kategori.nama',
             'namaKategori',
+            'kode',
             'nama',
             'created_at',
             'updated_at',

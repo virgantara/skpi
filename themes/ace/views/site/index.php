@@ -22,28 +22,7 @@ $listAsrama = $query->all();
 
 </style>
 
-<div class="row">
 
-  <div class="col-xs-12 ">
-          <div class="widget-box transparent">
-            <div class="widget-header">
-              <h4 class="widget-title lighter smaller">
-                <i class="ace-icon fa fa-rss orange"></i>Peta Sebaran Konsulat
-              </h4>
-            </div>
-
-            <div class="widget-body">
-              <div class="widget-main padding-4">
-                <div class="tab-content padding-8">
-<div class="col-lg-offset-1 col-lg-10 col-xs-12" id="mapid" style="height: 700px;"></div>
-  
-                </div>
-              </div><!-- /.widget-main -->
-            </div><!-- /.widget-body -->
-          </div><!-- /.widget-box -->
-        </div><!-- /.col -->
-
-</div>
 
 <div class="row">
 
@@ -203,7 +182,28 @@ $listAsrama = $query->all();
 
 </div>
 
+<div class="row">
 
+  <div class="col-xs-12 ">
+          <div class="widget-box transparent">
+            <div class="widget-header">
+              <h4 class="widget-title lighter smaller">
+                <i class="ace-icon fa fa-rss orange"></i>Peta Sebaran Konsulat
+              </h4>
+            </div>
+
+            <div class="widget-body">
+              <div class="widget-main padding-4">
+                <div class="tab-content padding-8">
+                  <div class="col-lg-offset-1 col-lg-10 col-xs-12" id="mapid" style="height: 700px;"></div>
+  
+                  </div>
+                </div><!-- /.widget-main -->
+            </div><!-- /.widget-body -->
+          </div><!-- /.widget-box -->
+        </div><!-- /.col -->
+
+</div>
 
 <?php
 $script = '
@@ -469,10 +469,10 @@ function getTopPelanggaran(kat,warna){
         $.each(hasil,function(i,obj){
             var tmp = new Object;
             tmp.y = obj.total;
-            tmp.name = obj.nama;
+            tmp.name = obj.kode;
 
             dataitems.push(tmp);
-            kategori.push(obj.nama); 
+            kategori.push(obj.kode); 
 
         }); 
 

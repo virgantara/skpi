@@ -31,9 +31,10 @@ class Pelanggaran extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kategori_id', 'nama'], 'required'],
+            [['kategori_id', 'nama','kode'], 'required'],
+            [['kode'], 'unique'],
             [['kategori_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at','kode'], 'safe'],
             [['nama'], 'string', 'max' => 255],
             [['kategori_id'], 'exist', 'skipOnError' => true, 'targetClass' => KategoriPelanggaran::className(), 'targetAttribute' => ['kategori_id' => 'id']],
         ];

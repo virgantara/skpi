@@ -16,7 +16,7 @@ use app\models\KategoriPelanggaran;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'kategori_id')->dropDownList(ArrayHelper::map(KategoriPelanggaran::find()->all(),'id','nama')) ?>
-
+    <?= $form->field($model, 'kode')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
 
 
