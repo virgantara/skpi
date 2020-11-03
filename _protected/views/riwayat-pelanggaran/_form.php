@@ -1,9 +1,11 @@
 <?php
-
+use yii\widgets\DetailView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
+
+use dosamigos\ckeditor\CKEditor;
 
 use app\models\Pelanggaran;
 use app\models\Hukuman;
@@ -26,54 +28,142 @@ use app\models\Hukuman;
     	]
     ]); ?>
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-sm-5">
 	      <div class="widget-box widget-color-blue2">
+	        <div class="widget-header">
+	          <h4 class="widget-title lighter smaller">Data Ortu</h4>
+	        </div>
+	        <div class="widget-body">
+	          <div class="widget-main">
+	          	<table class="table table-striped">
+					<tr>
+						<th >No</th>
+						<th  >Nama</th>
+						<th  >Hubungan</th>
+						<th  >Pendidikan</th>
+						<th  >Pekerjaan</th>
+						<th  >Penghasilan</th>
+						<th  >HP</th>
+					</tr>
+					<?php 
+					$listOrtu = $mahasiswa->simakMahasiswaOrtus;
+					foreach($listOrtu as $q => $ortu)
+					{
+					?>
+						<tr>
+							<td><?=$q+1;?></td>
+							<td><?=$ortu->nama;?></td>
+							<td><?=ucwords(strtolower($ortu->hubungan));?></td>
+							<td><?=$ortu->pendidikan0->label;?></td>
+							<td><?=$ortu->pekerjaan0->label;?></td>
+							<td><?=$ortu->penghasilan0->label;?></td>
+							<td><?=$ortu->hp;?></td>
+						</tr>
+								
+					<?php 
+					}
+					?>
+				</table>
+	          </div>
+	      </div>
+	  </div>
+	</div>
+	<div class="col-sm-7">
+		<div class="widget-box widget-color-blue2">
+	        <div class="widget-header">
+	          <h4 class="widget-title lighter smaller">Biodata Diri</h4>
+	        </div>
+	        <div class="widget-body">
+	          <div class="widget-main">
+	          	<?= DetailView::widget([
+			        'model' => $mahasiswa,
+			        'attributes' => [
+			            'nim_mhs',
+			            'ktp',
+			            'nama_mahasiswa',
+			            'tempat_lahir',
+			            'tgl_lahir',
+			            'jenis_kelamin',
+			   
+			            
+			        ],
+			    ]) ?>
+	          </div>
+	      </div>
+	  	</div>
+
+		
+   
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+	      <div class="widget-box widget-color-red">
 	        <div class="widget-header">
 	          <h4 class="widget-title lighter smaller">Data Hukuman</h4>
 	        </div>
 	        <div class="widget-body">
-	          <div class="widget-main">
-	          	<div class="row">
-		   		<label class="col-sm-2 control-label no-padding-right">Pelanggaran</label>
-				<div class="col-sm-10">
-				<?= $form->field($model,'pelanggaran_id')->dropDownList(ArrayHelper::map(Pelanggaran::find()->all(),'id',function($data){
-					return '['.$data->kategori->nama.'] '.$data->kode.' - '.$data->nama;
-				}),['class'=>'form-control'])->label(false) ?>
-				<label class="error_diagnosis"></label>
-				</div>
-			</div>
-			<div class="row">
-		   		<label class="col-sm-2 control-label no-padding-right">Tanggal Pelanggaran</label>
-				<div class="col-sm-10">
-					 <?php 
-                echo $form->field($model, 'tanggal',['options' => ['tag' => false]])->textInput(['class'=>'form-control datetimepicker','placeholder' => 'Input tanggal & jam pelanggaran ...'])->label(false);
-                 ?>
-				
-				<label class="error_tanggal"></label>
-				</div>
-			</div>
+	          	<div class="widget-main">
+		          	
 				<div class="row">
-		   		<label class="col-sm-2 control-label no-padding-right">Pelapor</label>
-				<div class="col-sm-10">
-				<?= $form->field($model,'pelapor')->textInput(['class'=>'form-control'])->label(false) ?>
-				<label class="error_diagnosis"></label>
-				</div>
-			</div>
-			<div class="row">
-		   		<label class="col-sm-2 control-label no-padding-right">Bukti (Foto)</label>
-				<div class="col-sm-10">
-				<?= $form->field($model,'bukti')->textInput(['class'=>'form-control','placeholder'=>'Link to Google Drive'])->label(false) ?>
-				<label class="error_diagnosis"></label>
-				</div>
-			</div>
-			<div class="row">
-		   		<label class="col-sm-2 control-label no-padding-right">Surat Pernyataan</label>
-				<div class="col-sm-10">
-				<?= $form->field($model,'surat_pernyataan')->textInput(['class'=>'form-control','placeholder'=>'Link to Google Drive'])->label(false) ?>
+			   		<label class="col-sm-2 control-label no-padding-right">Status Kasus</label>
+					<div class="col-sm-10">
+					<?= $form->field($model,'status_kasus')->radioList(['0'=>'WAITING','1'=>'ON-PROCESS','2'=>'CLOSED'])->label(false) ?>
 
-				<label class="error_diagnosis"></label>
+					<label class="error_diagnosis"></label>
+					</div>
 				</div>
-			</div>
+		          	<div class="row">
+			   		<label class="col-sm-2 control-label no-padding-right">Pelanggaran</label>
+					<div class="col-sm-10">
+					<?= $form->field($model,'pelanggaran_id')->dropDownList(ArrayHelper::map(Pelanggaran::find()->all(),'id',function($data){
+						return '['.$data->kategori->nama.'] '.$data->kode.' - '.$data->nama;
+					}),['class'=>'form-control'])->label(false) ?>
+					<label class="error_diagnosis"></label>
+					</div>
+				</div>
+				<div class="row">
+			   		<label class="col-sm-2 control-label no-padding-right">Deskripsi Pelanggaran</label>
+					<div class="col-sm-10">
+					 <?= $form->field($model, 'deskripsi')->widget(CKEditor::className(), [
+				        'options' => ['rows' => 6],
+				        'preset' => 'advance'
+				    ])->label(false) ?>
+					<label class="error_diagnosis"></label>
+					</div>
+				</div>
+				<div class="row">
+			   		<label class="col-sm-2 control-label no-padding-right">Tanggal Pelanggaran</label>
+					<div class="col-sm-10">
+						 <?php 
+	                echo $form->field($model, 'tanggal',['options' => ['tag' => false]])->textInput(['class'=>'form-control datetimepicker','placeholder' => 'Input tanggal & jam pelanggaran ...'])->label(false);
+	                 ?>
+					
+					<label class="error_tanggal"></label>
+					</div>
+				</div>
+					<div class="row">
+			   		<label class="col-sm-2 control-label no-padding-right">Pelapor</label>
+					<div class="col-sm-10">
+					<?= $form->field($model,'pelapor')->textInput(['class'=>'form-control'])->label(false) ?>
+					<label class="error_diagnosis"></label>
+					</div>
+				</div>
+				<div class="row">
+			   		<label class="col-sm-2 control-label no-padding-right">Bukti (Foto)</label>
+					<div class="col-sm-10">
+					<?= $form->field($model,'bukti')->textInput(['class'=>'form-control','placeholder'=>'Link to Google Drive'])->label(false) ?>
+					<label class="error_diagnosis"></label>
+					</div>
+				</div>
+				<div class="row">
+			   		<label class="col-sm-2 control-label no-padding-right">Surat Pernyataan</label>
+					<div class="col-sm-10">
+					<?= $form->field($model,'surat_pernyataan')->textInput(['class'=>'form-control','placeholder'=>'Link to Google Drive'])->label(false) ?>
+
+					<label class="error_diagnosis"></label>
+					</div>
+				</div>
 		   	<?php
 		   	$index =1 ;
 
