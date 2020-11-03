@@ -113,25 +113,29 @@ class SimakMahasiswaOrtu extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPendidikan0()
-    {
-        return $this->hasOne(SimakPilihan::className(), ['value' => 'pendidikan']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getPekerjaan0()
     {
-        return $this->hasOne(SimakPilihan::className(), ['value' => 'pekerjaan']);
+        return $this->hasOne(SimakPilihan::className(), ['value' => 'pekerjaan'])->onCondition(['kode' => '55']);
     }
 
     /**
+     * Gets query for [[Pendidikan0]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPendidikan0()
+    {
+        return $this->hasOne(SimakPilihan::className(), ['value' => 'pendidikan'])->onCondition(['kode' => '01']);
+    }
+
+    /**
+     * Gets query for [[Penghasilan0]].
+     *
      * @return \yii\db\ActiveQuery
      */
     public function getPenghasilan0()
     {
-        return $this->hasOne(SimakPilihan::className(), ['value' => 'penghasilan']);
+        return $this->hasOne(SimakPilihan::className(), ['value' => 'penghasilan'])->onCondition(['kode' => '69']);
     }
 
     public function getNamaPekerjaan()

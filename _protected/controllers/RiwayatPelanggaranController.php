@@ -7,6 +7,8 @@ use app\models\Asrama;
 use app\models\RiwayatKamar;
 use app\models\RiwayatPelanggaran;
 use app\models\RiwayatPelanggaranSearch;
+use app\models\SimakMastermahasiswa;
+use app\models\SimakKabupaten;
 use app\models\IzinMahasiswa;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -168,17 +170,14 @@ class RiwayatPelanggaranController extends Controller
     public function actionCreate($nim)
     {
         $model = new RiwayatPelanggaran();
-        $mahasiswa = [];
+        $mahasiswa = null;
         $api_baseurl = Yii::$app->params['api_baseurl'];
+        $kabupaten = null;
         $client = new Client(['baseUrl' => $api_baseurl]);
         if(!empty($nim))
         {
-        
-            $response = $client->get('/m/profil/nim', ['nim' => $nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
-            
-            if ($response->isOk) {
-                $mahasiswa = $response->data['values'][0];
-            }    
+            $mahasiswa = SimakMastermahasiswa::find()->where(['nim_mhs'=>$nim])->one();  
+            $kabupaten = SimakKabupaten::find()->where(['id'=>$mahasiswa->kabupaten])->one();
         }
 
         $response = $client->get('/tahun/aktif',[],['x-access-token'=>Yii::$app->params['client_token']])->send();
@@ -224,6 +223,8 @@ class RiwayatPelanggaranController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'mahasiswa' => $mahasiswa,
+            'kabupaten' => $kabupaten
         ]);
     }
 
@@ -238,7 +239,9 @@ class RiwayatPelanggaranController extends Controller
     {
         $model = $this->findModel($id);
 
-       
+        $mahasiswa = SimakMastermahasiswa::find()->where(['nim_mhs'=>$model->nim])->one();  
+        $kabupaten = SimakKabupaten::find()->where(['id'=>$mahasiswa->kabupaten])->one();
+        
 
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
@@ -279,6 +282,8 @@ class RiwayatPelanggaranController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'mahasiswa' => $mahasiswa,
+            'kabupaten' => $kabupaten
         ]);
     }
 
