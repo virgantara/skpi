@@ -30,7 +30,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     {
         return [
             [['id', 'pelanggaran_id', 'tahun_id'], 'integer'],
-            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori','namaFakultas','namaAsrama','namaKamar','pelapor','statusAktif','kodePelanggaran'], 'safe'],
+            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori','namaFakultas','namaAsrama','namaKamar','pelapor','statusAktif','kodePelanggaran','status_kasus'], 'safe'],
         ];
     }
 
@@ -69,6 +69,11 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         $dataProvider->sort->attributes['namaProdi'] = [
             'asc' => ['p.nama_prodi'=>SORT_ASC],
             'desc' => ['p.nama_prodi'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['status_kasus'] = [
+            'asc' => ['status_kasus'=>SORT_ASC],
+            'desc' => ['status_kasus'=>SORT_DESC]
         ];
 
         $dataProvider->sort->attributes['namaFakultas'] = [
@@ -145,6 +150,8 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         {
             $query->andWhere(['a.id'=> $this->namaAsrama]);
         }
+
+        $query->andFilterWhere(['status_kasus' => $this->status_kasus]);
         
         if(!empty($this->tanggal)){
 
