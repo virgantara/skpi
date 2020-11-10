@@ -38,7 +38,9 @@ class IzinHarianController extends Controller
         $query = IzinHarian::find();
         $query->select(['nim']);
         $query->where(['between','waktu_keluar',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
+        
         $query->groupBy(['nim']);
+
         $list_mhs = $query->all();
 
         foreach($list_mhs as $mhs)
@@ -48,7 +50,7 @@ class IzinHarianController extends Controller
             ]);
 
             $qry->andWhere(['between','waktu_keluar',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
-            
+            $qry->orderBy(['waktu_keluar'=>SORT_DESC]);
             $results[] = [
                 'mhs' => $mhs->nim0,
                 'izin' => $qry->all()
