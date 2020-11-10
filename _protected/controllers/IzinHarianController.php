@@ -37,7 +37,7 @@ class IzinHarianController extends Controller
         $label = 'Hari ini ';
         $query = IzinHarian::find();
         $query->select(['nim']);
-        $query->where(['between','waktu',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
+        $query->where(['between','waktu_keluar',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
         $query->groupBy(['nim']);
         $list_mhs = $query->all();
 
@@ -46,21 +46,12 @@ class IzinHarianController extends Controller
             $qry = IzinHarian::find()->where([
                 'nim' => $mhs->nim,
             ]);
-            $qry->select(['waktu']);
-            $qry->andWhere(['between','waktu',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
-            $keluar = $qry->andWhere(['status_izin'=>2])->orderBy(['waktu'=>SORT_ASC])->one();
 
-            $qry = IzinHarian::find()->where([
-                'nim' => $mhs->nim,
-            ]);
-            $qry->select(['waktu']);
-            $qry->andWhere(['between','waktu',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
-            $masuk = $qry->andWhere(['status_izin'=>1])->orderBy(['waktu'=>SORT_ASC])->one();
-
+            $qry->andWhere(['between','waktu_keluar',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
+            
             $results[] = [
-                'mhs' => $mhs,
-                'keluar' => $keluar->waktu,
-                'masuk' => $masuk->waktu
+                'mhs' => $mhs->nim0,
+                'izin' => $qry->all()
             ];
         }
 

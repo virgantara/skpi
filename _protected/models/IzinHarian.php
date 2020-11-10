@@ -32,8 +32,8 @@ class IzinHarian extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nim', 'waktu'], 'required'],
-            [['waktu', 'created_at', 'updated_at'], 'safe'],
+            [['nim', 'waktu_keluar'], 'required'],
+            [['waktu_keluar', 'created_at', 'updated_at','waktu_masuk'], 'safe'],
             [['status_izin'], 'integer'],
             [['nim'], 'string', 'max' => 25],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::className(), 'targetAttribute' => ['nim' => 'nim_mhs']],
@@ -48,7 +48,8 @@ class IzinHarian extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nim' => 'Nim',
-            'waktu' => 'Waktu',
+            'waktu_keluar' => 'Waktu Keluar',
+            'waktu_masuk' => 'Waktu Masuk',
             'status_izin' => 'Status Izin',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

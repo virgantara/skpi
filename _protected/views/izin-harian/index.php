@@ -51,7 +51,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     
                 },
             ],
-            'waktu',
+            'waktu_keluar',
+            'waktu_masuk',
             [
                 'attribute' => 'status_izin',
                 'filter' => ['2'=>'Keluar','1'=>'Masuk'],
@@ -59,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data->status_izin == 2 ? 'Keluar' : 'Masuk';
                 }
             ],
-            'created_at',
+            // 'created_at',
             //'updated_at',
 
             // ['class' => 'yii\grid\ActionColumn'],

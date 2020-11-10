@@ -26,7 +26,7 @@ class IzinHarianSearch extends IzinHarian
     {
         return [
             [['id', 'status_izin'], 'integer'],
-            [['nim', 'waktu', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaKota','namaKeperluan','namaFakultas','namaAsrama','namaKamar','statusIzin','approved','baak_approved','prodi_approved','namaNegara'], 'safe'],
+            [['nim', 'waktu_keluar','waktu_masuk', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaKota','namaKeperluan','namaFakultas','namaAsrama','namaKamar','statusIzin','approved','baak_approved','prodi_approved','namaNegara'], 'safe'],
         ];
     }
 
@@ -39,76 +39,7 @@ class IzinHarianSearch extends IzinHarian
         return Model::scenarios();
     }
 
-    public function searchToday($params)
-    {
-        $query = IzinHarian::find();
-
-        $query->joinWith([
-            'nim0 as mhs',
-            'nim0.kodeProdi as p',
-            'nim0.kamar as kk',
-            'nim0.kamar.asrama as a',
-        ]);
-
-        // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'sort'=> ['defaultOrder' => ['created_at'=>SORT_DESC]]
-        ]);
-
-        $dataProvider->sort->attributes['namaMahasiswa'] = [
-            'asc' => ['mhs.nama_mahasiswa'=>SORT_ASC],
-            'desc' => ['mhs.nama_mahasiswa'=>SORT_DESC]
-        ];
-
-        $dataProvider->sort->attributes['namaProdi'] = [
-            'asc' => ['p.nama_prodi'=>SORT_ASC],
-            'desc' => ['p.nama_prodi'=>SORT_DESC]
-        ];
-
-        $dataProvider->sort->attributes['semester'] = [
-            'asc' => ['mhs.semester'=>SORT_ASC],
-            'desc' => ['mhs.semester'=>SORT_DESC]
-        ];
-
-        $dataProvider->sort->attributes['namaAsrama'] = [
-            'asc' => ['a.nama'=>SORT_ASC],
-            'desc' => ['a.nama'=>SORT_DESC]
-        ];
-
-        $dataProvider->sort->attributes['namaKamar'] = [
-            'asc' => ['kk.nama'=>SORT_ASC],
-            'desc' => ['kk.nama'=>SORT_DESC]
-        ];
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
-
-        $query->andFilterWhere(['a.id'=> $this->namaAsrama]);
-        $query->andFilterWhere(['p.kode_prodi'=>$this->namaProdi]);
-        $query->andFilterWhere(['mhs.semester' => $this->semester]);
-        $query->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->namaMahasiswa]);
-
-        $query->andWhere(['between','waktu',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
-
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'waktu' => $this->waktu,
-            'status_izin' => $this->status_izin,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ]);
-
-        $query->andFilterWhere(['like', 'nim', $this->nim]);
-
-        return $dataProvider;
-    }
+  
 
     /**
      * Creates data provider instance with search query applied
@@ -176,7 +107,7 @@ class IzinHarianSearch extends IzinHarian
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'waktu' => $this->waktu,
+            'waktu_keluar' => $this->waktu_keluar,
             'status_izin' => $this->status_izin,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
