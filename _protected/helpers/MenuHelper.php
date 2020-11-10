@@ -48,6 +48,18 @@ class MenuHelper
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	        'items'=>[
+	        	[
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Hari ini',  
+	                'url' => ['/izin-harian/today'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK'),
+	               
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Riwayat Izin Harian',  
+	                'url' => ['/izin-harian/index'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK'),
+	               
+	            ],
 	           	[
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Perizinan',  
 	                'url' => ['/izin-mahasiswa/index'],	        

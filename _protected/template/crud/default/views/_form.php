@@ -24,23 +24,35 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-form">
+<div class="body">
 
     <?= "<?php " ?>$form = ActiveForm::begin([
     	'options' => [
-    		'class' => 'form-horizontal'
+            'id' => 'form_validation',
     	]
     ]); ?>
 
+
+
 <?php foreach ($generator->getColumnNames() as $attribute) {
     if (in_array($attribute, $safeAttributes)) {
-        echo "    <?= " . $generator->generateActiveField($attribute) . " ?>\n\n";
+        $tableSchema = $generator->getTableSchema();
+        $column = $tableSchema->columns[$attribute];
+        ?>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right"><?= Inflector::humanize($column->name);?></label>
+        <div class="col-sm-9">
+        <?php
+        echo "    <?= " . $generator->generateActiveField($attribute). "->label(false) ?>\n\n";
+         ?>
+            
+            </div>
+        </div>
+        <?php
     }
 } ?>
-    <div class="form-group">
-        <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Save') ?>, ['class' => 'btn btn-success']) ?>
-    </div>
-
+        <?= "<?= " ?>Html::submitButton(<?= $generator->generateString('Save') ?>, ['class' => 'btn btn-primary waves-effect']) ?>
+    
     <?= "<?php " ?>ActiveForm::end(); ?>
 
 </div>
