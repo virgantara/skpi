@@ -42,7 +42,7 @@ class IzinHarianController extends Controller
         $query->groupBy(['nim']);
 
         $list_mhs = $query->all();
-
+        $results = [];
         foreach($list_mhs as $mhs)
         {   
             $qry = IzinHarian::find()->where([
