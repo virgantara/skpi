@@ -23,8 +23,11 @@ $listAsrama = $query->all();
 </style>
 
 
-
-<div class="row">
+<?php 
+if(Yii::$app->user->identity->access_role != 'asesor')
+{
+?>
+  <div class="row">
 
 	<div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
           <div class="widget-box transparent">
@@ -39,116 +42,118 @@ $listAsrama = $query->all();
               <div class="widget-main padding-4">
                 <div class="tab-content padding-8">
                   <select name="year"  id="tahun_pelanggan_kategori">
-  <option value=''>Select Year</option>
-  <?php
-    for ($year = 2014; $year <= 2030; $year++) {
-      $selected = (date('Y')==$year) ? 'selected' : '';
-        echo "<option value=$year $selected>$year</option>";
-      
-    }
-  ?>
-</select>
-<div class="table-responsive">
-                 <div id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
-</div>
+                  <option value=''>Select Year</option>
+                  <?php
+                    for ($year = 2014; $year <= 2030; $year++) {
+                      $selected = (date('Y')==$year) ? 'selected' : '';
+                        echo "<option value=$year $selected>$year</option>";
+                      
+                    }
+                  ?>
+                </select>
+          <div class="table-responsive">
+                           <div id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+          </div>
                 </div>
               </div><!-- /.widget-main -->
             </div><!-- /.widget-body -->
           </div><!-- /.widget-box -->
         </div><!-- /.col -->
 
-</div>
-<div class="row">
+  </div>
+  <div class="row">
 
-  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
-    <div class="widget-box transparent">
-      <div class="widget-header">
-        <h4 class="widget-title lighter smaller">
-          <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Ringan
-          <span id="loadingringan" style="display: none">Fetching...</span>
-        </h4>
-         
-         <div class="pull-right">
-          <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv2ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-          <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv3ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-        </div>
-      </div>
-
-      <div class="widget-body">
-        <div class="widget-main padding-4">
-          <div class="tab-content padding-8">
+    <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+      <div class="widget-box transparent">
+        <div class="widget-header">
+          <h4 class="widget-title lighter smaller">
+            <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Ringan
+            <span id="loadingringan" style="display: none">Fetching...</span>
+          </h4>
            
-
-               <div class="containerringan" id="containerringan" style="min-width: 200;  margin: 0 auto">
-                 
-               </div> 
-            
+           <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv2ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+            <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv3ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
           </div>
-        </div><!-- /.widget-main -->
-      </div><!-- /.widget-body -->
-    </div><!-- /.widget-box -->
-  </div><!-- /.col -->
-  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
-    <div class="widget-box transparent">
-      <div class="widget-header">
-        <h4 class="widget-title lighter smaller">
-          <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Sedang
-          <span id="loadingsedang" style="display: none">Fetching...</span>
-        </h4>
-          <div class="pull-right">
-          <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv2sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-          <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv3sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
         </div>
-      </div>
 
-      <div class="widget-body">
-        <div class="widget-main padding-4">
-          <div class="tab-content padding-8">
-           
+        <div class="widget-body">
+          <div class="widget-main padding-4">
+            <div class="tab-content padding-8">
+             
 
-            <div class="table-responsive">
-                 <div class="containersedang" id="containersedang" style="min-width: 200;  margin: 0 auto">
+                 <div class="containerringan" id="containerringan" style="min-width: 200;  margin: 0 auto">
                    
                  </div> 
+              
             </div>
-
+          </div><!-- /.widget-main -->
+        </div><!-- /.widget-body -->
+      </div><!-- /.widget-box -->
+    </div><!-- /.col -->
+    <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+      <div class="widget-box transparent">
+        <div class="widget-header">
+          <h4 class="widget-title lighter smaller">
+            <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Sedang
+            <span id="loadingsedang" style="display: none">Fetching...</span>
+          </h4>
+            <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv2sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+            <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv3sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
           </div>
-        </div><!-- /.widget-main -->
-      </div><!-- /.widget-body -->
-    </div><!-- /.widget-box -->
-  </div><!-- /.col -->
-  <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
-    <div class="widget-box transparent">
-      <div class="widget-header">
-        <h4 class="widget-title lighter smaller">
-          <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Berat
-          <span id="loadingberat" style="display: none">Fetching...</span>
-        </h4>
-         <div class="pull-right">
-          <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv2berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-          <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv3berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
         </div>
-      </div>
 
-      <div class="widget-body">
-        <div class="widget-main padding-4">
-          <div class="tab-content padding-8">
-           
+        <div class="widget-body">
+          <div class="widget-main padding-4">
+            <div class="tab-content padding-8">
+             
 
-            <div class="table-responsive">
-                 <div class="containerberat" id="containerberat" style="min-width: 200;  margin: 0 auto">
-                   
-                 </div> 
+              <div class="table-responsive">
+                   <div class="containersedang" id="containersedang" style="min-width: 200;  margin: 0 auto">
+                     
+                   </div> 
+              </div>
+
             </div>
-
+          </div><!-- /.widget-main -->
+        </div><!-- /.widget-body -->
+      </div><!-- /.widget-box -->
+    </div><!-- /.col -->
+    <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+      <div class="widget-box transparent">
+        <div class="widget-header">
+          <h4 class="widget-title lighter smaller">
+            <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Berat
+            <span id="loadingberat" style="display: none">Fetching...</span>
+          </h4>
+           <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv2berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+            <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv3berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
           </div>
-        </div><!-- /.widget-main -->
-      </div><!-- /.widget-body -->
-    </div><!-- /.widget-box -->
-  </div><!-- /.col -->
+        </div>
 
-</div>
+        <div class="widget-body">
+          <div class="widget-main padding-4">
+            <div class="tab-content padding-8">
+             
 
+              <div class="table-responsive">
+                   <div class="containerberat" id="containerberat" style="min-width: 200;  margin: 0 auto">
+                     
+                   </div> 
+              </div>
+
+            </div>
+          </div><!-- /.widget-main -->
+        </div><!-- /.widget-body -->
+      </div><!-- /.widget-box -->
+    </div><!-- /.col -->
+
+  </div>
+<?php 
+}
+?>
 <div class="row">
      <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
           <div class="widget-box transparent">

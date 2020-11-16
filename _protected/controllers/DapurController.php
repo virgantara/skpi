@@ -10,6 +10,7 @@ use app\models\DapurSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * DapurController implements the CRUD actions for Dapur model.
@@ -22,10 +23,36 @@ class DapurController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'denyCallback' => function ($rule, $action) {
+                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                },
+                'only' => ['create','update','delete','index','view'],
+                'rules' => [
+                    [
+                        'actions' => ['create','update','delete','index','view'],
+                        'allow' => true,
+                        'roles' => ['stafBAPAK','admin','operatorCabang'],
+                    ],
+                    [
+                        'actions' => ['index','view'],
+                        'allow' => true,
+                        'roles' => ['asesor'],
+                    ],
+                    [
+                        'actions' => [
+                            'create','update','delete','index','view'
+                        ],
+                        'allow' => true,
+                        'roles' => ['theCreator'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
