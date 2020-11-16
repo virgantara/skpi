@@ -44,36 +44,9 @@ class MenuHelper
 	    }
 
 
-	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Perizinan </span><i class="caret"></i>', 'url' => '#',
-	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-	        'items'=>[
-	        	[
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Hari ini',  
-	                'url' => ['/izin-harian/today'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK'),
-	               
-	            ],
-	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Riwayat Izin Harian',  
-	                'url' => ['/izin-harian/index'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK'),
-	               
-	            ],
-	           	[
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Perizinan',  
-	                'url' => ['/izin-mahasiswa/index'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK'),
-	               
-	            ],
-	            [
-	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Perizinan',  
-	                'url' => ['/izin-mahasiswa/create'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('stafBAPAK'), 
-	            ],
-	        ]];
+	        
 
-	    if (Yii::$app->user->can('operatorCabang'))
+	    if (Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor'))
 	    {
          	$menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span><i class="caret"></i>', 
 		         'url' => '#',
@@ -84,51 +57,11 @@ class MenuHelper
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Penghuni Asrama',  
 		                'url' => ['asrama/mahasiswa'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor'), 
 		            ],
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pindah Kamar',  
 		                'url' => ['/asrama/pindah'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang'),
-		               
-		            ],
-		        ]
-		    ];
-
-		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Dapur </span><i class="caret"></i>', 
-		         'url' => '#',
-		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-		        'items'=>[
-		           	
-		            [
-		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Dapur',  
-		                'url' => ['dapur/index'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang'), 
-		            ],
-		            [
-		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan Dapur',  
-		                'url' => ['/asrama/dapur'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang'),
-		               
-		            ],
-		        ]
-		    ];
-
-		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Konsulat </span><i class="caret"></i>', 
-		         'url' => '#',
-		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-		        'items'=>[
-		           	
-		            [
-		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan',  
-		                'url' => ['mahasiswa/konsulat'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang'), 
-		            ],
-		            [
-		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap',  
-		                'url' => ['/mahasiswa/konsulat-rekap'],	        
 		                'visible' => Yii::$app->user->can('operatorCabang'),
 		               
 		            ],
@@ -144,7 +77,7 @@ class MenuHelper
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Manage',  
 		                'url' => ['organisasi-mahasiswa/index'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor'), 
 		            ],
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Tambah',  
@@ -155,8 +88,81 @@ class MenuHelper
 		        ]
 		    ];
 
+		    
+
+		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Konsulat </span><i class="caret"></i>', 
+		         'url' => '#',
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan',  
+		                'url' => ['mahasiswa/konsulat'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap',  
+		                'url' => ['/mahasiswa/konsulat-rekap'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor'),
+		               
+		            ],
+		        ]
+		    ];
+
+		    
+		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Dapur </span><i class="caret"></i>', 
+		         'url' => '#',
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Dapur',  
+		                'url' => ['dapur/index'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor'), 
+		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan Dapur',  
+		                'url' => ['/asrama/dapur'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'),
+		               
+		            ],
+		        ]
+		    ];
 
 		}
+
+
+		$menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Perizinan </span><i class="caret"></i>', 'url' => '#',
+	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	        'items'=>[
+	        	[
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Hari ini',  
+	                'url' => ['/izin-harian/today'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor'),
+	               
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Riwayat Izin Harian',  
+	                'url' => ['/izin-harian/index'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor'),
+	               
+	            ],
+	           	[
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Perizinan',  
+	                'url' => ['/izin-mahasiswa/index'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor'),
+	               
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Perizinan',  
+	                'url' => ['/izin-mahasiswa/create'],	        
+	                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('stafBAPAK'), 
+	            ],
+	        ]];
+
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Laporan </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',

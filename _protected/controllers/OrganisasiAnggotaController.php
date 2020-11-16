@@ -8,7 +8,7 @@ use app\models\OrganisasiAnggotaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\filters\AccessControl;
 /**
  * OrganisasiAnggotaController implements the CRUD actions for OrganisasiAnggota model.
  */
@@ -20,10 +20,36 @@ class OrganisasiAnggotaController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'denyCallback' => function ($rule, $action) {
+                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                },
+                'only' => ['create','update','delete','index','view','ajax-create'],
+                'rules' => [
+                    [
+                        'actions' => ['ajax-create','create','update','delete','index','view'],
+                        'allow' => true,
+                        'roles' => ['stafBAPAK','admin','operatorCabang'],
+                    ],
+                    [
+                        'actions' => ['index','view'],
+                        'allow' => true,
+                        'roles' => ['asesor'],
+                    ],
+                    [
+                        'actions' => [
+                            'create','update','delete','index','view','ajax-create'
+                        ],
+                        'allow' => true,
+                        'roles' => ['theCreator'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
