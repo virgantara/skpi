@@ -49,7 +49,7 @@ class Asrama extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-              'kampus_id' => 'Kampus',
+              'kampus_id' => 'Kelas',
             'nama' => 'Nama',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
