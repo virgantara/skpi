@@ -12,41 +12,47 @@ use Yii;
  */
 class AppController extends Controller
 {
-    /**
-     * Returns a list of behaviors that this component should behave as.
-     * Here we use RBAC in combination with AccessControl filter.
-     *
-     * @return array
-     */
-    public function behaviors()
+
+    public function beforeAction($action)
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'controllers' => ['user'],
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                    [
-                        // other rules
-                    ],
+        
+        $session = Yii::$app->session;
+        // $session->remove('token');
+        if($session->has('token'))
+        {
+            if (!parent::beforeAction($action)) {
+                return false;
+            }
 
-                ], // rules
+        }
 
-            ], // access
+        else
+        {
+            $time = time();
+            $token = Yii::$app->jwt->getBuilder()
+                        ->issuedBy(Url::home(true)) // Configures the issuer (iss claim)
+                        ->permittedFor($model->url) // Configures the audience (aud claim)
+                        ->identifiedBy('4f1g23a12aa', true) // Configures the id (jti claim), replicating as a header item
+                        ->issuedAt($time) // Configures the time that the token was issue (iat claim)
+                        ->canOnlyBeUsedAfter($time) // Configures the time that the token can be used (nbf claim)
+                        ->expiresAt($time + 3600) // Configures the expiration time of the token (exp claim)
+                        ->withClaim('uid', Yii::$app->user->identity->uuid) // Configures a new claim, called "uid"
+                        ->getToken(); // Retrieves the generated token
 
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ], // verbs
 
-        ]; // return
+            $token->getHeaders(); // Retrieves the token headers
+            $token->getClaims(); // Retrieves the token claims
 
-    } // behaviors
+            return $this->redirect($model->url.'/'.$model->success_callback.'/?token='.$token);
+            return $this->redirect(Yii::$app->params['sso_login']);
+        }
+
+        
+
+        // other custom code here
+
+        return true; // or false to not run the action
+    }
+    
 
 } // AppController
