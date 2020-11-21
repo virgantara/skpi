@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -12,41 +13,34 @@ use Yii;
  */
 class AppController extends Controller
 {
-    /**
-     * Returns a list of behaviors that this component should behave as.
-     * Here we use RBAC in combination with AccessControl filter.
-     *
-     * @return array
-     */
-    public function behaviors()
+
+    public function beforeAction($action)
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'controllers' => ['user'],
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                    [
-                        // other rules
-                    ],
+        
+        $session = Yii::$app->session;
+        
+        if($session->has('token'))
+        {
+            if (!parent::beforeAction($action)) {
+                return false;
+            }
 
-                ], // rules
+        }
 
-            ], // access
+        else
+        {
 
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ], // verbs
+           
+            // return $this->redirect($model->url.'/'.$model->success_callback.'/?token='.$token);
+            return $this->redirect(Yii::$app->params['sso_login']);
+        }
 
-        ]; // return
+        
 
-    } // behaviors
+        // other custom code here
+
+        return true; // or false to not run the action
+    }
+    
 
 } // AppController

@@ -37,7 +37,8 @@
         "2amigos/yii2-ckeditor-widget": "^2.1",
         "2amigos/yii2-chartjs-widget" : "~2.0",
         "kartik-v/yii2-date-range": "dev-master",
-        "phpoffice/phpspreadsheet": "^1.10"
+        "phpoffice/phpspreadsheet": "^1.10",
+        "firebase/php-jwt": "^5.2"
     
     },
     "require-dev": {

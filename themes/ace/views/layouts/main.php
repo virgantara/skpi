@@ -74,38 +74,61 @@ if(!Yii::$app->user->isGuest){
 ?>
                 <div class="navbar-buttons navbar-header pull-right  collapse navbar-collapse" role="navigation">
                     <ul class="nav ace-nav">
+
+                        <?php 
+                        $list_apps = [];
+                        $key = Yii::$app->params['jwt_key'];
+                        $session = Yii::$app->session;
+                        $token = $session->get('token');
+                        $decoded = \Firebase\JWT\JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
+                    
+                    
+
+                        
+                        ?>
+
                           <li class="blue dropdown-modal">
-                            <?php 
-                            $listNotif = \app\models\Notif::listNotif();
-                            
-                            ?>
-                            <a id="notif-toggle" data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                <i class="ace-icon fa fa-bell icon-animated-bell"></i>
-                                <span class="badge badge-important" id="count-notif">
-                                    <?=$listNotif;?>
-                                </span>
+                           <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <i class="ace-icon fa fa-cloud icon-animated-vertical"></i>
+                                <span class="badge badge-success"><?=count($decoded->apps);?></span>
                             </a>
-                            <ul class="dropdown-menu-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
+
+                            <ul class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
                                 <li class="dropdown-header">
-                                    <i class="ace-icon fa fa-exclamation-triangle"></i>
-                                    <?=$listNotif;?> Notification<?=$listNotif > 1? 's' : '';?>
+                                    <i class="ace-icon fa fa-cloud"></i>
+                                    <?=count($decoded->apps);?> Apps
                                 </li>
-
+                                <?php 
+                                foreach($decoded->apps as $app)
+                                {
+                                ?>
                                 <li class="dropdown-content">
-                                    <ul class="dropdown-menu dropdown-navbar navbar-pink" id="notif-content">
-                                       
-                                     
-                                     
-                                    </ul>
-                                </li>
+                                    <ul class="dropdown-menu dropdown-navbar">
+                                        <li>
+                                            <a href="<?=$app->app_url.$token;?>" class="clearfix">
+                                                <img src="assets/images/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" />
+                                                <span class="msg-body">
+                                                    <span class="msg-title">
+                                                        <span class="blue"><?=$app->app_name;?></span>
+                                                    </span>
 
-                                <li class="dropdown-footer">
-                                    <a href="<?=Url::to('/notif/index');?>">
-                                        See all notifications
-                                        <i class="ace-icon fa fa-arrow-right"></i>
-                                    </a>
-                                </li>
+                                                    <!-- <span class="msg-time">
+                                                        <i class="ace-icon fa fa-clock-o"></i>
+                                                        <span>a moment ago</span>
+                                                    </span> -->
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </li>   
+                                <?php 
+                                }
+                                ?>
+
+                                
                             </ul>
+                            
                         </li>
 
                         <li class="light-blue dropdown-modal user-min">
@@ -122,20 +145,20 @@ if(!Yii::$app->user->isGuest){
 
 
 
-echo Menu::widget([
-    'options'=>['class'=>'user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close'],
-    // 'itemOptions'=>array('class'=>'dropdown-menu'),
-    // 'itemCssClass'=>'item-test',
-    'encodeLabels'=>false,
-    'items' => [
-        ['label'=>'<i class="ace-icon fa fa-user"></i>Profil', 'url'=>['/pegawai/view','id'=>'']],
-        ['label'=> '','itemOptions'=>['class'=>'divider']],
-        ['label'=>'Pengguna', 'url'=>['/user/index']],
-        ['label'=> '','itemOptions'=>['class'=>'divider']],
-        ['label'=>'<a data-method="POST" href="'.Url::to(['/site/logout']).'">Logout</a>'],
+                            echo Menu::widget([
+                                'options'=>['class'=>'user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close'],
+                                // 'itemOptions'=>array('class'=>'dropdown-menu'),
+                                // 'itemCssClass'=>'item-test',
+                                'encodeLabels'=>false,
+                                'items' => [
+                                    ['label'=>'<i class="ace-icon fa fa-user"></i>Profil', 'url'=>['/pegawai/view','id'=>'']],
+                                    ['label'=> '','itemOptions'=>['class'=>'divider']],
+                                    ['label'=>'Pengguna', 'url'=>['/user/index']],
+                                    ['label'=> '','itemOptions'=>['class'=>'divider']],
+                                    ['label'=>'<a data-method="POST" href="'.Url::to(['/site/logout']).'">Logout</a>'],
 
-    ],
-]);
+                                ],
+                            ]);
 
  ?>
                         
