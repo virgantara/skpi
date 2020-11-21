@@ -30,16 +30,6 @@ $config = [
     ],
     'timeZone' => 'Asia/Jakarta',
     'components' => [
-        'jwt' => [
-            'class' => \sizeg\jwt\Jwt::class,
-            'key' => 'Jrk6rEHUa7',
-            
-            'jwtValidationData' => [
-                'class' => \sizeg\jwt\JwtValidationData::class,
-                 // configure leeway 
-                // 'leeway' => 20,
-            ],
-        ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [

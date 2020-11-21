@@ -38,8 +38,7 @@
         "2amigos/yii2-chartjs-widget" : "~2.0",
         "kartik-v/yii2-date-range": "dev-master",
         "phpoffice/phpspreadsheet": "^1.10",
-        "sizeg/yii2-jwt": "v2.0.1.1",
-        "lcobucci/jwt": "^3.3"
+        "firebase/php-jwt": "^5.2"
     
     },
     "require-dev": {

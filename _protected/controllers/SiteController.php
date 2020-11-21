@@ -15,6 +15,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use \Firebase\JWT\JWT;
 use Yii;
 
 /**
@@ -90,16 +91,10 @@ class SiteController extends AppController
 
     public function actionLoginSso($token)
     {
-        // print_r($token);exit;
-        $token = Yii::$app->jwt->getParser()->parse((string) $token); // Parses from a string
-        $session = Yii::$app->session;
-        $session->set('token',$token);
-        $token->getHeaders(); // Retrieves the token header
-        $token->getClaims(); // Retrieves the token claims
-
-        // echo $token->getHeader('jti').'<br>'; // will print "4f1g23a12aa"
-        // echo $token->getClaim('iss').'<br>'; // will print "http://example.com"
-        $uuid = $token->getClaim('uid'); // will print "1"
+        $key = Yii::$app->params['jwt_key'];
+        $decoded = JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
+        
+        $uuid = $decoded->uuid; // will print "1"
         $user = \app\models\User::find()
             ->where([
                 'uuid'=>$uuid,
@@ -107,12 +102,14 @@ class SiteController extends AppController
             ->one();
 
         if(!empty($user)){
+            $session = Yii::$app->session;
+            $session->set('token',$token);
             Yii::$app->user->login($user);
             return $this->redirect(['index']);
         }
         else{
             //Simpen disession attribute user dari Google
-            return $this->redirect($token->getClaim('iss').'/site/sso-callback?code=302')->send();
+            return $this->redirect($decoded->iss.'/site/sso-callback?code=302')->send();
         }   
     }
 
