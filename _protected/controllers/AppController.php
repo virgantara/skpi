@@ -18,7 +18,7 @@ class AppController extends Controller
     {
         
         $session = Yii::$app->session;
-        // $session->remove('token');
+        
         if($session->has('token'))
         {
             if (!parent::beforeAction($action)) {
