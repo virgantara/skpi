@@ -77,11 +77,18 @@ if(!Yii::$app->user->isGuest){
 
                         <?php 
                         $list_apps = [];
-                        $key = Yii::$app->params['jwt_key'];
-                        $session = Yii::$app->session;
-                        $token = $session->get('token');
-                        $decoded = \Firebase\JWT\JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
-                    
+                        try
+                        {
+                            $key = Yii::$app->params['jwt_key'];
+                            $session = Yii::$app->session;
+                            $token = $session->get('token');
+                            $decoded = \Firebase\JWT\JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
+                            $list_apps = $decoded->apps;
+                        }
+                        catch(\Exception $e) 
+                        {
+                       
+                        }
                     
 
                         
@@ -90,16 +97,16 @@ if(!Yii::$app->user->isGuest){
                           <li class="blue dropdown-modal">
                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <i class="ace-icon fa fa-cloud icon-animated-vertical"></i>
-                                <span class="badge badge-success"><?=count($decoded->apps);?></span>
+                                <span class="badge badge-success"><?=count($list_apps);?></span>
                             </a>
 
                             <ul class="dropdown-menu-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
                                 <li class="dropdown-header">
                                     <i class="ace-icon fa fa-cloud"></i>
-                                    <?=count($decoded->apps);?> Apps
+                                    <?=count($list_apps);?> Apps
                                 </li>
                                 <?php 
-                                foreach($decoded->apps as $app)
+                                foreach($list_apps as $app)
                                 {
                                 ?>
                                 <li class="dropdown-content">
