@@ -293,6 +293,7 @@ class SiteController extends AppController
      */
     public function actionIndex()
     {
+
         if (Yii::$app->user->isGuest) {
             $this->redirect(['/site/login']);
         }

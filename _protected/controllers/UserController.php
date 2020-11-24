@@ -5,6 +5,8 @@ use app\models\User;
 use app\models\UserSearch;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use Yii;
 
 /**
@@ -30,7 +32,9 @@ class UserController extends AppController
                         'roles' => ['admin'],
                     ],
                     [
-                        // other rules
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['theCreator'],
                     ],
 
                 ], // rules
@@ -55,6 +59,8 @@ class UserController extends AppController
      */
     public function actionIndex()
     {
+
+
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $this->_pageSize);
 

@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return ['class'=>CssHelper::userStatusCss($model->status)];
                 }
             ],
-            // role
+            'uuid',
             [
                 'attribute'=>'item_name',
                 'filter' => $searchModel->rolesList,

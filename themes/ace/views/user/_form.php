@@ -24,7 +24,7 @@ $listData=ArrayHelper::map($list,'id_perusahaan','nama');
                 ['placeholder' => Yii::t('app', 'Create username'), 'autofocus' => true]) ?>
         
         <?= $form->field($user, 'email')->input('email', ['placeholder' => Yii::t('app', 'Enter e-mail')]) ?>
-
+        <?= $form->field($user, 'uuid')->textInput() ?>
         <?php if ($user->scenario === 'create'): ?>
 
             <?= $form->field($user, 'password')->widget(PasswordInput::classname(), 
