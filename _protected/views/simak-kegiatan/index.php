@@ -1,26 +1,13 @@
 <?php
 
-use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
-
-/* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\crud\Generator */
-
-$urlParams = $generator->generateUrlParams();
-$nameAttribute = $generator->getNameAttribute();
-
-echo "<?php\n";
-?>
-
 use yii\helpers\Html;
-use <?= $generator->indexWidgetType === 'grid' ? "kartik\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
-<?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
-<?= !empty($generator->searchModelClass) ? "/* @var \$searchModel " . ltrim($generator->searchModelClass, '\\') . " */\n" : '' ?>
+/* @var $searchModel app\models\SimakKegiatanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
+$this->title = 'Simak Kegiatans';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -28,15 +15,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title"><?= "<?= " ?>Html::encode($this->title) ?></h3>
+                <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
             </div>
             <div class="panel-body ">
 
                 <p>
-                    <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success']) ?>
+                    <?= Html::a('Create Simak Kegiatan', ['create'], ['class' => 'btn btn-success']) ?>
                 </p>
-                <?= "<?php
-                \$gridColumns = [
+                <?php
+                $gridColumns = [
                 [
                     'class'=>'kartik\grid\SerialColumn',
                     'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -45,35 +32,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pageSummaryOptions' => ['colspan' => 6],
                     'header'=>'',
                     'headerOptions'=>['class'=>'kartik-sheet-style']
-                ],"
-                ?>
-
-            <?php
-            $count = 0;
-            if (($tableSchema = $generator->getTableSchema()) === false) {
-                foreach ($generator->getColumnNames() as $name) {
-                    if (++$count < 6) {
-                        echo "            '" . $name . "',\n";
-                    } else {
-                        echo "            //'" . $name . "',\n";
-                    }
-                }
-            } else {
-                foreach ($tableSchema->columns as $column) {
-                    $format = $generator->generateColumnFormat($column);
-                    if (++$count < 6) {
-                        echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-                    } else {
-                        echo "            //'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-                    }
-                }
-            }
-            ?>
-                <?php
-               echo "['class' => 'yii\grid\ActionColumn']\n"; 
-               echo  "];?>";
-               ?>
-                <?= "\n<?= " ?>GridView::widget([
+                ],
+                        'id',
+            'nama_kegiatan',
+            'sub_kegiatan',
+            'nilai',
+            'sk_unida_siman',
+            //'sk_unida_cabang',
+            //'id_jenis_kegiatan',
+            //'is_active',
+            //'created_at',
+            //'updated_at',
+                ['class' => 'yii\grid\ActionColumn']
+];?>                
+<?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'columns' => $gridColumns,

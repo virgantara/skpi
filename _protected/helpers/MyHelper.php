@@ -9,6 +9,33 @@ use Yii;
 class MyHelper
 {
 
+	public static function getStatusEvent()
+	{
+		return [
+			'0' => 'Not Started',
+			'1' => 'On-progres',
+			'2' => 'Finished',
+			'3' => 'Postponed',
+			'4' => 'Canceled'
+		];
+	}
+
+	public static function getStatusEventColor()
+	{
+		return [
+			'0' => 'warning',
+			'1' => 'info',
+			'2' => 'success',
+			'3' => 'purple',
+			'4' => 'inverse'
+		];
+	}
+
+	public static function appendZeros($str, $charlength=6)
+	{
+
+		return str_pad($str, $charlength, '0', STR_PAD_LEFT);
+	}
 	public static function getStatusAktivitas()
     {
         $roles = [
