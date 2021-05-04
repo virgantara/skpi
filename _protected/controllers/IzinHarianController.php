@@ -3,19 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-
-use app\models\MahasiswaSearch;
-use app\models\Dapur;
-use app\models\DapurSearch;
+use app\models\IzinHarian;
+use app\models\IzinHarianSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
+use app\models\Asrama;
 
 /**
- * DapurController implements the CRUD actions for Dapur model.
+ * IzinHarianController implements the CRUD actions for IzinHarian model.
  */
-class DapurController extends Controller
+class IzinHarianController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -23,84 +22,89 @@ class DapurController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'denyCallback' => function ($rule, $action) {
-                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
-                },
-                'only' => ['create','update','delete','index','view'],
-                'rules' => [
-                    [
-                        'actions' => ['create','update','delete','index','view'],
-                        'allow' => true,
-                        'roles' => ['stafBAPAK','admin','operatorCabang'],
-                    ],
-                    [
-                        'actions' => ['index','view'],
-                        'allow' => true,
-                        'roles' => ['asesor'],
-                    ],
-                    [
-                        'actions' => [
-                            'create','update','delete','index','view'
-                        ],
-                        'allow' => true,
-                        'roles' => ['theCreator'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    'delete' => ['POST'],
                 ],
             ],
         ];
     }
 
-    /**
-     * Lists all Dapur models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new DapurSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+    public function actionToday()
+    {   
+        
+        $label = 'Hari ini ';
+        $query = IzinHarian::find();
+        $query->select(['nim']);
+        $query->where(['between','waktu_keluar',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
+        
+        $query->groupBy(['nim']);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+        $list_mhs = $query->all();
+        $results = [];
+        foreach($list_mhs as $mhs)
+        {   
+            $qry = IzinHarian::find()->where([
+                'nim' => $mhs->nim,
+            ]);
+
+            $qry->andWhere(['between','waktu_keluar',date('Y-m-d 00:00:00'),date('Y-m-d 23:59:59')]);
+            $qry->orderBy(['waktu_keluar'=>SORT_DESC]);
+            $results[] = [
+                'mhs' => $mhs->nim0,
+                'izin' => $qry->all()
+            ];
+        }
+
+        return $this->render('today', [
+            'label' => $label,
+            'results' => $results,
         ]);
     }
 
     /**
-     * Displays a single Dapur model.
+     * Lists all IzinHarian models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {   
+        $asramas = ArrayHelper::map(Asrama::find()->all(),'id','nama');
+        $prodis = ArrayHelper::map(\app\models\SimakMasterprogramstudi::find()->all(),'kode_prodi','nama_prodi');
+        $searchModel = new IzinHarianSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $label = 'Riwayat Izin Harian ';
+        
+        return $this->render('index', [
+            'label' => $label,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'asramas' => $asramas,
+            'prodis' => $prodis
+        ]);
+    }
+
+    /**
+     * Displays a single IzinHarian model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
-        $model = $this->findModel($id);
-        $searchModel = new MahasiswaSearch();
-        $searchModel->dapur_id = $id;
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
         return $this->render('view', [
-            'model' => $model,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Dapur model.
+     * Creates a new IzinHarian model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Dapur();
+        $model = new IzinHarian();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -112,7 +116,7 @@ class DapurController extends Controller
     }
 
     /**
-     * Updates an existing Dapur model.
+     * Updates an existing IzinHarian model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -132,7 +136,7 @@ class DapurController extends Controller
     }
 
     /**
-     * Deletes an existing Dapur model.
+     * Deletes an existing IzinHarian model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -146,15 +150,15 @@ class DapurController extends Controller
     }
 
     /**
-     * Finds the Dapur model based on its primary key value.
+     * Finds the IzinHarian model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Dapur the loaded model
+     * @return IzinHarian the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Dapur::findOne($id)) !== null) {
+        if (($model = IzinHarian::findOne($id)) !== null) {
             return $model;
         }
 

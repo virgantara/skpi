@@ -100,7 +100,7 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
                     <th>Semester</th>
                     <th>Asrama-Kamar</th>
 
-                    <th>Kampus</th>
+                    <th>Kelas</th>
                     <th>Prodi</th>
                     <th>Kategori<br>Pelanggaran</th>
                     <th>Pelanggaran</th>

@@ -21,22 +21,26 @@ $this->title = $model-><?= $generator->getNameAttribute() ?>;
 $this->params['breadcrumbs'][] = ['label' => <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-view">
+<div class="block-header">
+    <h2><?= "<?= " ?>Html::encode($this->title) ?></h2>
+</div>
+<div class="row">
+   <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading">
+                <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['update', <?= $urlParams ?>], ['class' => 'btn btn-primary']) ?>
+                <?= "<?= " ?>Html::a(<?= $generator->generateString('Delete') ?>, ['delete', <?= $urlParams ?>], [
+                    'class' => 'btn btn-danger',
+                    'data' => [
+                        'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
+                        'method' => 'post',
+                    ],
+                ]) ?>
+            </div>
 
-    <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Update') ?>, ['update', <?= $urlParams ?>], ['class' => 'btn btn-primary']) ?>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('Delete') ?>, ['delete', <?= $urlParams ?>], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => <?= $generator->generateString('Are you sure you want to delete this item?') ?>,
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= "<?= " ?>DetailView::widget([
+            <div class="panel-body ">
+        
+<?= "<?= " ?>DetailView::widget([
         'model' => $model,
         'attributes' => [
 <?php
@@ -54,4 +58,8 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         ],
     ]) ?>
 
+            </div>
+        </div>
+
+    </div>
 </div>

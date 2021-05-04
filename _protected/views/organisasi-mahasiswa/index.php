@@ -7,18 +7,23 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\OrganisasiMahasiswaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Organisasi Mahasiswas';
+$this->title = 'Organisasi Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="organisasi-mahasiswa-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <?php 
+    if(Yii::$app->user->can('stafBAPAK'))
+    {
+    ?>
     <p>
         <?= Html::a('Create Organisasi Mahasiswa', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php
+}
+     // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -40,7 +45,14 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_at',
             //'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'visibleButtons' => [
+                    // 'view' => Yii::$app->user->can('stafBAPAK'),
+                    'update' => Yii::$app->user->can('stafBAPAK'),
+                    'delete' => Yii::$app->user->can('stafBAPAK')
+                ]
+            ],
         ],
     ]); ?>
 

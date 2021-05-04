@@ -1,6 +1,7 @@
 <?php
 namespace app\controllers;
 
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -12,41 +13,62 @@ use Yii;
  */
 class AppController extends Controller
 {
-    /**
-     * Returns a list of behaviors that this component should behave as.
-     * Here we use RBAC in combination with AccessControl filter.
-     *
-     * @return array
-     */
-    public function behaviors()
+
+    public function beforeAction($action)
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'controllers' => ['user'],
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
-                        'allow' => true,
-                        'roles' => ['admin'],
-                    ],
-                    [
-                        // other rules
-                    ],
+        
+        $session = Yii::$app->session;
+        
+        if($session->has('token'))
+        {
 
-                ], // rules
+            try
+            {
 
-            ], // access
+                $token = $session->get('token');
+                $key = Yii::$app->params['jwt_key'];
+                $decoded = \Firebase\JWT\JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
 
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
-            ], // verbs
+                // $api_baseurl = Yii::$app->params['invoke_token_uri'];
+                // $client = new \yii\httpclient\Client(['baseUrl' => $api_baseurl]);
+                // $headers = ['x-jwt-token'=>$token];
 
-        ]; // return
+                // $params = [];
+                // $response = $client->get($api_baseurl, $params,$headers)->send();
+                // if ($response->isOk) {
+                //     $res = $response->data;
+                //     if($res['code'] != '200')
+                //     {
+                //         $session->remove('token');
+                //         throw new \Exception;
+                        
+                //     }
+                // }
 
-    } // behaviors
+            }
+
+            catch(\Exception $e) 
+            {
+                return $this->redirect(Yii::$app->params['sso_login']);
+            }
+            
+            if (!parent::beforeAction($action)) {
+                return false;
+            } 
+        }
+
+        else
+        {
+            
+            return $this->redirect(Yii::$app->params['sso_login']);
+        }
+
+        
+
+        // other custom code here
+
+        return true; // or false to not run the action
+    }
+    
 
 } // AppController

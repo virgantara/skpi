@@ -47,7 +47,7 @@ class Dapur extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nama' => 'Nama',
             'kapasitas' => 'Kapasitas',
-            'kampus' => 'Kampus',
+            'kampus' => 'Kelas',
         ];
     }
 

@@ -15,6 +15,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use \Firebase\JWT\JWT;
 use Yii;
 
 /**
@@ -22,7 +23,7 @@ use Yii;
  * It is responsible for displaying static pages, logging users in and out,
  * sign up and account activation, and password reset.
  */
-class SiteController extends Controller
+class SiteController extends AppController
 {
 
     public $successUrl = '';
@@ -82,7 +83,70 @@ class SiteController extends Controller
         ];
     }
 
-   
+    public function actionAuthCallback()
+    {
+
+        // $input = json_decode(file_get_contents('php://input'),true);
+        // header('Content-type:application/json;charset=utf-8');
+
+        $results = [];
+         
+        try
+        {
+            $token = $_SERVER['HTTP_X_JWT_TOKEN'];
+            $key = Yii::$app->params['jwt_key'];
+            $decoded = JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
+            $results = [
+                'code' => 200,
+                'message' => 'Valid'
+            ];   
+        }
+        catch(\Exception $e) 
+        {
+
+            $results = [
+                'code' => 500,
+                'message' => $e->getMessage()
+            ];
+        }
+
+        echo json_encode($results);
+
+        die();
+        
+       
+    }
+
+
+    public function actionLogoutCallback(){
+        Yii::$app->user->logout();
+        $url = Yii::$app->params['sso_url'];
+        return $this->redirect($url);
+    }
+
+    public function actionLoginSso($token)
+    {
+        $key = Yii::$app->params['jwt_key'];
+        $decoded = JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
+        
+        $uuid = $decoded->uuid; // will print "1"
+        $user = \app\models\User::find()
+            ->where([
+                'uuid'=>$uuid,
+            ])
+            ->one();
+
+        if(!empty($user)){
+            $session = Yii::$app->session;
+            $session->set('token',$token);
+            Yii::$app->user->login($user);
+            return $this->redirect(['index']);
+        }
+        else{
+            //Simpen disession attribute user dari Google
+            return $this->redirect($decoded->iss.'/site/sso-callback?code=302')->send();
+        }   
+    }
 
     public function successCallback($client)
     {
@@ -229,6 +293,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
         if (Yii::$app->user->isGuest) {
             $this->redirect(['/site/login']);
         }
@@ -368,9 +433,11 @@ class SiteController extends Controller
     public function actionLogout()
     {
         
+        $session = Yii::$app->session;
+        $session->remove('token');
         Yii::$app->user->logout();
-
-        return $this->goHome();
+        $url = Yii::$app->params['sso_logout'];
+        return $this->redirect($url);
     }
 
 /*----------------*

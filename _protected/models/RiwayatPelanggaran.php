@@ -40,9 +40,9 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['pelanggaran_id', 'tanggal', 'nim', 'tahun_id'], 'required'],
+            [['pelanggaran_id', 'tanggal', 'nim', 'tahun_id','deskripsi'], 'required'],
             [['pelanggaran_id', 'tahun_id'], 'integer'],
-            [['tanggal', 'created_at', 'updated_at'], 'safe'],
+            [['tanggal', 'created_at', 'updated_at','status_kasus'], 'safe'],
             [['nim'], 'string', 'max' => 25],
             [['pelanggaran_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pelanggaran::className(), 'targetAttribute' => ['pelanggaran_id' => 'id']],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::className(), 'targetAttribute' => ['nim' => 'nim_mhs']],
@@ -117,6 +117,11 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
     public function getNamaPelanggaran()
     {
         return $this->pelanggaran->nama;
+    }
+
+    public function getKodePelanggaran()
+    {
+        return $this->pelanggaran->kode;
     }
 
     public function getNamaKategori()

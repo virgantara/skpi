@@ -92,7 +92,7 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
             ],
             [
                 'attribute' => 'namaKampus',
-                'label' => 'Kampus',
+                'label' => 'Kelas',
                 'format' => 'raw',
                 
                 'value'=>function($model,$url){

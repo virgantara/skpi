@@ -48,7 +48,7 @@ $negara = !empty($model->konsulat0) ? $model->konsulat0->country->name : '';
             <div class="panel-body ">
 
                  <div class="form-group">
-            <label class="control-label no-padding-right">Kampus</label>
+            <label class="control-label no-padding-right">Kelas</label>
         <div class="">
             <?= $form->field($model, 'kampus')->dropDownList(ArrayHelper::map(\app\models\SimakKampus::find()->all(),'kode_kampus','nama_kampus'),['class'=>'form-control','maxlength' => true,'disabled' => true])->label(false) ?>
 

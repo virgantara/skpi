@@ -26,11 +26,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'kampus',
+            [
+                'attribute'=>'kampus',
+                'value' => function($data){
+                    return $data->kampus0->nama_kampus;
+                }
+            ],
             'nama',
             'kapasitas',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'visibleButtons' => [
+                    // 'view' => Yii::$app->user->can('stafBAPAK'),
+                    'update' => Yii::$app->user->can('stafBAPAK'),
+                    'delete' => Yii::$app->user->can('stafBAPAK')
+                ]
+            ],
         ],
     ]); ?>
 

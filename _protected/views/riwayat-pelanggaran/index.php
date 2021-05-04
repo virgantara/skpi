@@ -39,16 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
     'nim',
     'namaMahasiswa',
-   [
-        'attribute' => 'namaFakultas',
-        'label' => 'Fakultas',
-        'format' => 'raw',
-        'filter'=>$fakultas,
-        'value'=>function($model,$url){
-            return $model->namaFakultas;
-            
-        },
-    ],
+   
    [
         'attribute' => 'namaProdi',
         'label' => 'Prodi',
@@ -71,6 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
         },
     ],
     'namaKamar',
+    'kodePelanggaran',
     'namaPelanggaran',
     [
         'attribute' => 'namaKategori',
@@ -99,7 +91,27 @@ $this->params['breadcrumbs'][] = $this->title;
         },
     ],
     
-    'pelapor',
+    [
+        'attribute' => 'status_kasus',
+        'format' => 'raw',
+        'filter'=>["0"=>"WAITING","1"=>"ON-PROCESS","2"=>"CLOSED"],
+        'value'=>function($model,$url){
+            $val = ["0"=>"WAITING","1"=>"ON-PROCESS","2"=>"CLOSED"];
+            $st = '';
+            $label = $val[$model->status_kasus];
+            if($model->status_kasus == '2')
+                $st = 'success arrowed-in arrowed-in-right';
+            else if($model->status_kasus == '1')
+                $st = 'warning arrowed-in-right';
+            else if($model->status_kasus == '0')
+                $st = 'default arrowed-in';
+            
+            
+            
+            return '<span type="button" class="label label-'.$st.' " >'.$label.'</span>';
+            
+        },
+    ],
     [
         'attribute' => 'statusAktif',
         'label' => 'Status Aktif',

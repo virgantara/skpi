@@ -225,7 +225,7 @@ $this->title = Yii::t('app', Yii::$app->name);
 							</div>
 						</div>
 						<div class="profile-info-row">
-							<div class="profile-info-name"> Kampus </div>
+							<div class="profile-info-name"> Kelas </div>
 
 							<div class="profile-info-value">
 								<span class="editable" ><?=$mahasiswa['nama_kampus'];?></span>

@@ -33,11 +33,11 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
     ]); ?>
     <?= $form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']) ?>
 	<div class="form-group" >
-		<label class="col-sm-3 control-label no-padding-right">Kampus</label>
+		<label class="col-sm-3 control-label no-padding-right">Kelas</label>
 			<div class="col-sm-9 col-lg-4">
 		<?= $form->field($model,'kampus')->dropDownList(ArrayHelper::map(\app\models\SimakKampus::find()->all(),'id',function($data){
 					return $data->kode_kampus.' - '.$data->nama_kampus;
-				}),['class'=>'form-control','prompt'=>'- Pilih Kampus -'])->label(false) ?>
+				}),['class'=>'form-control','prompt'=>'- Pilih Kelas -'])->label(false) ?>
 		</div>
 	</div>	
 	<div class="form-group" >

@@ -16,6 +16,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     public $namaProdi;
     public $namaFakultas;
     public $namaPelanggaran;
+    public $kodePelanggaran;
     public $namaKategori;
     public $namaAsrama;
     public $namaKamar;
@@ -29,7 +30,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
     {
         return [
             [['id', 'pelanggaran_id', 'tahun_id'], 'integer'],
-            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori','namaFakultas','namaAsrama','namaKamar','pelapor','statusAktif'], 'safe'],
+            [['tanggal', 'nim', 'created_at', 'updated_at','namaMahasiswa','namaProdi','semester','namaPelanggaran','namaKategori','namaFakultas','namaAsrama','namaKamar','pelapor','statusAktif','kodePelanggaran','status_kasus'], 'safe'],
         ];
     }
 
@@ -70,6 +71,11 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
             'desc' => ['p.nama_prodi'=>SORT_DESC]
         ];
 
+        $dataProvider->sort->attributes['status_kasus'] = [
+            'asc' => ['status_kasus'=>SORT_ASC],
+            'desc' => ['status_kasus'=>SORT_DESC]
+        ];
+
         $dataProvider->sort->attributes['namaFakultas'] = [
             'asc' => ['f.nama_fakultas'=>SORT_ASC],
             'desc' => ['f.nama_fakultas'=>SORT_DESC]
@@ -88,6 +94,11 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         $dataProvider->sort->attributes['namaPelanggaran'] = [
             'asc' => ['pl.nama'=>SORT_ASC],
             'desc' => ['pl.nama'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['kodePelanggaran'] = [
+            'asc' => ['pl.kode'=>SORT_ASC],
+            'desc' => ['pl.kode'=>SORT_DESC]
         ];
 
         $dataProvider->sort->attributes['namaAsrama'] = [
@@ -127,6 +138,7 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         // $query->andFilterWhere(['like', 'f.nama_fakultas', $this->namaFakultas]);
         $query->andFilterWhere(['like', 'mhs.semester', $this->semester]);
         $query->andFilterWhere(['like', 'pl.nama', $this->namaPelanggaran]);
+        $query->andFilterWhere(['like', 'pl.kode', $this->kodePelanggaran]);
         $query->andFilterWhere(['like', 'kk.nama', $this->namaKamar]);
 
         if(!empty($this->namaKategori))
@@ -138,6 +150,8 @@ class RiwayatPelanggaranSearch extends RiwayatPelanggaran
         {
             $query->andWhere(['a.id'=> $this->namaAsrama]);
         }
+
+        $query->andFilterWhere(['status_kasus' => $this->status_kasus]);
         
         if(!empty($this->tanggal)){
 

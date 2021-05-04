@@ -24,7 +24,7 @@ $listData=ArrayHelper::map($list,'id_perusahaan','nama');
                 ['placeholder' => Yii::t('app', 'Create username'), 'autofocus' => true]) ?>
         
         <?= $form->field($user, 'email')->input('email', ['placeholder' => Yii::t('app', 'Enter e-mail')]) ?>
-
+        <?= $form->field($user, 'uuid')->textInput() ?>
         <?php if ($user->scenario === 'create'): ?>
 
             <?= $form->field($user, 'password')->widget(PasswordInput::classname(), 
@@ -41,7 +41,7 @@ $listData=ArrayHelper::map($list,'id_perusahaan','nama');
     <div class="col-md-6">
 
         <?= $form->field($user, 'status')->dropDownList($user->statusList) ?>
-        <?= $form->field($user, 'kampus')->dropDownList(\yii\helpers\ArrayHelper::map(SimakKampus::find()->all(),'kode_kampus','nama_kampus'),['prompt'=>'- Pilih Kampus -']) ?>
+        <?= $form->field($user, 'kampus')->dropDownList(\yii\helpers\ArrayHelper::map(SimakKampus::find()->all(),'kode_kampus','nama_kampus'),['prompt'=>'- Pilih Kelas -']) ?>
 
         <?php foreach (AuthItem::getRoles() as $item_name): ?>
             <?php $roles[$item_name->name] = $item_name->name ?>
