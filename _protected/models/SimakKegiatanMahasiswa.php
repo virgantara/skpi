@@ -54,7 +54,7 @@ class SimakKegiatanMahasiswa extends \yii\db\ActiveRecord
         return [
             [['nim', 'id_jenis_kegiatan', 'id_kegiatan', 'tahun_akademik'], 'required'],
             [['id_jenis_kegiatan', 'id_kegiatan', 'nilai', 'is_approved'], 'integer'],
-            [['waktu', 'created_at', 'updated_at'], 'safe'],
+            [['waktu', 'created_at', 'updated_at','event_id'], 'safe'],
             [['keterangan', 'file'], 'string'],
             [['nim'], 'string', 'max' => 25],
             [['event_id'], 'string', 'max' => 20],
@@ -77,9 +77,9 @@ class SimakKegiatanMahasiswa extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nim' => 'Nim',
-            'id_jenis_kegiatan' => 'Id Jenis Kegiatan',
-            'id_kegiatan' => 'Id Kegiatan',
-            'event_id' => 'Event ID',
+            'id_jenis_kegiatan' => 'Jenis Kegiatan',
+            'id_kegiatan' => 'Kegiatan',
+            'event_id' => 'Event',
             'nilai' => 'Nilai',
             'waktu' => 'Waktu',
             'keterangan' => 'Keterangan',

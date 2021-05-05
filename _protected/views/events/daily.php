@@ -79,6 +79,26 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                  'format' => 'raw'
             ],
+            [
+              'class' => 'yii\grid\ActionColumn',
+              'template' => '{register}',
+              'buttons' => [
+                'register' => function ($url, $model){
+                  return Html::a('<span class="glyphicon glyphicon-plus"></span> Registration', $url, [
+                            'title' => Yii::t('app', 'Registration'),
+                            'data-method' => 'POST',
+                            'class' =>'btn btn-info btn-sm'
+                  ]);
+                }
+              ],
+              'urlCreator' => function ($action, $model, $key, $index) {
+                if($action == 'register')
+                {
+                  return Url::to(['events/register','id'=>$model->id]); 
+                }
+              }
+            ]
+
 ];?>                
 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
@@ -205,7 +225,7 @@ function changeStatus(id, status){
             {
                 "info" :
                  {
-                    "label" : "<i class=\'ace-icon fa fa-check\'></i> Start!",
+                    "label" : "<i class=\'ace-icon fa fa-check\'></i> Started",
                     "className" : "btn-sm btn-info",
                     "callback": function() {
                         changeStatus(selectorId, 1)
@@ -213,7 +233,7 @@ function changeStatus(id, status){
                 },
                 "finished" :
                 {
-                    "label" : "Finish",
+                    "label" : "Finished",
                     "className" : "btn-sm btn-success",
                     "callback": function() {
                         changeStatus(selectorId, 2)
@@ -221,7 +241,7 @@ function changeStatus(id, status){
                 }, 
                 "postponed" :
                 {
-                    "label" : "Postpone",
+                    "label" : "Postponed",
                     "className" : "btn-sm btn-purple",
                     "callback": function() {
                         changeStatus(selectorId, 3)
@@ -229,7 +249,7 @@ function changeStatus(id, status){
                 }, 
                 "cancelled" :
                 {
-                    "label" : "Cancel Event",
+                    "label" : "Cancelled",
                     "className" : "btn-sm btn-inverse",
                     "callback": function() {
                         changeStatus(selectorId, 4)
@@ -237,48 +257,7 @@ function changeStatus(id, status){
                 }, 
             }
         });
-        // Swal.fire({
-        //     title: \'Konfirmasi\',
-        //     text: "Lanjutkan proses ini?",
-        //     icon: \'info\',
-        //     showCancelButton: true,
-        //     confirmButtonColor: \'#3085d6\',
-        //     cancelButtonColor: \'#d33\',
-        //     confirmButtonText: \'Ya\',
-        //     cancelButtonText: \'Tidak\'
-        // })
-        // .then((result) => {
-        //     if (result.value) {
-        //         var obj = new Object;
-        //         obj.id = $(this).data("item");
-        //         obj.kode = $(this).data("kode");
-        //         $(this).ajaxDataPost("'.Url::to(['simak-kegiatan/ajax-aktivasi']).'",obj,function(err,hasil){
-        //           if(hasil.code == 200){
-                    
-        //               Swal.fire({
-        //                 title: \'Yeay!\',
-        //                 icon: \'success\',
-        //                 timer: 1000,
-        //                 timerProgressBar: true,
-        //                 text: hasil.message,
-                        
-        //               })
-        //               .then((result)=>{
-        //                 $.pjax.reload({container: "#pjax-container"})
-        //               })  
-                    
-        //           }
-
-        //           else{
-        //             Swal.fire({
-        //               title: \'Oops!\',
-        //               icon: \'error\',
-        //               text: hasil.message
-        //             })
-        //           }
-        //         });
-        //     }
-        // })
+        
         
    });
 

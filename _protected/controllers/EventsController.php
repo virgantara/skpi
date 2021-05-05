@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\helpers\MyHelper;
 use app\models\Events;
+use app\models\SimakKegiatanMahasiswa;
 use app\models\EventsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -13,6 +14,13 @@ use yii\filters\AccessControl;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Protection;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
 
 /**
  * EventsController implements the CRUD actions for Events model.
@@ -47,9 +55,258 @@ class EventsController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                    'register' => ['post'],
                 ],
             ],
         ];
+    }
+
+    public function actionAjaxListPeserta()
+    {
+        $dataPost = $_POST['dataPost'];
+         // header('Content-Type: application/json');
+        $model = Events::findOne($dataPost['event_id']);
+        $list = $model->simakKegiatanMahasiswas;
+        $results = [];
+        // $colors = ['info','important','danger','success','purple','pink','yellow'];
+        foreach($list as $res)
+        {
+            $results[] = [
+                'id' => $res->id,
+                'nim' => $res->nim,
+                'nama' => $res->nim0->nama_mahasiswa,
+                'checked_in' => $res->created_at,
+                'prodi' => $res->nim0->kodeProdi->singkatan,
+                'semester' => $res->nim0->semester
+            ];
+        }
+
+        echo json_encode($results);
+        exit;
+    }
+
+    public function actionAjaxRegister()
+    {
+        $dataPost = $_POST['dataPost'];
+        $model = Events::findOne($dataPost['event_id']);
+        $nim = $dataPost['nim'];
+
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        
+        $errors = '';
+        $results = [];
+        
+        try 
+        {
+
+            $tahun_aktif = \app\models\SimakTahunakademik::getTahunAktif();
+            $mhs = \app\models\SimakMastermahasiswa::find()->where(['nim_mhs'=>$nim])->one();
+            if(!empty($model))
+            {
+                $keg = SimakKegiatanMahasiswa::find()->where([
+                    'nim' => $nim,
+                    'event_id' => $model->id
+                ])->one();
+
+                if(empty($keg))
+                {
+                    $keg = new SimakKegiatanMahasiswa;
+                    $keg->nim =  $nim;
+                    $keg->event_id = $model->id;
+                    $keg->tahun_akademik = $tahun_aktif->tahun_id;
+                    $keg->id_kegiatan = $model->kegiatan_id;
+                    $keg->id_jenis_kegiatan = $model->kegiatan->id_jenis_kegiatan;
+                    $keg->nilai = $model->kegiatan->nilai;
+                    $keg->semester = (string)$mhs->semester;
+                    $keg->waktu = $model->tanggal_mulai;
+                    $keg->instansi = $model->penyelenggara;
+                    $keg->tema = $model->nama;
+                    $keg->is_approved = 1;
+                    if($keg->save())
+                    {
+                        $results = [
+                            'code' => 200,
+                            'message' => 'Participant added'
+                        ];
+
+                        $transaction->commit();
+
+                    }
+
+                    else
+                    {
+                        $errors .= \app\helpers\MyHelper::logError($keg);
+                        throw new \Exception;
+                    }
+                }
+
+                else
+                {
+                    $errors .= 'This student has already been registered';
+                    throw new \Exception;
+                }
+            }
+
+            else
+            {
+                $errors .= 'Oops, Event does not exist';
+                throw new \Exception;
+                
+            }
+        } 
+        catch (\Exception $e) {
+            $transaction->rollBack();
+            $errors .= $e->getMessage();
+            $results = [
+                'code' => 500,
+                'message' => $errors
+            ];
+        } 
+        catch (\Throwable $e) {
+            $transaction->rollBack();
+            $errors .= $e->getMessage();
+            $results = [
+                'code' => 500,
+                'message' => $errors
+            ];
+        }
+
+        echo json_encode($results);
+        die();
+    }
+
+    public function actionScan($id)
+    {
+        $model = Events::findOne($id);
+        
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        
+        $errors = '';
+        $results = [];
+        
+        try 
+        {
+            if(empty(Yii::$app->user) || empty(Yii::$app->user->identity))
+            {
+                $errors .= 'Please Login as student';
+                throw new \Exception;
+                
+            }
+
+            if(Yii::$app->user->identity->access_role != 'Mahasiswa')
+            {
+                $errors .= 'Only a student can be allowed to scan this event';
+                throw new \Exception;
+            }
+
+            $nim = Yii::$app->user->identity->nim;
+
+            $tahun_aktif = \app\models\SimakTahunakademik::getTahunAktif();
+            $mhs = \app\models\SimakMastermahasiswa::find()->where(['nim_mhs'=>$nim])->one();
+            if(!empty($model))
+            {
+                if($model->status != '1')
+                {
+                    $list_status = \app\helpers\MyHelper::getStatusEvent();
+                    $errors .= 'Oops, sorry, this event is '.$list_status[$model->status].'. You cannot register now';
+                    throw new \Exception;
+                }
+                
+                $keg = SimakKegiatanMahasiswa::find()->where([
+                    'nim' => $nim,
+                    'event_id' => $model->id
+                ])->one();
+
+                if(empty($keg))
+                {
+                    $keg = new SimakKegiatanMahasiswa;
+                    $keg->nim =  $nim;
+                    $keg->event_id = $model->id;
+                    $keg->tahun_akademik = $tahun_aktif->tahun_id;
+                    $keg->id_kegiatan = $model->kegiatan_id;
+                    $keg->id_jenis_kegiatan = $model->kegiatan->id_jenis_kegiatan;
+                    $keg->nilai = $model->kegiatan->nilai;
+                    $keg->semester = (string)$mhs->semester;
+                    $keg->waktu = $model->tanggal_mulai;
+                    $keg->instansi = $model->penyelenggara;
+                    $keg->tema = $model->nama;
+                    $keg->is_approved = 1;
+                    if($keg->save())
+                    {
+                        $results = [
+                            'code' => 200,
+                            'message' => 'Participant added'
+                        ];
+
+                        $transaction->commit();
+
+                    }
+
+                    else
+                    {
+                        $errors .= \app\helpers\MyHelper::logError($keg);
+                        throw new \Exception;
+                    }
+                }
+
+                else
+                {
+                    $errors .= 'This student has already been registered';
+                    throw new \Exception;
+                }
+            }
+
+            else
+            {
+                $errors .= 'Oops, Event does not exist';
+                throw new \Exception;
+                
+            }
+        } 
+        catch (\Exception $e) {
+            $transaction->rollBack();
+            $errors .= $e->getMessage();
+            $results = [
+                'code' => 500,
+                'message' => $errors
+            ];
+        } 
+        catch (\Throwable $e) {
+            $transaction->rollBack();
+            $errors .= $e->getMessage();
+            $results = [
+                'code' => 500,
+                'message' => $errors
+            ];
+        }
+
+        echo json_encode($results);
+        die();
+    }
+
+    public function actionRegister($id)
+    {   
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([])
+            ->data(\yii\helpers\Url::toRoute(['events/scan','id'=>$id],true))
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(300)
+            ->margin(10)
+            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+            // ->logoPath(__DIR__.'/assets/symfony.png')
+            ->labelText('Scan me to register')
+            ->labelFont(new NotoSans(20))
+            ->labelAlignment(new LabelAlignmentCenter())
+            ->build();
+        $model = $this->findModel($id);
+        return $this->render('register',[
+            'model' => $model,
+            'result' => $result
+        ]);
     }
 
     public function actionDownload()
