@@ -97,8 +97,8 @@ class EventsSearch extends Events
         if($daily == 'previous')
             $query->andWhere('tanggal_mulai < "'.$date_today.'"');
         else if($daily == 'today'){
-            $date_today = date('Y-m-d H:i:s');
-            $query->andWhere('"'.$date_today.'" BETWEEN tanggal_mulai AND tanggal_selesai');
+            $ed = date('Y-m-d 23:59:59');
+            $query->andWhere('tanggal_mulai BETWEEN "'.$date_today.'" AND "'.$ed.'"');
         }
         else if($daily =='upcoming'){
             $date_today = date('Y-m-d 00:00:00',strtotime('+1 days'));
