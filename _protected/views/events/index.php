@@ -1,26 +1,13 @@
 <?php
 
-use yii\helpers\Inflector;
-use yii\helpers\StringHelper;
-
-/* @var $this yii\web\View */
-/* @var $generator yii\gii\generators\crud\Generator */
-
-$urlParams = $generator->generateUrlParams();
-$nameAttribute = $generator->getNameAttribute();
-
-echo "<?php\n";
-?>
-
 use yii\helpers\Html;
-use <?= $generator->indexWidgetType === 'grid' ? "kartik\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
-<?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
-<?= !empty($generator->searchModelClass) ? "/* @var \$searchModel " . ltrim($generator->searchModelClass, '\\') . " */\n" : '' ?>
+/* @var $searchModel app\models\EventsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
+$this->title = 'Events';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -28,15 +15,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title"><?= "<?= " ?>Html::encode($this->title) ?></h3>
+                <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
             </div>
             <div class="panel-body ">
 
                 <p>
-                    <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success']) ?>
+                    <?= Html::a('Add an event', ['create'], ['class' => 'btn btn-success']) ?>
+                    or <?= Html::a('<i class="fa fa-download"></i> Download template events', ['download'], ['class' => 'btn btn-info']) ?>
                 </p>
-                <?= "<?php
-                \$gridColumns = [
+                <?php
+                $gridColumns = [
                 [
                     'class'=>'kartik\grid\SerialColumn',
                     'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -45,35 +33,35 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pageSummaryOptions' => ['colspan' => 6],
                     'header'=>'',
                     'headerOptions'=>['class'=>'kartik-sheet-style']
-                ],"
-                ?>
+                ],
+                [
+                'attribute' => 'kegiatan_id',
+                'value' => function($data){
 
-            <?php
-            $count = 0;
-            if (($tableSchema = $generator->getTableSchema()) === false) {
-                foreach ($generator->getColumnNames() as $name) {
-                    if (++$count < 6) {
-                        echo "            '" . $name . "',\n";
-                    } else {
-                        echo "            //'" . $name . "',\n";
-                    }
+                    return $data->kegiatan->nama_kegiatan;
                 }
-            } else {
-                foreach ($tableSchema->columns as $column) {
-                    $format = $generator->generateColumnFormat($column);
-                    if (++$count < 6) {
-                        echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-                    } else {
-                        echo "            //'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-                    }
+            ],
+            'nama',
+            'venue',
+            'tanggal_mulai',
+            'tanggal_selesai',
+            'penyelenggara',
+            'tingkat',
+            [
+                'attribute' => 'status',
+                'filter' => \app\helpers\MyHelper::getStatusEvent(),
+                'format' => 'raw',
+                'value' => function($data){
+                    $list = \app\helpers\MyHelper::getStatusEvent();
+                    $colors = \app\helpers\MyHelper::getStatusEventColor();
+                    return '<span class="label label-'.$colors[$data->status].'">'.$list[$data->status].'</span>';
                 }
-            }
-            ?>
-                <?php
-               echo "['class' => 'yii\grid\ActionColumn']\n"; 
-               echo  "];?>";
-               ?>
-                <?= "\n<?= " ?>GridView::widget([
+            ],
+            //'url:url',
+            //'priority',
+                ['class' => 'yii\grid\ActionColumn']
+];?>                
+<?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'columns' => $gridColumns,

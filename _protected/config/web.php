@@ -110,8 +110,11 @@ $config = [
             'enableAutoLogin' => true,
         ],
         'session' => [
-            'class' => 'app\components\SafeSession',
-            'savePath' => '@app/runtime/session'
+            'class' => 'yii\web\DbSession',
+            'cookieParams' => ['lifetime' => 7 * 24 *60 * 60],
+            'timeout' => 60 * 60 * 24 * 7, //session expire
+            'useCookies' => true,
+
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',

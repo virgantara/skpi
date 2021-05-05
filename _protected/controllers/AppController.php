@@ -1,10 +1,10 @@
 <?php
 namespace app\controllers;
 
-use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\httpclient\Client;
 use Yii;
 
 /**
@@ -13,6 +13,26 @@ use Yii;
  */
 class AppController extends Controller
 {
+    
+    public function refreshToken()
+    {
+
+        $api_baseurl = Yii::$app->params['invoke_token_uri'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $headers = ['x-jwt-token'=>$token];
+
+        $params = [];
+        $response = $client->get($api_baseurl, $params,$headers)->send();
+        if ($response->isOk) {
+            $res = $response->data;
+            if($res['code'] != '200')
+            {
+                $session->remove('token');
+                throw new \Exception;
+                
+            }
+        }
+    }
 
     public function beforeAction($action)
     {
@@ -29,27 +49,35 @@ class AppController extends Controller
                 $key = Yii::$app->params['jwt_key'];
                 $decoded = \Firebase\JWT\JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
 
-                // $api_baseurl = Yii::$app->params['invoke_token_uri'];
-                // $client = new \yii\httpclient\Client(['baseUrl' => $api_baseurl]);
-                // $headers = ['x-jwt-token'=>$token];
-
-                // $params = [];
-                // $response = $client->get($api_baseurl, $params,$headers)->send();
-                // if ($response->isOk) {
-                //     $res = $response->data;
-                //     if($res['code'] != '200')
-                //     {
-                //         $session->remove('token');
-                //         throw new \Exception;
-                        
-                //     }
-                // }
-
             }
 
             catch(\Exception $e) 
             {
-                return $this->redirect(Yii::$app->params['sso_login']);
+                // print_r($e);exit;
+                $session = Yii::$app->session;
+                
+                $api_baseurl = Yii::$app->params['invoke_token_uri'];
+                $client = new Client(['baseUrl' => $api_baseurl]);
+                $headers = ['x-jwt-token'=>$token];
+
+                $params = [
+                    'uuid' => Yii::$app->user->identity->uuid
+                ];
+                
+                $response = $client->get($api_baseurl, $params,$headers)->send();
+                if ($response->isOk) {
+                    $res = $response->data;
+
+                    if($res['code'] != '200')
+                    {
+                        return $this->redirect(Yii::$app->params['sso_login']);
+                    }
+
+                    else{
+                        $session->set('token',$res['token']);
+                    }
+                }
+                // 
             }
             
             if (!parent::beforeAction($action)) {
@@ -63,12 +91,14 @@ class AppController extends Controller
             return $this->redirect(Yii::$app->params['sso_login']);
         }
 
-        
 
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa' && Yii::$app->user->identity->is_accept_term == '0' && $action->id != 'update-profil')
+        {
+            if(!Yii::$app->request->isPost)
+                return $this->redirect(['simak-mastermahasiswa/update-profil']);
+        }
         // other custom code here
 
         return true; // or false to not run the action
     }
-    
-
 } // AppController

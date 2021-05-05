@@ -38,7 +38,9 @@
         "2amigos/yii2-chartjs-widget" : "~2.0",
         "kartik-v/yii2-date-range": "dev-master",
         "phpoffice/phpspreadsheet": "^1.10",
-        "firebase/php-jwt": "^5.2"
+        "firebase/php-jwt": "^5.2",
+        "devgroup/yii2-dropzone": "*",
+        "endroid/qr-code": "^4.1"
     
     },
     "require-dev": {

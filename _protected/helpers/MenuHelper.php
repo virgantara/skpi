@@ -41,6 +41,33 @@ class MenuHelper
 		            ],
 		        ]
 		    ];
+
+		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Events </span><i class="caret"></i>', 
+		         'url' => '#',
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Today\'s Event',  
+		                'url' => ['events/daily','daily'=>'today'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Upcoming Events',  
+		                'url' => ['events/daily','daily'=>'upcoming'],	             
+		                'visible' => Yii::$app->user->can('operatorCabang'),
+		            ],
+		            [
+		            	'label' => '<hr style="padding:0px;margin:0px">'
+		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Previous Events',  
+		                'url' => ['events/daily','daily'=>'previous'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'),
+		            ],
+		        ]
+		    ];
 	    }
 
 
@@ -227,6 +254,26 @@ class MenuHelper
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	        'items'=>[
+
+	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Event <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['events/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin'),
+	                        'url' => ['events/create']]
+	                ],
+	            ],
+	            [
+	            	'label' => '<hr style="padding:0px;margin:0px">'
+	            ],
+
 	     		 [
 	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Kategori Pelanggaran <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
