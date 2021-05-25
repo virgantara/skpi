@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $country = !empty($_GET['countries']) ? $_GET['countries'] : '';
 $states = !empty($_GET['states']) ? $_GET['states'] : '';
 
-$model->konsulat = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['konsulat'] : '';
+$model->konsulat = !empty($_GET['SimakMastermahasiswa']['konsulat']) ? $_GET['SimakMastermahasiswa']['konsulat'] : '';
 ?>
 
 <h1><?=$this->title;?></h1>
@@ -329,7 +329,7 @@ function getCities(sid){
 	});
 
 	setTimeout(function(){
-		$("#kode_prodi").val('.$params['kode_prodi'].');
+		$("#kode_prodi").val("'.(!empty($params['kode_prodi']) ? $params['kode_prodi'] : '-').'");
 	},500);
 
 	setInterval(function(){

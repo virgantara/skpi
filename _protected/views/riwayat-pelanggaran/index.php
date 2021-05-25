@@ -98,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'value'=>function($model,$url){
             $val = ["0"=>"WAITING","1"=>"ON-PROCESS","2"=>"CLOSED"];
             $st = '';
-            $label = $val[$model->status_kasus];
+            $label = !empty($val[$model->status_kasus]) ? $val[$model->status_kasus] : '-';
             if($model->status_kasus == '2')
                 $st = 'success arrowed-in arrowed-in-right';
             else if($model->status_kasus == '1')

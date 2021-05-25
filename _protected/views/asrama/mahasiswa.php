@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $model->kampus = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kampus'] : '';
 $model->kode_fakultas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_fakultas'] : '';
 
-$model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_prodi'] : '';
+$model->kode_prodi = !empty($_GET['SimakMastermahasiswa']['kode_prodi']) ? $_GET['SimakMastermahasiswa']['kode_prodi'] : '';
 
 $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['status_aktivitas'] : '';
 ?>
@@ -150,7 +150,7 @@ $this->registerJs('
 	$("#fakultas_id").trigger("change");
 
 	setTimeout(function(){
-		$("#kode_prodi").val('.$params['kode_prodi'].');
+		$("#kode_prodi").val("'.(!empty($params['kode_prodi']) ? $params['kode_prodi'] : '-').'");
 	},100)
 	
     ', \yii\web\View::POS_READY);

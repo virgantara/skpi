@@ -10,7 +10,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $model->kampus = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kampus'] : '';
 $model->kode_fakultas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_fakultas'] : '';
 
-$model->kode_prodi = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['kode_prodi'] : '';
+$model->kode_prodi = !empty($_GET['SimakMastermahasiswa']['kode_prodi']) ? $_GET['SimakMastermahasiswa']['kode_prodi'] : '';
 
 $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['status_aktivitas'] : '';
 
@@ -118,9 +118,9 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 							<td><?=$m->nama_mahasiswa;?></td>
 							<td><?=$m->jenis_kelamin;?></td>
 							<td><?=$m->semester;?></td>
-							<td><?=$m->konsulat0->name;?> - <?=$m->konsulat0->state->name;?> - <?=$m->konsulat0->country->name;?></td>
+							<td><?=!empty($m->konsulat0) ? $m->konsulat0->name : 'konsulat name not set';?> - <?=!empty($m->konsulat0) ? $m->konsulat0->state->name : 'provinsi not set';?> - <?=!empty($m->konsulat0) ? $m->konsulat0->country->name : 'country name not set';?></td>
 							<td>
-								<span class="datakamar"><?=$m->kamar->namaAsrama.' - '.$m->kamar->nama;?></span>
+								<span class="datakamar"><?=(!empty($m->kamar) ? $m->kamar->namaAsrama.' - '.$m->kamar->nama : '-');?></span>
 							</td>
 							<td>
 								<div class="form-group">
@@ -276,7 +276,7 @@ getListAsrama($("#kampus").val())
 	$("#fakultas_id").trigger("change");
 
 	setTimeout(function(){
-		$("#kode_prodi").val('.$params['kode_prodi'].');
+		$("#kode_prodi").val("'.(!empty($params['kode_prodi'])? $params['kode_prodi'] : '-').'");
 	},500);
 
 ', \yii\web\View::POS_READY);
