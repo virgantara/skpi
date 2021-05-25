@@ -38,7 +38,7 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['organisasi_id', 'pembimbing_id'], 'integer'],
+            [['organisasi_id', 'pembimbing_id','tahun_akademik'], 'integer'],
             [['tanggal_mulai', 'tanggal_selesai', 'tanggal_sk', 'created_at', 'updated_at'], 'safe'],
             [['no_sk'], 'string', 'max' => 255],
             [['organisasi_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organisasi::className(), 'targetAttribute' => ['organisasi_id' => 'id']],
@@ -53,6 +53,7 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'tahun_akademik' => 'Tahun Akademik',
             'organisasi_id' => 'Organisasi',
             'pembimbing_id' => 'Pembimbing',
             'tanggal_mulai' => 'Tanggal Mulai',
@@ -64,6 +65,7 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
         ];
     }
 
+  
     /**
      * Gets query for [[OrganisasiAnggotas]].
      *

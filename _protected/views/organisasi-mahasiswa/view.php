@@ -39,7 +39,7 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            
+            'tahun_akademik',
             [
                 'attribute' => 'organisasi_id',
                 'value' => function($data){
@@ -115,7 +115,7 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
                 'label' => 'Jabatan',
                 'format' => 'raw',
                 'value'=>function($model,$url){
-                    return $model->jabatan->nama;
+                    return $model->jabatan->nama_kegiatan;
                     
                 },
             ],
@@ -211,11 +211,18 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Jabatan</label>
+            <label class="col-sm-3 control-label" for="inputPatient">Jenis Kegiatan:</label>
             <div class="col-sm-9">
-                <?=Html::dropDownList('jabatan','',$listJabatan,['id'=>'jabatan_id','class'=>'form-control']);?>
+                <?=Html::dropDownList('id_jenis_kegiatan','',ArrayHelper::map(\app\models\SimakJenisKegiatan::find()->all(),'id','nama_jenis_kegiatan'),['id'=>'id_jenis_kegiatan','class'=>'form-control','prompt'=>'-Pilih Jenis Kegiatan-']);?>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="inputPatient">Kegiatan:</label>
+            <div class="col-sm-9">
+                <?=Html::dropDownList('jabatan_id','',[],['id'=>'jabatan_id','class'=>'form-control','prompt'=>'-Pilih Jabatan-']);?>
+            </div>
+        </div>
+        
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right">Peran</label>
             <div class="col-sm-9">
@@ -254,6 +261,43 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
 
  <?php 
 $script = "
+
+$(\"#id_jenis_kegiatan\").change(function(){
+    getListKegiatan($(this).val(),$('#jabatan_id'));
+});
+
+
+getListKegiatan($(\"#id_jenis_kegiatan\").val(),$('#jabatan_id'));
+
+
+function getListKegiatan(jenis_kegiatan, kegiatan_selector){
+    var obj = new Object;
+    obj.id = jenis_kegiatan;
+  
+    $.ajax({
+       url: '".Url::to(['simak-kegiatan/ajax-list-kegiatan'])."',
+       data: {
+        dataPost : obj
+       },
+       type: \"POST\",
+       async: true,
+       success: function(json) {
+            var res = $.parseJSON(json)
+            var row = '';
+            kegiatan_selector.empty();
+            $.each(res, function(i, obj){
+              row += '<option  value=\"'+obj.id+'\">'+obj.name+'</option>';
+            });
+
+            kegiatan_selector.append(row);
+       }
+    });
+  
+
+
+  
+}
+
     $('#btn-tambah').on('click', function (e) {
         e.preventDefault();
         $('#modal').modal('show');
