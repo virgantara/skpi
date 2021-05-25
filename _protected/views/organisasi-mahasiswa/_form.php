@@ -1,5 +1,5 @@
 <?php
-
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
@@ -17,6 +17,15 @@ $listDosen = \app\models\SimakMasterdosen::find()->all();
 <div class="organisasi-mahasiswa-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    
+     <?= $form->field($model, 'tahun_akademik')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\app\models\SimakTahunakademik::getList(),'tahun_id','nama_tahun'),
+
+            'options'=>['id'=>'tahun_akademik','placeholder'=>Yii::t('app','- Pilih Tahun Akademik -')],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
      <?= $form->field($model, 'organisasi_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map($listOrganisasi,'id','nama'),
 
@@ -33,6 +42,7 @@ $listDosen = \app\models\SimakMasterdosen::find()->all();
                 'allowClear' => true,
             ],
         ]) ?>
+
      <?= $form->field($model, 'tanggal_mulai')->widget(DatePicker::className(),[
         // 'readonly' => true,
         'pluginOptions' => [
@@ -72,3 +82,10 @@ $listDosen = \app\models\SimakMasterdosen::find()->all();
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+<?php
+
+$this->registerJs("
+    
+", \yii\web\View::POS_READY);

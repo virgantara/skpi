@@ -16,6 +16,10 @@ use app\helpers\MyHelper;
 use yii\httpclient\Client;
 
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Protection;
+/**
 /**
  * PenjualanController implements the CRUD actions for Penjualan model.
  */
@@ -192,31 +196,23 @@ class LaporanController extends Controller
                 $query->where(['between','tanggal',$tanggal_awal,$tanggal_akhir]);
                 $results = $query->all();
             }
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
-
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
-                        ->setCellValue('A1', 'No')
-                        ->setCellValue('B1', 'Tgl')
-                        ->setCellValue('C1', 'NIM')
-                        ->setCellValue('D1', 'Nama')
-                        ->setCellValue('E1', 'Semester')
-                        ->setCellValue('F1', 'Asrama-Kamar')
-                        ->setCellValue('G1', 'Kelas')
-                        ->setCellValue('H1', 'Prodi')
-                        ->setCellValue('I1', 'Kategori')
-                        ->setCellValue('J1', 'Pelanggaran')
-                        ->setCellValue('K1', 'Hukuman')
-                        ->setCellValue('L1', 'Status Mhs');
+            $sheet
+                ->setCellValue('A1', 'No')
+                ->setCellValue('B1', 'Tgl')
+                ->setCellValue('C1', 'NIM')
+                ->setCellValue('D1', 'Nama')
+                ->setCellValue('E1', 'Semester')
+                ->setCellValue('F1', 'Asrama-Kamar')
+                ->setCellValue('G1', 'Kelas')
+                ->setCellValue('H1', 'Prodi')
+                ->setCellValue('I1', 'Kategori')
+                ->setCellValue('J1', 'Pelanggaran')
+                ->setCellValue('K1', 'Hukuman')
+                ->setCellValue('L1', 'Status Mhs');
 
             //Put each record in a new cell
 
@@ -230,20 +226,20 @@ class LaporanController extends Controller
                     $skuy .= $h->hukuman->nama.', ';
                 }
 
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, date('d/m/Y',strtotime($row->tanggal)));
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row->nim0->nim_mhs);
-                $objPHPExcel->getActiveSheet()->setCellValue('D'.$ii, $row->nim0->nama_mahasiswa);
-                $objPHPExcel->getActiveSheet()->setCellValue('E'.$ii, $row->nim0->semester);
-                $objPHPExcel->getActiveSheet()->setCellValue('F'.$ii, $row->nim0->kamar->asrama->nama.' - '.$row->nim0->kamar->nama);
-                $objPHPExcel->getActiveSheet()->setCellValue('G'.$ii, $row->nim0->kampus0->nama_kampus);
-                $objPHPExcel->getActiveSheet()->setCellValue('H'.$ii, $row->nim0->kodeProdi->singkatan);
-                $objPHPExcel->getActiveSheet()->setCellValue('I'.$ii, $row->pelanggaran->kategori->nama);
+                $sheet->setCellValue('A'.$ii, $i);
+                $sheet->setCellValue('B'.$ii, date('d/m/Y',strtotime($row->tanggal)));
+                $sheet->setCellValue('C'.$ii, $row->nim0->nim_mhs);
+                $sheet->setCellValue('D'.$ii, $row->nim0->nama_mahasiswa);
+                $sheet->setCellValue('E'.$ii, $row->nim0->semester);
+                $sheet->setCellValue('F'.$ii, $row->nim0->kamar->asrama->nama.' - '.$row->nim0->kamar->nama);
+                $sheet->setCellValue('G'.$ii, $row->nim0->kampus0->nama_kampus);
+                $sheet->setCellValue('H'.$ii, $row->nim0->kodeProdi->singkatan);
+                $sheet->setCellValue('I'.$ii, $row->pelanggaran->kategori->nama);
                
-                $objPHPExcel->getActiveSheet()->setCellValue('J'.$ii, $row->pelanggaran->nama);
-                $objPHPExcel->getActiveSheet()->setCellValue('K'.$ii, $skuy);
-                $objPHPExcel->getActiveSheet()->setCellValue('L'.$ii, $row->nim0->status_aktivitas);
-                // $objPHPExcel->getActiveSheet()->setCellValue('H'.$ii, $row->subtotal);
+                $sheet->setCellValue('J'.$ii, $row->pelanggaran->nama);
+                $sheet->setCellValue('K'.$ii, $skuy);
+                $sheet->setCellValue('L'.$ii, $row->nim0->status_aktivitas);
+                // $sheet->setCellValue('H'.$ii, $row->subtotal);
                 $i++;
                 $ii++;
                 
@@ -252,18 +248,18 @@ class LaporanController extends Controller
             }       
 
             foreach(range('A','L') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Rincian Pelanggaran');
+            $sheet->setTitle('Rincian Pelanggaran');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="Rincian_Pelanggaran.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit();           
 
         }
@@ -323,19 +319,13 @@ class LaporanController extends Controller
                 
                 $results = $query->all();
             }
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+                
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
+            $sheet
                         ->setCellValue('A1', 'No')
                         ->setCellValue('B1', 'Tgl')
                         ->setCellValue('C1', 'NIM')
@@ -361,20 +351,20 @@ class LaporanController extends Controller
                     $skuy .= $h->hukuman->nama.', ';
                 }
 
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, date('d/m/Y',strtotime($row->tanggal)));
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row->nim0->nim_mhs);
-                $objPHPExcel->getActiveSheet()->setCellValue('D'.$ii, $row->nim0->nama_mahasiswa);
-                $objPHPExcel->getActiveSheet()->setCellValue('E'.$ii, $row->nim0->semester);
-                $objPHPExcel->getActiveSheet()->setCellValue('F'.$ii, $row->nim0->kamar->asrama->nama.' - '.$row->nim0->kamar->nama);
-                $objPHPExcel->getActiveSheet()->setCellValue('G'.$ii, $row->nim0->kampus0->nama_kampus);
-                $objPHPExcel->getActiveSheet()->setCellValue('H'.$ii, $row->nim0->kodeProdi->singkatan);
-                $objPHPExcel->getActiveSheet()->setCellValue('I'.$ii, $row->pelanggaran->kategori->nama);
+                $sheet->setCellValue('A'.$ii, $i);
+                $sheet->setCellValue('B'.$ii, date('d/m/Y',strtotime($row->tanggal)));
+                $sheet->setCellValue('C'.$ii, $row->nim0->nim_mhs);
+                $sheet->setCellValue('D'.$ii, $row->nim0->nama_mahasiswa);
+                $sheet->setCellValue('E'.$ii, $row->nim0->semester);
+                $sheet->setCellValue('F'.$ii, $row->nim0->kamar->asrama->nama.' - '.$row->nim0->kamar->nama);
+                $sheet->setCellValue('G'.$ii, $row->nim0->kampus0->nama_kampus);
+                $sheet->setCellValue('H'.$ii, $row->nim0->kodeProdi->singkatan);
+                $sheet->setCellValue('I'.$ii, $row->pelanggaran->kategori->nama);
                
-                $objPHPExcel->getActiveSheet()->setCellValue('J'.$ii, $row->pelanggaran->nama);
-                $objPHPExcel->getActiveSheet()->setCellValue('K'.$ii, $skuy);
-                $objPHPExcel->getActiveSheet()->setCellValue('L'.$ii, $row->nim0->status_aktivitas);
-                // $objPHPExcel->getActiveSheet()->setCellValue('H'.$ii, $row->subtotal);
+                $sheet->setCellValue('J'.$ii, $row->pelanggaran->nama);
+                $sheet->setCellValue('K'.$ii, $skuy);
+                $sheet->setCellValue('L'.$ii, $row->nim0->status_aktivitas);
+                // $sheet->setCellValue('H'.$ii, $row->subtotal);
                 $i++;
                 $ii++;
                 
@@ -383,18 +373,18 @@ class LaporanController extends Controller
             }       
 
             foreach(range('A','L') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Rincian Pelanggaran');
+            $sheet->setTitle('Rincian Pelanggaran');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="Rincian_Pelanggaran.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit();           
 
         }
@@ -498,19 +488,11 @@ class LaporanController extends Controller
                 }          
 
             }
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
-
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
+            $sheet
                         ->setCellValue('A1', 'No')
                         ->setCellValue('B1', 'Semester')
                         ->setCellValue('C1', 'Total');
@@ -522,26 +504,26 @@ class LaporanController extends Controller
             
             foreach($results as $row)
             {
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['smt']);
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $sheet->setCellValue('A'.$ii, $i);
+                $sheet->setCellValue('B'.$ii, $row['smt']);
+                $sheet->setCellValue('C'.$ii, $row['total']);
                 $i++;
                 $ii++;              
             }       
 
             foreach(range('A','C') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Pelanggaran Per Semester');
+            $sheet->setTitle('Pelanggaran Per Semester');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="Rincian_Pelanggaran_Per_Semester.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit();
         }
 
@@ -597,19 +579,11 @@ class LaporanController extends Controller
                 ->all();
                 
             }
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
-
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
+            $sheet
                         ->setCellValue('A1', 'No')
                         ->setCellValue('B1', 'Kategori')
                         ->setCellValue('C1', 'Total');
@@ -622,27 +596,27 @@ class LaporanController extends Controller
             foreach($results as $row)
             {
 
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['nama']);
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $sheet->setCellValue('A'.$ii, $i);
+                $sheet->setCellValue('B'.$ii, $row['nama']);
+                $sheet->setCellValue('C'.$ii, $row['total']);
                 $i++;
                 $ii++;
                   
             }       
 
             foreach(range('A','C') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Rekap Pelanggaran Per Kategori');
+            $sheet->setTitle('Rekap Pelanggaran Per Kategori');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="Rekap_Pelanggaran_PerKategori.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit();           
 
         }
@@ -699,19 +673,11 @@ class LaporanController extends Controller
                 ->all();
                 
             }
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
-
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
+            $sheet
                         ->setCellValue('A1', 'No')
                         ->setCellValue('B1', 'Asrama')
                         ->setCellValue('C1', 'Total');
@@ -724,27 +690,27 @@ class LaporanController extends Controller
             foreach($results as $row)
             {
 
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['nama']);
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $sheet->setCellValue('A'.$ii, $i);
+                $sheet->setCellValue('B'.$ii, $row['nama']);
+                $sheet->setCellValue('C'.$ii, $row['total']);
                 $i++;
                 $ii++;
                   
             }       
 
             foreach(range('A','C') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Rekap Pelanggaran Per Asrama');
+            $sheet->setTitle('Rekap Pelanggaran Per Asrama');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="Rekap_Pelanggaran_PerAsrama.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit();           
 
         }
@@ -782,19 +748,11 @@ class LaporanController extends Controller
                 ->groupBy('a.nama')
                 ->all();
                 
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
-
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
+            $sheet
                         ->setCellValue('A1', 'No')
                         ->setCellValue('B1', 'Asrama')
                         ->setCellValue('C1', 'Total');
@@ -807,27 +765,27 @@ class LaporanController extends Controller
             foreach($results as $row)
             {
 
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['nama']);
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $sheet->setCellValue('A'.$ii, $i);
+                $sheet->setCellValue('B'.$ii, $row['nama']);
+                $sheet->setCellValue('C'.$ii, $row['total']);
                 $i++;
                 $ii++;
                   
             }       
 
             foreach(range('A','C') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Rekap Penghuni Per Asrama');
+            $sheet->setTitle('Rekap Penghuni Per Asrama');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="Rekap_Penghuni_PerAsrama.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit();           
 
         }
@@ -927,19 +885,11 @@ class LaporanController extends Controller
                 }
                 
             }
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
-
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
+            $sheet
                         ->setCellValue('A1', 'No')
                         ->setCellValue('B1', 'Fakultas')
                         ->setCellValue('C1', 'Total');
@@ -952,9 +902,9 @@ class LaporanController extends Controller
             foreach($results as $row)
             {
 
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row['nama']);
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row['total']);
+                $sheet->setCellValue('A'.$ii, $i);
+                $sheet->setCellValue('B'.$ii, $row['nama']);
+                $sheet->setCellValue('C'.$ii, $row['total']);
                 $i++;
                 $ii++;
                 
@@ -963,18 +913,18 @@ class LaporanController extends Controller
             }       
 
             foreach(range('A','C') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Rekap Pelanggaran Per Fakultas');
+            $sheet->setTitle('Rekap Pelanggaran Per Fakultas');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="Rekap_Pelanggaran_PerFakultas.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit();           
 
         }
@@ -1057,19 +1007,11 @@ class LaporanController extends Controller
 
             }
 
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
-
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
+            $sheet
                         ->setCellValue('A1', 'No')
                         ->setCellValue('B1', 'Kategori')
                         ->setCellValue('C1', 'Prodi')
@@ -1088,10 +1030,10 @@ class LaporanController extends Controller
                 {
 
                     $v = $row['items'][$j];
-                    $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                    $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $j==0?$row['kategori_nama']:'');
-                    $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $v['singkatan']);
-                    $objPHPExcel->getActiveSheet()->setCellValue('D'.$ii, $v['total']);
+                    $sheet->setCellValue('A'.$ii, $i);
+                    $sheet->setCellValue('B'.$ii, $j==0?$row['kategori_nama']:'');
+                    $sheet->setCellValue('C'.$ii, $v['singkatan']);
+                    $sheet->setCellValue('D'.$ii, $v['total']);
                     $i++;
                     $ii++;      
                 }
@@ -1102,18 +1044,18 @@ class LaporanController extends Controller
             }       
 
             foreach(range('A','D') as $columnID) {
-                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
             }
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Pelanggaran Per Prodi');
+            $sheet->setTitle('Pelanggaran Per Prodi');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="Rincian_Pelanggaran_Per_Prodi.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit();
         
         }
@@ -1262,19 +1204,11 @@ class LaporanController extends Controller
                 
             }
             
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-            $objPHPExcel = new \PHPExcel();
-
-            //prepare the records to be added on the excel file in an array
-           
-            // Set document properties
-            // $objPHPExcel->getProperties()->setCreator("Me")->setLastModifiedBy("Me")->setTitle("My Excel Sheet")->setSubject("My Excel Sheet")->setDescription("Excel Sheet")->setKeywords("Excel Sheet")->setCategory("Me");
-
-            // Set active sheet index to the first sheet, so Excel opens this as the first sheet
-            $objPHPExcel->setActiveSheetIndex(0);
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
             // Add column headers
-            $objPHPExcel->getActiveSheet()
+            $sheet
                         ->setCellValue('A1', 'No')
                         ->setCellValue('B1', 'Tgl')
                         ->setCellValue('C1', 'Kode')
@@ -1296,15 +1230,15 @@ class LaporanController extends Controller
                   $laba = ($row->stok->barang->harga_jual - $row->stok->barang->harga_beli) * $row->qty;
                 $total += $laba;
                 
-                $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, date('d/m/Y',strtotime($row->penjualan->tanggal)));
-                $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row->stok->barang->kode_barang);
-                $objPHPExcel->getActiveSheet()->setCellValue('D'.$ii, $row->stok->barang->nama_barang);
-                $objPHPExcel->getActiveSheet()->setCellValue('E'.$ii, $row->qty);
-                $objPHPExcel->getActiveSheet()->setCellValue('F'.$ii, $row->stok->barang->harga_beli);
-                $objPHPExcel->getActiveSheet()->setCellValue('G'.$ii, $row->stok->barang->harga_jual);
-                $objPHPExcel->getActiveSheet()->setCellValue('H'.$ii, $laba);
-                // $objPHPExcel->getActiveSheet()->setCellValue('H'.$ii, $row->subtotal);
+                $sheet->setCellValue('A'.$ii, $i);
+                $sheet->setCellValue('B'.$ii, date('d/m/Y',strtotime($row->penjualan->tanggal)));
+                $sheet->setCellValue('C'.$ii, $row->stok->barang->kode_barang);
+                $sheet->setCellValue('D'.$ii, $row->stok->barang->nama_barang);
+                $sheet->setCellValue('E'.$ii, $row->qty);
+                $sheet->setCellValue('F'.$ii, $row->stok->barang->harga_beli);
+                $sheet->setCellValue('G'.$ii, $row->stok->barang->harga_jual);
+                $sheet->setCellValue('H'.$ii, $laba);
+                // $sheet->setCellValue('H'.$ii, $row->subtotal);
                 $i++;
                 $ii = $i+2;
                 
@@ -1313,13 +1247,13 @@ class LaporanController extends Controller
             }       
 
             // Set worksheet title
-            $objPHPExcel->getActiveSheet()->setTitle('Laporan Penjualan');
+            $sheet->setTitle('Laporan Penjualan');
             
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             header('Content-Disposition: attachment;filename="laporan_penjualan.xlsx"');
             header('Cache-Control: max-age=0');
-            $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-            $objWriter->save('php://output');
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
             exit;
         }
 
@@ -1338,84 +1272,5 @@ class LaporanController extends Controller
         
     }
 
-    /**
-     * Displays a single Penjualan model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Penjualan model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Penjualan();
-        
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing Penjualan model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing Penjualan model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Penjualan model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Penjualan the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Penjualan::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+    
 }

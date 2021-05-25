@@ -193,4 +193,11 @@ class SimakTahunakademik extends \yii\db\ActiveRecord
 
         return !empty($model) ? $model : null;
     }
+
+    public static function getList()
+    {
+        $model = SimakTahunakademik::find()->orderBy(['tahun_id'=>SORT_DESC])->all();
+
+        return $model;
+    }    
 }

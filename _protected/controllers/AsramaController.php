@@ -17,6 +17,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Protection;
 /**
  * AsramaController implements the CRUD actions for Asrama model.
  */
@@ -112,7 +115,7 @@ class AsramaController extends Controller
                 $params = $_GET['SimakMastermahasiswa'];
                 $results = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
-                    'kode_prodi' => $params['kode_prodi'],
+                    'kode_prodi' => !empty($params['kode_prodi']) ? $params['kode_prodi'] : '-',
                     'kode_fakultas' => $params['kode_fakultas'],
                     'status_aktivitas' => $params['status_aktivitas'],
                 ])->all();          
@@ -211,8 +214,8 @@ class AsramaController extends Controller
             // print_r($_POST);
             $parents = $_POST['depdrop_all_params'];
             if ($parents != null) {
-                $cat_id = $parents['fakultas_id'];
-                $selected_id = $parents['selected_id'];
+                $cat_id = !empty($parents['fakultas_id']) ? $parents['fakultas_id']: '-';
+                $selected_id = !empty($parents['selected_id']) ? $parents['selected_id'] : '-';
                 $out = self::getProdiList($cat_id); 
                 // the getSubCatList function will query the database based on the
                 // cat_id and return an array like below:
@@ -293,7 +296,7 @@ class AsramaController extends Controller
                 $params = $_GET['SimakMastermahasiswa'];
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
-                    'kode_prodi' => $params['kode_prodi'],
+                    'kode_prodi' => !empty($params['kode_prodi']) ?$params['kode_prodi'] : '-',
                     
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
@@ -331,7 +334,7 @@ class AsramaController extends Controller
                 $params = $_GET['SimakMastermahasiswa'];
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
-                    'kode_prodi' => $params['kode_prodi'],
+                    'kode_prodi' => !empty($params['kode_prodi']) ? $params['kode_prodi'] : '-',
                     // 'kode_fakultas' => $params['kode_fakultas'],
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
@@ -353,7 +356,7 @@ class AsramaController extends Controller
                 $params = $_GET['SimakMastermahasiswa'];
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
-                    'kode_prodi' => $params['kode_prodi'],
+                    'kode_prodi' => !empty($params['kode_prodi']) ? $params['kode_prodi'] : '-',
                     // 'kode_fakultas' => $params['kode_fakultas'],
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
@@ -367,12 +370,10 @@ class AsramaController extends Controller
                 $results = $query->all();
     
 
-                $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-                $objPHPExcel = new \PHPExcel();
+                $spreadsheet = new Spreadsheet();
+                $sheet = $spreadsheet->getActiveSheet();
 
-                $objPHPExcel->setActiveSheetIndex(0);
-
-                $objPHPExcel->getActiveSheet()
+                $sheet
                 ->setCellValue('A1', 'No')
                 ->setCellValue('B1', 'NIM')
                 ->setCellValue('C1', 'Nama Mahasiswa')
@@ -386,30 +387,30 @@ class AsramaController extends Controller
 
                 foreach($results as $row)
                 {
-                    $objPHPExcel->getActiveSheet()->setCellValue('A'.$ii, $i);
-                    $objPHPExcel->getActiveSheet()->setCellValue('B'.$ii, $row->nim_mhs);
-                    $objPHPExcel->getActiveSheet()->setCellValue('C'.$ii, $row->nama_mahasiswa);
-                    $objPHPExcel->getActiveSheet()->setCellValue('D'.$ii, $row->jenis_kelamin);
-                    $objPHPExcel->getActiveSheet()->setCellValue('E'.$ii, $row->semester);
-                    $objPHPExcel->getActiveSheet()->setCellValue('F'.$ii, $row->kamar->namaAsrama);
-                    $objPHPExcel->getActiveSheet()->setCellValue('G'.$ii, $row->kamar->nama);
+                    $sheet->setCellValue('A'.$ii, $i);
+                    $sheet->setCellValue('B'.$ii, $row->nim_mhs);
+                    $sheet->setCellValue('C'.$ii, $row->nama_mahasiswa);
+                    $sheet->setCellValue('D'.$ii, $row->jenis_kelamin);
+                    $sheet->setCellValue('E'.$ii, $row->semester);
+                    $sheet->setCellValue('F'.$ii, !empty($row->kamar) ? $row->kamar->namaAsrama : 'not set');
+                    $sheet->setCellValue('G'.$ii, !empty($row->kamar) ? $row->kamar->nama : 'not set');
 
                     $i++;
                     $ii++;
                 }       
 
                 foreach(range('A','G') as $columnID) {
-                    $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                    $sheet->getColumnDimension($columnID)
                     ->setAutoSize(true);
                 }
 
-                $objPHPExcel->getActiveSheet()->setTitle('Rincian Penghuni Kamar');
+                $sheet->setTitle('Rincian Penghuni Kamar');
 
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                 header('Content-Disposition: attachment;filename="Rincian_Penghuni_Kamar.xlsx"');              
                 header('Cache-Control: max-age=0');
-                $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
-                $objWriter->save('php://output');   
+                $writer = new Xlsx($spreadsheet);
+                $writer->save('php://output');
                 die();   
             }
 

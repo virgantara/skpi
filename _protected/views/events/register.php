@@ -283,7 +283,8 @@ $(document).on("click","#btn-register",function(e){
         title: "Write NIM here, then press Enter or click OK", 
         centerVertical: true,
         callback: function(result){ 
-            register(result, "'.$model->id.'") 
+            if(result)
+                register(result, "'.$model->id.'") 
         }
     }).find(".modal-content").css({
         "margin-top": function (){

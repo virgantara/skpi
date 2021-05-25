@@ -18,7 +18,7 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
     {
         return [
             [['id', 'organisasi_id'], 'integer'],
-            [['tanggal_mulai', 'tanggal_selesai', 'no_sk', 'tanggal_sk', 'created_at', 'updated_at'], 'safe'],
+            [['tanggal_mulai', 'tanggal_selesai', 'no_sk', 'tanggal_sk', 'created_at', 'updated_at','pembimbing_id','tahun_akademik'], 'safe'],
         ];
     }
 
@@ -60,6 +60,8 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
         $query->andFilterWhere([
             'id' => $this->id,
             'organisasi_id' => $this->organisasi_id,
+            'tahun_akademik' => $this->tahun_akademik,
+            'pembimbing_id' => $this->pembimbing_id,
             'tanggal_mulai' => $this->tanggal_mulai,
             'tanggal_selesai' => $this->tanggal_selesai,
             'tanggal_sk' => $this->tanggal_sk,
@@ -71,4 +73,6 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
 
         return $dataProvider;
     }
+
+
 }

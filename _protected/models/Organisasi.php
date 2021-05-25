@@ -58,4 +58,9 @@ class Organisasi extends \yii\db\ActiveRecord
     {
         return $this->hasMany(OrganisasiMahasiswa::className(), ['organisasi_id' => 'id']);
     }
+
+    public static function getList()
+    {
+        return Organisasi::find()->all();
+    }
 }

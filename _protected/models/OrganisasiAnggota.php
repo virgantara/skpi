@@ -41,7 +41,7 @@ class OrganisasiAnggota extends \yii\db\ActiveRecord
             [['nim'], 'string', 'max' => 25],
             [['nim', 'organisasi_id'], 'unique', 'targetAttribute' => ['nim', 'organisasi_id']],
             [['organisasi_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrganisasiMahasiswa::className(), 'targetAttribute' => ['organisasi_id' => 'id']],
-            [['jabatan_id'], 'exist', 'skipOnError' => true, 'targetClass' => OrganisasiJabatan::className(), 'targetAttribute' => ['jabatan_id' => 'id']],
+            [['jabatan_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKegiatan::className(), 'targetAttribute' => ['jabatan_id' => 'id']],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::className(), 'targetAttribute' => ['nim' => 'nim_mhs']],
         ];
     }
@@ -105,7 +105,7 @@ class OrganisasiAnggota extends \yii\db\ActiveRecord
      */
     public function getJabatan()
     {
-        return $this->hasOne(OrganisasiJabatan::className(), ['id' => 'jabatan_id']);
+        return $this->hasOne(SimakKegiatan::className(), ['id' => 'jabatan_id']);
     }
 
     /**

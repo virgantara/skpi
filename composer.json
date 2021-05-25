@@ -28,7 +28,6 @@
         "insolita/yii2-migration-generator": "~2.3",
         "yiisoft/yii2-jui": "^2.0",
         "kartik-v/yii2-widget-typeahead": "*",
-        "hscstudio/yii2-export": "*",
         "kartik-v/yii2-widget-fileinput": "dev-master",
         "keygenqt/yii2-autocomplete-ajax": "@dev",
         "kartik-v/yii2-mpdf": "dev-master",
@@ -40,7 +39,8 @@
         "phpoffice/phpspreadsheet": "^1.10",
         "firebase/php-jwt": "^5.2",
         "devgroup/yii2-dropzone": "*",
-        "endroid/qr-code": "^4.1"
+        "endroid/qr-code": "^4.1",
+        "kartik-v/yii2-editable": "dev-master"
     
     },
     "require-dev": {

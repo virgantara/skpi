@@ -127,6 +127,10 @@ $model->tanggal_akhir = !empty($_POST['IzinMahasiswa']['tanggal_akhir']) ? $_POS
                 <?php 
 
                 $i = 0;
+
+                if(!empty($resultsSemua))
+                {
+
                 foreach($list_prodi as $q=> $item)
                 {
                     $i++;
@@ -141,9 +145,12 @@ $model->tanggal_akhir = !empty($_POST['IzinMahasiswa']['tanggal_akhir']) ? $_POS
                        $tmpAll = 0;$tmp = 0;$tmpBlm = 0;
                        for($j = 1;$j<=10;$j++)
                        {
-                            $tmpAll += $resultsSemua[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j];
-                            $tmp += $results[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j];
-                            $tmpBlm += $resultsBelumPulang[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j];
+                            // print_r($resultsSemua[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j]);exit;
+                            $valAll = !empty($resultsSemua[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j]) ? $resultsSemua[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j] : 0;
+
+                            $tmpAll += $valAll;
+                            $tmp += !empty($results[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j]) ? $results[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j] : 0;
+                            $tmpBlm += !empty($resultsBelumPulang[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j]) ? $resultsBelumPulang[$item['kode_fakultas']][$item['items'][0]['kode_prodi']][$j] : 0;
                             if($j % 2 != 0){
                                 $tmpAll = 0;$tmp = 0;$tmpBlm = 0;
                                 continue;
@@ -181,9 +188,9 @@ $model->tanggal_akhir = !empty($_POST['IzinMahasiswa']['tanggal_akhir']) ? $_POS
                        $tmpAll = 0;$tmp = 0;$tmpBlm = 0;
                        for($k = 1;$k<=10;$k++)
                        {
-                            $tmpAll += $resultsSemua[$item['kode_fakultas']][$p['kode_prodi']][$k];
-                            $tmp += $results[$item['kode_fakultas']][$p['kode_prodi']][$k];
-                            $tmpBlm += $resultsBelumPulang[$item['kode_fakultas']][$p['kode_prodi']][$k];
+                            $tmpAll += !empty($resultsSemua[$item['kode_fakultas']][$p['kode_prodi']][$k]) ? $resultsSemua[$item['kode_fakultas']][$p['kode_prodi']][$k] : 0;
+                            $tmp += !empty($results[$item['kode_fakultas']][$p['kode_prodi']][$k]) ?$results[$item['kode_fakultas']][$p['kode_prodi']][$k] : 0;
+                            $tmpBlm += !empty($resultsBelumPulang[$item['kode_fakultas']][$p['kode_prodi']][$k]) ? $resultsBelumPulang[$item['kode_fakultas']][$p['kode_prodi']][$k] : 0;
                             if($k % 2 != 0){
                                 $tmpAll = 0;$tmp = 0;$tmpBlm = 0;
                                 continue;
@@ -213,6 +220,7 @@ $model->tanggal_akhir = !empty($_POST['IzinMahasiswa']['tanggal_akhir']) ? $_POS
                      
                     }
                 }
+              }
                 ?>
             </tbody>
         </table>
