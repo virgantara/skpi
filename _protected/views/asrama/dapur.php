@@ -133,6 +133,7 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 								<span class="datadapur"><?=!empty($m->dapur) ? $m->dapur->nama : 'not set';?></span>
 							</td>
 							<td>
+								
 								<div class="form-group">
 									<div class="col-sm-7">
 										<?= Html::dropDownList('dapur','',ArrayHelper::map($listDapur,'id','nama'),['id'=>'dapur_'.$m->nim_mhs,'class'=>'form-control dapur_id','prompt'=>'- Pilih Dapur -']);?>
