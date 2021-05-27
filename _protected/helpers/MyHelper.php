@@ -137,7 +137,7 @@ class MyHelper
 
     public static function getRandomString($minlength=12, $maxlength=12, $useupper=true, $usespecial=false, $usenumbers=true)
 	{
-
+		$key = '';
 	    $charset = "abcdefghijklmnopqrstuvwxyz";
 
 	    if ($useupper) $charset .= "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
