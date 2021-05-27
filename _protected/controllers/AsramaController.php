@@ -116,9 +116,9 @@ class AsramaController extends Controller
                 $results = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
                     'kode_prodi' => !empty($params['kode_prodi']) ? $params['kode_prodi'] : '-',
-                    'kode_fakultas' => $params['kode_fakultas'],
+                    
                     'status_aktivitas' => $params['status_aktivitas'],
-                ])->all();          
+                ])->orderBy(['semester'=>SORT_DESC,'nama_mahasiswa'=>SORT_ASC])->all();          
 
 
             }

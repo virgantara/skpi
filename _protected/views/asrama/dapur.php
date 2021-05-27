@@ -104,10 +104,22 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 					<?php 
 					$i=0;
 					if(!empty($results)){
+						$tahun = \app\models\SimakTahunakademik::getTahunAktif();
 						foreach($results as $m)
 						{
-							$i++;
+							
 
+
+				            $konfirmasi = \app\models\SimakKonfirmasipembayaran::find()->where([
+				                'pembayaran' => '01',
+				                'status' => 1,
+				                'nim' => $m->nim_mhs,
+				                'tahun_id' => $tahun->tahun_id
+				            ])->one();
+
+				            if(empty($konfirmasi)) continue;
+
+				            $i++;
 							?>
 							<tr>
 								<td><?=($i);?></td>
