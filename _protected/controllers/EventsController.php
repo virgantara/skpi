@@ -291,7 +291,7 @@ class EventsController extends Controller
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([])
-            ->data(\yii\helpers\Url::toRoute(['events/scan','id'=>$id],true))
+            ->data(\yii\helpers\Url::to('https://siakad.unida.gontor.ac.id/events/scan?id='.$id))
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
             ->size(300)
