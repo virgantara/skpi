@@ -21,7 +21,7 @@ use yii\web\JsExpression;
 $this->title = 'Update Mahasiswa';
 
 $negara = !empty($model->konsulat0) ? $model->konsulat0->country->name : '';
-
+$states = !empty($model->konsulat0) ? $model->konsulat0->state_id : '';
 ?>
 <?php $form = ActiveForm::begin([
         'options' => [
@@ -259,7 +259,7 @@ function getCities(sid){
     });
 
     setTimeout(function(){
-        $("#kode_prodi").val('.$params['kode_prodi'].');
+        $("#kode_prodi").val('.$model->kode_prodi.');
     },500);
 
     setInterval(function(){

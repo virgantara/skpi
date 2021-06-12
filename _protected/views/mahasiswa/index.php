@@ -9,6 +9,7 @@ use yii\widgets\Pjax;
 
 $this->title = 'Master Mahasiswas';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="simak-mastermahasiswa-index">
 
@@ -22,8 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'nim_mhs',
             'nama_mahasiswa',
+            'nim_mhs',
+            
             'tempat_lahir',
             'tgl_lahir',
             [
@@ -36,26 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     
                 },
             ],
-            [
-                'attribute' => 'namaKampus',
-                'label' => 'Kelas',
-                'format' => 'raw',
-                'filter'=>$listKampus,
-                'value'=>function($model,$url){
-                    return $model->namaKampus;
-                    
-                },
-            ],
-            [
-        'attribute' => 'namaFakultas',
-        'label' => 'Fakultas',
-        'format' => 'raw',
-        'filter'=>$fakultas,
-        'value'=>function($model,$url){
-            return $model->namaFakultas;
             
-        },
-    ],
+        
    [
         'attribute' => 'namaProdi',
         'label' => 'Prodi',
@@ -78,7 +62,13 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
             'semester',
             
-            // 'kampus',
+            [
+                'attribute' => 'kampus',
+                'filter' => $listKampus,
+                'value' => function($data){
+                    return !empty($data->kampus0) ? $data->kampus0->nama_kampus : '-';
+                }
+            ],
             // 'kode_fakultas',
             // 'kode_prodi',
             // 'id',
