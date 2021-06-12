@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'kegiatan_id',
                 'value' => function($data){
 
-                    return $data->kegiatan->nama_kegiatan;
+                    return !empty($data->kegiatan) ? $data->kegiatan->nama_kegiatan : 'Not found';
                 }
             ],
             'nama',
