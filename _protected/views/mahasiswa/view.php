@@ -43,13 +43,13 @@ $provinsi = SimakPropinsi::find()->where(['id'=>$model->provinsi])->one();
             [
                 'attribute' => 'konsulat',
                 'value' => function($data){
-                    return $data->konsulat0->name.' - '.$data->konsulat0->state->name.' - '.$data->konsulat0->country->name;
+                    return !empty($data->konsulat0) ? $data->konsulat0->name.' - '.$data->konsulat0->state->name.' - '.$data->konsulat0->country->name : 'not set';
                 }
             ],  
             [
                 'attribute' => 'kamar_id',
                 'value' => function($data){
-                    return $data->kamar->asrama->nama.' - '.$data->kamar->nama;
+                    return !empty($data->kamar) ? $data->kamar->asrama->nama.' - '.$data->kamar->nama : 'not set';
                 }
             ],            
             // 'kampus',
@@ -154,7 +154,7 @@ $provinsi = SimakPropinsi::find()->where(['id'=>$model->provinsi])->one();
                                 <div id="profile-feed-1" class="profile-feed">
                                     <div class="profile-activity clearfix">
                                         <div>
-                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+                                            <img class="pull-left" alt="<?=$model->nama_mahasiswa;?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
                                            <a class="user" href="#"><?=$model->nama_mahasiswa;?></a>
                                             melakukan pelanggaran <?=$value->pelanggaran->kategori->nama;?>
                                             yaitu <?=$value->pelanggaran->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->tanggal);?>
@@ -279,7 +279,7 @@ $provinsi = SimakPropinsi::find()->where(['id'=>$model->provinsi])->one();
                                 <div id="profile-feed-1" class="profile-feed">
                                     <div class="profile-activity clearfix">
                                         <div>
-                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+                                            <img class="pull-left" alt="<?=$model['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
                                            <a class="user" href="#"><?=$model->nama_mahasiswa;?></a>
                                             pindah dari <?=$value->dariKamar->namaAsrama;?>
                                             kamar <?=$value->dariKamar->nama;?> ke <?=$value->kamar->namaAsrama;?>

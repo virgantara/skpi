@@ -294,6 +294,7 @@ class MahasiswaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        // $states = \app\models\States::find()->all();
 
         if ($model->load(Yii::$app->request->post())) {
             if(!$model->save())
@@ -305,6 +306,7 @@ class MahasiswaController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            
         ]);
     }
 

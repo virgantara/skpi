@@ -341,7 +341,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
 
     public function getNamaProdi()
     {
-        return $this->kodeProdi->nama_prodi;
+        return !empty($this->kodeProdi) ? $this->kodeProdi->nama_prodi : 'not set';
     }
 
     /**
@@ -349,7 +349,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
      */
     public function getNamaFakultas()
     {
-        return $this->kodeFakultas->nama_fakultas;
+        return !empty($this->kodeFakultas) ? $this->kodeFakultas->nama_fakultas  : 'not set';
     }
 
     /**
@@ -357,7 +357,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
      */
     public function getNamaKampus()
     {
-        return $this->kampus0->nama_kampus;
+        return !empty($this->kampus0) ? $this->kampus0->nama_kampus : '-';
     }
 
     public function getKodeOrtu()
