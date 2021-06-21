@@ -18,7 +18,7 @@ class VenueSearch extends Venue
     {
         return [
             [['id', 'kapasitas'], 'integer'],
-            [['nama'], 'safe'],
+            [['nama','kode'], 'safe'],
         ];
     }
 
@@ -63,6 +63,7 @@ class VenueSearch extends Venue
         ]);
 
         $query->andFilterWhere(['like', 'nama', $this->nama]);
+        $query->andFilterWhere(['like', 'kode', $this->kode]);
 
         return $dataProvider;
     }

@@ -27,7 +27,7 @@ class Venue extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama'], 'required'],
+            [['nama','kode'], 'required'],
             [['kapasitas'], 'integer'],
             [['nama'], 'string', 'max' => 255],
         ];
@@ -41,6 +41,7 @@ class Venue extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nama' => 'Nama',
+            'kode' => 'Kode',
             'kapasitas' => 'Kapasitas',
         ];
     }
