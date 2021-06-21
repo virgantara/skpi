@@ -21,12 +21,13 @@ class MenuHelper
 		}
 
 
-	    if (Yii::$app->user->can('operatorCabang'))
+	    if (Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event'))
 	    {
 	        
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Pelanggaran </span><i class="caret"></i>', 'url' => '#',
 		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		         'visible' => Yii::$app->user->can('operatorCabang'),
 		        'items'=>[
 		           	[
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Pelanggaran',  
@@ -51,12 +52,12 @@ class MenuHelper
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Today\'s Event',  
 		                'url' => ['events/daily','daily'=>'today'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event'), 
 		            ],
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Upcoming Events',  
 		                'url' => ['events/daily','daily'=>'upcoming'],	             
-		                'visible' => Yii::$app->user->can('operatorCabang'),
+		                'visible' => Yii::$app->user->can('operatorCabang')|| Yii::$app->user->can('event'),
 		            ],
 		            [
 		            	'label' => '<hr style="padding:0px;margin:0px">'
@@ -64,7 +65,7 @@ class MenuHelper
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Previous Events',  
 		                'url' => ['events/daily','daily'=>'previous'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang'),
+		                'visible' => Yii::$app->user->can('operatorCabang')|| Yii::$app->user->can('event'),
 		            ],
 		        ]
 		    ];
@@ -164,6 +165,7 @@ class MenuHelper
 		$menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Perizinan </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	         'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor'),
 	        'items'=>[
 	        	[
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Hari ini',  
@@ -248,7 +250,7 @@ class MenuHelper
 	    
 
 	    // display Users to admin+ roles
-	    if (Yii::$app->user->can('operatorCabang')){
+	    if (Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event')){
 
 	        $menuItems[] = ['label' =>'<i class="menu-icon fa fa-book"></i><span class="menu-text"> Master </span><i class="caret"></i>', 'url' => '#',
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
@@ -258,7 +260,7 @@ class MenuHelper
 	            [
 	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Event <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	                'visible' => Yii::$app->user->can('admin'),
+	                'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('event'),
 	                'url' => ['#'],
 	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	                'items' => [
@@ -266,7 +268,7 @@ class MenuHelper
 	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['events/index']],
 	                     [
 	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
-	                        'visible' => Yii::$app->user->can('admin'),
+	                        'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('event'),
 	                        'url' => ['events/create']]
 	                ],
 	            ],
