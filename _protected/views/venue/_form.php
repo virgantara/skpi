@@ -11,8 +11,9 @@ use yii\widgets\ActiveForm;
 <div class="venue-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+    <?= $form->field($model, 'kode')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
+
 
     <?= $form->field($model, 'kapasitas')->textInput() ?>
 

@@ -28,6 +28,7 @@ class Venue extends \yii\db\ActiveRecord
     {
         return [
             [['nama','kode'], 'required'],
+            [['kode'],'unique'],
             [['kapasitas'], 'integer'],
             [['nama'], 'string', 'max' => 255],
         ];
