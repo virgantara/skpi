@@ -23,7 +23,7 @@ class MahasiswaSearch extends SimakMastermahasiswa
     {
         return [
             [['id', 'status_bayar', 'status_mahasiswa', 'is_synced', 'is_eligible', 'kamar_id'], 'integer'],
-            [['kode_pt', 'kode_fakultas', 'kode_prodi', 'kode_jenjang_studi', 'nim_mhs', 'nama_mahasiswa', 'tempat_lahir', 'tgl_lahir', 'jenis_kelamin', 'tahun_masuk', 'semester_awal', 'batas_studi', 'asal_propinsi', 'tgl_masuk', 'tgl_lulus', 'status_aktivitas', 'status_awal', 'jml_sks_diakui', 'nim_asal', 'asal_pt', 'nama_asal_pt', 'asal_jenjang_studi', 'asal_prodi', 'kode_biaya_studi', 'kode_pekerjaan', 'tempat_kerja', 'kode_pt_kerja', 'kode_ps_kerja', 'nip_promotor', 'nip_co_promotor1', 'nip_co_promotor2', 'nip_co_promotor3', 'nip_co_promotor4', 'photo_mahasiswa', 'semester', 'keterangan', 'telepon', 'hp', 'email', 'alamat', 'berat', 'tinggi', 'ktp', 'rt', 'rw', 'dusun', 'kode_pos', 'desa', 'kecamatan', 'kecamatan_feeder', 'jenis_tinggal', 'penerima_kps', 'no_kps', 'provinsi', 'kabupaten', 'status_warga', 'warga_negara', 'warga_negara_feeder', 'status_sipil', 'agama', 'gol_darah', 'masuk_kelas', 'tgl_sk_yudisium', 'no_ijazah', 'kampus', 'jur_thn_smta', 'kode_pd', 'va_code', 'created_at', 'updated_at', 'namaProdi', 'namaFakultas', 'namaKampus','dapur_id','rfid'], 'safe'],
+            [['kode_pt', 'kode_fakultas', 'kode_prodi', 'kode_jenjang_studi', 'nim_mhs', 'nama_mahasiswa', 'tempat_lahir', 'tgl_lahir', 'jenis_kelamin', 'tahun_masuk', 'semester_awal', 'batas_studi', 'asal_propinsi', 'tgl_masuk', 'tgl_lulus', 'status_aktivitas', 'status_awal', 'jml_sks_diakui', 'nim_asal', 'asal_pt', 'nama_asal_pt', 'asal_jenjang_studi', 'asal_prodi', 'kode_biaya_studi', 'kode_pekerjaan', 'tempat_kerja', 'kode_pt_kerja', 'kode_ps_kerja', 'nip_promotor', 'nip_co_promotor1', 'nip_co_promotor2', 'nip_co_promotor3', 'nip_co_promotor4', 'photo_mahasiswa', 'semester', 'keterangan', 'telepon', 'hp', 'email', 'alamat', 'berat', 'tinggi', 'ktp', 'rt', 'rw', 'dusun', 'kode_pos', 'desa', 'kecamatan', 'kecamatan_feeder', 'jenis_tinggal', 'penerima_kps', 'no_kps', 'provinsi', 'kabupaten', 'status_warga', 'warga_negara', 'warga_negara_feeder', 'status_sipil', 'agama', 'gol_darah', 'masuk_kelas', 'tgl_sk_yudisium', 'no_ijazah', 'kampus', 'jur_thn_smta', 'kode_pd', 'va_code', 'created_at', 'updated_at', 'namaProdi', 'namaFakultas', 'namaKampus','dapur_id','rfid','tahun_masuk'], 'safe'],
         ];
     }
 
@@ -52,7 +52,12 @@ class MahasiswaSearch extends SimakMastermahasiswa
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
-                'defaultOrder' => ['status_aktivitas'=>SORT_ASC,'kode_prodi'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]
+                'defaultOrder' => [
+                    'status_aktivitas'=>SORT_ASC,
+                    'kode_prodi'=>SORT_ASC,
+                    'kampus' => SORT_ASC,
+                    'nama_mahasiswa'=>SORT_ASC
+                ]
             ]
         ]);
 
@@ -127,6 +132,7 @@ class MahasiswaSearch extends SimakMastermahasiswa
             $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
         }
 
+        $query->andFilterWhere(['tahun_masuk'=> $this->tahun_masuk]);
         
 
         $query->andFilterWhere(['like', 'kode_pt', $this->kode_pt])
