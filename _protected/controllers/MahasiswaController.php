@@ -185,7 +185,7 @@ class MahasiswaController extends Controller
     {
         $searchModel = new MahasiswaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $listKampus = ArrayHelper::map(\app\models\SimakKampus::find()->all(),'nama_kampus','nama_kampus');
+        $listKampus = ArrayHelper::map(\app\models\SimakKampus::find()->all(),'kode_kampus','nama_kampus');
         $prodis = ArrayHelper::map(\app\models\SimakMasterprogramstudi::find()->all(),'kode_prodi','nama_prodi');
         $fakultas = ArrayHelper::map(\app\models\SimakMasterfakultas::find()->all(),'kode_fakultas','nama_fakultas');
 

@@ -133,6 +133,7 @@ class MahasiswaSearch extends SimakMastermahasiswa
         }
 
         $query->andFilterWhere(['tahun_masuk'=> $this->tahun_masuk]);
+        $query->andFilterWhere(['kampus'=> $this->kampus]);
         
 
         $query->andFilterWhere(['like', 'kode_pt', $this->kode_pt])
