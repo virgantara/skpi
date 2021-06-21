@@ -116,7 +116,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     {
         return [
             [['nim_mhs', 'nama_mahasiswa'], 'required'],
-            [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at','no_sk_yudisium','konsulat','dapur_id'], 'safe'],
+            [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at','no_sk_yudisium','konsulat','dapur_id','rfid'], 'safe'],
             [['keterangan'], 'string'],
             [['status_bayar', 'status_mahasiswa', 'is_synced', 'kamar_id', 'is_eligible'], 'integer'],
             [['kode_pt', 'asal_prodi', 'kode_pos'], 'string', 'max' => 6],
@@ -124,7 +124,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['nim_mhs', 'nama_asal_pt', 'telepon', 'hp'], 'string', 'max' => 25],
             [['nama_mahasiswa', 'dusun', 'desa', 'kecamatan', 'warga_negara', 'status_sipil', 'jur_thn_smta', 'kode_pd'], 'string', 'max' => 100],
             [['tempat_lahir', 'asal_propinsi', 'status_aktivitas', 'email', 'status_warga'], 'string', 'max' => 50],
-            
+            [['rfid'], 'unique','message' => 'RFID ini sudah digunakan'],
             [['jml_sks_diakui'], 'number'],
             [['nim_asal', 'kode_biaya_studi', 'kode_pekerjaan', 'tempat_kerja', 'kode_pt_kerja'], 'string', 'max' => 55],
             [['asal_pt', 'ktp'], 'string', 'max' => 30],
