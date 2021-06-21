@@ -43,13 +43,15 @@ EventAsset::register($this);
             <div class="control-group">
                 <label class="control-label" for="inputPatient">Event:</label>
                 <div class="field desc">
+
                     <input class="form-control" id="title" name="title" placeholder="Nama Event" type="text" value="">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="inputPatient">Venue/Lokasi Acara:</label>
                 <div class="field desc">
-                    <input class="form-control" id="venue" name="venue" placeholder="Lokasi Acara" type="text" value="">
+                    <?=Html::dropDownList('venue','',ArrayHelper::map(\app\models\Venue::find()->all(),'id','nama'),['id'=>'venue','class'=>'form-control','prompt'=>'-Pilih Venue/Lokasi Acara-']);?>
+                   
                 </div>
             </div>
             <div class="control-group">
@@ -120,7 +122,8 @@ EventAsset::register($this);
             <div class="control-group">
                 <label class="control-label" for="inputPatient">Venue/Lokasi Acara:</label>
                 <div class="field desc">
-                    <input class="form-control" id="venue_edit" name="venue" placeholder="Lokasi Acara" type="text" value="">
+                     <?=Html::dropDownList('venue_edit','',ArrayHelper::map(\app\models\Venue::find()->all(),'id','nama'),['id'=>'venue_edit','class'=>'form-control','prompt'=>'-Pilih Venue/Lokasi Acara-']);?>
+                   
                 </div>
             </div>
             <div class="control-group">
