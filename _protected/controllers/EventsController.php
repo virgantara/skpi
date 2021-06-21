@@ -46,7 +46,7 @@ class EventsController extends Controller
                             'update','index','view','start','delete'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator','admin','operatorCabang'],
+                        'roles' => ['theCreator','admin','operatorCabang','event'],
                     ],
                     
                 ],
