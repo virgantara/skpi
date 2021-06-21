@@ -88,7 +88,7 @@ class IzinMahasiswaController extends Controller
         //         $mahasiswa = $response->data['values'][0];
         //     }    
         // }
-
+        $errors = '';
         $response = $client->get('/tahun/aktif',[],['x-access-token'=>Yii::$app->params['client_token']])->send();
         $tahun_aktif = [];
         if ($response->isOk) {
@@ -123,7 +123,7 @@ class IzinMahasiswaController extends Controller
 
                         $uploadedFile = UploadedFile::getInstance($model, 'bulk_upload');
                         $model->bulk_upload = $uploadedFile;
-                        if($model->bulk_upload->extension)
+                        if($uploadedFile)
                         {
                            
                             $model->bulk_upload = $uploadedFile;
@@ -161,22 +161,23 @@ class IzinMahasiswaController extends Controller
                                 $m->nim = (string) $nim;
                                 // print_r($m->attributes);exit;
                                 if(!$m->save()){
-                                    $logs = \app\helpers\MyHelper::logError($m);
+                                    $errors .= \app\helpers\MyHelper::logError($m);
                             
-                                    throw new \Exception($logs);
+                                    throw new \Exception;
                                 }
 
                             }
                         }
                         if(!$model->save()){
-                            $logs = \app\helpers\MyHelper::logError($model);
+                            $errors .= \app\helpers\MyHelper::logError($model);
                             
-                            throw new \Exception($logs);
+                            throw new \Exception;
                             
                         }
 
 
                         $transaction->commit();
+                        Yii::$app->session->setFlash('success', "Data tersimpan");
                         return $this->redirect(['izin-mahasiswa/index']);
                     }    
                 }
@@ -184,10 +185,14 @@ class IzinMahasiswaController extends Controller
             }
         } catch (\Exception $e) {
             $transaction->rollBack();
+            $errors .= $e->getMessage();
+            Yii::$app->session->setFlash('danger', $errors);
             // throw $e;
         } catch (\Throwable $e) {
             $transaction->rollBack();
-            // throw $e;
+            
+            $errors .= $e->getMessage();
+            Yii::$app->session->setFlash('danger', $errors);
         }
 
         return $this->render('create', [

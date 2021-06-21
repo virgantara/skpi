@@ -36,7 +36,16 @@ use yii\web\JsExpression;
             </div>
             <div class="widget-body">
               <div class="widget-main">
-                <?=$form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);?>
+                <?php
+
+                foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
+                  echo '<div class="flash alert alert-' . $key . '">' . $message . '<button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button></div>';
+                }
+
+
+                echo $form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);
+
+                ?>
 
                 <div class="form-group">
          <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Ketik Nama Mahasiswa atau NIM</label>
