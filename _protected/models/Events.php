@@ -38,9 +38,9 @@ class Events extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
+            [['id','tahun_id'], 'required'],
             [['kegiatan_id'], 'integer'],
-            [['tanggal_mulai', 'tanggal_selesai','file_path'], 'safe'],
+            [['tanggal_mulai', 'tanggal_selesai','file_path','tahun_id','toleransi_masuk','toleransi_keluar'], 'safe'],
             [['file_path'], 'required','on'=>'update'],
             [['file_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, bmp','maxSize' => 1024 * 1024 * 1],
             [['id'], 'string', 'max' => 20],
@@ -62,10 +62,13 @@ class Events extends \yii\db\ActiveRecord
             'kegiatan_id' => 'Activity',
             'nama' => 'Event\'s Name',
             'venue' => 'Venue',
+            'tahun_id' => 'Tahun Akademik',
             'tanggal_mulai' => 'Start Date',
             'tanggal_selesai' => 'End Date',
             'penyelenggara' => 'Organizer',
             'tingkat' => 'Level',
+            'toleransi_masuk' => 'Toleransi masuk',
+            'toleransi_keluar' => 'Toleransi selesai',
             'url' => 'URL',
             'file_path' => 'Poster',
             'priority' => 'Priority',

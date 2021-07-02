@@ -25,12 +25,19 @@ $this->params['breadcrumbs'][] = 'Update';
                 'enctype' => 'multipart/form-data'
             ]
         ]); ?>
+        <?php
+            foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
+              echo '<div class="flash alert alert-' . $key . '">' . $message . '<button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button></div>';
+            }
 
+        ?>
         <?= $form->field($model, 'id')->textInput(['readonly' => true]) ?>
+        <?= $form->field($model, 'tahun_id')->dropDownList(ArrayHelper::map($listTahun,'tahun_id','nama_tahun'),['prompt'=>'- Pilih Tahun -']) ?>
         <div class="form-group">
             <label for="">Jenis Kegiatan</label>
         <?=Html::dropDownList('id_jenis_kegiatan',$model->kegiatan->id_jenis_kegiatan,ArrayHelper::map(\app\models\SimakJenisKegiatan::find()->all(),'id','nama_jenis_kegiatan'),['id'=>'id_jenis_kegiatan','class'=>'form-control','prompt'=>'-Pilih Jenis Kegiatan-']);?>
         </div>
+
         <?= $form->field($model, 'kegiatan_id')->dropDownList([],['id'=>'kegiatan_id','prompt'=>'- Pilih Kegiatan -']) ?>
 
         <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
@@ -46,6 +53,8 @@ $this->params['breadcrumbs'][] = 'Update';
             ]
         ]); ?>
 
+        <?= $form->field($model, 'toleransi_masuk')->dropDownList(\app\helpers\MyHelper::getToleransiWaktu()) ?>
+
         <?= $form->field($model, 'tanggal_selesai')->widget(DateTimePicker::classname(), [
             'options' => ['placeholder' => 'Enter event time ...'],
             'pluginOptions' => [
@@ -54,6 +63,8 @@ $this->params['breadcrumbs'][] = 'Update';
                 'format' => 'yyyy-mm-dd hh:mm:ss'
             ]
         ]); ?>
+
+        <?= $form->field($model, 'toleransi_keluar')->dropDownList(\app\helpers\MyHelper::getToleransiWaktu()) ?>
 
         <?= $form->field($model, 'penyelenggara')->textInput(['maxlength' => true]) ?>
 

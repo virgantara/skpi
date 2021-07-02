@@ -9,6 +9,7 @@ use kartik\grid\GridView;
 
 $this->title = 'Events';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <div class="row">
@@ -22,6 +23,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 <p>
                     <?= Html::a('Add an event', ['create'], ['class' => 'btn btn-success']) ?>
                     or <?= Html::a('<i class="fa fa-download"></i> Download template events', ['download'], ['class' => 'btn btn-info']) ?>
+                </p>
+                <p>
+                <?php
+                    foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
+                      echo '<div class="flash alert alert-' . $key . '">' . $message . '<button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button></div>';
+                    }
+
+                ?>
                 </p>
                 <?php
                 $gridColumns = [
@@ -43,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 ],
                 [
-                'attribute' => 'kegiatan_id',
+                    'attribute' => 'kegiatan_id',
                     'value' => function($data){
 
                         return !empty($data->kegiatan) ? $data->kegiatan->nama_kegiatan : 'Not found';
@@ -56,6 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'tanggal_selesai',
                 'penyelenggara',
                 'tingkat',
+                'tahun_id',
                 [
                     'attribute' => 'status',
                     'filter' => \app\helpers\MyHelper::getStatusEvent(),
@@ -66,6 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return '<span class="label label-'.$colors[$data->status].'">'.$list[$data->status].'</span>';
                     }
                 ],
+
             //'url:url',
             //'priority',
                 ['class' => 'yii\grid\ActionColumn']

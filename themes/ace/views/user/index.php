@@ -22,7 +22,7 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
         </span>         
     </h1>
 
-   
+    
 <?php
 $gridColumns = [
     [

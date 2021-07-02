@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\helpers\MyHelper;
 use app\models\Events;
+use app\models\SimakTahunakademik;
 use app\models\SimakKegiatanMahasiswa;
 use app\models\EventsSearch;
 use yii\web\Controller;
@@ -591,6 +592,7 @@ class EventsController extends Controller
     public function actionCreate()
     {
         $model = new Events();
+        $listTahun = SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(5)->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -598,6 +600,7 @@ class EventsController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'listTahun' => $listTahun
         ]);
     }
 
@@ -614,7 +617,7 @@ class EventsController extends Controller
         $file_path = $model->file_path;
         $s3config = Yii::$app->params['s3'];
         $s3 = new \Aws\S3\S3Client($s3config);
-
+        $listTahun = SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(5)->all();
         if ($model->load(Yii::$app->request->post())) 
         {
             $model->file_path = UploadedFile::getInstance($model,'file_path');
@@ -654,12 +657,10 @@ class EventsController extends Controller
                 if($model->validate())
                 {
                     $model->save();
-                    Yii::$app->session->setFlash('success', "Data tersimpan");
+                    
                     $transaction->commit();
-                    if(isset($_POST['btn-simpan']))
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    else
-                        return $this->redirect(['create']);
+                    Yii::$app->session->setFlash('success', "Data tersimpan");
+                    return $this->redirect(['index']);
                 }
 
                 else
@@ -675,11 +676,13 @@ class EventsController extends Controller
                 $errors .= $e->getMessage();
                 Yii::$app->session->setFlash('danger', $errors);
                 $transaction->rollBack();
+                
             }
         }
 
         return $this->render('update_event', [
             'model' => $model,
+            'listTahun' => $listTahun
         ]);
     }
 

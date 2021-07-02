@@ -9,6 +9,17 @@ use Yii;
 class MyHelper
 {
 
+	public static function getToleransiWaktu()
+	{
+		return [
+			'5' => '5 menit',
+			'10' => '10 menit',
+			'15' => '15 menit',
+			'30' => '30 menit',
+			'60' => '1 jam'
+		];
+	}
+
 	public static function getStatusEvent()
 	{
 		return [
