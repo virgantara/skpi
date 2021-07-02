@@ -21,7 +21,7 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
-
+use yii\web\UploadedFile;
 /**
  * EventsController implements the CRUD actions for Events model.
  */
@@ -611,12 +611,74 @@ class EventsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $file_path = $model->file_path;
+        $s3config = Yii::$app->params['s3'];
+        $s3 = new \Aws\S3\S3Client($s3config);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) 
+        {
+            $model->file_path = UploadedFile::getInstance($model,'file_path');
+         
+            $transaction = \Yii::$app->db->beginTransaction();
+            try 
+            {
+                if($model->file_path)
+                {
+                    $file_path = $model->file_path->tempName;
+                    $mime_type = $model->file_path->type;
+                    
+                    $file = 'evt_'.$model->id.'.'.$model->file_path->extension;
+
+                
+                    $errors = '';
+                            
+                    $key = 'event/'.$model->tingkat.'/'.$model->venue.'/'.$file;
+                     
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $file_path,
+                         'ContentType' => $mime_type
+                    ]);
+
+                    
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->file_path = $plainUrl;
+                }
+
+                if (empty($model->file_path)){
+                    $model->file_path = $file_path;
+                }
+
+                if($model->validate())
+                {
+                    $model->save();
+                    Yii::$app->session->setFlash('success', "Data tersimpan");
+                    $transaction->commit();
+                    if(isset($_POST['btn-simpan']))
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    else
+                        return $this->redirect(['create']);
+                }
+
+                else
+                {
+                    $errors .= \app\helpers\MyHelper::logError($model);
+                    throw new \Exception;
+                    
+                }
+            }
+
+            catch(\Exception $e)
+            {
+                $errors .= $e->getMessage();
+                Yii::$app->session->setFlash('danger', $errors);
+                $transaction->rollBack();
+            }
         }
 
-        return $this->render('update', [
+        return $this->render('update_event', [
             'model' => $model,
         ]);
     }

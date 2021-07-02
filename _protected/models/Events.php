@@ -40,7 +40,9 @@ class Events extends \yii\db\ActiveRecord
         return [
             [['id'], 'required'],
             [['kegiatan_id'], 'integer'],
-            [['tanggal_mulai', 'tanggal_selesai'], 'safe'],
+            [['tanggal_mulai', 'tanggal_selesai','file_path'], 'safe'],
+            [['file_path'], 'required','on'=>'update'],
+            [['file_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, bmp','maxSize' => 1024 * 1024 * 1],
             [['id'], 'string', 'max' => 20],
             [['nama', 'venue', 'penyelenggara', 'url'], 'string', 'max' => 255],
             [['tingkat', 'priority'], 'string', 'max' => 15],
@@ -65,6 +67,7 @@ class Events extends \yii\db\ActiveRecord
             'penyelenggara' => 'Organizer',
             'tingkat' => 'Level',
             'url' => 'URL',
+            'file_path' => 'Poster',
             'priority' => 'Priority',
             'status' => 'Status',
         ];

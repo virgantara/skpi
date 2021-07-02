@@ -35,28 +35,37 @@ $this->params['breadcrumbs'][] = $this->title;
                     'headerOptions'=>['class'=>'kartik-sheet-style']
                 ],
                 [
+                    'attribute' => 'file_path',
+                    'format' => 'raw',
+                    'value' => function($data){
+                        
+                        return Html::img($data->file_path,['width'=>'150px']);
+                    }
+                ],
+                [
                 'attribute' => 'kegiatan_id',
-                'value' => function($data){
+                    'value' => function($data){
 
-                    return !empty($data->kegiatan) ? $data->kegiatan->nama_kegiatan : 'Not found';
-                }
-            ],
-            'nama',
-            'venue',
-            'tanggal_mulai',
-            'tanggal_selesai',
-            'penyelenggara',
-            'tingkat',
-            [
-                'attribute' => 'status',
-                'filter' => \app\helpers\MyHelper::getStatusEvent(),
-                'format' => 'raw',
-                'value' => function($data){
-                    $list = \app\helpers\MyHelper::getStatusEvent();
-                    $colors = \app\helpers\MyHelper::getStatusEventColor();
-                    return '<span class="label label-'.$colors[$data->status].'">'.$list[$data->status].'</span>';
-                }
-            ],
+                        return !empty($data->kegiatan) ? $data->kegiatan->nama_kegiatan : 'Not found';
+                    }
+                ],
+
+                'nama',
+                'venue',
+                'tanggal_mulai',
+                'tanggal_selesai',
+                'penyelenggara',
+                'tingkat',
+                [
+                    'attribute' => 'status',
+                    'filter' => \app\helpers\MyHelper::getStatusEvent(),
+                    'format' => 'raw',
+                    'value' => function($data){
+                        $list = \app\helpers\MyHelper::getStatusEvent();
+                        $colors = \app\helpers\MyHelper::getStatusEventColor();
+                        return '<span class="label label-'.$colors[$data->status].'">'.$list[$data->status].'</span>';
+                    }
+                ],
             //'url:url',
             //'priority',
                 ['class' => 'yii\grid\ActionColumn']

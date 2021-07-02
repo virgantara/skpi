@@ -69,6 +69,7 @@ class UserSearch extends User
         $query->andFilterWhere([
             'id' => $this->id,
             'status' => $this->status,
+            'kampus' => $this->kampus,
             'uuid' => $this->uuid,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
