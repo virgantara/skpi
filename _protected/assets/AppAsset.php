@@ -26,10 +26,10 @@ class AppAsset extends AssetBundle
         'font-awesome/4.5.0/css/font-awesome.min.css',
         'css/jquery-ui.custom.min.css',
         'css/chosen.min.css',
-        'css/bootstrap-datetimepicker.min.css',
-        'css/bootstrap-datepicker3.min.css',
-        'css/bootstrap-timepicker.min.css',
-        'css/daterangepicker.min.css',
+        // 'css/bootstrap-datetimepicker.min.css',
+        // 'css/bootstrap-datepicker3.min.css',
+        // 'css/bootstrap-timepicker.min.css',
+        // 'css/daterangepicker.min.css',
         // 'css/jquery.datetextentry.css',
         
         'css/ace.min.css',
@@ -46,8 +46,8 @@ class AppAsset extends AssetBundle
         'js/jquery-ui.min.js',
         // 'js/jquery.datetextentry.js',
         'js/moment.min.js',
-        'js/bootstrap-datetimepicker.min.js',
-        'js/bootstrap-datepicker.min.js'
+        // 'js/bootstrap-datetimepicker.min.js',
+        // 'js/bootstrap-datepicker.min.js'
 
     ];
 

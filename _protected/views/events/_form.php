@@ -29,6 +29,12 @@ EventAsset::register($this);
       </div>
       <div class="modal-body">
             <div class="control-group">
+                <label class="control-label" for="inputPatient">Tahun Akademik:</label>
+                <div class="field desc">
+                    <?=Html::dropDownList('tahun_akademik','',ArrayHelper::map($listTahun,'tahun_id','nama_tahun'),['id'=>'tahun_akademik','class'=>'form-control','prompt'=>'-Pilih Tahun-']);?>
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="inputPatient">Jenis Kegiatan:</label>
                 <div class="field desc">
                     <?=Html::dropDownList('id_jenis_kegiatan','',ArrayHelper::map(\app\models\SimakJenisKegiatan::find()->all(),'id','nama_jenis_kegiatan'),['id'=>'id_jenis_kegiatan','class'=>'form-control','prompt'=>'-Pilih Jenis Kegiatan-']);?>
@@ -74,6 +80,20 @@ EventAsset::register($this);
                     
                 </div>
             </div>
+            <div class="control-group">
+                <label class="control-label" for="inputPatient">Toleransi waktu masuk:</label>
+                <div class="field desc">
+
+                    <?=Html::dropDownList('toleransi_masuk','',\app\helpers\MyHelper::getToleransiWaktu(),['id'=>'toleransi_masuk','class'=>'form-control','prompt'=>'-Pilih Toleransi Waktu-']);?>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="inputPatient">Toleransi waktu selesai: *dalam menit</label>
+                <div class="field desc">
+
+                    <?=Html::dropDownList('toleransi_keluar','',\app\helpers\MyHelper::getToleransiWaktu(),['id'=>'toleransi_keluar','class'=>'form-control','prompt'=>'-Pilih Toleransi Waktu-']);?>
+                </div>
+            </div>
             <input type="hidden" id="startTime" value="2021-05-02T05:00:00">
             <input type="hidden" id="endTime" value="2021-05-02T05:30:00">
             
@@ -83,7 +103,9 @@ EventAsset::register($this);
             <label class="control-label" for="when">When:</label>
             <div class="controls controls-row" id="when" style="margin-top:5px;"></div>
         </div>
-        
+        <div class="alert alert-info">
+            NB: Toleransi waktu berlaku sebelum dan sesuah waktu acara.
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -101,6 +123,12 @@ EventAsset::register($this);
         <h4 class="modal-title">Edit Event</h4>
       </div>
       <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" for="inputPatient">Tahun Akademik:</label>
+                <div class="field desc">
+                    <?=Html::dropDownList('tahun_akademik_edit','',ArrayHelper::map($listTahun,'tahun_id','nama_tahun'),['id'=>'tahun_akademik_edit','class'=>'form-control','prompt'=>'-Pilih Tahun-']);?>
+                </div>
+            </div>
             <div class="control-group">
                 <label class="control-label" for="inputPatient">Jenis Kegiatan:</label>
                 <div class="field desc">
@@ -146,6 +174,20 @@ EventAsset::register($this);
                     
                 </div>
             </div>
+            <div class="control-group">
+                <label class="control-label" for="inputPatient">Toleransi waktu masuk:</label>
+                <div class="field desc">
+
+                    <?=Html::dropDownList('toleransi_masuk_edit','',\app\helpers\MyHelper::getToleransiWaktu(),['id'=>'toleransi_masuk_edit','class'=>'form-control','prompt'=>'-Pilih Toleransi Waktu-']);?>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="inputPatient">Toleransi waktu selesai:</label>
+                <div class="field desc">
+
+                    <?=Html::dropDownList('toleransi_keluar_edit','',\app\helpers\MyHelper::getToleransiWaktu(),['id'=>'toleransi_keluar_edit','class'=>'form-control','prompt'=>'-Pilih Toleransi Waktu-']);?>
+                </div>
+            </div>
             <input type="hidden" id="startTime_edit" value="2021-05-02T05:00:00">
             <input type="hidden" id="eventID_edit" value="">
             <input type="hidden" id="endTime_edit" value="2021-05-02T05:30:00">
@@ -156,7 +198,9 @@ EventAsset::register($this);
             <label class="control-label" for="when">When:</label>
             <div class="controls controls-row" id="when_edit" style="margin-top:5px;">Sunday, May 2nd 2021, 5:00 - 5:30</div>
         </div>
-        
+        <div class="alert alert-info">
+            NB: Toleransi waktu berlaku sebelum dan sesuah waktu acara.
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>

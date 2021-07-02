@@ -9,5 +9,15 @@ return [
    'jwt_key' => '',
    'consumer_id' => '',
     'consumer_secret' => '',
-   'invoke_token_uri' => 'http://local.central.com/site/invoke-token'
+   'invoke_token_uri' => 'http://local.central.com/site/invoke-token',
+   's3' => [
+        'version' => 'latest',
+        'region'  => 'us-east-1',
+        'endpoint' => '',
+        'use_path_style_endpoint' => true,
+        'credentials' => [
+            'key'    => '',
+            'secret' => '',
+        ],
+    ]
 ];

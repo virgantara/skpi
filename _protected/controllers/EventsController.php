@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\helpers\MyHelper;
 use app\models\Events;
+use app\models\SimakTahunakademik;
 use app\models\SimakKegiatanMahasiswa;
 use app\models\EventsSearch;
 use yii\web\Controller;
@@ -21,7 +22,7 @@ use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
-
+use yii\web\UploadedFile;
 /**
  * EventsController implements the CRUD actions for Events model.
  */
@@ -591,6 +592,7 @@ class EventsController extends Controller
     public function actionCreate()
     {
         $model = new Events();
+        $listTahun = SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(5)->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -598,6 +600,7 @@ class EventsController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'listTahun' => $listTahun
         ]);
     }
 
@@ -611,13 +614,75 @@ class EventsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $file_path = $model->file_path;
+        $s3config = Yii::$app->params['s3'];
+        $s3 = new \Aws\S3\S3Client($s3config);
+        $listTahun = SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(5)->all();
+        if ($model->load(Yii::$app->request->post())) 
+        {
+            $model->file_path = UploadedFile::getInstance($model,'file_path');
+         
+            $transaction = \Yii::$app->db->beginTransaction();
+            try 
+            {
+                if($model->file_path)
+                {
+                    $file_path = $model->file_path->tempName;
+                    $mime_type = $model->file_path->type;
+                    
+                    $file = 'evt_'.$model->id.'.'.$model->file_path->extension;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+                
+                    $errors = '';
+                            
+                    $key = 'event/'.$model->tingkat.'/'.$model->venue.'/'.$file;
+                     
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $file_path,
+                         'ContentType' => $mime_type
+                    ]);
+
+                    
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->file_path = $plainUrl;
+                }
+
+                if (empty($model->file_path)){
+                    $model->file_path = $file_path;
+                }
+
+                if($model->validate())
+                {
+                    $model->save();
+                    
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', "Data tersimpan");
+                    return $this->redirect(['index']);
+                }
+
+                else
+                {
+                    $errors .= \app\helpers\MyHelper::logError($model);
+                    throw new \Exception;
+                    
+                }
+            }
+
+            catch(\Exception $e)
+            {
+                $errors .= $e->getMessage();
+                Yii::$app->session->setFlash('danger', $errors);
+                $transaction->rollBack();
+                
+            }
         }
 
-        return $this->render('update', [
+        return $this->render('update_event', [
             'model' => $model,
+            'listTahun' => $listTahun
         ]);
     }
 

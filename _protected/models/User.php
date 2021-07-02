@@ -76,8 +76,14 @@ class User extends UserIdentity
 
             ['status', 'required'],
             ['perusahaan_id', 'required'],
-            ['item_name', 'string', 'min' => 3, 'max' => 64]
+            ['item_name', 'string', 'min' => 3, 'max' => 64],
+            [['kampus'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus' => 'id']],
         ];
+    }
+
+    public function getKampus0()
+    {
+        return $this->hasOne(SimakKampus::className(), ['id' => 'kampus']);
     }
 
     /**

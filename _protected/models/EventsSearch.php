@@ -17,7 +17,7 @@ class EventsSearch extends Events
     public function rules()
     {
         return [
-            [['id', 'nama', 'venue', 'tanggal_mulai', 'tanggal_selesai', 'penyelenggara', 'tingkat', 'url','status','kegiatan_id'], 'safe'],
+            [['id', 'nama', 'venue', 'tanggal_mulai', 'tanggal_selesai', 'penyelenggara', 'tingkat', 'url','status','kegiatan_id','tahun_id','toleransi_masuk','toleransi_keluar'], 'safe'],
         ];
     }
 
@@ -41,11 +41,14 @@ class EventsSearch extends Events
     {
         $query = Events::find();
 
+        $query->joinWith(['kegiatan as k']);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+
 
         $this->load($params);
 
@@ -55,10 +58,16 @@ class EventsSearch extends Events
             return $dataProvider;
         }
 
+        $query->andFilterWhere(['like','k.nama_kegiatan',$this->kegiatan_id]);
+
         // grid filtering conditions
         $query->andFilterWhere([
             'tanggal_mulai' => $this->tanggal_mulai,
             'tanggal_selesai' => $this->tanggal_selesai,
+            'tahun_id' => $this->tahun_id,
+            'toleransi_masuk' => $this->toleransi_masuk,
+            'toleransi_keluar' => $this->toleransi_keluar,
+            // 'kegiatan_id' => $this->kegiatan_id,
             'status' => $this->status
         ]);
 

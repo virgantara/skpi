@@ -40,7 +40,8 @@
         "firebase/php-jwt": "^5.2",
         "devgroup/yii2-dropzone": "*",
         "endroid/qr-code": "^4.1",
-        "kartik-v/yii2-editable": "dev-master"
+        "kartik-v/yii2-editable": "dev-master",
+        "aws/aws-sdk-php": "^3.173"
     
     },
     "require-dev": {
