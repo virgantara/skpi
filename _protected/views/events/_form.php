@@ -289,6 +289,11 @@ var calendar = $('#calendar').fullCalendar({
                         $('#calendarModal #startTime_edit').val(res.start);
                         $('#calendarModal #endTime_edit').val(res.end);
                         $('#calendarModal #priority_edit').val(res.priority);
+                        $('#calendarModal #tahun_akademik_edit').val(res.tahun_id);
+                        $('#calendarModal #toleransi_masuk_edit').val(res.toleransi_masuk);
+
+                        $('#calendarModal #toleransi_keluar_edit').val(res.toleransi_keluar);
+
                         endtime = $.fullCalendar.moment(res.end).format('YYYY-MM-DD HH:mm:ss');
                         starttime = $.fullCalendar.moment(res.start).format('YYYY-MM-DD HH:mm:ss');
                         
@@ -337,6 +342,9 @@ var calendar = $('#calendar').fullCalendar({
                         obj.venue = res.venue
                         obj.priority = res.priority
                         obj.kegiatan_id = res.kegiatan_id
+                        obj.tahun_id = res.tahun_id
+                        obj.toleransi_masuk = res.toleransi_masuk
+                        obj.toleransi_keluar = res.toleransi_keluar
 
                         $.ajax({
                            url: '".Url::to(['events/ajax-update'])."',
@@ -375,6 +383,9 @@ var calendar = $('#calendar').fullCalendar({
                         obj.venue = res.venue
                         obj.priority = res.priority
                         obj.kegiatan_id = res.kegiatan_id
+                        obj.tahun_id = res.tahun_id
+                        obj.toleransi_masuk = res.toleransi_masuk
+                        obj.toleransi_keluar = res.toleransi_keluar
 
                         $.ajax({
                            url: '".Url::to(['events/ajax-update'])."',
@@ -453,7 +464,9 @@ function doSubmit(){
    obj.penyelenggara = $('#penyelenggara').val();
    obj.priority = $('#priority').val()
    obj.kegiatan_id = $('#kegiatan_id').val()
-
+   obj.tahun_id = $('#tahun_akademik').val()
+   obj.toleransi_masuk = $('#toleransi_masuk').val()
+   obj.toleransi_keluar = $('#toleransi_keluar').val()
 
    $.ajax({
         url: '".Url::to(['events/ajax-add'])."',
@@ -463,12 +476,24 @@ function doSubmit(){
         type: \"POST\",
         success: function(json) {
             var json = $.parseJSON(json)
-           Swal.fire({
-                      title: 'Yeay!',
-                      text: json.message,
-                      icon: 'success',
-                    });
-           $(\"#calendar\").fullCalendar('refetchEvents');
+            if(json.code == 200){
+                Swal.fire({
+                  title: 'Yeay!',
+                  text: json.message,
+                  icon: 'success',
+                });
+            }
+
+            else{
+                Swal.fire({
+                  title: 'Oops!',
+                  text: json.message,
+                  icon: 'error',
+                });
+                
+            }
+
+            $(\"#calendar\").fullCalendar('refetchEvents');
        }
    });
    
@@ -491,6 +516,9 @@ function doUpdate(){
    obj.penyelenggara = $('#penyelenggara_edit').val();
    obj.priority = $('#priority_edit').val()
    obj.kegiatan_id = $('#kegiatan_id_edit').val()
+   obj.tahun_id = $('#tahun_akademik_edit').val()
+   obj.toleransi_masuk = $('#toleransi_masuk_edit').val()
+   obj.toleransi_keluar = $('#toleransi_keluar_edit').val()
 
    $.ajax({
         url: '".Url::to(['events/ajax-update'])."',
@@ -500,12 +528,24 @@ function doUpdate(){
         type: \"POST\",
         success: function(json) {
             var json = $.parseJSON(json)
-            Swal.fire({
-                      title: 'Yeay!',
-                      text: json.message,
-                      icon: 'success',
-                    });
-           $(\"#calendar\").fullCalendar('refetchEvents');
+            if(json.code == 200){
+                Swal.fire({
+                  title: 'Yeay!',
+                  text: json.message,
+                  icon: 'success',
+                });
+            }
+
+            else{
+                Swal.fire({
+                  title: 'Oops!',
+                  text: json.message,
+                  icon: 'error',
+                });
+                
+            }
+
+            $(\"#calendar\").fullCalendar('refetchEvents');
 
        }
    });

@@ -398,7 +398,10 @@ class EventsController extends Controller
             'penyelenggara' => $model->penyelenggara,
             'venue' => $model->venue,
             'priority' => $model->priority,
-            'kegiatan_id' => $model->kegiatan_id
+            'kegiatan_id' => $model->kegiatan_id,
+            'tahun_id' => $model->tahun_id,
+            'toleransi_masuk' => $model->toleransi_masuk,
+            'toleransi_keluar' => $model->toleransi_keluar,
         ];
         
         echo json_encode($results);
@@ -418,6 +421,9 @@ class EventsController extends Controller
         $model->tingkat = $dataPost['tingkat'];
         $model->priority = $dataPost['priority'];
         $model->kegiatan_id = $dataPost['kegiatan_id'];
+        $model->tahun_id = $dataPost['tahun_id'];
+        $model->toleransi_masuk = $dataPost['toleransi_masuk'];
+        $model->toleransi_keluar = $dataPost['toleransi_keluar'];
 
         $results = [];
         $errors = '';
@@ -458,7 +464,9 @@ class EventsController extends Controller
         $model->tingkat = $dataPost['tingkat'];
         $model->priority = $dataPost['priority'];
         $model->kegiatan_id = $dataPost['kegiatan_id'];
-
+        $model->tahun_id = $dataPost['tahun_id'];
+        $model->toleransi_masuk = $dataPost['toleransi_masuk'];
+        $model->toleransi_keluar = $dataPost['toleransi_keluar'];
         $results = [];
         $errors = '';
         if($model->save())
