@@ -22,9 +22,14 @@ $provinsi = SimakPropinsi::find()->where(['id'=>$model->provinsi])->one();
 
     <h1><?= Html::encode($this->title) ?></h1>
      <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        
-            
 
+<p>        
+<div class="row">
+    <div class="col-xs-12 text-center">
+        <img width="300px" height="400px" src="<?=$model->foto_path;?>"/>
+    </div>
+</div>
+</p>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [           

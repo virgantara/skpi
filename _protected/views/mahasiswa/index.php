@@ -14,7 +14,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-   
+ <?php
+        yii\bootstrap\Modal::begin(['id' =>'modal','size'=>'modal-lg',]);
+        echo '<div class="text-center">';
+        echo '<img id="img">';
+        echo '</div>';
+        yii\bootstrap\Modal::end();
+    ?>
 <?php
     $gridColumns = [
     [
@@ -26,6 +32,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'header'=>'',
         'headerOptions'=>['class'=>'kartik-sheet-style']
     ],
+        [
+                'attribute' => 'foto_path',
+                'format' => 'raw',
+
+                'value' => function($data){
+                    if(!empty($data->foto_path))
+                        return Html::a(Html::img($data->foto_path,['width'=>'70px']),'',['id'=>'popupModal','data-item'=>$data->foto_path]);
+                    else
+                        return '';
+                }
+            ],
             'nama_mahasiswa',
             'nim_mhs',
             
@@ -136,3 +153,16 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+
+<?php
+
+$this->registerJs("$(function() {
+   $('#popupModal').click(function(e) {
+     e.preventDefault();
+     var m = $('#modal').modal('show').find('#img');
+
+     m.attr('src',$(this).data('item'))
+     
+   });
+});");
+?>
