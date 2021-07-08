@@ -16,6 +16,8 @@ $list_fakultas = \app\models\SimakMasterfakultas::getList();
 $list_tingkat = \app\helpers\MyHelper::getTingkatEvent();
 $listTahun = \app\models\SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(5)->all();
 $listTahun = ArrayHelper::map($listTahun,'tahun_id','nama_tahun');
+$listDosen = \app\models\SimakMasterdosen::find()->orderBy(['nama_dosen'=>SORT_ASC])->all();
+
 ?>
 
 <div class="row">
@@ -133,7 +135,21 @@ $listTahun = ArrayHelper::map($listTahun,'tahun_id','nama_tahun');
                         return !empty($data->prodi0) ? $data->prodi0->singkatan : 'Not found';
                     }
                 ],
+                [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'dosen_id',
+                    'refreshGrid' => true,
+                    'filter' => ArrayHelper::map($listDosen,'nidn','nama_dosen'),
+                    'editableOptions' => [
+                        'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+                        'data' => ArrayHelper::map($listDosen,'nidn','nama_dosen'),
+                        'asPopover' => false,
+                    ],
+                    'value' => function($data){
 
+                        return !empty($data->dosen) ? $data->dosen->nama_dosen : 'Not found';
+                    }
+                ],
                 [
                     'class' => 'kartik\grid\EditableColumn',
                     'attribute' => 'tahun_id',

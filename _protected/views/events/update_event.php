@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use kartik\datetime\DateTimePicker;
 use kartik\file\FileInput;
+use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model app\models\Events */
 
@@ -15,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
 // $list_prodi = \app\models\SimakMasterprogramstudi::getList();
 $list_fakultas = \app\models\SimakMasterfakultas::getList();
+$listDosen = \app\models\SimakMasterdosen::find()->orderBy(['nama_dosen'=>SORT_ASC])->all();
 
 ?>
 <div class="col-lg-6">
@@ -79,6 +81,15 @@ $list_fakultas = \app\models\SimakMasterfakultas::getList();
         }),['id'=>'fakultas','class'=>'form-control','prompt'=>'-Pilih Prodi-']);?>
 
         <?= $form->field($model, 'prodi')->dropDownList([],['id'=>'prodi','class'=>'form-control','prompt'=>'-Pilih Prodi-']);?>
+
+        <?= $form->field($model, 'dosen_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map($listDosen,'nidn','nama_dosen'),
+
+            'options'=>['id'=>'dosen_id','placeholder'=>Yii::t('app','- Pilih Dosen -')],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
 
         <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
 

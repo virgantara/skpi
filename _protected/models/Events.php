@@ -40,7 +40,7 @@ class Events extends \yii\db\ActiveRecord
         return [
             [['id','tahun_id'], 'required'],
             [['kegiatan_id'], 'integer'],
-            [['tanggal_mulai', 'tanggal_selesai','file_path','tahun_id','toleransi_masuk','toleransi_keluar','fakultas','prodi'], 'safe'],
+            [['tanggal_mulai', 'tanggal_selesai','file_path','tahun_id','toleransi_masuk','toleransi_keluar','fakultas','prodi','dosen_id'], 'safe'],
             [['file_path'], 'required','on'=>'update'],
             [['file_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, bmp','maxSize' => 1024 * 1024 * 1],
             [['id'], 'string', 'max' => 20],
@@ -51,6 +51,7 @@ class Events extends \yii\db\ActiveRecord
             [['kegiatan_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKegiatan::className(), 'targetAttribute' => ['kegiatan_id' => 'id']],
             [['fakultas'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterfakultas::className(), 'targetAttribute' => ['fakultas' => 'kode_fakultas']],
             [['prodi'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterprogramstudi::className(), 'targetAttribute' => ['prodi' => 'kode_prodi']],
+             [['dosen_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterdosen::className(), 'targetAttribute' => ['dosen_id' => 'nidn']],
         ];
     }
 
@@ -76,6 +77,22 @@ class Events extends \yii\db\ActiveRecord
             'priority' => 'Priority',
             'status' => 'Status',
         ];
+    }
+
+    public function beforeSave($insert)
+    {
+        
+
+        $this->fakultas = !empty($this->fakultas) ? $this->fakultas : null;
+        $this->prodi = !empty($this->prodi) ? $this->prodi : null;
+        $this->dosen_id = !empty($this->dosen_id) || $this->dosen_id != '' ? $this->dosen_id : null;
+
+        return parent::beforeSave($insert);
+    }
+
+    public function getDosen()
+    {
+        return $this->hasOne(SimakMasterdosen::className(), ['nidn' => 'dosen_id']);
     }
 
     /**
