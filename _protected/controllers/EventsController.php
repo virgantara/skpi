@@ -662,7 +662,7 @@ class EventsController extends Controller
         $errors = '';
         if ($model->load(Yii::$app->request->post())) 
         {
-            // $model->file_path = UploadedFile::getInstance($model,'file_path');
+            $model->file_path = UploadedFile::getInstance($model,'file_path');
          
             $transaction = \Yii::$app->db->beginTransaction();
             try 
@@ -674,7 +674,7 @@ class EventsController extends Controller
                     
                     $file = 'evt_'.$model->id.'.'.$model->file_path->extension;
 
-                
+                    
                     $errors = '';
                             
                     $key = 'event/'.$model->tingkat.'/'.$model->venue.'/'.$file;
