@@ -38,7 +38,7 @@ class Events extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id','tahun_id'], 'required'],
+            [['id','tahun_id','venue','tingkat'], 'required'],
             [['kegiatan_id'], 'integer'],
             [['tanggal_mulai', 'tanggal_selesai','file_path','tahun_id','toleransi_masuk','toleransi_keluar','fakultas','prodi','dosen_id'], 'safe'],
             [['file_path'], 'required','on'=>'update'],
