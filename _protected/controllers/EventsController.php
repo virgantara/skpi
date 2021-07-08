@@ -659,45 +659,45 @@ class EventsController extends Controller
         $s3config = Yii::$app->params['s3'];
         $s3 = new \Aws\S3\S3Client($s3config);
         $listTahun = SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(5)->all();
+        $errors = '';
         if ($model->load(Yii::$app->request->post())) 
         {
-            $model->file_path = UploadedFile::getInstance($model,'file_path');
+            // $model->file_path = UploadedFile::getInstance($model,'file_path');
          
             $transaction = \Yii::$app->db->beginTransaction();
             try 
             {
-                if($model->file_path)
-                {
-                    $file_path = $model->file_path->tempName;
-                    $mime_type = $model->file_path->type;
+                // if($model->file_path)
+                // {
+                //     $file_path = $model->file_path->tempName;
+                //     $mime_type = $model->file_path->type;
                     
-                    $file = 'evt_'.$model->id.'.'.$model->file_path->extension;
+                //     $file = 'evt_'.$model->id.'.'.$model->file_path->extension;
 
                 
-                    $errors = '';
+                //     $errors = '';
                             
-                    $key = 'event/'.$model->tingkat.'/'.$model->venue.'/'.$file;
+                //     $key = 'event/'.$model->tingkat.'/'.$model->venue.'/'.$file;
                      
-                    $insert = $s3->putObject([
-                         'Bucket' => 'siakad',
-                         'Key'    => $key,
-                         'Body'   => 'This is the Body',
-                         'SourceFile' => $file_path,
-                         'ContentType' => $mime_type
-                    ]);
+                //     $insert = $s3->putObject([
+                //          'Bucket' => 'siakad',
+                //          'Key'    => $key,
+                //          'Body'   => 'This is the Body',
+                //          'SourceFile' => $file_path,
+                //          'ContentType' => $mime_type
+                //     ]);
 
                     
-                    $plainUrl = $s3->getObjectUrl('siakad', $key);
-                    $model->file_path = $plainUrl;
-                }
+                //     $plainUrl = $s3->getObjectUrl('siakad', $key);
+                //     $model->file_path = $plainUrl;
+                // }
 
-                if (empty($model->file_path)){
-                    $model->file_path = $file_path;
-                }
+                // if (empty($model->file_path)){
+                //     $model->file_path = $file_path;
+                // }
 
-                if($model->validate())
+                if($model->save())
                 {
-                    $model->save();
                     
                     $transaction->commit();
                     Yii::$app->session->setFlash('success', "Data tersimpan");
@@ -706,17 +706,26 @@ class EventsController extends Controller
 
                 else
                 {
+
                     $errors .= \app\helpers\MyHelper::logError($model);
                     throw new \Exception;
                     
                 }
             }
 
-            catch(\Exception $e)
-            {
+            catch (\Throwable $e) { // For PHP 7
+                $transaction->rollBack();
                 $errors .= $e->getMessage();
                 Yii::$app->session->setFlash('danger', $errors);
+                
+            }
+
+            catch(\Exception $e)
+            {
                 $transaction->rollBack();
+                $errors .= $e->getMessage();
+                Yii::$app->session->setFlash('danger', $errors);
+
                 
             }
         }
