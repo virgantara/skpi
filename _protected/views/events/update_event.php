@@ -12,6 +12,10 @@ $this->title = 'Update Events: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Events', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
+
+// $list_prodi = \app\models\SimakMasterprogramstudi::getList();
+$list_fakultas = \app\models\SimakMasterfakultas::getList();
+
 ?>
 <div class="col-lg-6">
 
@@ -70,6 +74,12 @@ $this->params['breadcrumbs'][] = 'Update';
 
         <?= $form->field($model, 'tingkat')->dropDownList(['Prodi'=>'Prodi','Fakultas'=>'Fakultas','Universitas'=>'Universitas','Lokal'=>'Lokal','Provinsi'=>'Provinsi','Nasional'=>'Nasional','Internasional'=>'Internasional'],['id'=>'tingkat','class'=>'form-control','prompt'=>'-Pilih Tingkat-']);?>
 
+        <?= $form->field($model, 'fakultas')->dropDownList(ArrayHelper::map($list_fakultas,'kode_fakultas',function($data){
+            return $data->kode_fakultas.' - '.$data->nama_fakultas;
+        }),['id'=>'fakultas','class'=>'form-control','prompt'=>'-Pilih Prodi-']);?>
+
+        <?= $form->field($model, 'prodi')->dropDownList([],['id'=>'prodi','class'=>'form-control','prompt'=>'-Pilih Prodi-']);?>
+
         <?= $form->field($model, 'url')->textInput(['maxlength' => true]) ?>
 
         <?= $form->field($model, 'priority')->dropDownList(['success'=>'Low','yellow'=>'Medium','warning'=>'High','danger'=>'Important'],['id'=>'priority','class'=>'form-control','prompt'=>'-Pilih Prioritas-']);?>
@@ -112,6 +122,35 @@ $(\"#id_jenis_kegiatan\").change(function(){
 
 getListKegiatan($(\"#id_jenis_kegiatan\").val(),$('#kegiatan_id'));
 
+$('#fakultas').change(function(){
+    getProdyByFakultas($(this).val())
+})
+
+function getProdyByFakultas(kode_fakultas){
+    var obj = new Object;
+    obj.kode_fakultas = kode_fakultas;
+    var prodi = $('#prodi');
+    $.ajax({
+       url: '".Url::to(['api/get-prodi-by-fakultas'])."',
+       data: {
+        dataPost : obj
+       },
+       type: \"POST\",
+       async: true,
+       success: function(json) {
+            var res = $.parseJSON(json)
+            var row = '';
+            prodi.empty();
+            row += '<option  value=\"\">- Pilih Prodi -</option>'
+            $.each(res, function(i, obj){
+              row += '<option  value=\"'+obj.kode_prodi+'\">'+obj.nama_prodi+'</option>';
+            });
+
+            prodi.append(row);
+            prodi.val('".$model->prodi."');
+       }
+    });
+}
 
 function getListKegiatan(jenis_kegiatan, kegiatan_selector){
     var obj = new Object;

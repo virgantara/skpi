@@ -9,6 +9,10 @@ use Yii;
 class MyHelper
 {
 
+	public static function getTingkatEvent(){
+		return ['Prodi'=>'Prodi','Fakultas'=>'Fakultas','Universitas'=>'Universitas','Lokal'=>'Lokal','Provinsi'=>'Provinsi','Nasional'=>'Nasional','Internasional'=>'Internasional'];
+	}
+	
 	public static function getToleransiWaktu()
 	{
 		return [

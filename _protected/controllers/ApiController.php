@@ -34,6 +34,27 @@ class ApiController extends Controller
         ];
     }
 
+    public function actionGetProdiByFakultas(){
+        $dataPost = $_POST['dataPost'];
+        $kode_fakultas = $dataPost['kode_fakultas'];
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $results = [];
+        $params = [
+            'kode_fakultas' => $kode_fakultas
+        ];
+        $response = $client->get('/f/prodi/list', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+        if ($response->isOk) {
+            $results = $response->data['values'];
+            $results = $results[0]['items'];
+
+
+        }
+
+        echo json_encode($results);
+        exit;
+    }
+
     public function actionAjaxGetPelanggaranJumlahTerbanyakProdi()
     {
 

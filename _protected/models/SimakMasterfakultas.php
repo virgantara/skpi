@@ -89,4 +89,8 @@ class SimakMasterfakultas extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SimakMasterprogramstudi::className(), ['kode_fakultas' => 'kode_fakultas']);
     }
+
+     public static function getList(){
+        return SimakMasterfakultas::find()->orderBy(['kode_fakultas'=>SORT_ASC])->all();
+    }
 }
