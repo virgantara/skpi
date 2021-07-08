@@ -667,34 +667,34 @@ class EventsController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
             try 
             {
-                // if($model->file_path)
-                // {
-                //     $file_path = $model->file_path->tempName;
-                //     $mime_type = $model->file_path->type;
+                if($model->file_path)
+                {
+                    $file_path = $model->file_path->tempName;
+                    $mime_type = $model->file_path->type;
                     
-                //     $file = 'evt_'.$model->id.'.'.$model->file_path->extension;
+                    $file = 'evt_'.$model->id.'.'.$model->file_path->extension;
 
                 
-                //     $errors = '';
+                    $errors = '';
                             
-                //     $key = 'event/'.$model->tingkat.'/'.$model->venue.'/'.$file;
+                    $key = 'event/'.$model->tingkat.'/'.$model->venue.'/'.$file;
                      
-                //     $insert = $s3->putObject([
-                //          'Bucket' => 'siakad',
-                //          'Key'    => $key,
-                //          'Body'   => 'This is the Body',
-                //          'SourceFile' => $file_path,
-                //          'ContentType' => $mime_type
-                //     ]);
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $file_path,
+                         'ContentType' => $mime_type
+                    ]);
 
                     
-                //     $plainUrl = $s3->getObjectUrl('siakad', $key);
-                //     $model->file_path = $plainUrl;
-                // }
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->file_path = $plainUrl;
+                }
 
-                // if (empty($model->file_path)){
-                //     $model->file_path = $file_path;
-                // }
+                if (empty($model->file_path)){
+                    $model->file_path = $file_path;
+                }
 
                 if($model->save())
                 {
