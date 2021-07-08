@@ -1,5 +1,5 @@
 <?php
-
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 
@@ -10,6 +10,12 @@ use kartik\grid\GridView;
 $this->title = 'Events';
 $this->params['breadcrumbs'][] = $this->title;
 
+$list_venue = \app\models\Venue::getList();
+$list_prodi = \app\models\SimakMasterprogramstudi::getList();
+$list_fakultas = \app\models\SimakMasterfakultas::getList();
+$list_tingkat = \app\helpers\MyHelper::getTingkatEvent();
+$listTahun = \app\models\SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(5)->all();
+$listTahun = ArrayHelper::map($listTahun,'tahun_id','nama_tahun');
 ?>
 
 <div class="row">
@@ -60,12 +66,86 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
 
                 'nama',
-                'venue',
+                [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'venue',
+                    'filter' => ArrayHelper::map($list_venue,'nama','nama'),
+                    'refreshGrid' => true,
+                    'editableOptions' => [
+                        'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+                        'data' => ArrayHelper::map($list_venue,'nama','nama'),
+                        'asPopover' => false,
+                    ],
+
+                  
+                ],
                 'tanggal_mulai',
                 'tanggal_selesai',
-                'penyelenggara',
-                'tingkat',
-                'tahun_id',
+                [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'penyelenggara',
+                    'refreshGrid' => true,
+                     'editableOptions' => [
+                        'inputType' => \kartik\editable\Editable::INPUT_TEXT,
+                        'asPopover' => false,
+                    ],
+                  
+                ],
+                [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'tingkat',
+                    'filter' => $list_tingkat,
+                    'refreshGrid' => true,
+                    'editableOptions' => [
+                        'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+                        'data' => $list_tingkat,
+                        'asPopover' => false,
+                    ],
+                  
+                ],
+                [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'fakultas',
+                    'refreshGrid' => true,
+                    'filter' => ArrayHelper::map($list_fakultas,'kode_fakultas','nama_fakultas'),
+                    'editableOptions' => [
+                        'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+                        'data' => ArrayHelper::map($list_fakultas,'kode_fakultas','nama_fakultas'),
+                        'asPopover' => false,
+                    ],
+                    'value' => function($data){
+
+                        return !empty($data->fakultas0) ? $data->fakultas0->nama_fakultas : 'Not found';
+                    }
+                ],
+                [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'prodi',
+                    'refreshGrid' => true,
+                    'filter' => ArrayHelper::map($list_prodi,'kode_prodi','singkatan'),
+                    'editableOptions' => [
+                        'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+                        'data' => ArrayHelper::map($list_prodi,'kode_prodi','singkatan'),
+                        'asPopover' => false,
+                    ],
+                    'value' => function($data){
+
+                        return !empty($data->prodi0) ? $data->prodi0->singkatan : 'Not found';
+                    }
+                ],
+
+                [
+                    'class' => 'kartik\grid\EditableColumn',
+                    'attribute' => 'tahun_id',
+                    'filter' => $listTahun,
+                    'refreshGrid' => true,
+                    'editableOptions' => [
+                        'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+                        'data' => $listTahun,
+                        'asPopover' => false,
+                    ],
+                  
+                ],
                 [
                     'attribute' => 'status',
                     'filter' => \app\helpers\MyHelper::getStatusEvent(),

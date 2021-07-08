@@ -46,4 +46,8 @@ class Venue extends \yii\db\ActiveRecord
             'kapasitas' => 'Kapasitas',
         ];
     }
+
+    public static function getList(){
+        return Venue::find()->orderBy(['nama'=>SORT_ASC])->all();
+    }
 }

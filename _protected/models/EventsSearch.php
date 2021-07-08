@@ -17,7 +17,7 @@ class EventsSearch extends Events
     public function rules()
     {
         return [
-            [['id', 'nama', 'venue', 'tanggal_mulai', 'tanggal_selesai', 'penyelenggara', 'tingkat', 'url','status','kegiatan_id','tahun_id','toleransi_masuk','toleransi_keluar'], 'safe'],
+            [['id', 'nama', 'venue', 'tanggal_mulai', 'tanggal_selesai', 'penyelenggara', 'tingkat', 'url','status','kegiatan_id','tahun_id','toleransi_masuk','toleransi_keluar','fakultas','prodi'], 'safe'],
         ];
     }
 
@@ -65,6 +65,8 @@ class EventsSearch extends Events
             'tanggal_mulai' => $this->tanggal_mulai,
             'tanggal_selesai' => $this->tanggal_selesai,
             'tahun_id' => $this->tahun_id,
+            'fakultas' => $this->fakultas,
+            'prodi' => $this->prodi,
             'toleransi_masuk' => $this->toleransi_masuk,
             'toleransi_keluar' => $this->toleransi_keluar,
             // 'kegiatan_id' => $this->kegiatan_id,

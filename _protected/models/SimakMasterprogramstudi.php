@@ -140,4 +140,8 @@ class SimakMasterprogramstudi extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SimakProdiCapem::className(), ['prodi_id' => 'kode_prodi']);
     }
+
+    public static function getList(){
+        return SimakMasterprogramstudi::find()->orderBy(['kode_fakultas'=>SORT_ASC,'nama_prodi'=>SORT_ASC])->all();
+    }
 }

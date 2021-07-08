@@ -40,7 +40,7 @@ class Events extends \yii\db\ActiveRecord
         return [
             [['id','tahun_id'], 'required'],
             [['kegiatan_id'], 'integer'],
-            [['tanggal_mulai', 'tanggal_selesai','file_path','tahun_id','toleransi_masuk','toleransi_keluar'], 'safe'],
+            [['tanggal_mulai', 'tanggal_selesai','file_path','tahun_id','toleransi_masuk','toleransi_keluar','fakultas','prodi'], 'safe'],
             [['file_path'], 'required','on'=>'update'],
             [['file_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg, bmp','maxSize' => 1024 * 1024 * 1],
             [['id'], 'string', 'max' => 20],
@@ -49,6 +49,8 @@ class Events extends \yii\db\ActiveRecord
             [['status'], 'string', 'max' => 1],
             [['id'], 'unique'],
             [['kegiatan_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKegiatan::className(), 'targetAttribute' => ['kegiatan_id' => 'id']],
+            [['fakultas'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterfakultas::className(), 'targetAttribute' => ['fakultas' => 'kode_fakultas']],
+            [['prodi'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterprogramstudi::className(), 'targetAttribute' => ['prodi' => 'kode_prodi']],
         ];
     }
 
@@ -84,6 +86,16 @@ class Events extends \yii\db\ActiveRecord
     public function getKegiatan()
     {
         return $this->hasOne(SimakKegiatan::className(), ['id' => 'kegiatan_id']);
+    }
+
+    public function getFakultas0()
+    {
+        return $this->hasOne(SimakMasterfakultas::className(), ['kode_fakultas' => 'fakultas']);
+    }
+
+    public function getProdi0()
+    {
+        return $this->hasOne(SimakMasterprogramstudi::className(), ['kode_prodi' => 'prodi']);
     }
 
     /**
