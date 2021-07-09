@@ -34,6 +34,43 @@ class ApiController extends Controller
         ];
     }
 
+    public function actionCountProdiEventTop(){
+        $dataPost = $_POST['dataPost'];
+        
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $results = [];
+        $params = [
+            'tahun_id' => $dataPost['tahun_id'],
+            'limit' => $dataPost['limit']
+        ];
+        $response = $client->get('/event/prodi/top', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+        if ($response->isOk) {
+            $results = $response->data['values'];
+        }
+
+        echo json_encode($results);
+        exit;
+    }
+
+    public function actionCountEventByTingkat(){
+        $dataPost = $_POST['dataPost'];
+        
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $results = [];
+        $params = [
+            'periode' => $dataPost['periode']
+        ];
+        $response = $client->get('/event/tingkat/count', $params,['x-access-token'=>Yii::$app->params['client_token']])->send();
+        if ($response->isOk) {
+            $results = $response->data['values'];
+        }
+
+        echo json_encode($results);
+        exit;
+    }
+
     public function actionGetProdiByFakultas(){
         $dataPost = $_POST['dataPost'];
         $kode_fakultas = $dataPost['kode_fakultas'];

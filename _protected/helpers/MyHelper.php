@@ -9,6 +9,17 @@ use Yii;
 class MyHelper
 {
 
+	public static function getPeriodeEvent()
+	{
+		return [
+			'1' => '1 bulan ke depan',
+			'3' => '3 bulan ke depan',
+			'6' => '6 bulan ke depan',
+			'12' => '1 tahun ke depan',
+			'-12' => '1 tahun yang lalu'
+		];
+	}
+
 	public static function getTingkatEvent(){
 		return ['Prodi'=>'Prodi','Fakultas'=>'Fakultas','Universitas'=>'Universitas','Lokal'=>'Lokal','Provinsi'=>'Provinsi','Nasional'=>'Nasional','Internasional'=>'Internasional'];
 	}

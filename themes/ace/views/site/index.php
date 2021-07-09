@@ -1,6 +1,7 @@
 <?php
 /* @var $this yii\web\View */
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use app\assets\HighchartAsset;
@@ -22,174 +23,129 @@ $listAsrama = $query->all();
 
 </style>
 
+<div class="tabbable">
+  <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
+    <li class="active">
+      <a data-toggle="tab" href="#akpam" aria-expanded="true">Akpam</a>
+    </li>
 
-<?php 
-if(Yii::$app->user->identity->access_role != 'asesor')
-{
-?>
-  <div class="row">
+    <li class="">
+      <a data-toggle="tab" href="#event" aria-expanded="false">Events</a>
+    </li>
 
-	<div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
-          <div class="widget-box transparent">
+    <li class="">
+      <a data-toggle="tab" href="#asrama" aria-expanded="false">Asrama</a>
+    </li>
+
+     <li class="">
+      <a data-toggle="tab" href="#konsulat" aria-expanded="false">Peta Konsulat</a>
+    </li>
+
+    <li class="">
+      <a data-toggle="tab" href="#dropdown14" aria-expanded="false">Pelanggaran Disiplin</a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="akpam" class="tab-pane active">
+      <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+    </div>
+
+    <div id="event" class="tab-pane">
+      
+      
+      <div class="row">
+      <div class="col-md-6">
+         <div class="widget-box transparent">
             <div class="widget-header">
               <h4 class="widget-title lighter smaller">
-                <i class="ace-icon fa fa-rss orange"></i>Grafik Jumlah Pelanggaran
+                <i class="ace-icon fa fa-rss orange"></i>Perbandingan Event tiap Tingkatan
+                <span id="loadingEvent" style="display:none">Loading...</span>
               </h4>
-               <div id="loadingBuy" style="display: none">Fetching...</div>
+            </div>
+            <div class="widget-body">
+              <div class="widget-main padding-4">
+                <div class="tab-content padding-8">
+                  <?=Html::dropDownList('periode','',\app\helpers\MyHelper::getPeriodeEvent(),['prompt' => '- Pilih Periode Event-','id'=>'periode']);?>
+                    <div class="chart-container">
+                    <div id="container-event" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                  </div>
+                </div>
+              </div>
+                
+            </div>
+          </div>
+        
+      </div>
+      <div class="col-md-6">
+        <div class="widget-box transparent">
+            <div class="widget-header">
+              <h4 class="widget-title lighter smaller">
+                <i class="ace-icon fa fa-rss orange"></i>Top 5 Prodi dengan Event Teraktif
+                <span id="loadingTopProdiAktif" style="display: none">Fetching...</span>
+              </h4>
+               
+               <div class="pull-right">
+                
+              </div>
             </div>
 
             <div class="widget-body">
               <div class="widget-main padding-4">
                 <div class="tab-content padding-8">
-                  <select name="year"  id="tahun_pelanggan_kategori">
-                  <option value=''>Select Year</option>
-                  <?php
-                    for ($year = 2014; $year <= 2030; $year++) {
-                      $selected = (date('Y')==$year) ? 'selected' : '';
-                        echo "<option value=$year $selected>$year</option>";
                       
-                    }
-                  ?>
-                </select>
-          <div class="table-responsive">
-                           <div id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
-          </div>
+                    <?=Html::dropDownList('tahun_id','',ArrayHelper::map(\app\models\SimakTahunakademik::getList(),'tahun_id','nama_tahun'),['prompt' => '- Pilih Tahun Akademik-','id'=>'tahun_id']);?>
+                     <div class="containerProdiAktif" id="containerProdiAktif" style="min-width: 200;  margin: 0 auto">
+                       
+                     </div> 
+                  
                 </div>
               </div><!-- /.widget-main -->
             </div><!-- /.widget-body -->
           </div><!-- /.widget-box -->
-        </div><!-- /.col -->
+      </div>
+      </div>
+    </div>
 
-  </div>
-  <div class="row">
-
-    <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
-      <div class="widget-box transparent">
-        <div class="widget-header">
-          <h4 class="widget-title lighter smaller">
-            <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Ringan
-            <span id="loadingringan" style="display: none">Fetching...</span>
-          </h4>
-           
-           <div class="pull-right">
-            <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv2ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-            <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv3ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-          </div>
-        </div>
-
-        <div class="widget-body">
-          <div class="widget-main padding-4">
-            <div class="tab-content padding-8">
-             
-
-                 <div class="containerringan" id="containerringan" style="min-width: 200;  margin: 0 auto">
-                   
-                 </div> 
-              
-            </div>
-          </div><!-- /.widget-main -->
-        </div><!-- /.widget-body -->
-      </div><!-- /.widget-box -->
-    </div><!-- /.col -->
-    <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
-      <div class="widget-box transparent">
-        <div class="widget-header">
-          <h4 class="widget-title lighter smaller">
-            <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Sedang
-            <span id="loadingsedang" style="display: none">Fetching...</span>
-          </h4>
-            <div class="pull-right">
-            <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv2sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-            <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv3sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-          </div>
-        </div>
-
-        <div class="widget-body">
-          <div class="widget-main padding-4">
-            <div class="tab-content padding-8">
-             
-
-              <div class="table-responsive">
-                   <div class="containersedang" id="containersedang" style="min-width: 200;  margin: 0 auto">
-                     
-                   </div> 
-              </div>
-
-            </div>
-          </div><!-- /.widget-main -->
-        </div><!-- /.widget-body -->
-      </div><!-- /.widget-box -->
-    </div><!-- /.col -->
-    <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
-      <div class="widget-box transparent">
-        <div class="widget-header">
-          <h4 class="widget-title lighter smaller">
-            <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Berat
-            <span id="loadingberat" style="display: none">Fetching...</span>
-          </h4>
-           <div class="pull-right">
-            <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv2berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-            <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv3berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
-          </div>
-        </div>
-
-        <div class="widget-body">
-          <div class="widget-main padding-4">
-            <div class="tab-content padding-8">
-             
-
-              <div class="table-responsive">
-                   <div class="containerberat" id="containerberat" style="min-width: 200;  margin: 0 auto">
-                     
-                   </div> 
-              </div>
-
-            </div>
-          </div><!-- /.widget-main -->
-        </div><!-- /.widget-body -->
-      </div><!-- /.widget-box -->
-    </div><!-- /.col -->
-
-  </div>
-<?php 
-}
-?>
-<div class="row">
-     <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
-          <div class="widget-box transparent">
-            <div class="widget-header">
-              <h4 class="widget-title lighter smaller">
-                <i class="ace-icon fa fa-rss orange"></i>Kapasitas Asrama
-              </h4>
-               <div id="loadingGauge" style="display: none">Fetching...</div>
-            </div>
-
-            <div class="widget-body">
-              <div class="widget-main padding-4">
-                <div class="tab-content padding-8">
-                 
-
-                    <?php 
-                    
-                    foreach($listAsrama as $a)
-                    {
-                    ?><div class="table-responsive">
-                 <div class="containerAsrama" id="containerAsrama<?=$a->id;?>" style="min-width: 200;  margin: 0 auto"></div> </div>
-                 <?php 
-             }
-                 ?>
-            
+    <div id="asrama" class="tab-pane">
+      
+      <div class="row">
+         <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+              <div class="widget-box transparent">
+                <div class="widget-header">
+                  <h4 class="widget-title lighter smaller">
+                    <i class="ace-icon fa fa-rss orange"></i>Kapasitas Asrama
+                  </h4>
+                   <div id="loadingGauge" style="display: none">Fetching...</div>
                 </div>
-              </div><!-- /.widget-main -->
-            </div><!-- /.widget-body -->
-          </div><!-- /.widget-box -->
-        </div><!-- /.col -->
 
-</div>
+                <div class="widget-body">
+                  <div class="widget-main padding-4">
+                    <div class="tab-content padding-8">
+                     
 
-<div class="row">
+                        <?php 
+                        
+                        foreach($listAsrama as $a)
+                        {
+                        ?><div class="table-responsive">
+                     <div class="containerAsrama" id="containerAsrama<?=$a->id;?>" style="min-width: 200;  margin: 0 auto"></div> </div>
+                     <?php 
+                 }
+                     ?>
+                
+                    </div>
+                  </div><!-- /.widget-main -->
+                </div><!-- /.widget-body -->
+              </div><!-- /.widget-box -->
+            </div><!-- /.col -->
 
-  <div class="col-xs-12 ">
+    </div>
+    </div>
+    <div id="konsulat" class="tab-pane">
+      <div class="row">
+
+        <div class="col-xs-12 ">
           <div class="widget-box transparent">
             <div class="widget-header">
               <h4 class="widget-title lighter smaller">
@@ -208,11 +164,383 @@ if(Yii::$app->user->identity->access_role != 'asesor')
           </div><!-- /.widget-box -->
         </div><!-- /.col -->
 
+      </div>
+      
+    </div>
+    <div id="dropdown14" class="tab-pane">
+      <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+          <div class="widget-box transparent">
+            <div class="widget-header">
+              <h4 class="widget-title lighter smaller">
+                <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Ringan
+                <span id="loadingringan" style="display: none">Fetching...</span>
+              </h4>
+               
+               <div class="pull-right">
+                <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv2ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+                <a href="javascript:void(0)" class="btn btn-xs btn-info" id="kembalilv3ringan" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+              </div>
+            </div>
+
+            <div class="widget-body">
+              <div class="widget-main padding-4">
+                <div class="tab-content padding-8">
+                 
+
+                     <div class="containerringan" id="containerringan" style="min-width: 200;  margin: 0 auto">
+                       
+                     </div> 
+                  
+                </div>
+              </div><!-- /.widget-main -->
+            </div><!-- /.widget-body -->
+          </div><!-- /.widget-box -->
+        </div><!-- /.col -->
+        <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+          <div class="widget-box transparent">
+            <div class="widget-header">
+              <h4 class="widget-title lighter smaller">
+                <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Sedang
+                <span id="loadingsedang" style="display: none">Fetching...</span>
+              </h4>
+                <div class="pull-right">
+                <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv2sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+                <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv3sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+              </div>
+            </div>
+
+            <div class="widget-body">
+              <div class="widget-main padding-4">
+                <div class="tab-content padding-8">
+                 
+
+                  <div class="table-responsive">
+                       <div class="containersedang" id="containersedang" style="min-width: 200;  margin: 0 auto">
+                         
+                       </div> 
+                  </div>
+
+                </div>
+              </div><!-- /.widget-main -->
+            </div><!-- /.widget-body -->
+          </div><!-- /.widget-box -->
+        </div><!-- /.col -->
+        <div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
+          <div class="widget-box transparent">
+            <div class="widget-header">
+              <h4 class="widget-title lighter smaller">
+                <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Berat
+                <span id="loadingberat" style="display: none">Fetching...</span>
+              </h4>
+               <div class="pull-right">
+                <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv2berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+                <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv3berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
+              </div>
+            </div>
+
+            <div class="widget-body">
+              <div class="widget-main padding-4">
+                <div class="tab-content padding-8">
+                 
+
+                  <div class="table-responsive">
+                       <div class="containerberat" id="containerberat" style="min-width: 200;  margin: 0 auto">
+                         
+                       </div> 
+                  </div>
+
+                </div>
+              </div><!-- /.widget-main -->
+            </div><!-- /.widget-body -->
+          </div><!-- /.widget-box -->
+        </div><!-- /.col -->
+
+      </div>
+      <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-lg-6 col-md-6">
+                <div class="widget-box transparent">
+                  <div class="widget-header">
+                    <h4 class="widget-title lighter smaller">
+                      <i class="ace-icon fa fa-rss orange"></i>Grafik Jumlah Pelanggaran
+                    </h4>
+                     <div id="loadingBuy" style="display: none">Fetching...</div>
+                  </div>
+
+                  <div class="widget-body">
+                    <div class="widget-main padding-4">
+                      <div class="tab-content padding-8">
+                        <select name="year"  id="tahun_pelanggan_kategori">
+                        <option value=''>Select Year</option>
+                        <?php
+                          for ($year = 2014; $year <= 2030; $year++) {
+                            $selected = (date('Y')==$year) ? 'selected' : '';
+                              echo "<option value=$year $selected>$year</option>";
+                            
+                          }
+                        ?>
+                      </select>
+                <div class="table-responsive">
+                                 <div id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+                </div>
+                      </div>
+                    </div><!-- /.widget-main -->
+                  </div><!-- /.widget-body -->
+                </div><!-- /.widget-box -->
+              </div><!-- /.col -->
+
+        </div>
+    </div>
+  </div>
 </div>
+
+<?php 
+if(Yii::$app->user->identity->access_role != 'asesor')
+{
+?>
+  
+  
+<?php 
+}
+?>
+
+
+
 
 <?php
 $script = '
 
+$("#periode").change(function(){
+  countEventByTingkat($(this).val())
+})
+
+let limit = 5;
+
+$("#tahun_id").change(function(){
+
+  countProdiEventTop($(this).val(),limit)
+})
+countProdiEventTop($("#tahun_id").val(),limit)
+countEventByTingkat($("#periode").val())
+
+function countProdiEventTop(tahun_id, limit){
+  var obj = new Object
+  obj.tahun_id = tahun_id
+  obj.limit = limit
+
+  $.ajax({
+      type : "POST",
+      data : {
+        dataPost : obj
+      },
+      url : "'.Url::to(["api/count-prodi-event-top"]).'",
+      async: true,
+      beforeSend : function(){
+        $("#loadingTopProdiAktif").show();
+      },
+      error : function(e){
+          console.log(e.responseText);
+         $("#loadingTopProdiAktif").hide();
+      },
+      success : function(data){
+        $("#loadingTopProdiAktif").hide();
+        var hasil = $.parseJSON(data);
+
+        var kategori = []
+        var chartData = []
+        $.each(hasil, function(i,obj){
+          kategori.push(obj.nama_prodi)
+
+          var tmp = {
+            y: obj.total,
+            name: obj.nama_prodi
+          }
+
+          chartData.push(tmp)
+        })
+
+        Highcharts.chart("containerProdiAktif", {
+          chart: {
+              type: "bar"
+          },
+          title: {
+              text: null
+          },
+          subtitle: {
+              text: null
+          },
+          xAxis: {
+            categories: kategori,
+            title : {
+              text : \'Top 5 Prodi Teraktif\'
+            }
+          },
+          yAxis: {
+              min: 0,
+              title: {
+                  text: "Jumlah",
+                  align: \'high\'
+              },
+              labels: {
+                  overflow: \'justify\'
+              }
+          },
+          tooltip: {
+              valueSuffix: " Prodi Ter"
+          },
+          plotOptions: {
+              bar: {
+                  dataLabels: {
+                      enabled: true
+                  }
+              },
+              series: {
+                  cursor: \'pointer\',
+                  point: {
+                      events: {
+                          click: function() {
+                            
+                          }
+                      }
+                  }
+              }
+          },
+          credits: {
+              enabled: false
+          },
+          series: [{
+              name: "Prodi Teraktif",
+              data: chartData,
+              // color: warna
+          }],
+          
+        });
+      }
+  });
+
+  
+}
+
+function countEventByTingkat(periode){
+  var obj = new Object
+  obj.periode = periode
+
+  $.ajax({
+      type : "POST",
+      data : {
+        dataPost : obj
+      },
+      url : "'.Url::to(["api/count-event-by-tingkat"]).'",
+      async: true,
+      beforeSend : function(){
+        $("#loadingEvent").show();
+      },
+      error : function(e){
+          console.log(e.responseText);
+         $("#loadingEvent").hide();
+      },
+      success : function(data){
+        $("#loadingEvent").hide();
+        var hasil = $.parseJSON(data);
+
+        var kategori = []
+        var chartData = []
+        $.each(hasil, function(i,obj){
+          kategori.push(obj.tingkat)
+
+          var tmp = {
+            y: obj.total,
+            name: obj.tingkat
+          }
+
+          chartData.push(tmp)
+        })
+
+        $("#container-event").highcharts({
+          chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: "pie"
+          },
+          title: {
+              text: "Perbandingan Jumlah Tingkat Kegiatan"
+          },
+
+          xAxis: {
+            categories: kategori,
+            crosshair: true
+          },
+          yAxis: {
+              title: {
+                  text: "Jumlah"
+              },
+              
+              startOnTick: false,
+              endOnTick: false
+          },
+          tooltip: {
+              headerFormat: "<span style=\"font-size:10px\">{point.key}</span><table>",
+              pointFormat: "<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>" +
+                  "<td style=\"padding:0\"><b>{point.y}</b></td></tr>",
+              footerFormat: "</table>",
+              shared: true,
+              useHTML: true
+          },
+          plotOptions: {
+              pie: {
+                  allowPointSelect: true,
+                  cursor: "pointer",
+                  dataLabels: {
+                      enabled: true,
+                      format: "<b>{point.name}</b> : {point.percentage:.1f} %"
+                  }
+              },
+              series: {
+                  cursor: \'pointer\',
+                  point: {
+                      events: {
+                          click: function (tes) {
+                            if(tes.point.name){
+                              window.open("'.Url::to(['simak-mastermahasiswa/list-belum-krs']).'","_blank")
+                            }
+                          }
+                      }
+                  }
+              }
+              
+              
+            
+          },
+
+          series: [{
+              name: "Total event",
+              data: chartData,
+              colorByPoint: true,
+          }],
+
+          responsive: {
+              rules: [{
+                  condition: {
+                      maxWidth: 500
+                  },
+                  chartOptions: {
+                      legend: {
+                          layout: "horizontal",
+                          align: "center",
+                          verticalAlign: "bottom"
+                      }
+                  }
+              }]
+          }
+        });
+      }
+  });
+
+  
+}
 
 function getPelanggaran(tahun){
 

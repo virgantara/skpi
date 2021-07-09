@@ -16,7 +16,7 @@ class MenuHelper
 		if(!Yii::$app->user->isGuest){
 
 		     $menuItems[] = [
-		        'label' => '<i class="menu-icon fa fa-tachometer"></i><span class="menu-text"> Beranda </span>', 
+		        'label' => '<i class="menu-icon fa fa-tachometer"></i><span class="menu-text"> Dashboard </span>', 
 		        'url' => ['site/index']];
 		}
 
