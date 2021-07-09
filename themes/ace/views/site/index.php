@@ -48,7 +48,83 @@ $listAsrama = $query->all();
 
   <div class="tab-content">
     <div id="akpam" class="tab-pane active">
-      <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="widget-box transparent">
+              <div class="widget-header">
+                <h4 class="widget-title lighter smaller">
+                  <i class="ace-icon fa fa-rss orange"></i>Rekapitulasi Kelulusan AKPAM
+
+                </h4>
+              
+              </div>
+
+              <div class="widget-body">
+                <div class="widget-main padding-4">
+                  <div class="tab-content padding-8">
+                    
+                    <?=Html::dropDownList('tahun_id','',ArrayHelper::map(\app\models\SimakTahunakademik::getList(),'tahun_id','nama_tahun'),['prompt' => '- Pilih Tahun Akademik-','id'=>'tahun_akpam_id']);?>
+                    <span id="loading_akpam_lulus" style="display: none">
+                      <img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" />
+                    </span>
+                   <div class="chart-container">
+                    <div id="container-akpam-lulus" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                  </div>
+                  </div>
+                </div><!-- /.widget-main -->
+              </div><!-- /.widget-body -->
+            </div><!-- /.widget-box -->
+        </div>
+        <div class="col-md-4">
+          <div class="widget-box transparent">
+              <div class="widget-header">
+                <h4 class="widget-title lighter smaller">
+                  <i class="ace-icon fa fa-rss orange"></i>Rekapitulasi Kelulusan AKPAM Per Fakultas
+
+                </h4>
+              
+              </div>
+
+              <div class="widget-body">
+                <div class="widget-main padding-4">
+                  <div class="tab-content padding-8">
+                    <span id="loading_akpam_lulus_fakultas" style="display: none">
+                      <img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" />
+                    </span>
+                    <div class="chart-container">
+                      <div id="container-akpam-lulus-fakultas" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                    </div>
+                  </div>
+                </div><!-- /.widget-main -->
+              </div><!-- /.widget-body -->
+            </div><!-- /.widget-box -->
+        </div>
+        <div class="col-md-4">
+          <div class="widget-box transparent">
+              <div class="widget-header">
+                <h4 class="widget-title lighter smaller">
+                  <i class="ace-icon fa fa-rss orange"></i>Rekapitulasi Kelulusan AKPAM Per Prodi
+
+                </h4>
+              
+              </div>
+
+              <div class="widget-body">
+                <div class="widget-main padding-4">
+                  <div class="tab-content padding-8">
+                    <span id="loading_akpam_lulus_prodi" style="display: none">
+                      <img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" />
+                    </span>
+                    <div class="chart-container">
+                      <div id="container-akpam-lulus-prodi" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                    </div>
+                  </div>
+                </div><!-- /.widget-main -->
+              </div><!-- /.widget-body -->
+            </div><!-- /.widget-box -->
+        </div>
+      </div>
+     
     </div>
 
     <div id="event" class="tab-pane">
@@ -60,13 +136,14 @@ $listAsrama = $query->all();
             <div class="widget-header">
               <h4 class="widget-title lighter smaller">
                 <i class="ace-icon fa fa-rss orange"></i>Perbandingan Event tiap Tingkatan
-                <span id="loadingEvent" style="display:none">Loading...</span>
+                
               </h4>
             </div>
             <div class="widget-body">
               <div class="widget-main padding-4">
                 <div class="tab-content padding-8">
                   <?=Html::dropDownList('periode','',\app\helpers\MyHelper::getPeriodeEvent(),['prompt' => '- Pilih Periode Event-','id'=>'periode']);?>
+                  <span id="loadingEvent" style="display:none"><img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
                     <div class="chart-container">
                     <div id="container-event" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
                   </div>
@@ -82,7 +159,7 @@ $listAsrama = $query->all();
             <div class="widget-header">
               <h4 class="widget-title lighter smaller">
                 <i class="ace-icon fa fa-rss orange"></i>Top 5 Prodi dengan Event Teraktif
-                <span id="loadingTopProdiAktif" style="display: none">Fetching...</span>
+                
               </h4>
                
                <div class="pull-right">
@@ -95,6 +172,7 @@ $listAsrama = $query->all();
                 <div class="tab-content padding-8">
                       
                     <?=Html::dropDownList('tahun_id','',ArrayHelper::map(\app\models\SimakTahunakademik::getList(),'tahun_id','nama_tahun'),['prompt' => '- Pilih Tahun Akademik-','id'=>'tahun_id']);?>
+                    <span id="loadingTopProdiAktif" style="display: none"><img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
                      <div class="containerProdiAktif" id="containerProdiAktif" style="min-width: 200;  margin: 0 auto">
                        
                      </div> 
@@ -116,7 +194,7 @@ $listAsrama = $query->all();
                   <h4 class="widget-title lighter smaller">
                     <i class="ace-icon fa fa-rss orange"></i>Kapasitas Asrama
                   </h4>
-                   <div id="loadingGauge" style="display: none">Fetching...</div>
+                   <div id="loadingGauge" style="display: none"><img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></div>
                 </div>
 
                 <div class="widget-body">
@@ -175,7 +253,7 @@ $listAsrama = $query->all();
             <div class="widget-header">
               <h4 class="widget-title lighter smaller">
                 <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Ringan
-                <span id="loadingringan" style="display: none">Fetching...</span>
+                <span id="loadingringan" style="display: none"><img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
               </h4>
                
                <div class="pull-right">
@@ -203,7 +281,7 @@ $listAsrama = $query->all();
             <div class="widget-header">
               <h4 class="widget-title lighter smaller">
                 <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Sedang
-                <span id="loadingsedang" style="display: none">Fetching...</span>
+                <span id="loadingsedang" style="display: none"><img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
               </h4>
                 <div class="pull-right">
                 <a href="javascript:void(0)" class="btn btn-xs btn-warning" id="kembalilv2sedang" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
@@ -232,7 +310,7 @@ $listAsrama = $query->all();
             <div class="widget-header">
               <h4 class="widget-title lighter smaller">
                 <i class="ace-icon fa fa-rss orange"></i>Top Pelanggaran Berat
-                <span id="loadingberat" style="display: none">Fetching...</span>
+                <span id="loadingberat" style="display: none"><img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
               </h4>
                <div class="pull-right">
                 <a href="javascript:void(0)" class="btn btn-xs btn-danger" id="kembalilv2berat" style="display: none"> <i class="glyphicon glyphicon-step-backward"></i> Kembali</a>
@@ -266,7 +344,7 @@ $listAsrama = $query->all();
                     <h4 class="widget-title lighter smaller">
                       <i class="ace-icon fa fa-rss orange"></i>Grafik Jumlah Pelanggaran
                     </h4>
-                     <div id="loadingBuy" style="display: none">Fetching...</div>
+                     <div id="loadingBuy" style="display: none"><img width="50px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></div>
                   </div>
 
                   <div class="widget-body">
@@ -318,12 +396,368 @@ $("#periode").change(function(){
 
 let limit = 5;
 
+function getRandColor(same, darkness) {
+    var r = Math.floor(Math.random() * 255);
+    var g = Math.floor(Math.random() * 255);
+    var b = Math.floor(Math.random() * 255);
+    return "rgb(" + r + "," + g + "," + b + ")";
+}
+
+
 $("#tahun_id").change(function(){
 
   countProdiEventTop($(this).val(),limit)
 })
+
+$("#tahun_akpam_id").change(function(){
+
+  getKelulusanAkpam($(this).val());
+  getKelulusanAkpamFakultas($(this).val())
+  getKelulusanAkpamProdi($(this).val(),null)
+})
+
 countProdiEventTop($("#tahun_id").val(),limit)
 countEventByTingkat($("#periode").val())
+getKelulusanAkpam($("#tahun_akpam_id").val())
+
+function getKelulusanAkpamProdi(tahun_akademik, fakultas){
+    
+    var obj = new Object;
+    obj.tahun_akademik = tahun_akademik;
+    obj.fakultas = fakultas
+   
+    $.ajax({
+
+        type : "POST",
+        url : "'.Url::to(['/api/ajax-rekap-kelulusan-akpam-prodi']).'",
+        data : {
+          dataPost : obj
+        },
+        async : true,
+        error : function(e){
+          $("#loading_akpam_lulus_prodi").hide();
+        },
+        beforeSend : function(){
+          $("#loading_akpam_lulus_prodi").show(); 
+
+        },
+        success: function(hasil){
+          var hasil = $.parseJSON(hasil);
+          $("#loading_akpam_lulus_prodi").hide();
+                
+          var kategori = [];
+
+          var chartData = [];
+          var chartDataBelum = [];
+
+          $.each(hasil,function(i,obj){
+            kategori.push(obj.prodi)
+            
+            chartData.push(obj.count_lulus);
+            chartDataBelum.push(obj.count_belum);
+          });
+
+          $("#container-akpam-lulus-prodi").highcharts({
+            chart: {
+              type: "column"
+          },
+            title: {
+                text: "Persentase Kelulusan AKPAM Per Prodi"
+            },
+
+            xAxis: {
+              categories: kategori,
+              crosshair: true
+            },
+            yAxis: {
+                title: {
+                    text: "Jumlah"
+                },
+
+                startOnTick: false,
+                endOnTick: false
+            },
+            tooltip: {
+                headerFormat: "<span style=\"font-size:10px\">{point.key}</span><table>",
+                pointFormat: "<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>" +
+                    "<td style=\"padding:0\"><b>{point.y}</b></td></tr>",
+                footerFormat: "</table>",
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+                },
+                series: {
+                  cursor: \'pointer\',
+                  point: {
+                      events: {
+                          click: function (tes) {
+                            
+                          }
+                      }
+                  }
+              }
+                
+              
+            },
+
+            series: [
+            {
+                  name: "Jumlah Mahasiswa Lulus AKPAM",
+                  data: chartData,
+                  color: "rgb(0,200,0)"
+            },
+            {
+                  name: "Jumlah Mahasiswa Belum Lulus AKPAM",
+                  data: chartDataBelum,
+                  color: "rgb(200,0,0)"
+            },
+            ],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: "horizontal",
+                            align: "center",
+                            verticalAlign: "bottom"
+                        }
+                    }
+                }]
+            }
+          });
+        }
+    });
+}
+
+function getKelulusanAkpamFakultas(tahun_akademik){
+    
+    var obj = new Object;
+    obj.tahun_akademik = tahun_akademik;
+   
+    $.ajax({
+
+        type : "POST",
+        url : "'.Url::to(['/api/ajax-rekap-kelulusan-akpam-fakultas']).'",
+        data : {
+          dataPost : obj
+        },
+        async : true,
+        error : function(e){
+          $("#loading_akpam_lulus_fakultas").hide();
+        },
+        beforeSend : function(){
+          $("#loading_akpam_lulus_fakultas").show(); 
+
+        },
+        success: function(hasil){
+          var hasil = $.parseJSON(hasil);
+          $("#loading_akpam_lulus_fakultas").hide();
+                
+          var kategori = [];
+
+          var chartData = [];
+          var chartDataBelum = [];
+
+          $.each(hasil,function(i,obj){
+            kategori.push(obj.fakultas)
+            
+            chartData.push(obj.count_lulus);
+            chartDataBelum.push(obj.count_belum);
+          });
+
+          $("#container-akpam-lulus-fakultas").highcharts({
+            chart: {
+              type: "column"
+          },
+            title: {
+                text: "Persentase Kelulusan AKPAM Per Fakultas"
+            },
+
+            xAxis: {
+              categories: kategori,
+              crosshair: true
+            },
+            yAxis: {
+                title: {
+                    text: "Jumlah"
+                },
+
+                startOnTick: false,
+                endOnTick: false
+            },
+            tooltip: {
+                headerFormat: "<span style=\"font-size:10px\">{point.key}</span><table>",
+                pointFormat: "<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>" +
+                    "<td style=\"padding:0\"><b>{point.y}</b></td></tr>",
+                footerFormat: "</table>",
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+                },
+                series: {
+                  cursor: \'pointer\',
+                  point: {
+                      events: {
+                          click: function (tes) {
+                            getKelulusanAkpamProdi($("#tahun_akpam_id").val(),tes.point.category)
+                          }
+                      }
+                  }
+              }
+                
+              
+            },
+
+            series: [
+            {
+                  name: "Jumlah Mahasiswa Lulus AKPAM",
+                  data: chartData,
+                  color: "rgb(0,200,0)"
+            },
+            {
+                  name: "Jumlah Mahasiswa Belum Lulus AKPAM",
+                  data: chartDataBelum,
+                  color: "rgb(200,0,0)"
+            },
+            ],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: "horizontal",
+                            align: "center",
+                            verticalAlign: "bottom"
+                        }
+                    }
+                }]
+            }
+          });
+        }
+    });
+}
+
+function getKelulusanAkpam(tahun_akademik){
+    
+    var obj = new Object;
+    obj.tahun_akademik = tahun_akademik;
+   
+    $.ajax({
+
+        type : "POST",
+        url : "'.Url::to(['/api/ajax-rekap-kelulusan-akpam']).'",
+        data : {
+          dataPost : obj
+        },
+        async : true,
+        error : function(e){
+          $("#loading_akpam_lulus").hide();
+        },
+        beforeSend : function(){
+          $("#loading_akpam_lulus").show(); 
+
+        },
+        success: function(hasil){
+          var hasil = $.parseJSON(hasil);
+          $("#loading_akpam_lulus").hide();
+                     var kategori = ["LULUS","BELUM"];
+
+          var chartData = [
+            {
+              y:hasil.count_lulus,
+              name:"Lulus"
+            },
+            {
+              y:hasil.count_belum,
+              name:"Belum Lulus"
+            }
+          ];
+
+
+          $("#container-akpam-lulus").highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: "pie"
+            },
+            title: {
+                text: "Persentase Kelulusan AKPAM UNIDA Gontor"
+            },
+
+            xAxis: {
+              categories: kategori,
+              crosshair: true
+            },
+            yAxis: {
+                title: {
+                    text: "Jumlah"
+                },
+                min: 0,
+                max: 4,
+                startOnTick: false,
+                endOnTick: false
+            },
+            tooltip: {
+                headerFormat: "<span style=\"font-size:10px\">{point.key}</span><table>",
+                pointFormat: "<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>" +
+                    "<td style=\"padding:0\"><b>{point.y}</b></td></tr>",
+                footerFormat: "</table>",
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: "pointer",
+                    dataLabels: {
+                        enabled: true,
+                        format: "<b>{point.name}</b>: {point.percentage:.1f} %"
+                    }
+                }
+                
+                
+              
+            },
+
+            series: [{
+                name: "Data Kelulusan AKPAM ",
+                data: chartData,
+                colorByPoint: true,
+            }],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: "horizontal",
+                            align: "center",
+                            verticalAlign: "bottom"
+                        }
+                    }
+                }]
+            }
+          });
+        }
+    });
+}
 
 function countProdiEventTop(tahun_id, limit){
   var obj = new Object
@@ -504,7 +938,7 @@ function countEventByTingkat(periode){
                       events: {
                           click: function (tes) {
                             if(tes.point.name){
-                              window.open("'.Url::to(['simak-mastermahasiswa/list-belum-krs']).'","_blank")
+                              window.open("'.Url::to(['api/list-belum-krs']).'","_blank")
                             }
                           }
                       }
