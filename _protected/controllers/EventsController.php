@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\helpers\MyHelper;
 use app\models\Events;
+use app\models\SimakMastermahasiswa;
 use app\models\SimakTahunakademik;
 use app\models\SimakKegiatanMahasiswa;
 use app\models\EventsSearch;
@@ -39,12 +40,12 @@ class EventsController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['update','index','view','delete','start'],
+                'only' => ['update','index','view','delete','start','bulk-registration'],
                 'rules' => [
                     
                     [
                         'actions' => [
-                            'update','index','view','start','delete'
+                            'update','index','view','start','delete','bulk-registration'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator','admin','operatorCabang','event'],
@@ -61,6 +62,47 @@ class EventsController extends Controller
             ],
         ];
     }
+
+    public function actionBulkRegistration($event_id)
+    {
+
+        $event = Events::findOne($event_id);
+        $model = new SimakMastermahasiswa;
+        $model->setScenario('asrama');
+        
+        $results = [];
+        $params = [];
+
+        if (!empty($_GET['btn-search'])) {
+            if(!empty($_GET['SimakMastermahasiswa']))
+            {
+                $params = $_GET['SimakMastermahasiswa'];
+                $query = SimakMastermahasiswa::find()->where([
+                    'kampus' => $params['kampus'],
+                    'kode_prodi' => !empty($params['kode_prodi']) ?$params['kode_prodi'] : '-',
+                    
+                    'status_aktivitas' => $params['status_aktivitas']
+                ]);
+
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+                }
+                
+                $query->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]);          
+                $results = $query->all();
+
+
+            }
+        }
+
+        return $this->render('bulk_registration',[
+            'model' => $model,
+            'event' => $event,
+            'results' => $results,
+            'params' => $params,
+        ]);
+    } 
 
     public function actionAjaxListPeserta()
     {
@@ -84,6 +126,77 @@ class EventsController extends Controller
 
         echo json_encode($results);
         exit;
+    }
+
+    public function actionAjaxUnregister()
+    {
+        $dataPost = $_POST['dataPost'];
+        $model = Events::findOne($dataPost['event_id']);
+        $nim = $dataPost['nim'];
+
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        
+        $errors = '';
+        $results = [];
+        
+        try 
+        {
+
+            
+            $mhs = \app\models\SimakMastermahasiswa::find()->where(['nim_mhs'=>$nim])->one();
+            if(!empty($model))
+            {
+                $keg = SimakKegiatanMahasiswa::find()->where([
+                    'nim' => $nim,
+                    'event_id' => $model->id,
+                ])->one();
+
+                if(!empty($keg))
+                {
+                    $keg->delete();
+                    $results = [
+                        'code' => 200,
+                        'message' => 'Participant deleted'
+                    ];
+
+                    $transaction->commit();
+                }
+                else
+                {
+                    $results = [
+                        'code' => 404,
+                        'message' => 'Participant not found'
+                    ];
+                }
+            }
+
+            else
+            {
+                $errors .= 'Oops, Event does not exist';
+                throw new \Exception;
+                
+            }
+        } 
+        catch (\Exception $e) {
+            $transaction->rollBack();
+            $errors .= $e->getMessage();
+            $results = [
+                'code' => 500,
+                'message' => $errors
+            ];
+        } 
+        catch (\Throwable $e) {
+            $transaction->rollBack();
+            $errors .= $e->getMessage();
+            $results = [
+                'code' => 500,
+                'message' => $errors
+            ];
+        }
+
+        echo json_encode($results);
+        die();
     }
 
     public function actionAjaxRegister()

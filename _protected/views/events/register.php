@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\assets\EventAsset;
@@ -68,6 +69,12 @@ $list_color = \app\helpers\MyHelper::getStatusEventColor();
                                         <a href="javascript:void(0)" id="btn-register" class="btn btn-sm btn-block btn-primary">
                                             <i class="ace-icon fa fa-plus-circle bigger-300"></i>
                                             <span class="bigger-300">Tap here to register</span>
+                                        </a>
+
+                                        <div class="bigger-300">or</div>
+                                        <a href="<?=Url::to(['bulk-registration','event_id'=>$model->id]);?>" class="btn btn-sm btn-block btn-danger">
+                                            <i class="ace-icon fa fa-plus-circle bigger-300"></i>
+                                            <span class="bigger-300">Bulk Registration</span>
                                         </a>
                                         <?php
                                         }
