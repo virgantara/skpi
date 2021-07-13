@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\Url;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 
@@ -19,9 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
             <div class="panel-body ">
 
-                <p>
-                    <?= Html::a('Create Simak Kegiatan', ['create'], ['class' => 'btn btn-success']) ?>
-                </p>
+                
                 <?php
                 $gridColumns = [
                 [
@@ -33,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'header'=>'',
                     'headerOptions'=>['class'=>'kartik-sheet-style']
                 ],
-                        'id',
+                        // 'id',
             'nama_kegiatan',
             'sub_kegiatan',
             'nilai',
@@ -43,7 +42,24 @@ $this->params['breadcrumbs'][] = $this->title;
             //'is_active',
             //'created_at',
             //'updated_at',
-                ['class' => 'yii\grid\ActionColumn']
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{bulk}',
+                    'buttons' => [
+                        'bulk' => function ($url, $model){
+                          return Html::a('<span class="glyphicon glyphicon-plus"></span> Registration', $url, [
+                                    'title' => Yii::t('app', 'Registration'),
+                                    'class' =>'btn btn-info btn-sm'
+                          ]);
+                        }
+                      ],
+                      'urlCreator' => function ($action, $model, $key, $index) {
+                        if($action == 'bulk')
+                        {
+                          return Url::to(['simak-kegiatan/bulk-registration','id'=>$model->id]); 
+                        }
+                      }
+                ]
 ];?>                
 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
@@ -78,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'export' => [
                         'fontAwesome' => true
                     ],
-                    'pjax' => true,
+                    'pjax' => false,
                     'bordered' => true,
                     'striped' => true,
                     // 'condensed' => false,
