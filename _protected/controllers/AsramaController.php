@@ -282,6 +282,43 @@ class AsramaController extends Controller
         die();
     }
 
+    public function actionPindah()
+    {
+        $model = new SimakMastermahasiswa;
+        $model->setScenario('asrama');
+        
+        $results = [];
+        $params = [];
+
+        if (!empty($_GET['btn-search'])) {
+            if(!empty($_GET['SimakMastermahasiswa']))
+            {
+                $params = $_GET['SimakMastermahasiswa'];
+                $query = SimakMastermahasiswa::find()->where([
+                    'kampus' => $params['kampus'],
+                    'kode_prodi' => !empty($params['kode_prodi']) ?$params['kode_prodi'] : '-',
+                    
+                    'status_aktivitas' => $params['status_aktivitas']
+                ]);
+
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+                }
+                
+                $query->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]);          
+                $results = $query->all();
+
+
+            }
+        }
+
+        return $this->render('pindah',[
+            'model' => $model,
+            'results' => $results,
+            'params' => $params,
+        ]);
+    } 
 
     public function actionMahasiswa()
     {

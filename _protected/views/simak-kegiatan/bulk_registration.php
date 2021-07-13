@@ -14,6 +14,12 @@ $model->kode_prodi = !empty($_GET['SimakMastermahasiswa']['kode_prodi']) ? $_GET
 
 $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['status_aktivitas'] : '';
 
+$model->tahun_masuk = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakMastermahasiswa']['tahun_masuk'] : '';
+
+$tahun_akademik = !empty($_GET['tahun_akademik']) ? $_GET['tahun_akademik'] : '';
+ $listTahun = \app\models\SimakTahunakademik::find()->where(['>=','tahun_id', '2014'])->orderBy(['tahun_id' => SORT_DESC])->all();
+$list_tahun = ArrayHelper::map($listTahun,'tahun_id','nama_tahun');
+
 ?>
 
 <div class="row">
@@ -26,7 +32,7 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 				],
 			],
 			'method' => 'GET',
-			'action' => Url::to(['events/bulk-registration','event_id' => $event->id]),
+			'action' => Url::to(['simak-kegiatan/bulk-registration','id' => $kegiatan->id]),
 			'options' => [
 
 
@@ -37,7 +43,8 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 
 		<div class="form-group">
 			<div class="col-sm-offset-3">
-				<h3><?=$event->nama;?></h3>
+				<h3><?=$kegiatan->nama_kegiatan;?> [<?=$kegiatan->nilai;?>]</h3>
+				<h3><?=$kegiatan->jenisKegiatan->nama_jenis_kegiatan;?> [<?=$kegiatan->jenisKegiatan->nilai_minimal;?> - <?=$kegiatan->jenisKegiatan->nilai_maximal;?>]</h3>
 			</div>
 		</div>
 		<div class="form-group" >
@@ -84,11 +91,18 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 			</div>
 		</div>
 		<div class="form-group" >
+			<label class="col-sm-3 control-label no-padding-right">Tahun Akademik</label>
+			<div class="col-sm-9 col-lg-4">
+				<?= Html::dropDownList('tahun_akademik',$tahun_akademik,$list_tahun,['id'=>'tahun_akademik','class'=>'form-control','prompt'=>'- Pilih Tahun Akademik -']) ?>
+			</div>
+		</div>
+		<div class="form-group" >
 			<label class="col-sm-3 control-label no-padding-right">Tahun Masuk</label>
 			<div class="col-sm-9 col-lg-4">
 				<?= $form->field($model,'tahun_masuk')->textInput(['class'=>'form-control','id'=>'tahun_masuk'])->label(false) ?>
 			</div>
 		</div>
+		
 		<div class="clearfix form-actions">
 			<div class="col-md-offset-3 col-md-9">
 
@@ -122,7 +136,8 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 
 							$keg = \app\models\SimakKegiatanMahasiswa::find()->where([
 								'nim' => $m->nim_mhs,
-								'event_id' => $event->id
+								'id_kegiatan' => $kegiatan->id,
+								'tahun_akademik' => $tahun_akademik
 							])->one();
 		                    $value = !empty($keg) ? '1' : '0';
 		                    $i++;
@@ -137,7 +152,7 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 							<td><?=$m->semester;?></td>
 							
 							<td>
-								<?= Html::checkbox('kehadiran',$value,['class'=>'form-control list_kehadiran','data-item'=>$m->nim_mhs,'data-event'=>$event->id]);?>
+								<?= Html::checkbox('kehadiran',$value,['class'=>'form-control list_kehadiran','data-item'=>$m->nim_mhs,'data-event'=>$kegiatan->id]);?>
 								
 							</td>
 						</tr>
@@ -176,32 +191,35 @@ $("#checkAll").click(function(){
 
     $(".list_kehadiran").each(function(i,obj){
     	var nim = $(this).data("item")
-    	var event_id = "'.$event->id.'"
-    	if(this.checked)
-    		register(nim, event_id)
-    	else
-    		unregister(nim, event_id)
+    	var kegiatan_id = "'.$kegiatan->id.'"
+		var tahun_akademik = $("#tahun_akademik").val()
+		if(this.checked)
+			register(nim, kegiatan_id, tahun_akademik)
+		else
+			unregister(nim, kegiatan_id, tahun_akademik)
     })
 });
 
 $(".list_kehadiran").click(function(){
     
 	var nim = $(this).data("item")
-	var event_id = "'.$event->id.'"
+	var kegiatan_id = "'.$kegiatan->id.'"
+	var tahun_akademik = $("#tahun_akademik").val()
 	if(this.checked)
-		register(nim, event_id)
+		register(nim, kegiatan_id, tahun_akademik)
 	else
-		unregister(nim, event_id)
+		unregister(nim, kegiatan_id, tahun_akademik)
     
 });
 
-function unregister(nim, event_id){
+function unregister(nim, kegiatan_id, tahun_akademik){
     var obj = new Object
     obj.nim = nim
-    obj.event_id = event_id
+    obj.kegiatan_id = kegiatan_id
+    obj.tahun_akademik = tahun_akademik
     $.ajax({
         type: \'POST\',
-        url: "'.\yii\helpers\Url::to(['events/ajax-unregister']).'",
+        url: "'.\yii\helpers\Url::to(['simak-kegiatan/ajax-unregister']).'",
         data: {
             dataPost : obj
         },
@@ -241,13 +259,14 @@ function unregister(nim, event_id){
     })
 }
 
-function register(nim, event_id){
+function register(nim, kegiatan_id, tahun_akademik){
     var obj = new Object
     obj.nim = nim
-    obj.event_id = event_id
+    obj.kegiatan_id = kegiatan_id
+    obj.tahun_akademik = tahun_akademik
     $.ajax({
         type: \'POST\',
-        url: "'.\yii\helpers\Url::to(['events/ajax-register']).'",
+        url: "'.\yii\helpers\Url::to(['simak-kegiatan/ajax-register']).'",
         data: {
             dataPost : obj
         },

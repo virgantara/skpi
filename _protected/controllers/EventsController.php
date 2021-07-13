@@ -84,6 +84,11 @@ class EventsController extends Controller
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
 
+                if(!empty($params['tahun_masuk']))
+                {
+                    $query->andWhere(['tahun_masuk'=>$params['tahun_masuk']]);
+                }
+
                 if(Yii::$app->user->identity->access_role == 'operatorCabang')
                 {
                     $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
@@ -746,7 +751,7 @@ class EventsController extends Controller
     public function actionCreate()
     {
         $model = new Events();
-        $listTahun = SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(5)->all();
+        $listTahun = SimakTahunakademik::find()->select(['tahun_id','nama_tahun'])->orderBy(['tahun_id' => SORT_DESC])->limit(14)->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
