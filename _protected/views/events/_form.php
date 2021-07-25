@@ -56,7 +56,7 @@ EventAsset::register($this);
             <div class="control-group">
                 <label class="control-label" for="inputPatient">Venue/Lokasi Acara:</label>
                 <div class="field desc">
-                    <?=Html::dropDownList('venue','',ArrayHelper::map(\app\models\Venue::find()->all(),'nama','nama'),['id'=>'venue','class'=>'form-control','prompt'=>'-Pilih Venue/Lokasi Acara-']);?>
+                    <?=Html::dropDownList('venue','',ArrayHelper::map(\app\models\Venue::find()->all(),'kode','nama'),['id'=>'venue','class'=>'form-control','prompt'=>'-Pilih Venue/Lokasi Acara-']);?>
                    
                 </div>
             </div>
@@ -150,7 +150,7 @@ EventAsset::register($this);
             <div class="control-group">
                 <label class="control-label" for="inputPatient">Venue/Lokasi Acara:</label>
                 <div class="field desc">
-                     <?=Html::dropDownList('venue_edit','',ArrayHelper::map(\app\models\Venue::find()->all(),'nama','nama'),['id'=>'venue_edit','class'=>'form-control','prompt'=>'-Pilih Venue/Lokasi Acara-']);?>
+                     <?=Html::dropDownList('venue_edit','',ArrayHelper::map(\app\models\Venue::find()->all(),'kode','nama'),['id'=>'venue_edit','class'=>'form-control','prompt'=>'-Pilih Venue/Lokasi Acara-']);?>
                    
                 </div>
             </div>
