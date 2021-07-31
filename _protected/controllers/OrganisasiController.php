@@ -3,11 +3,15 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\SimakTahunakademik;
+use app\models\SimakKegiatanMahasiswa;
 use app\models\Organisasi;
+use app\models\OrganisasiMahasiswa;
 use app\models\OrganisasiSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * OrganisasiController implements the CRUD actions for Organisasi model.
@@ -20,6 +24,30 @@ class OrganisasiController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'denyCallback' => function ($rule, $action) {
+                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                },
+                'only' => ['update','index','create','delete','sync','ajax-sync'],
+                'rules' => [
+                    [
+                        'actions' => [
+                            'update','delete','create','index','ajax-sync'
+                        ],
+                        'allow' => true,
+                        'roles' => ['theCreator','admin','operatorCabang'],
+                    ],
+                    [
+                        'actions' => [
+                            'sync','ajax-sync'
+                        ],
+                        'allow' => true,
+                        'roles' => ['theCreator','admin'],
+                    ],
+                    
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -27,6 +55,133 @@ class OrganisasiController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionAjaxSync()
+    {
+            
+        $results = [];
+        $errors = '';
+        $counter_added = 0;
+        $counter_updated = 0;
+        if(Yii::$app->request->isPost)
+        {   
+            if(!empty($_POST['dataPost']))
+            {
+                $dataPost = $_POST['dataPost'];
+                $connection = \Yii::$app->db;
+                $transaction = $connection->beginTransaction();
+                try 
+                {
+
+                    foreach($dataPost['organisasi_id'] as $oid)
+                    {
+                        $model = OrganisasiMahasiswa::findOne($oid);
+
+                        if(!empty($model))    
+                        {
+                        
+                            foreach($model->organisasiAnggotas as $anggota)
+                            {
+                                if(empty($anggota->jabatan)) continue;
+
+                                if(empty($anggota->nim0)) continue;
+
+                                $event_id = 'ORG'.$model->id.$anggota->id;
+                                $keg = SimakKegiatanMahasiswa::find()->where([
+                                    'nim' => $anggota->nim,
+                                    'tahun_akademik' => $model->tahun_akademik,
+                                    'nama_kegiatan_mahasiswa' => $event_id
+                                ])->one();
+
+                                if(empty($keg))
+                                {
+                                    $keg = new SimakKegiatanMahasiswa;
+                                    $keg->nim =  $anggota->nim;
+                                    $keg->nama_kegiatan_mahasiswa = $event_id;
+                                    $keg->tahun_akademik = (string)$model->tahun_akademik;
+                                    $keg->id_kegiatan = $anggota->jabatan_id;
+                                    $keg->id_jenis_kegiatan = $anggota->jabatan->id_jenis_kegiatan;
+                                    $keg->nilai = $anggota->jabatan->nilai;
+                                    $keg->semester = (string)$anggota->nim0->semester;
+                                    $keg->waktu = date('Y-m-d');
+                                    $keg->instansi = $model->organisasi->nama;
+                                    $keg->tema = $model->organisasi->nama.' Tahun '.$model->tahun_akademik;
+                                    $keg->is_approved = 1;
+                                    if($keg->save())
+                                    {
+                                        $counter_added++;
+                                    }
+
+                                    else
+                                    {
+                                        $errors .= \app\helpers\MyHelper::logError($keg);
+                                        throw new \Exception;
+                                    }
+                                }
+
+                                else
+                                {
+                                    $keg->nilai = $anggota->jabatan->nilai;
+                                    if($keg->save(false,['nilai']))
+                                    {
+                                        $counter_updated++;
+                                        
+                                    }
+                                }
+                            }   
+                        }
+                    }
+
+                    $results = [
+                        'code' => 200,
+                        'message' => 'Student AKPAM '.$counter_added.' added and '.$counter_updated.' updated'
+                    ];
+                    $transaction->commit();
+                }
+
+                catch (\Exception $e) 
+                {
+                    $transaction->rollBack();
+                    $errors .= $e->getMessage();
+                    $results = [
+                        'code' => 500,
+                        'message' => $errors
+                    ];
+                } 
+                catch (\Throwable $e) {
+                    $transaction->rollBack();
+                    $errors .= $e->getMessage();
+                    $results = [
+                        'code' => 500,
+                        'message' => $errors
+                    ];
+                }
+            }
+        }
+        
+        echo json_encode($results);
+        die();
+    }   
+
+    public function actionSync()
+    {
+        $model = new OrganisasiMahasiswa;
+
+        $tahun_aktif = null;
+        if(!empty($_GET['tahun_akademik']))
+            $tahun_aktif = SimakTahunakademik::find()->where(['tahun_id' => $_GET['tahun_akademik']])->one();
+        else
+            $tahun_aktif = SimakTahunakademik::getTahunAktif();
+
+
+        $list = OrganisasiMahasiswa::find()->where(['tahun_akademik'=>$tahun_aktif->tahun_id])->all();
+
+        return $this->render('sync', [
+            'model' => $model,
+            'list' => $list,
+            'tahun_aktif' => $tahun_aktif
+        ]);
     }
 
     /**
