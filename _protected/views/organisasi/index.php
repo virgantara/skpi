@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\OrganisasiSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Organisasis';
+$this->title = 'Organisasi';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="organisasi-index">
@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Create Organisasi', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<i class="fa fa-refresh"></i> Sync to AKPAM', ['sync'], ['class' => 'btn btn-info']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -26,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            // 'id',
             'nama',
             'tingkat',
             'instansi',

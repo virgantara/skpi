@@ -43,13 +43,13 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
             [
                 'attribute' => 'organisasi_id',
                 'value' => function($data){
-                    return $data->organisasi->nama;
+                    return !empty($data->organisasi) ?$data->organisasi->nama : '-';
                 }
             ],
             [
                 'label' => 'Pembimbing',
                 'value' => function($data){
-                    return $data->pembimbing->nama_dosen;
+                    return !empty($data->pembimbing) ? $data->pembimbing->nama_dosen : '-';
                 }
             ],
             'tanggal_mulai',
@@ -115,7 +115,7 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
                 'label' => 'Jabatan',
                 'format' => 'raw',
                 'value'=>function($model,$url){
-                    return $model->jabatan->nama_kegiatan;
+                    return !empty($model->jabatan) ? $model->jabatan->nama_kegiatan : '-';
                     
                 },
             ],
