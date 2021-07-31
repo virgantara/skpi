@@ -129,6 +129,7 @@ class MenuHelper
 		                'visible' => Yii::$app->user->can('operatorCabang'),
 		               
 		            ],
+		            
 		        ]
 		    ];
 
@@ -393,7 +394,12 @@ class MenuHelper
 	                     [
 	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
 	                        'visible' => Yii::$app->user->can('admin'),
-	                        'url' => ['organisasi/create']]
+	                        'url' => ['organisasi/create']],
+	                      [
+			            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Sync',  
+			                'url' => ['organisasi/sync'],	        
+			                'visible' => Yii::$app->user->can('admin'), 
+			            ],
 	                ],
 	            ],
 
