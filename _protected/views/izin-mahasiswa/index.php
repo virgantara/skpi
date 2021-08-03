@@ -211,6 +211,7 @@ $html .= '<li class="divider"></li><li><a href="javascript:void(0)" class="btn-b
      <div class="table-responsive">
 
     <?= GridView::widget([
+        'responsiveWrap' => false,
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => $gridColumns,

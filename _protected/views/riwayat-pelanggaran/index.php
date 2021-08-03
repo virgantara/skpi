@@ -133,6 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
      <div class="table-responsive">
 
     <?= GridView::widget([
+        'responsiveWrap' => false,
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => $gridColumns,
