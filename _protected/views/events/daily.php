@@ -101,6 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ];?>                
 <?= GridView::widget([
+    'responsiveWrap' => false,
                     'dataProvider' => $dataProvider,
                     'filterModel' => $searchModel,
                     'columns' => $gridColumns,

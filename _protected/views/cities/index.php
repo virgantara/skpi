@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
@@ -80,6 +80,7 @@ $country_id = !empty($searchModel->country_id) ? $searchModel->country_id : '';
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
+        'responsiveWrap' => false,
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
