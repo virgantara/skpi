@@ -22,9 +22,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
+                [
+                    'attribute' => 'kode_kegiatan',
+                    'value' => function ($data){
+                        return !empty($data->kodeKegiatan) && !empty($data->kodeKegiatan->kegiatan) ? $data->kodeKegiatan->kegiatan->nama_kegiatan : '-';
+                    }
+                ],
                 'nim',
+                'namaMahasiswa',
+                'semester',
                 'tahun_akademik',
-                'kode_kegiatan',
+
                 'poin',
                 'waktu',
                 'created_at',
