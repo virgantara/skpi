@@ -307,6 +307,21 @@ class MenuHelper
 	                ],
 	            ],
 	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Harian <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('event'),
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['simak-kegiatan-harian/index']],
+	                     [
+	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
+	                        'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('event'),
+	                        'url' => ['simak-kegiatan-harian/create']]
+	                ],
+	            ],
+	            [
 	            	'label' => '<hr style="padding:0px;margin:0px">'
 	            ],
 

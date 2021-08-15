@@ -49,6 +49,29 @@ class SimakKegiatanController extends Controller
         ];
     }
 
+    public function actionAjaxGetKegiatan()
+    {
+        $results = [] ;
+        if (Yii::$app->request->isPost) 
+        {
+            $dataPost = $_POST['dataPost'];
+            
+            $model = SimakKegiatan::findOne($dataPost['id']);
+
+            if(!empty($model)){
+                $results = $model->attributes;
+            }
+
+            
+            echo json_encode($results);
+
+              
+        }
+
+        die();
+    }
+
+
     public function actionBulkRegistration($id)
     {
 
