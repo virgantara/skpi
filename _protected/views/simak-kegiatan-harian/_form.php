@@ -17,7 +17,7 @@ use kartik\time\TimePicker;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'tahun_akademik')->dropDownList(ArrayHelper::map($listTahun,'tahun_id','nama_tahun')) ?>
-    <?= $form->field($model, 'kategori')->dropDownList(ArrayHelper::map(\app\models\SimakKegiatanHarianKategori::find()->all(),'kode','nama'),['class'=>'form-control','prompt'=>'- Pili Kategori -']);?>
+    <?= $form->field($model, 'kategori')->dropDownList(ArrayHelper::map(\app\models\SimakKegiatanHarianKategori::find()->all(),'kode','nama'),['class'=>'form-control','prompt'=>'- Pilih Kategori -']);?>
     <div class="control-group">
         <label class="control-label" for="inputPatient">Jenis Kegiatan:</label>
         <div class="field desc">
