@@ -7,17 +7,14 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\SimakKegiatanHarianMahasiswaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Simak Kegiatan Harian Mahasiswas';
+$this->title = 'Kegiatan Harian Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="simak-kegiatan-harian-mahasiswa-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Simak Kegiatan Harian Mahasiswa', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
+  
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
@@ -25,15 +22,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'nim',
-            'tahun_akademik',
-            'kode_kegiatan',
-            'kegiatan_rutin_id',
-            //'poin',
-            //'waktu',
-
+                'nim',
+                'tahun_akademik',
+                'kode_kegiatan',
+                'poin',
+                'waktu',
+                'created_at',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
