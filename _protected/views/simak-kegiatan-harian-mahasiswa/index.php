@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'nim',
                 'namaMahasiswa',
+                'namaProdi',
                 'semester',
                 'tahun_akademik',
 
