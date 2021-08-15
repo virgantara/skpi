@@ -10,7 +10,6 @@ use kartik\time\TimePicker;
 /* @var $model app\models\SimakKegiatanHarian */
 /* @var $form yii\widgets\ActiveForm */
 
-setlocale(LC_ALL, 'id_ID');
 ?>
 
 <div class="col-md-6">
@@ -18,7 +17,7 @@ setlocale(LC_ALL, 'id_ID');
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'tahun_akademik')->dropDownList(ArrayHelper::map($listTahun,'tahun_id','nama_tahun')) ?>
-
+    <?= $form->field($model, 'kategori')->dropDownList(ArrayHelper::map(\app\models\SimakKegiatanHarianKategori::find()->all(),'kode','nama'),['class'=>'form-control','prompt'=>'- Pili Kategori -']);?>
     <div class="control-group">
         <label class="control-label" for="inputPatient">Jenis Kegiatan:</label>
         <div class="field desc">

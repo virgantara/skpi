@@ -9,7 +9,7 @@ $params = array_merge(
 
 $config = [
     'id' => 'basic',
-    'name' => 'SIMPEL',
+    'name' => 'SIKAP',
     'language' => 'en',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'app\components\Aliases'],
