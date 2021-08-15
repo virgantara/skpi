@@ -111,7 +111,7 @@ function getListKegiatan(jenis_kegiatan, kegiatan_selector){
             });
 
             kegiatan_selector.append(row);
-            kegiatan_selector.val('".$model->kegiatan_id."');
+            kegiatan_selector.val('".(!$model->isNewRecord ? $model->kegiatan_id : '')."');
             
        }
     });
@@ -119,7 +119,7 @@ function getListKegiatan(jenis_kegiatan, kegiatan_selector){
   
 }
 
-$(\"#id_jenis_kegiatan\").val('".(!empty($model) ? $model->kegiatan->id_jenis_kegiatan : '')."')
+$(\"#id_jenis_kegiatan\").val('".(!empty($model) && !$model->isNewRecord ? $model->kegiatan->id_jenis_kegiatan : '')."')
 
     
 $(\"#id_jenis_kegiatan\").trigger('change');
