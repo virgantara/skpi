@@ -7,6 +7,7 @@ use app\models\SimakKegiatanHarianMahasiswaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * SimakKegiatanHarianMahasiswaController implements the CRUD actions for SimakKegiatanHarianMahasiswa model.
@@ -21,6 +22,31 @@ class SimakKegiatanHarianMahasiswaController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'denyCallback' => function ($rule, $action) {
+                        throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                    },
+                    'only' => ['update','index','view','delete'],
+                    'rules' => [
+                        
+                        [
+                            'actions' => [
+                                'index','view'
+                            ],
+                            'allow' => true,
+                            'roles' => ['operatorCabang','event'],
+                        ],
+                        [
+                            'actions' => [
+                                'index','view','update','delete'
+                            ],
+                            'allow' => true,
+                            'roles' => ['theCreator','admin'],
+                        ],
+                        
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [

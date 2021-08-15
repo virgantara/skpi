@@ -99,6 +99,24 @@ class MenuHelper
 		            ],
 		        ]
 		    ];
+
+		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Harian </span><i class="caret"></i>', 
+		         'url' => '#',
+		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+		        'items'=>[
+		           	
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rutin',  
+		                'url' => ['simak-kegiatan-harian-mahasiswa/index'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event'), 
+		            ],
+		            [
+		            	'label' => '<hr style="padding:0px;margin:0px">'
+		            ],
+		            
+		        ]
+		    ];
 	    }
 
 
@@ -134,7 +152,7 @@ class MenuHelper
 		        'items'=>[
 		           	
 		            [
-		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Register',  
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Manage',  
 		                'url' => ['simak-kegiatan/index'],	        
 		                'visible' => Yii::$app->user->can('theCreator'), 
 		            ],
