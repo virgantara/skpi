@@ -2,13 +2,16 @@
 
 namespace app\controllers;
 use Yii;
+
+use app\models\SimakKegiatanHarianKategori;
+use app\models\SimakKegiatanHarianMahasiswa;
 use app\models\SimakTahunakademik;
 use app\models\SimakKegiatanHarian;
 use app\models\SimakKegiatanHarianSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\filters\AccessControl;
 
 /**
  * SimakKegiatanHarianController implements the CRUD actions for SimakKegiatanHarian model.
@@ -23,6 +26,31 @@ class SimakKegiatanHarianController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'denyCallback' => function ($rule, $action) {
+                        throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                    },
+                    'only' => ['create','update','index','view','delete','rekap'],
+                    'rules' => [
+                        
+                        [
+                            'actions' => [
+                                'index','view','rekap'
+                            ],
+                            'allow' => true,
+                            'roles' => ['operatorCabang','event'],
+                        ],
+                        [
+                            'actions' => [
+                                'index','view','update','delete','create',
+                            ],
+                            'allow' => true,
+                            'roles' => ['theCreator','admin'],
+                        ],
+                        
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -32,6 +60,60 @@ class SimakKegiatanHarianController extends Controller
             ]
         );
     }
+
+    public function actionRekap()
+    {
+
+        $results = [];
+
+        $list_kategori = SimakKegiatanHarianKategori::find()->all();
+        $list_kampus = [];
+        if(!empty($_GET['btn-search']))
+        {
+            $sd = date('Y-m-d 00:00:00');
+            $ed = date('Y-m-d 23:59:59');
+            if(!empty($_GET['tanggal']))
+            {
+                $tgl = explode(" hingga ",$_GET['tanggal']);
+                $sd = $tgl[0];
+                $ed = $tgl[1];    
+            }
+            
+            $query = new \yii\db\Query();
+            $tmp = $query->select(['kam.nama_kampus','kam.kode_kampus', 'COUNT(*) as total'])
+            ->from('simak_mastermahasiswa mas')
+            ->innerJoin('simak_kampus kam', 'kam.kode_kampus = mas.kampus')
+            ->where(['mas.status_aktivitas' => 'A'])
+            ->groupBy(['kam.nama_kampus','kam.kode_kampus'])
+            ->all();
+
+            foreach($tmp as $t)
+                $list_kampus[$t['kode_kampus']] = $t['total'];
+
+            $kat = $_GET['jenis_kegiatan'];
+            $query = new \yii\db\Query();
+            $results = $query->select(['COUNT(*) as total','kk.nama_kegiatan','kam.nama_kampus','kam.kode_kampus'])
+            ->from('simak_kegiatan_harian_mahasiswa m')
+            ->innerJoin('simak_kegiatan_harian h', 'm.kode_kegiatan = h.kode')
+            ->innerJoin('simak_mastermahasiswa mas', 'mas.nim_mhs = m.nim')
+            ->innerJoin('simak_kampus kam', 'kam.kode_kampus = mas.kampus')
+            ->innerJoin('simak_kegiatan_harian_kategori k', 'k.kode = h.kategori')
+            ->innerJoin('simak_kegiatan kk', 'kk.id = h.kegiatan_id')
+            ->where(['k.kode' => $kat])
+            ->andWhere(['BETWEEN','m.created_at',$sd, $ed])
+            ->groupBy(['kk.nama_kegiatan','kam.nama_kampus','kam.kode_kampus'])
+            ->orderBy('total DESC')
+          
+            ->all();
+        }
+
+        return $this->render('rekap',[
+            'results' => $results,
+            'list_kategori' => $list_kategori,
+            'list_kampus' => $list_kampus
+        ]);
+    }
+
 
     /**
      * Lists all SimakKegiatanHarian models.

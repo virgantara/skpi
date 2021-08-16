@@ -27,7 +27,7 @@ class SimakKegiatanHarianMahasiswaController extends Controller
                     'denyCallback' => function ($rule, $action) {
                         throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                     },
-                    'only' => ['update','index','view','delete'],
+                    'only' => ['create','update','index','view','delete'],
                     'rules' => [
                         
                         [
@@ -39,7 +39,7 @@ class SimakKegiatanHarianMahasiswaController extends Controller
                         ],
                         [
                             'actions' => [
-                                'index','view','update','delete'
+                                'index','view','update','delete','create',
                             ],
                             'allow' => true,
                             'roles' => ['theCreator','admin'],

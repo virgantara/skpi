@@ -29,6 +29,7 @@ $list_venue = ArrayHelper::map(\app\models\Venue::find()->all(),'kode','nama');
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'responsiveWrap' => false,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
