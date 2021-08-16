@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
-
+use kartik\datetime\DateTimePicker;
 use dosamigos\ckeditor\CKEditor;
 
 use app\models\Pelanggaran;
@@ -135,9 +135,16 @@ use app\models\Hukuman;
 				<div class="row">
 			   		<label class="col-sm-2 control-label no-padding-right">Tanggal Pelanggaran</label>
 					<div class="col-sm-10">
-						 <?php 
-	                echo $form->field($model, 'tanggal',['options' => ['tag' => false]])->textInput(['class'=>'form-control datetimepicker','placeholder' => 'Input tanggal & jam pelanggaran ...'])->label(false);
-	                 ?>
+						<?= $form->field($model, 'tanggal')->widget(DateTimePicker::classname(), [
+				            'options' => ['placeholder' => 'Input tanggal & jam pelanggaran ...'],
+				            'pluginOptions' => [
+				                'autoclose' => true,
+				                'todayHighlight' => true,
+				                'format' => 'yyyy-mm-dd hh:mm:ss'
+				            ]
+				        ])->label(false); ?>
+
+					
 					
 					<label class="error_tanggal"></label>
 					</div>
