@@ -163,7 +163,8 @@ EventAsset::register($this);
             <div class="control-group">
                 <label class="control-label" for="inputPatient">Tingkat:</label>
                 <div class="field desc">
-                    <?=Html::dropDownList('tingkat_edit','',['Lokal'=>'Lokal','Provinsi'=>'Provinsi','Nasional'=>'Nasional','Internasional'=>'Internasional'],['id'=>'tingkat_edit','class'=>'form-control','prompt'=>'-Pilih Tingkat-']);?>
+                    <?=Html::dropDownList('tingkat_edit','',['Prodi'=>'Prodi','Fakultas'=>'Fakultas','Universitas'=>'Universitas','Lokal'=>'Lokal','Provinsi'=>'Provinsi','Nasional'=>'Nasional','Internasional'=>'Internasional'],['id'=>'tingkat','class'=>'form-control','prompt'=>'-Pilih Tingkat-']);?>
+                   
                     
                 </div>
             </div>

@@ -243,7 +243,7 @@ class AsramaController extends Controller
                 $data2 = new RiwayatKamar;
                 $data2->nim = $dataku['nimku'];
                 $data2->kamar_id = $dataku['kamarku'];
-                $data2->dari_kamar_id = $kamarLama->id;
+                $data2->dari_kamar_id = !empty($kamarLama) ? $kamarLama->id : null;
                 $data2->save();
 
                 $data->kamar_id = $kamar;
