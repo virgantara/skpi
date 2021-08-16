@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'attribute' => 'kode_kegiatan',
                     'value' => function ($data){
-                        return !empty($data->kodeKegiatan) && !empty($data->kodeKegiatan->kegiatan) ? $data->kodeKegiatan->kegiatan->nama_kegiatan : '-';
+                        return !empty($data->kodeKegiatan) && !empty($data->kodeKegiatan->kegiatan) ? $data->kodeKegiatan->kegiatan->nama_kegiatan.' - '.$data->kodeKegiatan->kegiatan->sub_kegiatan : '-';
                     }
                 ],
                 'nim',
