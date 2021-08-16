@@ -75,15 +75,15 @@ class SimakKegiatanHarianController extends Controller
             if(!empty($_GET['tanggal']))
             {
                 $tgl = explode(" hingga ",$_GET['tanggal']);
-                $sd = $tgl[0];
-                $ed = $tgl[1];    
+                $sd = $tgl[0].' 00:00:00';
+                $ed = $tgl[1].' 23:59:59';    
             }
             
             $query = new \yii\db\Query();
             $tmp = $query->select(['kam.nama_kampus','kam.kode_kampus', 'COUNT(*) as total'])
             ->from('simak_mastermahasiswa mas')
             ->innerJoin('simak_kampus kam', 'kam.kode_kampus = mas.kampus')
-            ->where(['mas.status_aktivitas' => 'A'])
+            ->where(['mas.status_aktivitas' => 'A','mas.kampus' => 1]) # siman
             ->groupBy(['kam.nama_kampus','kam.kode_kampus'])
             ->all();
 
@@ -92,7 +92,7 @@ class SimakKegiatanHarianController extends Controller
 
             $kat = $_GET['jenis_kegiatan'];
             $query = new \yii\db\Query();
-            $results = $query->select(['COUNT(*) as total','kk.nama_kegiatan','kam.nama_kampus','kam.kode_kampus'])
+            $results = $query->select(['COUNT(*) as total','kk.nama_kegiatan','kam.nama_kampus','kam.kode_kampus','DATE(m.created_at) as tgl'])
             ->from('simak_kegiatan_harian_mahasiswa m')
             ->innerJoin('simak_kegiatan_harian h', 'm.kode_kegiatan = h.kode')
             ->innerJoin('simak_mastermahasiswa mas', 'mas.nim_mhs = m.nim')
@@ -101,8 +101,8 @@ class SimakKegiatanHarianController extends Controller
             ->innerJoin('simak_kegiatan kk', 'kk.id = h.kegiatan_id')
             ->where(['k.kode' => $kat])
             ->andWhere(['BETWEEN','m.created_at',$sd, $ed])
-            ->groupBy(['kk.nama_kegiatan','kam.nama_kampus','kam.kode_kampus'])
-            ->orderBy('total DESC')
+            ->groupBy(['kk.nama_kegiatan','kam.nama_kampus','kam.kode_kampus','DATE(m.created_at)'])
+            ->orderBy('tgl ASC')
           
             ->all();
         }

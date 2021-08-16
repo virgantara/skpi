@@ -6,6 +6,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use kartik\daterange\DateRangePicker;
 
+setlocale(LC_TIME, 'id_ID.utf8');
 /* @var $this yii\web\View */
 /* @var $model app\models\SimakKegiatanHarian */
 
@@ -88,6 +89,7 @@ echo DateRangePicker::widget([
                 <tr>
                     <th rowspan="2">No</th>
                     <th rowspan="2">Kegiatan</th>
+                    <th rowspan="2">Tanggal</th>
                     <th rowspan="2">Kampus</th>
                     <th colspan="2" class="text-center">Total (mhs)</th>
                 </tr>
@@ -104,10 +106,14 @@ echo DateRangePicker::widget([
                 foreach($results as $res)
                 {
                     $total_mhs = $list_kampus[$res['kode_kampus']];
+
+                    $hari = new \DateTime($res['tgl']);
+                    $d = strftime('%A, %d %B %Y', $hari->getTimestamp());
                 ?>
                 <tr>
                     <td><?=$i+1;?></td>
                     <td><?=$res['nama_kegiatan'];?></td>
+                    <td><?=$d;?></td>
                     <td><?=$res['nama_kampus'];?></td>
                     <td class="text-center"><?=$res['total'];?></td>
                     <td class="text-center"><?=$total_mhs - $res['total'];?></td>
