@@ -24,6 +24,7 @@ $theme = $this->theme;
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="icon" type="image/png" sizes="96x96" href="<?=Yii::$app->view->theme->baseUrl;?>/images/favicon.ico">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
 
@@ -43,12 +44,12 @@ $theme = $this->theme;
 </head>
 
 <body class="no-skin">
-     <div id="navbar" class="navbar navbar-default    navbar-collapse       h-navbar ace-save-state">
+     <div id="navbar" style="background-color:#fff" class="navbar navbar-default    navbar-collapse       h-navbar ace-save-state">
             <div class="navbar-container ace-save-state" id="navbar-container">
                 <div class="navbar-header pull-left">
-                    <a href="<?=Url::to('/site/index');?>" class="navbar-brand">
+                    <a href="<?=Url::to('/site/index');?>" class="navbar-brand" style="color:#777">
                         <small>
-                            <i class="fa fa-leaf"></i>
+                            <img width="25px" src="<?=$theme->getPath('images/logo_small.png');?>" alt="Logo SIKAP" />
                             <?= Yii::$app->name ?>
                         </small>
                     </a>
@@ -188,36 +189,7 @@ if(!Yii::$app->user->isGuest){
                     try{ace.settings.loadState('sidebar')}catch(e){}
                 </script>
                
-                <div class="sidebar-shortcuts" id="sidebar-shortcuts">
-                    <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-                        <button class="btn btn-success">
-                            <i class="ace-icon fa fa-signal"></i>
-                        </button>
-
-                        <button class="btn btn-info">
-                            <i class="ace-icon fa fa-pencil"></i>
-                        </button>
-
-                        <button class="btn btn-warning">
-                            <i class="ace-icon fa fa-users"></i>
-                        </button>
-
-                        <button class="btn btn-danger">
-                            <i class="ace-icon fa fa-cogs"></i>
-                        </button>
-                    </div>
-
-                    <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-                        <span class="btn btn-success"></span>
-
-                        <span class="btn btn-info"></span>
-
-                        <span class="btn btn-warning"></span>
-
-                        <span class="btn btn-danger"></span>
-                    </div>
-                </div><!-- /.sidebar-shortcuts -->
-
+ 
                   <?php 
     
     $menuItems = \app\helpers\MenuHelper::getMenuItems();              

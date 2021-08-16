@@ -112,6 +112,11 @@ class MenuHelper
 		                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event'), 
 		            ],
 		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap',  
+		                'url' => ['simak-kegiatan-harian/rekap'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event'), 
+		            ],
+		            [
 		            	'label' => '<hr style="padding:0px;margin:0px">'
 		            ],
 		            
