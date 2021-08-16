@@ -17,7 +17,7 @@ class SimakKegiatanHarianSearch extends SimakKegiatanHarian
     public function rules()
     {
         return [
-            [['id', 'kode', 'jam_mulai', 'jam_selesai', 'kode_venue'], 'safe'],
+            [['id', 'kode', 'jam_mulai', 'jam_selesai', 'kode_venue','kategori'], 'safe'],
             [['kegiatan_id', 'tahun_akademik'], 'integer'],
         ];
     }
@@ -65,6 +65,7 @@ class SimakKegiatanHarianSearch extends SimakKegiatanHarian
         ]);
 
         $query->andFilterWhere(['like', 'id', $this->id])
+            ->andFilterWhere(['like', 'kategori', $this->kategori])
             ->andFilterWhere(['like', 'kode', $this->kode])
             ->andFilterWhere(['like', 'kode_venue', $this->kode_venue]);
 
