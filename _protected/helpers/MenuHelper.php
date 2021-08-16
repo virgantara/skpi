@@ -119,6 +119,11 @@ class MenuHelper
 		            [
 		            	'label' => '<hr style="padding:0px;margin:0px">'
 		            ],
+		            [
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Riwayat',  
+		                'url' => ['simak-kegiatan-harian-mahasiswa/riwayat'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event'), 
+		            ],
 		            
 		        ]
 		    ];

@@ -27,19 +27,19 @@ class SimakKegiatanHarianMahasiswaController extends Controller
                     'denyCallback' => function ($rule, $action) {
                         throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                     },
-                    'only' => ['create','update','index','view','delete'],
+                    'only' => ['create','update','index','view','delete','riwayat'],
                     'rules' => [
                         
                         [
                             'actions' => [
-                                'index','view'
+                                'index','view','riwayat'
                             ],
                             'allow' => true,
                             'roles' => ['operatorCabang','event'],
                         ],
                         [
                             'actions' => [
-                                'index','view','update','delete','create',
+                                'index','view','update','delete','create','riwayat'
                             ],
                             'allow' => true,
                             'roles' => ['theCreator','admin'],
@@ -55,6 +55,17 @@ class SimakKegiatanHarianMahasiswaController extends Controller
                 ],
             ]
         );
+    }
+
+    public function actionRiwayat()
+    {
+        $searchModel = new SimakKegiatanHarianMahasiswaSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams,'no');
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
