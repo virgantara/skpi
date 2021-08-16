@@ -89,6 +89,7 @@ class SimakKegiatanHarianMahasiswaSearch extends SimakKegiatanHarianMahasiswa
             'kegiatan_rutin_id' => $this->kegiatan_rutin_id,
             'poin' => $this->poin,
             'waktu' => $this->waktu,
+            'mhs.kode_prodi' => $this->namaProdi
         ]);
         $query->andFilterWhere(['like', 'nim', $this->nim]);
         $query->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->namaMahasiswa]);

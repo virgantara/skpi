@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-
+use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\SimakKegiatanHarianMahasiswaSearch */
@@ -9,6 +9,9 @@ use kartik\grid\GridView;
 
 $this->title = 'Kegiatan Harian Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
+
+$list_prodi = ArrayHelper::map(\app\models\SimakMasterprogramstudi::find()->orderBy(['kode_fakultas' => SORT_ASC,'kode_prodi'=> SORT_ASC])->all(),'kode_prodi','nama_prodi');
+
 ?>
 <div class="simak-kegiatan-harian-mahasiswa-index">
 
@@ -20,21 +23,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php $gridColumns = [
             ['class' => 'yii\grid\SerialColumn'],
-             [
-                    'attribute' => 'kode_kegiatan',
-                    'value' => function ($data){
-                        return !empty($data->kodeKegiatan) && !empty($data->kodeKegiatan->kegiatan) ? $data->kodeKegiatan->kegiatan->nama_kegiatan.' - '.$data->kodeKegiatan->kegiatan->sub_kegiatan : '-';
-                    }
-                ],
-                'nim',
-                'namaMahasiswa',
-                'namaProdi',
-                'semester',
-                'tahun_akademik',
+            [
+                'attribute' => 'kode_kegiatan',
+                'value' => function ($data){
+                    return !empty($data->kodeKegiatan) && !empty($data->kodeKegiatan->kegiatan) ? $data->kodeKegiatan->kegiatan->nama_kegiatan.' - '.$data->kodeKegiatan->kegiatan->sub_kegiatan : '-';
+                }
+            ],
+            'nim',
+            'namaMahasiswa',
+            [
+                'attribute' => 'namaProdi',
+                'filter' => $list_prodi,
+                
+            ],
+            'semester',
+            'tahun_akademik',
 
-                'poin',
-                'waktu',
-                'created_at',
+            'poin',
+            'waktu',
+            'created_at',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'visibleButtons' => [
@@ -113,7 +120,7 @@ $this->registerJs('
 
 setInterval(function(){ 
     $.pjax.reload({container:"#pjax_id"}) 
-}, 5000);
+}, 30000);
 
 ', \yii\web\View::POS_READY);
 
