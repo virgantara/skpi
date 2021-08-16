@@ -34,12 +34,12 @@ $list_venue = ArrayHelper::map(\app\models\Venue::find()->all(),'kode','nama');
             ['class' => 'yii\grid\SerialColumn'],
 
             // 'id',
-            // 'kode',
+            'kategori',
             [
                 'attribute' => 'kegiatan_id',
                 'value' => function($data){
 
-                    return !empty($data->kegiatan) ? $data->kegiatan->nama_kegiatan : 'Not found';
+                    return !empty($data->kegiatan) ? $data->kegiatan->nama_kegiatan.' - '.$data->kegiatan->sub_kegiatan : 'Not found';
                 }
             ],
             [
