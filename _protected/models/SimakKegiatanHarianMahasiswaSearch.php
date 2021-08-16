@@ -58,6 +58,7 @@ class SimakKegiatanHarianMahasiswaSearch extends SimakKegiatanHarianMahasiswa
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['created_at'=>SORT_DESC]]
         ]);
 
         $dataProvider->sort->attributes['namaMahasiswa'] = [
