@@ -43,16 +43,17 @@ class SimakKegiatanHarianMahasiswaSearch extends SimakKegiatanHarianMahasiswa
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$today="yes")
     {
         $query = SimakKegiatanHarianMahasiswa::find();
-
+        $query->alias('t');
         $query->joinWith([
             'nim0 as mhs',
             'nim0.kodeProdi as p',
 
         ]);
 
+        
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -96,6 +97,12 @@ class SimakKegiatanHarianMahasiswaSearch extends SimakKegiatanHarianMahasiswa
         $query->andFilterWhere(['like', 'id', $this->id])
             ->andFilterWhere(['like', 'nim', $this->nim])
             ->andFilterWhere(['like', 'kode_kegiatan', $this->kode_kegiatan]);
+
+        if($today=='yes'){
+            $sd = date('Y-m-d 00:00:00');
+            $ed = date('Y-m-d 23:59:59');
+            $query->andWhere(['BETWEEN','t.created_at',$sd, $ed]);
+        }
 
         return $dataProvider;
     }
