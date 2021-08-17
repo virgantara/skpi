@@ -201,14 +201,18 @@ class MenuHelper
 		         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 		         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 		        'items'=>[
-		           	
+		           	[
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan WNI',  
+		                'url' => ['mahasiswa/konsulat-wni'],	        
+		                'visible' => Yii::$app->user->can('operatorCabang'), 
+		            ],
 		            [
-		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan',  
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemetaan WNA',  
 		                'url' => ['mahasiswa/konsulat'],	        
 		                'visible' => Yii::$app->user->can('operatorCabang'), 
 		            ],
 		            [
-		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Rekap',  
+		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Geografis',  
 		                'url' => ['/mahasiswa/konsulat-rekap'],	        
 		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor'),
 		               

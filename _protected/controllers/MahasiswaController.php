@@ -32,12 +32,12 @@ class MahasiswaController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['update','index','view','konsulat'],
+                'only' => ['update','index','view','konsulat','konsulat-wni'],
                 'rules' => [
                     
                     [
                         'actions' => [
-                            'update','index','view','konsulat'
+                            'update','index','view','konsulat','konsulat-wni'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator','admin','operatorCabang'],
@@ -53,6 +53,72 @@ class MahasiswaController extends Controller
             ],
         ];
     }
+
+    public function actionKonsulatWni()
+    {
+        $model = new SimakMastermahasiswa;
+        $results = [];
+        
+        if (!empty($_GET['SimakMastermahasiswa']['kabupaten']) && !empty($_GET['SimakMastermahasiswa']['status_aktivitas'])) {
+            
+            $results = SimakMastermahasiswa::find()->where([
+                'kabupaten' => $_GET['SimakMastermahasiswa']['kabupaten'],
+                'status_aktivitas' => $_GET['SimakMastermahasiswa']['status_aktivitas']
+            ])->all();          
+            
+        }
+        
+        if(!empty($_POST['btn-update-all']))
+        {
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction();
+            $errors = '';
+            $hasil = [];
+            
+            try 
+            {
+
+
+                foreach($_POST['nim'] as $q => $nim)
+                {
+                    $mhs = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
+                    $konsul = !empty($_POST['konsulat'][$q]) ? $_POST['konsulat'][$q] : null;
+                    if(!empty($mhs))
+                    {
+                        $mhs->konsulat = $konsul;
+                        if(!$mhs->save())
+                        {
+                            $errors .= \app\helpers\MyHelper::logError($mhs);
+                            throw new \Exception;
+                        }
+                    }
+                }
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                $transaction->commit();
+
+                return $this->redirect(['konsulat-wni']);
+                    
+                
+            } 
+            catch (\Exception $e) {
+                $transaction->rollBack();
+                $errors .= $e->getMessage();
+                Yii::$app->session->setFlash('danger', $errors);
+                
+            } 
+            catch (\Throwable $e) {
+                $transaction->rollBack();
+                $errors .= $e->getMessage();
+                Yii::$app->session->setFlash('danger', $errors);
+            }
+        }
+        return $this->render('konsulat_wni',[
+            'model' => $model,
+            'results' => $results,
+        ]);
+
+        
+    } 
 
     public function actionKonsulatRekap()
     {
@@ -156,6 +222,8 @@ class MahasiswaController extends Controller
         echo json_encode($results);
         die();
     }
+
+    
 
     public function actionKonsulat()
     {

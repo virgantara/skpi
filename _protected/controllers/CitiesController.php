@@ -31,6 +31,50 @@ class CitiesController extends Controller
         ];
     }
 
+    public function actionAjaxGetKota(){
+        $cid = $_POST['cid'];
+
+        $results = [];
+
+        $kota = Cities::findOne($cid);
+
+        if(!empty($kota))
+        {
+
+
+            $results = [
+                'id' => $kota->id,
+                'name' => $kota->name,
+                'lat' => $kota->latitude,
+                'lng' => $kota->longitude
+            ];  
+        }
+
+        echo json_encode($results);
+        exit;
+    }
+
+    public function actionAjaxListKota(){
+        $nama_kota = $_POST['nama_kota'];
+
+        $results = [];
+
+        $list_kota = Cities::find()->where(['country_code' => 'ID'])->andFilterWhere(['like','name',$nama_kota])->orderBy(['id'=>SORT_ASC])->all();
+
+        foreach($list_kota as $kota)
+        {
+            $results[] = [
+                'id' => $kota->id,
+                'name' => $kota->name.' - '.$kota->state->name,
+                'lat' => $kota->latitude,
+                'lng' => $kota->longitude,
+            ];  
+        }
+
+        echo json_encode($results);
+        exit;
+    }
+
     private function getCitiesList($id){
         $list = Cities::find()->where(['state_id'=>$id])->orderBy('name')->all();
         $result = [];

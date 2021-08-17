@@ -29,6 +29,25 @@ class SimakKabupatenController extends Controller
         ];
     }
 
+    public function actionAjaxListKota(){
+        $pid = $_POST['pid'];
+
+        $results = [];
+
+        $list_kota = SimakKabupaten::find()->where(['id_provinsi' => $pid])->orderBy(['kab'=>SORT_ASC])->all();
+
+        foreach($list_kota as $kota)
+        {
+            $results[] = [
+                'id' => $kota->id,
+                'nama' => $kota->kab
+            ];  
+        }
+
+        echo json_encode($results);
+        exit;
+    }
+
     /**
      * Lists all SimakKabupaten models.
      * @return mixed
