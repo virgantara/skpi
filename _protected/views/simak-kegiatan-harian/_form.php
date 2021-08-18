@@ -37,7 +37,7 @@ use kartik\time\TimePicker;
     <?= $form->field($model, 'jam_mulai')->widget(TimePicker::className(),[
         'options' => ['placeholder' => 'Select start operating time ...'],
         'pluginOptions' => [
-            'showSeconds' => true,
+            'showSeconds' => false,
             'secondStep' => 10, 
             'showMeridian' => false,
             'minuteStep' => 5,
@@ -48,7 +48,7 @@ use kartik\time\TimePicker;
     <?= $form->field($model, 'jam_selesai')->widget(TimePicker::className(),[
         'options' => ['placeholder' => 'Select end operating time ...'],
             'pluginOptions' => [
-                'showSeconds' => true,
+                'showSeconds' => false,
                 'secondStep' => 10,
                   'showMeridian' => false,
                 'minuteStep' => 5,

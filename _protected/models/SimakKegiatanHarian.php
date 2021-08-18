@@ -38,9 +38,10 @@ class SimakKegiatanHarian extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'kode'], 'required'],
+            [['id', 'kode','kode_venue','kategori','kegiatan_id','jam_mulai','jam_selesai'], 'required'],
             [['kegiatan_id', 'tahun_akademik'], 'integer'],
             [['jam_mulai', 'jam_selesai'], 'safe'],
+            ['jam_mulai','validateDates'],
             [['poin'], 'number'],
             [['id'], 'string', 'max' => 100],
             [['kode'], 'string', 'max' => 50],
@@ -69,6 +70,14 @@ class SimakKegiatanHarian extends \yii\db\ActiveRecord
             'kode_venue' => 'Kode Venue',
             'poin' => 'Poin',
         ];
+    }
+
+    public function validateDates(){
+        if(strtotime($this->jam_mulai) <= strtotime($this->jam_selesai))
+        {
+            $this->addError('jam_mulai','Please give correct Start and End dates');
+            $this->addError('jam_selesai','Please give correct Start and End dates');
+        }
     }
 
     /**

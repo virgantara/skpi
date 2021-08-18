@@ -65,6 +65,14 @@ $list_venue = ArrayHelper::map(\app\models\Venue::find()->all(),'kode','nama');
                 'editableOptions' => [
                     'inputType' => \kartik\editable\Editable::INPUT_TIME,
                     'asPopover' => false,
+                    'options'=>[
+                        'pluginOptions'=>[
+                            'showSeconds' => false,
+                            'showMeridian' => false,
+                            'minuteStep' => 5,
+                            'secondStep' => 5,
+                        ]
+                    ]
                 ],
             ],
             [
@@ -74,6 +82,14 @@ $list_venue = ArrayHelper::map(\app\models\Venue::find()->all(),'kode','nama');
                 'editableOptions' => [
                     'inputType' => \kartik\editable\Editable::INPUT_TIME,
                     'asPopover' => false,
+                    'options'=>[
+                        'pluginOptions'=>[
+                            'showSeconds' => false,
+                            'showMeridian' => false,
+                            'minuteStep' => 5,
+                            'secondStep' => 5,
+                        ]
+                    ]
                 ],
             ],
             [
