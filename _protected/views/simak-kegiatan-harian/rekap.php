@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
 $jenis_kegiatan = !empty($_GET['jenis_kegiatan']) ? $_GET['jenis_kegiatan'] : '';
-$tanggal = !empty($_GET['tanggal']) ? $_GET['tanggal'] : '';
+$tanggal = !empty($_GET['tanggal']) ? $_GET['tanggal'] : date('Y-m-d').' hingga '.date('Y-m-d');
 
 ?>
 <div class="simak-kegiatan-harian-view">
