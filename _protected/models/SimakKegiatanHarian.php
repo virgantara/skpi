@@ -73,7 +73,7 @@ class SimakKegiatanHarian extends \yii\db\ActiveRecord
     }
 
     public function validateDates(){
-        if(strtotime($this->jam_mulai) <= strtotime($this->jam_selesai))
+        if(strtotime($this->jam_mulai) >= strtotime($this->jam_selesai))
         {
             $this->addError('jam_mulai','Please give correct Start and End dates');
             $this->addError('jam_selesai','Please give correct Start and End dates');
