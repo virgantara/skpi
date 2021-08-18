@@ -112,7 +112,7 @@ echo DateRangePicker::widget([
                 ?>
                 <tr>
                     <td><?=$i+1;?></td>
-                    <td><?=$res['nama_kegiatan'];?></td>
+                    <td><?=$res['nama_kegiatan'];?> - <?=$res['sub_kegiatan'];?></td>
                     <td><?=$d;?></td>
                     <td><?=$res['nama_kampus'];?></td>
                     <td class="text-center"><?=$res['total'];?></td>

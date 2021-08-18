@@ -92,7 +92,7 @@ class SimakKegiatanHarianController extends Controller
 
             $kat = $_GET['jenis_kegiatan'];
             $query = new \yii\db\Query();
-            $results = $query->select(['COUNT(*) as total','kk.nama_kegiatan','kam.nama_kampus','kam.kode_kampus','DATE(m.created_at) as tgl'])
+            $results = $query->select(['COUNT(*) as total','kk.nama_kegiatan','kam.nama_kampus','kk.sub_kegiatan','kam.kode_kampus','DATE(m.created_at) as tgl'])
             ->from('simak_kegiatan_harian_mahasiswa m')
             ->innerJoin('simak_kegiatan_harian h', 'm.kode_kegiatan = h.kode')
             ->innerJoin('simak_mastermahasiswa mas', 'mas.nim_mhs = m.nim')
@@ -101,7 +101,7 @@ class SimakKegiatanHarianController extends Controller
             ->innerJoin('simak_kegiatan kk', 'kk.id = h.kegiatan_id')
             ->where(['k.kode' => $kat])
             ->andWhere(['BETWEEN','m.created_at',$sd, $ed])
-            ->groupBy(['kk.nama_kegiatan','kam.nama_kampus','kam.kode_kampus','DATE(m.created_at)'])
+            ->groupBy(['kk.nama_kegiatan','kk.sub_kegiatan','kam.nama_kampus','kam.kode_kampus','DATE(m.created_at)'])
             ->orderBy('tgl ASC')
           
             ->all();
