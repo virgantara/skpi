@@ -78,9 +78,9 @@ class SimakKegiatanHarianController extends Controller
         ->where('created_at <= (SELECT created_at FROM simak_kegiatan_harian_mahasiswa ORDER BY created_at DESC LIMIT 1)')
         ->groupBy(['DATE(created_at)'])
         ->orderBy(['tgl' => SORT_ASC]);
-        $tmp = $query->all();
+        $listJadwal = $query->all();
 
-        foreach($tmp as $t)
+        foreach($listJadwal as $t)
         {
             $hariIni = new \DateTime(date('Y-m-d',strtotime($t['tgl'])));
             $today = strftime('%A, %d %B', $hariIni->getTimestamp());
@@ -90,22 +90,34 @@ class SimakKegiatanHarianController extends Controller
         $results['tanggal'] = $list_tanggal;
         foreach($list_sholat as $s)
         {
-            $query = new \yii\db\Query();
-            $query->select(['DATE(km.created_at) as tgl','k.sub_kegiatan', 'COUNT(*) as total'])
-            ->from('simak_kegiatan_harian_mahasiswa km')
-            ->innerJoin('simak_kegiatan_harian h', 'h.kode = km.kode_kegiatan')
-            ->innerJoin('simak_kegiatan k', 'k.id = h.kegiatan_id')
-            ->where(['h.kode'=> 'SHOLAT', 'h.kode' => $s->kode])
-            ->groupBy(['date(km.created_at)','k.sub_kegiatan'])
-            ->orderBy(['tgl'=>SORT_ASC]);
-            $temps = $query->all();
 
             $tmp = [];
-            foreach($temps as $t)
+            $total = 0;
+            foreach($listJadwal as $t)
             {
-                $c = (int)$t['total'] == 0 || empty($t['total']) ? 0 : (int)$t['total'];
-                $tmp[] = $c;
+                $sd = $t['tgl'].' 00:00:00';
+                $ed = $t['tgl'].' 23:59:59';
+                
+                $query = new \yii\db\Query();
+                $query->select(['DATE(km.created_at) as tgl','k.sub_kegiatan', 'COUNT(*) as total'])
+                ->from('simak_kegiatan_harian_mahasiswa km')
+                ->innerJoin('simak_kegiatan_harian h', 'h.kode = km.kode_kegiatan')
+                ->innerJoin('simak_kegiatan k', 'k.id = h.kegiatan_id')
+                ->where(['h.kode'=> 'SHOLAT', 'h.kode' => $s->kode])
+                ->andWhere(['BETWEEN','km.created_at',$sd, $ed])
+                ->groupBy(['date(km.created_at)','k.sub_kegiatan'])
+                ->orderBy(['tgl'=>SORT_ASC]);
+                $temps = $query->all();
+                foreach($temps as $t)
+                {
+                    $c = (int)$t['total'] == 0 || empty($t['total']) ? 0 : (int)$t['total'];
+                    $total += $c;
+                }
+
+                $tmp[] = $total;
             }
+            
+            
 
             $results['items'][] = [
                 'kategori' => $s->kegiatan->sub_kegiatan,
