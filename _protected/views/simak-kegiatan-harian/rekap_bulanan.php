@@ -143,7 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-8">
         <h3>Grafik Perkembangan Kehadiran per Hari</h3>
         <div class="chart-container">
-            <div id="container" style="min-width: 310px; height: 400px; max-width: 100%; margin: 0 auto"></div>
+            <div id="container" style="min-width: 310px; height: 800px; max-width: 100%; margin: 0 auto"></div>
         </div>
     </div>
 </div>
