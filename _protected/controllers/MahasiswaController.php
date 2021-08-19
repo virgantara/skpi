@@ -63,7 +63,8 @@ class MahasiswaController extends Controller
             
             $results = SimakMastermahasiswa::find()->where([
                 'kabupaten' => $_GET['SimakMastermahasiswa']['kabupaten'],
-                'status_aktivitas' => $_GET['SimakMastermahasiswa']['status_aktivitas']
+                'status_aktivitas' => $_GET['SimakMastermahasiswa']['status_aktivitas'],
+                'status_warga' => 'WNI'
             ])->all();          
             
         }
