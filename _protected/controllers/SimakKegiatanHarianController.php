@@ -61,6 +61,176 @@ class SimakKegiatanHarianController extends Controller
         );
     }
 
+    public function actionAjaxPerkembangan()
+    {   
+
+        setlocale(LC_TIME, 'id_ID.utf8');
+        $query = SimakKegiatanHarian::find();
+        $query->alias('t');
+        $query->joinWith(['kegiatan as keg']);
+        $query->andWhere(['t.kategori' => 'SHOLAT']);
+        $query->orderBy(['keg.updated_at' => SORT_ASC]);
+        $list_sholat = $query->all();
+
+        $query = new \yii\db\Query();
+        $query->select(['DATE(created_at) as tgl'])
+        ->from('simak_kegiatan_harian_mahasiswa')
+        ->where('created_at <= (SELECT created_at FROM simak_kegiatan_harian_mahasiswa ORDER BY created_at DESC LIMIT 1)')
+        ->groupBy(['DATE(created_at)'])
+        ->orderBy(['tgl' => SORT_ASC]);
+        $tmp = $query->all();
+
+        foreach($tmp as $t)
+        {
+            $hariIni = new \DateTime(date('Y-m-d',strtotime($t['tgl'])));
+            $today = strftime('%A, %d %B', $hariIni->getTimestamp());
+            $list_tanggal[] = $today;//date('Y-m-d',strtotime($t['tgl']));
+        }
+
+        $results['tanggal'] = $list_tanggal;
+        foreach($list_sholat as $s)
+        {
+            $query = new \yii\db\Query();
+            $query->select(['DATE(km.created_at) as tgl','k.sub_kegiatan', 'COUNT(*) as total'])
+            ->from('simak_kegiatan_harian_mahasiswa km')
+            ->innerJoin('simak_kegiatan_harian h', 'h.kode = km.kode_kegiatan')
+            ->innerJoin('simak_kegiatan k', 'k.id = h.kegiatan_id')
+            ->where(['h.kode'=> 'SHOLAT', 'h.kode' => $s->kode])
+            ->groupBy(['date(km.created_at)','k.sub_kegiatan'])
+            ->orderBy(['tgl'=>SORT_ASC]);
+            $temps = $query->all();
+
+            $tmp = [];
+            foreach($temps as $t)
+            {
+                $c = (int)$t['total'] == 0 || empty($t['total']) ? 0 : (int)$t['total'];
+                $tmp[] = $c;
+            }
+
+            $results['items'][] = [
+                'kategori' => $s->kegiatan->sub_kegiatan,
+                'data' => $tmp
+            ];
+        }
+
+
+        echo json_encode($results);
+        exit;
+
+    }
+
+    public function actionRekapBulanan()
+    {
+
+        $results = [];
+
+        $list_kategori = SimakKegiatanHarianKategori::find()->all();
+        $list_sholat = [];
+        $list_prodi = [];
+        if(!empty($_GET['btn-search']))
+        {
+            $sd = date('Y-m-01 00:00:00');
+            $ed = date('Y-m-d 23:59:59');
+            if(!empty($_GET['bulan']))
+            {
+                $bulan = $_GET['bulan'];
+                $sd = date('Y-'.$bulan.'-01 00:00:00');
+                $ed = date('Y-'.$bulan.'-d 23:59:59');
+            }
+            
+            $query = new \yii\db\Query();
+            $tmp = $query->select(['p.nama_prodi','p.kode_prodi', 'COUNT(*) as total'])
+            ->from('simak_mastermahasiswa mas')
+            ->innerJoin('simak_masterprogramstudi p', 'p.kode_prodi = mas.kode_prodi')
+            ->where(['mas.status_aktivitas' => 'A']) # siman
+            ->groupBy(['p.nama_prodi','p.kode_prodi'])
+            ->orderBy(['p.kode_fakultas'=>SORT_ASC, 'p.nama_prodi'=>SORT_ASC]);
+
+            $list_prodi = $tmp->all();
+
+            $query = SimakKegiatanHarian::find();
+            $query->alias('t');
+            $query->joinWith(['kegiatan as keg']);
+            $query->andWhere(['t.kategori' => $_GET['jenis_kegiatan']]);
+            $query->orderBy(['keg.updated_at' => SORT_ASC]);
+            $list_sholat = $query->all();
+                
+
+            
+            foreach($list_prodi as $prodi)
+            {
+                foreach($list_sholat as $keg)
+                {
+
+                    $query = new \yii\db\Query();
+                    $query->select(['keg.sub_kegiatan', 'count(*) as total', 'date(km.created_at) as hari', 'p.nama_prodi'])
+                    ->from('simak_kegiatan_harian_kategori kk')
+                    ->innerJoin('simak_kegiatan_harian kh', 'kh.kategori = kk.kode')
+                    ->innerJoin('simak_kegiatan_harian_mahasiswa km', 'km.kode_kegiatan = kh.kode')
+                    ->innerJoin('simak_mastermahasiswa m', 'm.nim_mhs = km.nim')
+                    ->innerJoin('simak_masterprogramstudi p', 'p.kode_prodi = m.kode_prodi')
+                    ->innerJoin('simak_kegiatan keg', 'keg.id = kh.kegiatan_id')
+                    ->where(['kk.kode'=> $_GET['jenis_kegiatan'],'p.kode_prodi' => $prodi['kode_prodi'],'kh.kode'=>$keg->kode])
+                    ->andWhere(['BETWEEN','km.created_at',$sd, $ed])
+                    ->groupBy(['p.nama_prodi','date(km.created_at)','keg.sub_kegiatan'])
+                    ->orderBy(['sub_kegiatan'=>SORT_ASC,'hari'=>SORT_ASC,'p.nama_prodi'=>SORT_ASC]);
+                    $temps = $query->all();
+                    $sum = 0;
+                    $count = count($temps);
+                    foreach($temps as $tmp)
+                    {
+                        $sum += $tmp['total'];
+                    }
+
+                    $avg = 0;
+
+                    if($count > 0)
+                    {
+                        $avg = $sum / $count;
+                    }
+
+                    // print_r($keg->kode);exit;
+                    $results[$prodi['kode_prodi']][$keg->kode] = $avg;
+                }
+            }
+
+            // $query = new \yii\db\Query();
+            // $list_kategori = $query->select(['h.kode','k.sub_kegiatan'])
+            // ->from('simak_kegiatan_harian h')
+            // ->innerJoin('simak_kegiatan k', 'k.id = h.kegiatan_id')
+            // ->where(['h.kategori' => 'SHOLAT'])
+            // ->all();
+
+
+            // foreach($tmp as $t)
+            // $list_prodi[$t['kode_prodi']] = $t['total'];
+
+            // $kat = $_GET['jenis_kegiatan'];
+            // $query = new \yii\db\Query();
+            // $results = $query->select(['COUNT(*) as total','kk.nama_kegiatan','kam.nama_kampus','kk.sub_kegiatan','kam.kode_kampus','DATE(m.created_at) as tgl'])
+            // ->from('simak_kegiatan_harian_mahasiswa m')
+            // ->innerJoin('simak_kegiatan_harian h', 'm.kode_kegiatan = h.kode')
+            // ->innerJoin('simak_mastermahasiswa mas', 'mas.nim_mhs = m.nim')
+            // ->innerJoin('simak_kampus kam', 'kam.kode_kampus = mas.kampus')
+            // ->innerJoin('simak_kegiatan_harian_kategori k', 'k.kode = h.kategori')
+            // ->innerJoin('simak_kegiatan kk', 'kk.id = h.kegiatan_id')
+            // ->where(['k.kode' => $kat])
+            // ->andWhere(['BETWEEN','m.created_at',$sd, $ed])
+            // ->groupBy(['kk.nama_kegiatan','kk.sub_kegiatan','kam.nama_kampus','kam.kode_kampus','DATE(m.created_at)'])
+            // ->orderBy('tgl ASC')
+          
+            // ->all();
+        }
+
+        return $this->render('rekap_bulanan',[
+            'results' => $results,
+            'list_kategori' => $list_kategori,
+            'list_prodi' => $list_prodi,
+            'list_sholat' => $list_sholat,
+
+        ]);
+    }
+
     public function actionRekap()
     {
 

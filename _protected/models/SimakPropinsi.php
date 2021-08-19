@@ -18,6 +18,7 @@ use Yii;
  * @property int|null $last_updated
  *
  * @property SimakKabupaten[] $simakKabupatens
+ * @property SimakPropinsiBatas[] $simakPropinsiBatas
  */
 class SimakPropinsi extends \yii\db\ActiveRecord
 {
@@ -62,6 +63,11 @@ class SimakPropinsi extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getSimakMastermahasiswas()
+    {
+        return $this->hasMany(SimakMastermahasiswa::className(), ['provinsi' => 'id']);
+    }
+
     /**
      * Gets query for [[SimakKabupatens]].
      *
@@ -70,5 +76,15 @@ class SimakPropinsi extends \yii\db\ActiveRecord
     public function getSimakKabupatens()
     {
         return $this->hasMany(SimakKabupaten::className(), ['id_provinsi' => 'id']);
+    }
+
+    /**
+     * Gets query for [[SimakPropinsiBatas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSimakPropinsiBatas()
+    {
+        return $this->hasMany(SimakPropinsiBatas::className(), ['kode_prop' => 'id']);
     }
 }

@@ -39,6 +39,7 @@ $themeUrl = $this->theme->baseUrl."/new_leaflet";
     <!-- Load Esri Leaflet Geocoder from CDN -->
     <link rel="stylesheet" href="<?=$themeUrl;?>/esri-leaflet-geocoder.css">
     <script src="<?=$themeUrl;?>/esri-leaflet-geocoder.js"></script>
+    <script src="<?=$themeUrl;?>/indonesia-geojson.js"></script>
     <title><?= Html::encode($this->title) ?></title>
 
     <?php $this->head(); ?>
