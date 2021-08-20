@@ -320,6 +320,8 @@ class SimakKegiatanHarianController extends Controller
                     {
                         $sum += $tmp['total'];
                     }
+
+                    $sum = $sum / 5;
                     
                     $persentase = $sum / $divider * 100;
               
