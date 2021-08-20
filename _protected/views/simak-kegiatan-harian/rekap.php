@@ -109,7 +109,7 @@ echo DateRangePicker::widget([
                     <th>Prodi</th>
                     <th class="text-center">Hadir</th>
                     <th class="text-center">Ghoib</th>
-                    <th class="text-center">Kehadiran</th>
+                    <th class="text-center">Kehadiran (%)</th>
                 </tr>
             </thead>
             <tbody>
