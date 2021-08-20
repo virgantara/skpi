@@ -100,14 +100,14 @@ $tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <h3>Persentase Kehadiran dari <?=$tgl_awal;?> hingga <?=$tgl_akhir;?></h3>
         <table id="dynamic-table"  class="table table-striped table-hover table-bordered">
             <thead>
                 <tr>
                     <th>No</th>
                     <th>Prodi</th>
-                    <th>Persentase</th>
+                    <th class="text-center">Persentase <br>(%)</th>
                     <?php 
                     // foreach($list_sholat as $kat)
                     // {
@@ -157,7 +157,7 @@ $tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
             </tbody>
         </table>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-8">
         <h3>Grafik Perkembangan Kehadiran per Hari</h3>
         <div class="chart-container">
             <div id="container" style="min-width: 310px; height: 600px; max-width: 100%; margin: 0 auto"></div>
