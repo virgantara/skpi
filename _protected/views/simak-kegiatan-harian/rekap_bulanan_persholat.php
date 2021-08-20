@@ -107,14 +107,13 @@ $tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
                 <tr>
                     <th>No</th>
                     <th>Prodi</th>
-                    <th>Persentase</th>
                     <?php 
-                    // foreach($list_sholat as $kat)
-                    // {
+                    foreach($list_sholat as $kat)
+                    {
                     ?>
-                    <!-- <th class="text-center"><br> (%)</th> -->
+                    <th class="text-center"><?=$kat->kegiatan->sub_kegiatan;?><br> (%)</th>
                     <?php
-                    // }
+                    }
                     ?>
                    
                 </tr>
@@ -130,23 +129,21 @@ $tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
 
                     // $hari = new \DateTime($res['tgl']);
                     // $d = strftime('%A, %d %B %Y', $hari->getTimestamp());
-                    $avg= $results[$res['kode_prodi']];
                 ?>
                 <tr>
                     <td><?=$i+1;?></td>
                     <td><?=$res['nama_prodi'];?></td>
                     <?php 
-
-                    // foreach($list_sholat as $kat)
-                    // {
-                    //     $avg= $results[$res['kode_prodi']][$kat->kode];
+                    foreach($list_sholat as $kat)
+                    {
+                        $avg= $results[$res['kode_prodi']][$kat->kode];
                     ?>
                     <td class="text-center">
                         <?=$avg;?>        
                     </td>
 
                     <?php
-                    // }
+                    }
                     ?>
                     
                 </tr>
@@ -177,7 +174,8 @@ var myTable = $(\'#dynamic-table\')
         bAutoWidth: false,
         "aoColumns": [
           { "bSortable": false },
-          null, null,
+          null, null,null, null, null,
+          null
         ],
         "aaSorting": [],
         select: {
