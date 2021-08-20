@@ -34,12 +34,22 @@ $kampus = !empty($_GET['kampus']) ? $_GET['kampus'] : '';
     '12' => 'Desember',
 ];
 
-$this->title = 'Rekap Kegiatan Bulan '.$bulans[$bulan].' '.date('Y');
+$this->title = 'Rekap Kegiatan Bulanan ';
 $this->params['breadcrumbs'][] = ['label' => 'Kegiatan Harian', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
 $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus','nama_kampus');
+
+
+
+$hariIni = new \DateTime(date('Y-m-d',strtotime($sd)));
+$tgl_awal = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
+
+$hariIni = new \DateTime(date('Y-m-d',strtotime($ed)));
+$tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
+
+
 ?>
 <div class="simak-kegiatan-harian-view">
 
@@ -91,7 +101,7 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
 
 <div class="row">
     <div class="col-md-6">
-        <h3>Rata-Rata Kehadiran per Kegiatan</h3>
+        <h3>Persentase Kehadiran dari <?=$tgl_awal;?> hingga <?=$tgl_akhir;?></h3>
         <table id="dynamic-table"  class="table table-striped table-hover table-bordered">
             <thead>
                 <tr>
