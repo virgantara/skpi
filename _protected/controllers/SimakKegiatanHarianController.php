@@ -92,7 +92,7 @@ class SimakKegiatanHarianController extends Controller
         {
 
             $tmp = [];
-            $total = 0;
+            
             foreach($listJadwal as $t)
             {
                 $sd = $t['tgl'].' 00:00:00';
@@ -108,6 +108,7 @@ class SimakKegiatanHarianController extends Controller
                 ->groupBy(['date(km.created_at)','k.sub_kegiatan'])
                 ->orderBy(['tgl'=>SORT_ASC]);
                 $temps = $query->all();
+                $total = 0;
                 foreach($temps as $t)
                 {
                     $c = (int)$t['total'] == 0 || empty($t['total']) ? 0 : (int)$t['total'];
