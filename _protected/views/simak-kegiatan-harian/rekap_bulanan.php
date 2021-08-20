@@ -8,7 +8,8 @@ use kartik\daterange\DateRangePicker;
 use app\assets\HighchartAsset;
 
 HighchartAsset::register($this);
-
+use app\assets\DatatableAsset;
+DatatableAsset::register($this);
 setlocale(LC_TIME, 'id_ID.utf8');
 /* @var $this yii\web\View */
 /* @var $model app\models\SimakKegiatanHarian */
@@ -89,21 +90,18 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <h3>Rata-Rata Kehadiran per Kegiatan</h3>
-        <table class="table table-striped table-hover table-bordered">
+        <table id="dynamic-table"  class="table table-striped table-hover table-bordered">
             <thead>
                 <tr>
-                    <th rowspan="2">No</th>
-                    <th rowspan="2">Prodi</th>
-                    <th class="text-center" colspan="<?=count($list_sholat);?>">Rata-rata kehadiran per kegiatan (mhs)</th>
-                </tr>
-                <tr>
+                    <th>No</th>
+                    <th>Prodi</th>
                     <?php 
                     foreach($list_sholat as $kat)
                     {
                     ?>
-                    <th rowspan="2" class="text-center"><?=$kat->kegiatan->sub_kegiatan;?></th>
+                    <th class="text-center"><?=$kat->kegiatan->sub_kegiatan;?><br> (%)</th>
                     <?php
                     }
                     ?>
@@ -131,7 +129,7 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
                         $avg= $results[$res['kode_prodi']][$kat->kode];
                     ?>
                     <td class="text-center">
-                        <?=floor($avg);?>        
+                        <?=$avg;?>        
                     </td>
 
                     <?php
@@ -146,7 +144,7 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
             </tbody>
         </table>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-6">
         <h3>Grafik Perkembangan Kehadiran per Hari</h3>
         <div class="chart-container">
             <div id="container" style="min-width: 310px; height: 600px; max-width: 100%; margin: 0 auto"></div>
@@ -158,6 +156,22 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
 <?php
 $script = '
 
+
+
+var myTable = $(\'#dynamic-table\')
+    .DataTable( {
+        pageLength: 50,
+        bAutoWidth: false,
+        "aoColumns": [
+          { "bSortable": false },
+          null, null,null, null, null,
+          null
+        ],
+        "aaSorting": [],
+        select: {
+            style: \'multi\'
+        }
+    } );
 getPerkembangan(20211)
 
 function getPerkembangan(tahun_akademik){
