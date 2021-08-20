@@ -62,7 +62,7 @@ $tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
         ],
     ],
     'method' => 'GET',
-    'action' => Url::to(['simak-kegiatan-harian/rekap-bulanan']),
+    'action' => Url::to(['simak-kegiatan-harian/rekap-bulanan-persholat']),
     'options' => [
         'class' => 'form-horizontal'
     ]
