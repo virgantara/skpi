@@ -16,6 +16,7 @@ setlocale(LC_TIME, 'id_ID.utf8');
 
 $jenis_kegiatan = !empty($_GET['jenis_kegiatan']) ? $_GET['jenis_kegiatan'] : '';
 $bulan = !empty($_GET['bulan']) ? $_GET['bulan'] : date('m');
+$kampus = !empty($_GET['kampus']) ? $_GET['kampus'] : '';
 
  $bulans = [
     '01' => 'Januari',
@@ -37,7 +38,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Kegiatan Harian', 'url' => ['index
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 
-
+$list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus','nama_kampus');
 ?>
 <div class="simak-kegiatan-harian-view">
 
@@ -67,7 +68,12 @@ $this->params['breadcrumbs'][] = $this->title;
         <?=Html::dropDownList('bulan',$bulan,$bulans);?>
     </div>
 </div>  
-
+<div class="form-group" >
+    <label class="col-sm-3 control-label no-padding-right">Kelas</label>
+    <div class="col-sm-9">
+        <?=Html::dropDownList('kampus',$kampus,$list_kampus);?>
+    </div>
+</div>  
 <div class="clearfix form-actions">
     <div class="col-md-offset-3 col-md-9">
 
@@ -198,7 +204,7 @@ function getPerkembangan(tahun_akademik){
           $("#container").highcharts({
             
             title: {
-                text: "Perkembangan Sholat Jama\'ah di masjid Jami\'"
+                text: "Perkembangan Sholat Jama\'ah di masjid"
             },
 
             xAxis: {
