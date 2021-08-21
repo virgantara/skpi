@@ -158,7 +158,7 @@ $tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
             <tfoot>
                 <tr>
                     <td colspan="2"><h3>Persentase Kehadiran Keseluruhan </h3></td>
-                    <td class="text-center"><h3><?=$results['persentase'];?> %</h3></td>
+                    <td class="text-center"><h3><?=!empty($results['persentase']) ? $results['persentase'] : 0;?> %</h3></td>
                 </tr>
             </tfoot>
         </table>
