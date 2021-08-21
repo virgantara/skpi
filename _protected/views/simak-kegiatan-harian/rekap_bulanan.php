@@ -130,7 +130,7 @@ $tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
 
                     // $hari = new \DateTime($res['tgl']);
                     // $d = strftime('%A, %d %B %Y', $hari->getTimestamp());
-                    $avg= $results[$res['kode_prodi']];
+                    $avg= $results['items'][$res['kode_prodi']];
                 ?>
                 <tr>
                     <td><?=$i+1;?></td>
@@ -155,6 +155,12 @@ $tgl_akhir = strftime('%A, %d %B %Y', $hariIni->getTimestamp());
                 }
                 ?>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><h3>Persentase Kehadiran Keseluruhan </h3></td>
+                    <td class="text-center"><h3><?=$results['persentase'];?> %</h3></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
     <div class="col-md-8">
