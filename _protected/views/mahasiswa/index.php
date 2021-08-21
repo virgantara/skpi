@@ -168,12 +168,13 @@ echo ExportMenu::widget([
 <?php
 
 $this->registerJs("$(function() {
-   $('.popupModal').click(function(e) {
-     e.preventDefault();
-     var m = $('#modal').modal('show').find('#img');
 
-     m.attr('src',$(this).data('item'))
-     
-   });
+    $(document).on('click','.popupModal',function(e){
+        e.preventDefault();
+        var m = $('#modal').modal('show').find('#img');
+
+        m.attr('src',$(this).data('item'))
+    })
+    
 });");
 ?>
