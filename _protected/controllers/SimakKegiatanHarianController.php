@@ -288,7 +288,10 @@ class SimakKegiatanHarianController extends Controller
             // $list_sholat = $query->all();
                 
 
-            
+            $total_persentase = 0;
+            $total = 0;
+            $total_mhs = 0;
+            $hasil = [];
             foreach($list_prodi as $prodi)
             {
                 // foreach($list_sholat as $keg)
@@ -321,14 +324,20 @@ class SimakKegiatanHarianController extends Controller
                         $sum += $tmp['total'];
                     }
 
+                    $total += $sum;
+                    $total_mhs += $jml_mhs;
+
                     $sum = $sum / 5;
                     
                     $persentase = $sum / $divider * 100;
               
-                    $results[$prodi['kode_prodi']] = round($persentase,2);
+                    $hasil[$prodi['kode_prodi']] = round($persentase,2);
                 // }
             }
 
+            $total_persentase = round(($total / ($total_mhs * $jumlah_hari) / 5) * 100,2);
+            $results['persentase'] = $total_persentase;
+            $results['items'] = $hasil;
         }
 
         return $this->render('rekap_bulanan',[
