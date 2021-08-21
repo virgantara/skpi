@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use kartik\export\ExportMenu;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\MahasiswaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -14,10 +16,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
- <?php
+   <?php
         yii\bootstrap\Modal::begin(['id' =>'modal','size'=>'modal-lg',]);
         echo '<div class="text-center">';
-        echo '<img id="img">';
+        echo '<img width="100%" id="img">';
         echo '</div>';
         yii\bootstrap\Modal::end();
     ?>
@@ -38,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 'value' => function($data){
                     if(!empty($data->foto_path))
-                        return Html::a(Html::img($data->foto_path,['width'=>'70px']),'',['id'=>'popupModal','data-item'=>$data->foto_path]);
+                        return Html::a(Html::img($data->foto_path,['width'=>'70px']),'',['class'=>'popupModal','data-item'=>$data->foto_path]);
                     else
                         return '';
                 }
@@ -105,7 +107,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
     
 ];?>    
-
+<p>
+<?php 
+// Renders a export dropdown menu
+echo ExportMenu::widget([
+    'dataProvider' => $dataProvider,
+    'columns' => $gridColumns,
+    'clearBuffers' => true, //optional
+]);
+?>
+</p>
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -130,7 +141,7 @@ $this->params['breadcrumbs'][] = $this->title;
           ],
           
         'toolbar' =>  [
-            '{export}', 
+            // '{export}', 
 
            '{toggleData}' //uncoment untuk menghidupkan button menampilkan semua data..
         ],
@@ -157,7 +168,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 
 $this->registerJs("$(function() {
-   $('#popupModal').click(function(e) {
+   $('.popupModal').click(function(e) {
      e.preventDefault();
      var m = $('#modal').modal('show').find('#img');
 
