@@ -41,7 +41,8 @@
         "devgroup/yii2-dropzone": "*",
         "endroid/qr-code": "^4.1",
         "kartik-v/yii2-editable": "dev-master",
-        "aws/aws-sdk-php": "^3.173"
+        "aws/aws-sdk-php": "^3.173",
+        "kartik-v/yii2-export": "dev-master"
     
     },
     "require-dev": {
