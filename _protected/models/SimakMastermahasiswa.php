@@ -131,7 +131,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['nip_co_promotor1'], 'number'],
             [['nip_co_promotor2'], 'number'],
             [['nip_co_promotor3'], 'number'],
-            [['photo_mahasiswa', 'alamat', 'kecamatan_feeder', 'provinsi', 'kabupaten', 'warga_negara_feeder', 'no_ijazah','no_sk_yudisium'], 'string', 'max' => 255],
+            [['photo_mahasiswa', 'alamat', 'kecamatan_feeder', 'kabupaten', 'warga_negara_feeder', 'no_ijazah','no_sk_yudisium'], 'string', 'max' => 255],
             [['berat', 'tinggi'], 'string', 'max' => 3],
             [['jenis_tinggal', 'no_kps', 'agama', 'va_code'], 'string', 'max' => 20],
             [['penerima_kps', 'masuk_kelas'], 'string', 'max' => 1],
