@@ -18,6 +18,8 @@ $this->params['breadcrumbs'][] = 'Update';
 $list_fakultas = \app\models\SimakMasterfakultas::getList();
 $listDosen = \app\models\SimakMasterdosen::find()->orderBy(['nama_dosen'=>SORT_ASC])->all();
 
+$id_jenis_kegiatan = !empty($model) && !empty($model->kegiatan) ? $model->kegiatan->id_jenis_kegiatan : null;
+
 ?>
 <div class="col-lg-6">
 
@@ -41,7 +43,7 @@ $listDosen = \app\models\SimakMasterdosen::find()->orderBy(['nama_dosen'=>SORT_A
         <?= $form->field($model, 'tahun_id')->dropDownList(ArrayHelper::map($listTahun,'tahun_id','nama_tahun'),['prompt'=>'- Pilih Tahun -']) ?>
         <div class="form-group">
             <label for="">Jenis Kegiatan</label>
-        <?=Html::dropDownList('id_jenis_kegiatan',$model->kegiatan->id_jenis_kegiatan,ArrayHelper::map(\app\models\SimakJenisKegiatan::find()->all(),'id','nama_jenis_kegiatan'),['id'=>'id_jenis_kegiatan','class'=>'form-control','prompt'=>'-Pilih Jenis Kegiatan-']);?>
+        <?=Html::dropDownList('id_jenis_kegiatan',$id_jenis_kegiatan,ArrayHelper::map(\app\models\SimakJenisKegiatan::find()->all(),'id','nama_jenis_kegiatan'),['id'=>'id_jenis_kegiatan','class'=>'form-control','prompt'=>'-Pilih Jenis Kegiatan-']);?>
         </div>
 
         <?= $form->field($model, 'kegiatan_id')->dropDownList([],['id'=>'kegiatan_id','prompt'=>'- Pilih Kegiatan -']) ?>
