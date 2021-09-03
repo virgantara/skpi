@@ -286,9 +286,9 @@ $provinsi = SimakPropinsi::find()->where(['id'=>$model->provinsi])->one();
                                         <div>
                                             <img class="pull-left" alt="<?=$model['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
                                            <a class="user" href="#"><?=$model->nama_mahasiswa;?></a>
-                                            pindah dari <?=$value->dariKamar->namaAsrama;?>
-                                            kamar <?=$value->dariKamar->nama;?> ke <?=$value->kamar->namaAsrama;?>
-                                            kamar <?=$value->kamar->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->created_at);?>
+                                            pindah dari <?=!empty($value->dariKamar) ? $value->dariKamar->namaAsrama : '-';?>
+                                            kamar <?=!empty($value->dariKamar) ? $value->dariKamar->nama : '-';?> ke <?=!empty($value->kamar) ? $value->kamar->namaAsrama : '-';?>
+                                            kamar <?=!empty($value->kamar) ? $value->kamar->nama : '-';?> pada tanggal <?=MyHelper::YmdtodmY($value->created_at);?>
 
                                             <div class="time">
                                                 <i class="ace-icon fa fa-clock-o bigger-110"></i>
