@@ -73,11 +73,15 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
 
         $query->andFilterWhere(['like', 'no_sk', $this->no_sk]);
 
-        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'akpam')
+        if(!Yii::$app->user->isGuest)
         {
-            $query->andWhere([
-                't.kampus' => Yii::$app->user->identity->kampus
-            ]);
+
+            if(Yii::$app->user->identity->access_role == 'akpam' || Yii::$app->user->identity->access_role == 'akpam')
+            {
+                $query->andWhere([
+                    't.kampus' => Yii::$app->user->identity->kampus
+                ]);
+            }
         }
 
 

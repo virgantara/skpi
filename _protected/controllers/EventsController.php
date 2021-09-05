@@ -618,11 +618,15 @@ class EventsController extends Controller
         $sd = $_GET['start'];
         $ed = $_GET['end'];
         $query = Events::find();
-        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'akpam')
+        if(!Yii::$app->user->isGuest)
         {
-            $query->andWhere([
-                'kampus' => Yii::$app->user->identity->kampus
-            ]);
+
+            if(Yii::$app->user->identity->access_role == 'akpam' || Yii::$app->user->identity->access_role == 'akpam')
+            {
+                $query->andWhere([
+                    'kampus' => Yii::$app->user->identity->kampus
+                ]);
+            }
         }
 
         $query->andWhere(['between','tanggal_mulai',$sd,$ed]);
