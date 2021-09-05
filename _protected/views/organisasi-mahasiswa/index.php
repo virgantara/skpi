@@ -95,6 +95,7 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
                     
                 ],
             ],
+            
             'tanggal_sk',
             'tanggal_mulai',
             'tanggal_selesai',
