@@ -175,7 +175,17 @@ class OrganisasiController extends Controller
             $tahun_aktif = SimakTahunakademik::getTahunAktif();
 
 
-        $list = OrganisasiMahasiswa::find()->where(['tahun_akademik'=>$tahun_aktif->tahun_id])->all();
+        $kampus = null;
+        $list = [];
+        if(!empty($_GET['kampus']))
+        {
+            $kampus = $_GET['kampus'];
+            $list = OrganisasiMahasiswa::find()->where([
+                'tahun_akademik'=>$tahun_aktif->tahun_id,
+                'kampus' => $kampus
+            ])->all();    
+        }
+        
 
         return $this->render('sync', [
             'model' => $model,
