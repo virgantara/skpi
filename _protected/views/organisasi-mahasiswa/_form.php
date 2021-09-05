@@ -19,23 +19,8 @@ $listKampus = \app\models\SimakKampus::find()->all();
 
     <?php $form = ActiveForm::begin(); ?>
     
-     <?= $form->field($model, 'tahun_akademik')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(\app\models\SimakTahunakademik::getList(),'tahun_id','nama_tahun'),
-
-            'options'=>['id'=>'tahun_akademik','placeholder'=>Yii::t('app','- Pilih Tahun Akademik -')],
-            'pluginOptions' => [
-                'allowClear' => true,
-            ],
-        ]) ?>
-    <?= $form->field($model, 'kampus')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map($listKampus,'id','nama'),
-
-            'options'=>['id'=>'kampus_id','placeholder'=>Yii::t('app','- Pilih Kampus -')],
-            'pluginOptions' => [
-                'allowClear' => true,
-            ],
-        ]) ?>
-     <?= $form->field($model, 'organisasi_id')->widget(Select2::classname(), [
+     
+    <?= $form->field($model, 'organisasi_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map($listOrganisasi,'id','nama'),
 
             'options'=>['id'=>'propinsi_id','placeholder'=>Yii::t('app','- Pilih Organisasi -')],
@@ -43,6 +28,15 @@ $listKampus = \app\models\SimakKampus::find()->all();
                 'allowClear' => true,
             ],
         ]) ?>
+    <?= $form->field($model, 'kampus')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map($listKampus,'kode_kampus','nama_kampus'),
+
+            'options'=>['id'=>'kampus_id','placeholder'=>Yii::t('app','- Pilih Kampus -')],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
+     
     <?= $form->field($model, 'pembimbing_id')->widget(Select2::classname(), [
             'data' => ArrayHelper::map($listDosen,'id','nama_dosen'),
 
@@ -51,7 +45,14 @@ $listKampus = \app\models\SimakKampus::find()->all();
                 'allowClear' => true,
             ],
         ]) ?>
+    <?= $form->field($model, 'tahun_akademik')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(\app\models\SimakTahunakademik::getList(),'tahun_id','nama_tahun'),
 
+            'options'=>['id'=>'tahun_akademik','placeholder'=>Yii::t('app','- Pilih Tahun Akademik -')],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
      <?= $form->field($model, 'tanggal_mulai')->widget(DatePicker::className(),[
         // 'readonly' => true,
         'pluginOptions' => [
