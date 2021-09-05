@@ -12,9 +12,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Sinkronisasi Organisasi Mahasiswa'
 $this->params['breadcrumbs'][] = $this->title;
 
 $tahun_akademik = !empty($_GET['tahun_akademik']) ? $_GET['tahun_akademik'] : '';
+$kampus = !empty($_GET['kampus']) ? $_GET['kampus'] : '';
  $listTahun = \app\models\SimakTahunakademik::find()->where(['>=','tahun_id', '2014'])->orderBy(['tahun_id' => SORT_DESC])->all();
 $list_tahun = ArrayHelper::map($listTahun,'tahun_id','nama_tahun');
-
+$listKampus = \app\models\SimakKampus::find()->all();
+$listKampus = ArrayHelper::map($listKampus,'kode_kampus','nama_kampus');
 ?>
 
 <div class="row">
@@ -42,6 +44,12 @@ $list_tahun = ArrayHelper::map($listTahun,'tahun_id','nama_tahun');
         <label class="col-sm-3 control-label no-padding-right">Tahun Akademik</label>
         <div class="col-sm-9">
             <?= Html::dropDownList('tahun_akademik',$tahun_akademik,$list_tahun,['id'=>'tahun_akademik','class'=>'form-control','prompt'=>'- Pilih Tahun Akademik -']) ?>
+        </div>
+    </div>
+    <div class="form-group" >
+        <label class="col-sm-3 control-label no-padding-right">Kampus</label>
+        <div class="col-sm-9">
+            <?= Html::dropDownList('kampus',$kampus,$listKampus,['id'=>'kampus','class'=>'form-control','prompt'=>'- Pilih Kampus -']) ?>
         </div>
     </div>
     <div class="clearfix form-actions">
@@ -120,7 +128,7 @@ $(document).on('click','#btn-sync',function(e){
 function sync(list_tmp){
     var obj = new Object;
     obj.organisasi_id = list_tmp
-
+    
     $.ajax({
         url         : '".Url::to(['organisasi/ajax-sync'])."',
         type        : 'POST',

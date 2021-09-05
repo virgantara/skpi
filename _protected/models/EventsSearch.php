@@ -83,11 +83,15 @@ class EventsSearch extends Events
             ->andFilterWhere(['like', 'tingkat', $this->tingkat])
             ->andFilterWhere(['like', 'url', $this->url]);
 
-        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'akpam')
+        if(!Yii::$app->user->isGuest)
         {
-            $query->andWhere([
-                't.kampus' => Yii::$app->user->identity->kampus
-            ]);
+
+            if(Yii::$app->user->identity->access_role == 'akpam' || Yii::$app->user->identity->access_role == 'akpam')
+            {
+                $query->andWhere([
+                    't.kampus' => Yii::$app->user->identity->kampus
+                ]);
+            }
         }
 
         return $dataProvider;
@@ -131,11 +135,15 @@ class EventsSearch extends Events
             'status' => $this->status
         ]);
 
-        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'akpam')
+        if(!Yii::$app->user->isGuest)
         {
-            $query->andWhere([
-                't.kampus' => Yii::$app->user->identity->kampus
-            ]);
+
+            if(Yii::$app->user->identity->access_role == 'akpam' || Yii::$app->user->identity->access_role == 'akpam')
+            {
+                $query->andWhere([
+                    't.kampus' => Yii::$app->user->identity->kampus
+                ]);
+            }
         }
         
 

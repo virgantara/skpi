@@ -9,6 +9,8 @@ use kartik\grid\GridView;
 
 $this->title = 'Organisasi Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
+
+$list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus','nama_kampus');
 ?>
 <div class="organisasi-mahasiswa-index">
 
@@ -37,11 +39,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'headerOptions'=>['class'=>'kartik-sheet-style']
     ],  
             [
-                'filter' => ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus','nama_kampus'),
+                'filter' => $list_kampus,
                 'format' => 'raw',
+                'class' => 'kartik\grid\EditableColumn',
+                'refreshGrid' => true,
+                'editableOptions' => [
+                    'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+                    'data' => $list_kampus,
+                    'asPopover' => false
+                ],
                 'attribute' => 'kampus',
-                'value' => function($data){
-                    return !empty($data->kampus0) ? $data->kampus0->nama_kampus : '-';
+                'value' => function($data) use ($list_kampus) {
+                    return !empty($data->kampus) ? $list_kampus[$data->kampus] : '-';
                 }
             ],
             [
@@ -107,6 +116,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => $gridColumns,
+        'responsiveWrap' => false,
         'containerOptions' => ['style' => 'overflow: auto'], 
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
