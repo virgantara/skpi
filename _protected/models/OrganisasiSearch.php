@@ -18,7 +18,7 @@ class OrganisasiSearch extends Organisasi
     {
         return [
             [['id'], 'integer'],
-            [['nama', 'tingkat', 'instansi'], 'safe'],
+            [['nama', 'tingkat', 'instansi','kampus'], 'safe'],
         ];
     }
 

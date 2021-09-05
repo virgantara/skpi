@@ -36,7 +36,7 @@ class OrganisasiController extends Controller
                             'update','delete','create','index','ajax-sync'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator','admin','operatorCabang'],
+                        'roles' => ['theCreator','admin','operatorCabang','akpam'],
                     ],
                     [
                         'actions' => [
@@ -101,12 +101,12 @@ class OrganisasiController extends Controller
                                     $keg->nama_kegiatan_mahasiswa = $event_id;
                                     $keg->tahun_akademik = (string)$model->tahun_akademik;
                                     $keg->id_kegiatan = $anggota->jabatan_id;
-                                    $keg->id_jenis_kegiatan = $anggota->jabatan->id_jenis_kegiatan;
-                                    $keg->nilai = $anggota->jabatan->nilai;
+                                    $keg->id_jenis_kegiatan = !empty($anggota->jabatan) ? $anggota->jabatan->id_jenis_kegiatan : 'Jenis Kegiatan tidak ada';
+                                    $keg->nilai = !empty($anggota->jabatan) ? $anggota->jabatan->nilai : 'Jabatan belum diisi';
                                     $keg->semester = (string)$anggota->nim0->semester;
                                     $keg->waktu = date('Y-m-d');
-                                    $keg->instansi = $model->organisasi->nama;
-                                    $keg->tema = $model->organisasi->nama.' Tahun '.$model->tahun_akademik;
+                                    $keg->instansi = !empty($model->organisasi) ? $model->organisasi->nama : 'Nama organisasi kosong';
+                                    $keg->tema = !empty($model->organisasi) ? $model->organisasi->nama.' Tahun '.$model->tahun_akademik : 'Tema juga kosong';
                                     $keg->is_approved = 1;
                                     if($keg->save())
                                     {

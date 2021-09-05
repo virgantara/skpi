@@ -48,7 +48,7 @@ class EventsController extends Controller
                             'update','index','view','start','delete','bulk-registration'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator','admin','operatorCabang','event'],
+                        'roles' => ['theCreator','admin','operatorCabang','event','akpam'],
                     ],
                     
                 ],
@@ -585,6 +585,7 @@ class EventsController extends Controller
         $model->tahun_id = $dataPost['tahun_id'];
         $model->toleransi_masuk = $dataPost['toleransi_masuk'];
         $model->toleransi_keluar = $dataPost['toleransi_keluar'];
+        $model->kampus = Yii::$app->user->identity->kampus;
         $results = [];
         $errors = '';
         if($model->save())
@@ -617,6 +618,13 @@ class EventsController extends Controller
         $sd = $_GET['start'];
         $ed = $_GET['end'];
         $query = Events::find();
+        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'akpam')
+        {
+            $query->andWhere([
+                'kampus' => Yii::$app->user->identity->kampus
+            ]);
+        }
+
         $query->andWhere(['between','tanggal_mulai',$sd,$ed]);
 
         $results = [];

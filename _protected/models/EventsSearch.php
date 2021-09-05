@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use Yii;
+
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Events;
@@ -40,7 +42,7 @@ class EventsSearch extends Events
     public function search($params)
     {
         $query = Events::find();
-
+        $query->alias('t');
         $query->joinWith(['kegiatan as k']);
         // add conditions that should always apply here
 
@@ -81,6 +83,13 @@ class EventsSearch extends Events
             ->andFilterWhere(['like', 'tingkat', $this->tingkat])
             ->andFilterWhere(['like', 'url', $this->url]);
 
+        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'akpam')
+        {
+            $query->andWhere([
+                't.kampus' => Yii::$app->user->identity->kampus
+            ]);
+        }
+
         return $dataProvider;
     }
 
@@ -89,6 +98,7 @@ class EventsSearch extends Events
     public function searchDaily($daily='today',$params)
     {
         $query = Events::find();
+        $query->alias('t');
 
         // add conditions that should always apply here
 
@@ -120,6 +130,14 @@ class EventsSearch extends Events
         $query->andFilterWhere([
             'status' => $this->status
         ]);
+
+        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'akpam')
+        {
+            $query->andWhere([
+                't.kampus' => Yii::$app->user->identity->kampus
+            ]);
+        }
+        
 
         $query->andFilterWhere(['like', 'id', $this->id])
             ->andFilterWhere(['like', 'nama', $this->nama])

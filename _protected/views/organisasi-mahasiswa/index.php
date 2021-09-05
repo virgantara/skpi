@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php 
-    if(Yii::$app->user->can('stafBAPAK'))
+    if(Yii::$app->user->can('stafBAPAK') || Yii::$app->user->can('akpam'))
     {
     ?>
     <p>
@@ -35,7 +35,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'pageSummaryOptions' => ['colspan' => 6],
         'header'=>'',
         'headerOptions'=>['class'=>'kartik-sheet-style']
-    ],
+    ],  
+            [
+                'filter' => ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus','nama_kampus'),
+                'format' => 'raw',
+                'attribute' => 'kampus',
+                'value' => function($data){
+                    return !empty($data->kampus0) ? $data->kampus0->nama_kampus : '-';
+                }
+            ],
             [
                 'filter' => ArrayHelper::map(\app\models\Organisasi::getList(),'id','nama'),
                 'format' => 'raw',
@@ -88,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'visibleButtons' => [
                     // 'view' => Yii::$app->user->can('stafBAPAK'),
-                    'update' => Yii::$app->user->can('stafBAPAK'),
+                    'update' => Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('akpam'),
                     'delete' => Yii::$app->user->can('stafBAPAK')
                 ]
             ],
