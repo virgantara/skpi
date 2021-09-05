@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\OrganisasiMahasiswa;
@@ -18,7 +19,7 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
     {
         return [
             [['id', 'organisasi_id'], 'integer'],
-            [['tanggal_mulai', 'tanggal_selesai', 'no_sk', 'tanggal_sk', 'created_at', 'updated_at','pembimbing_id','tahun_akademik'], 'safe'],
+            [['tanggal_mulai', 'tanggal_selesai', 'no_sk', 'tanggal_sk', 'created_at', 'updated_at','pembimbing_id','tahun_akademik','kampus'], 'safe'],
         ];
     }
 
@@ -41,6 +42,7 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
     public function search($params)
     {
         $query = OrganisasiMahasiswa::find();
+        $query->alias('t');
 
         // add conditions that should always apply here
 
@@ -58,7 +60,7 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'kampus' => $this->kampus,
             'organisasi_id' => $this->organisasi_id,
             'tahun_akademik' => $this->tahun_akademik,
             'pembimbing_id' => $this->pembimbing_id,
@@ -70,6 +72,14 @@ class OrganisasiMahasiswaSearch extends OrganisasiMahasiswa
         ]);
 
         $query->andFilterWhere(['like', 'no_sk', $this->no_sk]);
+
+        if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'akpam')
+        {
+            $query->andWhere([
+                't.kampus' => Yii::$app->user->identity->kampus
+            ]);
+        }
+
 
         return $dataProvider;
     }

@@ -33,7 +33,7 @@ class OrganisasiMahasiswaController extends Controller
                     [
                         'actions' => ['create','update','delete','index','view'],
                         'allow' => true,
-                        'roles' => ['stafBAPAK','admin','operatorCabang'],
+                        'roles' => ['stafBAPAK','admin','operatorCabang','akpam'],
                     ],
                     [
                         'actions' => ['index','view'],

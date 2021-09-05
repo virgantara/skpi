@@ -8,6 +8,7 @@ use kartik\date\DatePicker;
 
 $listOrganisasi = \app\models\Organisasi::find()->all();
 $listDosen = \app\models\SimakMasterdosen::find()->all();
+$listKampus = \app\models\SimakKampus::find()->all();
 
 /* @var $this yii\web\View */
 /* @var $model app\models\OrganisasiMahasiswa */
@@ -22,6 +23,14 @@ $listDosen = \app\models\SimakMasterdosen::find()->all();
             'data' => ArrayHelper::map(\app\models\SimakTahunakademik::getList(),'tahun_id','nama_tahun'),
 
             'options'=>['id'=>'tahun_akademik','placeholder'=>Yii::t('app','- Pilih Tahun Akademik -')],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]) ?>
+    <?= $form->field($model, 'kampus')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map($listKampus,'id','nama'),
+
+            'options'=>['id'=>'kampus_id','placeholder'=>Yii::t('app','- Pilih Kampus -')],
             'pluginOptions' => [
                 'allowClear' => true,
             ],
