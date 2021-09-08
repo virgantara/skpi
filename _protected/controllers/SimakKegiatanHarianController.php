@@ -256,7 +256,7 @@ class SimakKegiatanHarianController extends Controller
         $list_sholat = [];
         $list_prodi = [];
         $sd = date('Y-m-01 00:00:00');
-        $ed = date('Y-m-d 23:59:59');
+        $ed = date('Y-m-t 23:59:59');
         if(!empty($_GET['btn-search']))
         {
             
@@ -264,7 +264,7 @@ class SimakKegiatanHarianController extends Controller
             {
                 $bulan = $_GET['bulan'];
                 $sd = date('Y-'.$bulan.'-01 00:00:00');
-                $ed = date('Y-'.$bulan.'-d 23:59:59');
+                $ed = date('Y-'.$bulan.'-t 23:59:59');
             }
             
             $interval = \app\helpers\MyHelper::hitungSelisihHari($sd,$ed);
