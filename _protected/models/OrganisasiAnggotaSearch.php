@@ -18,6 +18,10 @@ class OrganisasiAnggotaSearch extends OrganisasiAnggota
     public $namaKampus;
     public $namaMahasiswa;
 
+    public $tahun_akademik;
+    public $kampus;
+    public $tahun_masuk;
+
     /**
      * {@inheritdoc}
      */
@@ -48,7 +52,9 @@ class OrganisasiAnggotaSearch extends OrganisasiAnggota
     public function search($params)
     {
         $query = OrganisasiAnggota::find();
+        $query->alias('t');
         $query->joinWith([
+            'organisasi as org',
             'nim0 as m',
             'nim0.kodeProdi as p',
             'nim0.kampus0 as k',
@@ -85,10 +91,31 @@ class OrganisasiAnggotaSearch extends OrganisasiAnggota
             return $dataProvider;
         }
 
+        if(!empty($this->tahun_akademik))
+        {
+            $query->andWhere([
+                'org.tahun_akademik' => $this->tahun_akademik,
+            ]);
+        }
+
+        if(!empty($this->kampus))
+        {
+            $query->andWhere([
+                'org.kampus' => $this->kampus,
+            ]);
+        }
+
+        if(!empty($this->tahun_masuk))
+        {
+            $query->andWhere([
+                'm.tahun_masuk' => $this->tahun_masuk,
+            ]);
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'organisasi_id' => $this->organisasi_id,
+            't.organisasi_id' => $this->organisasi_id,
             'jabatan_id' => $this->jabatan_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
