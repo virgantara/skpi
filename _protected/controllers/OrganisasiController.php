@@ -177,13 +177,20 @@ class OrganisasiController extends Controller
 
         $kampus = null;
         $list = [];
-        if(!empty($_GET['kampus']))
+        if(!empty($_GET['kampus']) && !empty($_GET['tahun_masuk']))
         {
             $kampus = $_GET['kampus'];
-            $list = OrganisasiMahasiswa::find()->where([
-                'tahun_akademik'=>$tahun_aktif->tahun_id,
-                'kampus' => $kampus
-            ])->all();    
+            $query = OrganisasiMahasiswa::find();
+            $query->alias('t');
+            $query->joinWith(['nims as mhs']);
+
+            $query->andWhere([
+                't.tahun_akademik'=>$tahun_aktif->tahun_id,
+                't.kampus' => $kampus,
+                'mhs.tahun_masuk' => $_GET['tahun_masuk']
+            ]);
+
+            $list = $query->all();    
         }
         
 
