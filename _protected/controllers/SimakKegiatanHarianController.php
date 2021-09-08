@@ -255,7 +255,7 @@ class SimakKegiatanHarianController extends Controller
         $list_kategori = SimakKegiatanHarianKategori::find()->all();
         $list_sholat = [];
         $list_prodi = [];
-        $sd = date('Y-m-16 00:00:00');
+        $sd = date('Y-m-01 00:00:00');
         $ed = date('Y-m-d 23:59:59');
         if(!empty($_GET['btn-search']))
         {
@@ -263,7 +263,7 @@ class SimakKegiatanHarianController extends Controller
             if(!empty($_GET['bulan']))
             {
                 $bulan = $_GET['bulan'];
-                $sd = date('Y-'.$bulan.'-16 00:00:00');
+                $sd = date('Y-'.$bulan.'-01 00:00:00');
                 $ed = date('Y-'.$bulan.'-d 23:59:59');
             }
             
