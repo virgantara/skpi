@@ -30,7 +30,7 @@ class OrganisasiAnggotaController extends Controller
                     [
                         'actions' => ['ajax-create','create','update','delete','index','view'],
                         'allow' => true,
-                        'roles' => ['stafBAPAK','admin','operatorCabang'],
+                        'roles' => ['stafBAPAK','admin','operatorCabang','akpam','dkp'],
                     ],
                     [
                         'actions' => ['index','view'],
