@@ -80,8 +80,19 @@ class OrganisasiController extends Controller
 
                         if(!empty($model))    
                         {
-                        
-                            foreach($model->organisasiAnggotas as $anggota)
+                            $query = \app\models\OrganisasiAnggota::find();
+                            $query->alias('t');
+                            $query->joinWith(['organisasi as org','nim0 as mhs']);
+
+                            $query->andWhere([
+                                't.organisasi_id' => $model->id,
+
+                                'org.tahun_akademik' => $model->tahun_akademik,
+                                'mhs.tahun_masuk' => $dataPost['tahun_masuk']
+                            ]);
+
+                            $anggotas = $query->all();
+                            foreach($anggotas as $anggota)
                             {
                                 if(empty($anggota->jabatan)) continue;
 

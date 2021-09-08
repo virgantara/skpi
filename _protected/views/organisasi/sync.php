@@ -145,6 +145,7 @@ $(document).on('click','#btn-sync',function(e){
 function sync(list_tmp){
     var obj = new Object;
     obj.organisasi_id = list_tmp
+    obj.tahun_masuk = '".$tahun_masuk."'
     
     $.ajax({
         url         : '".Url::to(['organisasi/ajax-sync'])."',
