@@ -93,10 +93,17 @@ $listKampus = ArrayHelper::map($listKampus,'kode_kampus','nama_kampus');
                 <?php 
                 foreach($list as $q=>$m)
                 {
-                    // $jml_anggota = \app\models\OrganisasiMahasiswa::find()->where([
-                    //     ''
-                    // ])->count();
-                    $jml_anggota = count($m->organisasiAnggotas);
+                    $query = \app\models\OrganisasiAnggota::find();
+                    $query->alias('t');
+                    $query->joinWith(['organisasi as org','nim0 as mhs']);
+
+                    $query->andWhere([
+                        't.organisasi_id' => $m->id,
+                        // 'org.kampus' => $kampus,
+                        'org.tahun_akademik' => $m->tahun_akademik,
+                        'mhs.tahun_masuk' => $_GET['tahun_masuk']
+                    ]);
+                    $jml_anggota = $query->count();
 
                 ?>
                 <tr>
@@ -104,7 +111,7 @@ $listKampus = ArrayHelper::map($listKampus,'kode_kampus','nama_kampus');
                     <td><?=!empty($m->organisasi) ? $m->organisasi->nama : '-';?></td>
                     <td><?=!empty($m->pembimbing) ? $m->pembimbing->nama_dosen : '-';?></td>
                     <td><?=$m->tahun_akademik;?></td>
-                    <td><?=$jml_anggota;?>
+                    <td><a target="_blank" href="<?=Url::to(['organisasi-anggota/index','tahun_akademik'=>$m->tahun_akademik,'kampus'=>$kampus,'tahun_masuk'=>$tahun_masuk,'organisasi_id'=>$m->id]) ?>"><?=$jml_anggota;?></a>
                         
                         <input type="hidden" class="organisasi_id" data-item="<?=$m->id;?>" value="<?=$m->id;?>">
                     </td>

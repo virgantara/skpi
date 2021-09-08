@@ -56,6 +56,12 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
             'tanggal_selesai',
             'no_sk',
             'tanggal_sk',
+            [
+                'attribute' => 'kampus',
+                'value' => function($data){
+                    return !empty($data->kampus0) ? $data->kampus0->nama_kampus : '';
+                }
+            ]
             
         ],
     ]) ?>

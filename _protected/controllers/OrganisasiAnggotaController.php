@@ -89,9 +89,14 @@ class OrganisasiAnggotaController extends Controller
      * Lists all OrganisasiAnggota models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($tahun_akademik=null,$kampus=null,$tahun_masuk=null,$organisasi_id=null)
     {
         $searchModel = new OrganisasiAnggotaSearch();
+        $searchModel->tahun_akademik = $tahun_akademik;
+        $searchModel->organisasi_id = $organisasi_id;
+        $searchModel->kampus = $kampus;
+        $searchModel->tahun_masuk = $tahun_masuk;
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
