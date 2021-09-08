@@ -182,7 +182,7 @@ class OrganisasiController extends Controller
             $kampus = $_GET['kampus'];
             $query = OrganisasiMahasiswa::find();
             $query->alias('t');
-            $query->joinWith(['nims as mhs']);
+            $query->joinWith(['organisasiAnggotas as oa','organisasiAnggotas.nim0 as mhs']);
 
             $query->andWhere([
                 't.tahun_akademik'=>$tahun_aktif->tahun_id,

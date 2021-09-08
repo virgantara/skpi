@@ -93,6 +93,9 @@ $listKampus = ArrayHelper::map($listKampus,'kode_kampus','nama_kampus');
                 <?php 
                 foreach($list as $q=>$m)
                 {
+                    // $jml_anggota = \app\models\OrganisasiMahasiswa::find()->where([
+                    //     ''
+                    // ])->count();
                     $jml_anggota = count($m->organisasiAnggotas);
 
                 ?>
