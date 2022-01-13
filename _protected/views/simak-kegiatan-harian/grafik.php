@@ -4,7 +4,6 @@ use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use kartik\daterange\DateRangePicker;
 
 setlocale(LC_TIME, 'id_ID.utf8');
 /* @var $this yii\web\View */

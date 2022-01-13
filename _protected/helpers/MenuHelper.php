@@ -11,14 +11,14 @@ class MenuHelper
     public static function getMenuItems()
     {
 
-    	$userRole = Yii::$app->user->identity->access_role;
+    	// $userRole = Yii::$app->user->identity->access_role;
         $menuItems = [];
-		if(!Yii::$app->user->isGuest){
+		// if(!Yii::$app->user->isGuest){
 
 		     $menuItems[] = [
 		        'label' => '<i class="menu-icon fa fa-tachometer"></i><span class="menu-text"> Dashboard </span>', 
 		        'url' => ['site/index']];
-		}
+		// }
 
 
 	    if (Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event') || Yii::$app->user->can('akpam'))
@@ -601,6 +601,9 @@ class MenuHelper
 	        $menuItems[] = ['label' => '<i class="menu-icon fa fa-users"></i><span class="menu-text"> Users </span>', 'url' => ['/user/index']];
 	    }
 
+	    $menuItems[] = [
+	        'label' => '<i class="menu-icon fa fa-key"></i><span class="menu-text"> Login </span>', 
+	        'url' => ['site/login']];
 
 		return $menuItems;
     }
