@@ -23,7 +23,7 @@ use Yii;
  * It is responsible for displaying static pages, logging users in and out,
  * sign up and account activation, and password reset.
  */
-class SiteController extends AppController
+class SiteController extends Controller
 {
 
     public $successUrl = '';
@@ -82,6 +82,13 @@ class SiteController extends AppController
             ],
         ];
     }
+
+    public function beforeAction($action)
+    {
+        
+        return true; // or false to not run the action
+    }
+
 
     public function actionAuthCallback()
     {
@@ -294,12 +301,12 @@ class SiteController extends AppController
     public function actionIndex()
     {
 
-        if (Yii::$app->user->isGuest) {
-            $this->redirect(['/site/login']);
-        }
+        // if (Yii::$app->user->isGuest) {
+        //     $this->redirect(['/site/login']);
+        // }
 
-        else
-        {
+        // else
+        // {
             // $api_baseurl = Yii::$app->params['api_baseurl'];
             // $client = new Client(['baseUrl' => $api_baseurl]);
 
@@ -316,29 +323,33 @@ class SiteController extends AppController
             //     $out = $response->data['values'][0];
                 
             // }
+            $results = [];
 
-            $query = new \yii\db\Query();
-            $query = $query->select(['konsulat', 'c.name','c.latitude','c.longitude', 'count(*) as total'])
-            ->from('simak_mastermahasiswa m')
-            ->innerJoin('cities c', 'm.konsulat = c.id');
-            if(Yii::$app->user->identity->access_role == 'operatorCabang')
-            {
-                $query->where(['m.kampus'=>Yii::$app->user->identity->kampus]);
+            if(!Yii::$app->user->isGuest){
+                    
+                
+                $query = new \yii\db\Query();   
+                $query = $query->select(['konsulat', 'c.name','c.latitude','c.longitude', 'count(*) as total'])
+                ->from('simak_mastermahasiswa m')
+                ->innerJoin('cities c', 'm.konsulat = c.id');
+                if(Yii::$app->user->identity->access_role == 'operatorCabang')
+                {
+                    $query->where(['m.kampus'=>Yii::$app->user->identity->kampus]);
 
+                }
+
+                $query->groupBy(['m.konsulat', 'c.name','c.latitude','c.longitude'])
+                ->orderBy('total DESC');
+                // ->limit(10)
+                $results = $query->all();
             }
-
-            $query->groupBy(['m.konsulat', 'c.name','c.latitude','c.longitude'])
-            ->orderBy('total DESC');
-            // ->limit(10)
-            $results = $query->all();
-
             
 
             return $this->render('index',[
                 'data'=>$out,
                 'results' => $results
             ]);
-        }
+        // }
     }
 
     /**
@@ -387,6 +398,34 @@ class SiteController extends AppController
      */
     public function actionLogin()
     {
+
+        $session = Yii::$app->session;
+
+        if($session->has('token'))
+        {
+
+            try
+            {
+
+                $token = $session->get('token');
+                $key = Yii::$app->params['jwt_key'];
+                $decoded = \Firebase\JWT\JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
+
+            }
+
+            catch(\Exception $e) 
+            {
+                \app\helpers\MyHelper::refreshToken($token);
+            }
+            
+             
+        }
+
+        else
+        {
+            return $this->redirect(Yii::$app->params['sso_login']);
+        }
+
         $this->layout = 'default';
         // user is logged in, he doesn't need to login
         if (!Yii::$app->user->isGuest) {

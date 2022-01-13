@@ -11,7 +11,10 @@ HighchartAsset::register($this);
 
 \app\assets\LeafletAsset::register($this);
 $query = \app\models\Asrama::find();
-if(Yii::$app->user->identity->access_role == 'operatorCabang'){
+
+
+
+if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'operatorCabang'){
   $query->where(['kampus_id'=>Yii::$app->user->identity->kampus]);
 }
 $listAsrama = $query->all();
@@ -40,11 +43,9 @@ $listAsrama = $query->all();
 
 <div class="tabbable">
   <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
-    <li class="active">
-      <a data-toggle="tab" href="#akpam" aria-expanded="true">Akpam</a>
-    </li>
+    
 
-    <li class="">
+    <li class="active">
       <a data-toggle="tab" href="#event" aria-expanded="false">Events</a>
     </li>
 
@@ -55,14 +56,24 @@ $listAsrama = $query->all();
      <li class="">
       <a data-toggle="tab" href="#konsulat" id="tab_konsulat" aria-expanded="false">Peta Konsulat</a>
     </li>
+    <li class="">
+      <a data-toggle="tab" href="#akpam" aria-expanded="true">Akpam</a>
+    </li>
+    <?php 
 
+    if(!Yii::$app->user->isGuest){
+     ?>
+    
     <li class="">
       <a data-toggle="tab" href="#dropdown14" aria-expanded="false">Pelanggaran Disiplin</a>
     </li>
+  <?php 
+  } 
+  ?>
   </ul>
 
   <div class="tab-content">
-    <div id="akpam" class="tab-pane active">
+    <div id="akpam" class="tab-pane">
       <div class="row">
         <div class="col-md-4">
           <div class="widget-box transparent">
@@ -142,7 +153,7 @@ $listAsrama = $query->all();
      
     </div>
 
-    <div id="event" class="tab-pane">
+    <div id="event" class="tab-pane active">
       
       
       <div class="row">
@@ -390,7 +401,7 @@ $listAsrama = $query->all();
 </div>
 
 <?php 
-if(Yii::$app->user->identity->access_role != 'asesor')
+if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role != 'asesor')
 {
 ?>
   

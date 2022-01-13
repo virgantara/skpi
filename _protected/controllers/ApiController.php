@@ -471,7 +471,7 @@ class ApiController extends Controller
             ->from('erp_riwayat_pelanggaran b')
             ->innerJoin('erp_pelanggaran a', 'b.pelanggaran_id = a.id')
             ->innerJoin('erp_kategori_pelanggaran c', 'a.kategori_id = c.id');
-            if(Yii::$app->user->identity->access_role == 'operatorCabang')
+            if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == 'operatorCabang')
             {
                 $query->innerJoin('simak_mastermahasiswa m', 'm.nim_mhs = b.nim');
                 $query->where(['m.kampus'=>Yii::$app->user->identity->kampus]);    
@@ -501,7 +501,7 @@ class ApiController extends Controller
         $headers = ['x-access-token'=>$client_token];
         
         $params = [
-            'kampus' => Yii::$app->user->identity->kampus
+            'kampus' => !Yii::$app->user->isGuest ? Yii::$app->user->identity->kampus : null
         ];
         $response = $client->get('/simpel/asrama/kapasitas', $params,$headers)->send();
         
