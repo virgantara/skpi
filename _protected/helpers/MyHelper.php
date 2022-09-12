@@ -9,6 +9,15 @@ use Yii;
 class MyHelper
 {
 
+	public static function listRekomendasi(){
+		return [
+			'0' => 'Dibina Tanpa Pemanggilan Orang Tua',
+			'1' => 'Dibina dan Pemanggilan Orang Tua',
+			'2' => 'Dikeluarkan',
+			
+		];
+	}
+
 	public static function getHari(){
 		return [
 			'Saturday' => 'Sabtu',

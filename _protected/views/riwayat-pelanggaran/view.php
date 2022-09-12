@@ -40,7 +40,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-xs-12 col-sm-3 center">
                     <div>
                         <span class="profile-picture">
-                            <img id="avatar" class="editable img-responsive" alt="Alex's Avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/profile-pic.jpg" />
+                            <?php 
+                            $foto_path = '';
+                            if(!empty($model->nim0->foto_path)){
+                                $foto_path = Url::to(['mahasiswa/foto','id'=>$model->nim0->id]);
+                                echo  Html::a(Html::img($foto_path,['width'=>'240px']),'',['class'=>'popupModal','data-pjax'=>0,'data-item'=>Url::to(['mahasiswa/foto','id'=>$model->nim0->id])]);
+                            }
+                                
+                            else{
+                                $foto_path = $this->theme->baseUrl."/images/avatars/profile-pic.jpg";
+                                echo '<img id="avatar" class="editable img-responsive" alt="Alex\'s Avatar" src="'.$foto_path.'" />';
+                            }
+
+                             ?>
                         </span>
 
                         <div class="space-4"></div>
@@ -106,38 +118,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
                         <div class="space-6"></div>
 
-                        <div class="profile-social-links align-center">
-                            <a href="#" class="tooltip-info" title="" data-original-title="Visit my Facebook">
-                                <i class="middle ace-icon fa fa-facebook-square fa-2x blue"></i>
-                            </a>
-
-                            <a href="#" class="tooltip-info" title="" data-original-title="Visit my Twitter">
-                                <i class="middle ace-icon fa fa-twitter-square fa-2x light-blue"></i>
-                            </a>
-
-                            <a href="#" class="tooltip-error" title="" data-original-title="Visit my Pinterest">
-                                <i class="middle ace-icon fa fa-pinterest-square fa-2x red"></i>
-                            </a>
-                        </div>
+                       
                     </div>
 
                     <div class="hr hr12 dotted"></div>
 
-                    <div class="clearfix">
-                        <div class="grid2">
-                            <span class="bigger-175 blue">25</span>
-
-                            <br />
-                            Followers
-                        </div>
-
-                        <div class="grid2">
-                            <span class="bigger-175 blue">12</span>
-
-                            <br />
-                            Following
-                        </div>
-                    </div>
+                   
 
                     <div class="hr hr16 dotted"></div>
                 </div>
@@ -299,7 +285,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <div id="profile-feed-1" class="profile-feed">
                                     <div class="profile-activity clearfix">
                                         <div>
-                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$foto_path?>" />
                                            <a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
                                             melakukan pelanggaran <?=$value->pelanggaran->kategori->nama;?>
                                             yaitu <?=$value->pelanggaran->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->tanggal);?>
@@ -357,11 +343,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <div id="profile-feed-1" class="profile-feed">
                                     <div class="profile-activity clearfix">
                                         <div>
-                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+                                            <img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$foto_path;?>" />
                                            <a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
-                                            pindah dari <?=$value->dariKamar->namaAsrama;?>
-                                            kamar <?=$value->dariKamar->nama;?> ke <?=$value->kamar->namaAsrama;?>
-                                            kamar <?=$value->kamar->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->created_at);?>
+                                            pindah dari <?=(!empty($value->dariKamar) ? $value->dariKamar->namaAsrama : '');?>
+                                            kamar <?=(!empty($value->dariKamar) ? $value->dariKamar->nama : null);?> ke <?=$value->kamar->namaAsrama;?>
+                                            kamar <?=(!empty($value->kamar) ? $value->kamar->nama : null);?> pada tanggal <?=MyHelper::YmdtodmY($value->created_at);?>
 
                                             <div class="time">
                                                 <i class="ace-icon fa fa-clock-o bigger-110"></i>
@@ -398,15 +384,30 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
+ <?php
+        yii\bootstrap\Modal::begin(['id' =>'modal','size'=>'modal-lg',]);
+        echo '<div class="text-center">';
+        echo '<img width="100%" id="img">';
+        echo '</div>';
+        yii\bootstrap\Modal::end();
+    ?>
 <?php
 
-$this->registerJs(' 
+$this->registerJs('
+
+    $(document).on("click",".popupModal",function(e){
+        e.preventDefault();
+        var m = $("#modal").modal("show").find("#img");
+
+        m.attr("src",$(this).data("item"))
+    })
 
     $("#btn-tambah-pelanggaran").on(ace.click_event, function() {
         
     });
 
-    ', \yii\web\View::POS_READY);
+    
+', \yii\web\View::POS_READY);
 
 ?>
 

@@ -1,5 +1,5 @@
 <?php
-
+use yii\helpers\Url;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
@@ -29,6 +29,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'pageSummaryOptions' => ['colspan' => 6],
         'header'=>'',
         'headerOptions'=>['class'=>'kartik-sheet-style']
+    ],
+    [
+        'header' => 'Foto',
+        'format' => 'raw',
+        'value' => function($data){
+            if(!empty($data->nim0->foto_path)){
+                // // return Html::img(Url::to(['simak-mastermahasiswa/foto','id'=>$data->id]),['width'=>'70px']);
+                // return Html::a(Html::img($data->foto_path,['width'=>'70px']),'',['class'=>'popupModal','data-pjax'=>0,'data-item'=>$data->foto_path]);
+                return Html::a(Html::img(Url::to(['mahasiswa/foto','id'=>$data->nim0->id]),['width'=>'70px']),'',['class'=>'popupModal','data-pjax'=>0,'data-item'=>Url::to(['mahasiswa/foto','id'=>$data->nim0->id])]);
+            }
+                
+            else
+                return '';
+        }
     ],
     [
         'attribute' => 'tanggal',
@@ -180,5 +194,34 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 </div>
     
+
+</div>
+
+ <?php
+        yii\bootstrap\Modal::begin(['id' =>'modal','size'=>'modal-lg',]);
+        echo '<div class="text-center">';
+        echo '<img width="100%" id="img">';
+        echo '</div>';
+        yii\bootstrap\Modal::end();
+    ?>
+<?php
+
+$this->registerJs('
+
+    $(document).on("click",".popupModal",function(e){
+        e.preventDefault();
+        var m = $("#modal").modal("show").find("#img");
+
+        m.attr("src",$(this).data("item"))
+    })
+
+    $("#btn-tambah-pelanggaran").on(ace.click_event, function() {
+        
+    });
+
+    
+', \yii\web\View::POS_READY);
+
+?>
 
 </div>
