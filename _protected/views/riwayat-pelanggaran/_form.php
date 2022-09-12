@@ -1,4 +1,5 @@
 <?php
+use app\helpers\MyHelper;
 use yii\widgets\DetailView;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -10,7 +11,7 @@ use dosamigos\ckeditor\CKEditor;
 use app\models\Pelanggaran;
 use app\models\Hukuman;
 
-
+$list_rekomendasi = MyHelper::listRekomendasi();
 /* @var $this yii\web\View */
 /* @var $model app\models\RiwayatPelanggaran */
 /* @var $form yii\widgets\ActiveForm */
@@ -97,7 +98,7 @@ use app\models\Hukuman;
 	</div>
 </div>
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-sm-12 col-lg-6 col-md-6">
 	      <div class="widget-box widget-color-red">
 	        <div class="widget-header">
 	          <h4 class="widget-title lighter smaller">Data Hukuman</h4>
@@ -132,6 +133,7 @@ use app\models\Hukuman;
 					<label class="error_diagnosis"></label>
 					</div>
 				</div>
+				
 				<div class="row">
 			   		<label class="col-sm-2 control-label no-padding-right">Tanggal Pelanggaran</label>
 					<div class="col-sm-10">
@@ -203,6 +205,30 @@ use app\models\Hukuman;
 				<label class="error_diagnosis"></label>
 				</div>
 			</div>
+			<div class="row">
+		   		<label class="col-sm-2 control-label no-padding-right">Rekomendasi DKP</label>
+				<div class="col-sm-10">
+				<?= $form->field($model,'rekomendasi_dkp')->dropDownList($list_rekomendasi,['separator' => '&nbsp;&nbsp;&nbsp;','prompt' => '- Pilih Rekomendasi -'])->label(false) ?>
+				
+				<label class="error_diagnosis"></label>
+				</div>
+			</div>
+			<div class="row">
+		   		<label class="col-sm-2 control-label no-padding-right">Rekomendasi Pimpinan</label>
+				<div class="col-sm-10">
+				<?= $form->field($model,'rekomendasi_pimpinan')->dropDownList($list_rekomendasi,['separator' => '&nbsp;&nbsp;&nbsp;','prompt' => '- Pilih Rekomendasi -'])->label(false) ?>
+				
+				<label class="error_diagnosis"></label>
+				</div>
+			</div>
+			<div class="row">
+			   		<label class="col-sm-2 control-label no-padding-right">Deskripsi Pelanggaran untuk Pelaporan PDDIKTI</label>
+					<div class="col-sm-10">
+					<?= $form->field($model,'deskripsi_pddikti')->textInput(['class'=>'form-control'])->label(false) ?>
+					
+					<label class="error_diagnosis"></label>
+					</div>
+				</div>
 	          </div>
 	      </div>
 	    </div>

@@ -116,7 +116,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
     {
         return [
             [['nim_mhs', 'nama_mahasiswa'], 'required'],
-            [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at','no_sk_yudisium','konsulat','dapur_id','rfid'], 'safe'],
+            [['tgl_lahir', 'tgl_masuk', 'tgl_lulus', 'tgl_sk_yudisium', 'created_at', 'updated_at','no_sk_yudisium','konsulat','dapur_id','rfid','foto_path'], 'safe'],
             [['keterangan'], 'string'],
             [['status_bayar', 'status_mahasiswa', 'is_synced', 'kamar_id', 'is_eligible'], 'integer'],
             [['kode_pt', 'asal_prodi', 'kode_pos'], 'string', 'max' => 6],
