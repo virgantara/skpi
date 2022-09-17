@@ -16,6 +16,7 @@ use yii\filters\VerbFilter;
 use yii\httpclient\Client;
 use app\models\RiwayatHukuman;
 use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
 
 /**
  * RiwayatPelanggaranController implements the CRUD actions for RiwayatPelanggaran model.
@@ -127,16 +128,25 @@ class RiwayatPelanggaranController extends Controller
     {
         $model = $this->findModel($id);
         $mahasiswa = [];
-        if(!empty($model->nim))
-        {
-            $api_baseurl = Yii::$app->params['api_baseurl'];
-            $client = new Client(['baseUrl' => $api_baseurl]);
-            $response = $client->get('/m/profil/nim', ['nim' => $model->nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
+        // if(!empty($model->nim))
+        // {
+        //     $api_baseurl = Yii::$app->params['api_baseurl'];
+        //     $client = new Client(['baseUrl' => $api_baseurl]);
+        //     $response = $client->get('/m/profil/nim', ['nim' => $model->nim],['x-access-token'=>Yii::$app->params['client_token']])->send();
             
-            if ($response->isOk) {
-                $mahasiswa = $response->data['values'][0];
-            }    
-        }
+        //     if ($response->isOk && !empty($response->data['values'])) {
+                
+        //         $mahasiswa = $response->data['values'][0];
+        //     }
+
+        //     else{
+        //         $mahasiswa = $model->nim0;
+        //     }    
+        // }
+
+        $mahasiswa = $model->nim0;
+        $kabupaten = SimakKabupaten::findOne(['id' => $mahasiswa->kabupaten]);
+        $mahasiswa['kabupaten'] = $kabupaten;
 
         $query = RiwayatPelanggaran::find()->where([
             'nim'=> $model->nim
@@ -169,6 +179,9 @@ class RiwayatPelanggaranController extends Controller
      */
     public function actionCreate($nim)
     {
+        $s3config = Yii::$app->params['s3'];
+        $s3 = new \Aws\S3\S3Client($s3config);
+
         $model = new RiwayatPelanggaran();
         $mahasiswa = null;
         $api_baseurl = Yii::$app->params['api_baseurl'];
@@ -193,8 +206,62 @@ class RiwayatPelanggaranController extends Controller
         $transaction = $connection->beginTransaction();
         try 
         {
-            if ($model->load(Yii::$app->request->post())) 
-            {
+            if ($model->load(Yii::$app->request->post())) {
+
+                $model->bukti = UploadedFile::getInstance($model,'bukti');
+                $model->surat_pernyataan = UploadedFile::getInstance($model,'surat_pernyataan');
+
+                if($model->bukti)
+                {
+                    $bukti = $model->bukti->tempName;
+                    $mime_type = $model->bukti->type;
+                    
+                    $file = 'B'.$model->id.'.'.$model->bukti->extension;
+
+                    
+                    $errors = '';
+                            
+                    $key = 'pelanggaran/bukti/'.$model->nim.'/'.$file;
+                     
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $bukti,
+                         'ContentType' => $mime_type
+                    ]);
+
+                    
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->bukti = $plainUrl;
+                }
+
+                if($model->surat_pernyataan)
+                {
+                    $surat_pernyataan = $model->surat_pernyataan->tempName;
+                    $mime_type = $model->surat_pernyataan->type;
+                    
+                    $file = 'SP'.$model->id.'.'.$model->surat_pernyataan->extension;
+
+                    
+                    $errors = '';
+                            
+                    $key = 'pelanggaran/surat_pernyataan/'.$model->nim.'/'.$file;
+                     
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $surat_pernyataan,
+                         'ContentType' => $mime_type
+                    ]);
+
+                    
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->surat_pernyataan = $plainUrl;
+                }
+
+
                 $model->tanggal = \app\helpers\MyHelper::dmYtoYmd($model->tanggal);
                 $model->save();
 
@@ -239,6 +306,11 @@ class RiwayatPelanggaranController extends Controller
     {
         $model = $this->findModel($id);
 
+        $bukti = $model->bukti;
+        $surat_pernyataan = $model->surat_pernyataan;
+        $s3config = Yii::$app->params['s3'];
+        $s3 = new \Aws\S3\S3Client($s3config);
+
         $mahasiswa = SimakMastermahasiswa::find()->where(['nim_mhs'=>$model->nim])->one();  
         $kabupaten = SimakKabupaten::find()->where(['id'=>$mahasiswa->kabupaten])->one();
         
@@ -249,6 +321,68 @@ class RiwayatPelanggaranController extends Controller
         {
             if ($model->load(Yii::$app->request->post())) 
             {
+
+                $model->bukti = UploadedFile::getInstance($model,'bukti');
+                $model->surat_pernyataan = UploadedFile::getInstance($model,'surat_pernyataan');
+
+                if($model->bukti)
+                {
+                    $bukti = $model->bukti->tempName;
+                    $mime_type = $model->bukti->type;
+                    
+                    $file = 'B'.$model->id.'.'.$model->bukti->extension;
+
+                    
+                    $errors = '';
+                            
+                    $key = 'pelanggaran/bukti/'.$model->nim.'/'.$file;
+                     
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $bukti,
+                         'ContentType' => $mime_type
+                    ]);
+
+                    
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->bukti = $plainUrl;
+                }
+
+                if (empty($model->bukti)){
+                    $model->bukti = $bukti;
+                }
+
+                if($model->surat_pernyataan)
+                {
+                    $surat_pernyataan = $model->surat_pernyataan->tempName;
+                    $mime_type = $model->surat_pernyataan->type;
+                    
+                    $file = 'SP'.$model->id.'.'.$model->surat_pernyataan->extension;
+
+                    
+                    $errors = '';
+                            
+                    $key = 'pelanggaran/surat_pernyataan/'.$model->nim.'/'.$file;
+                     
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $surat_pernyataan,
+                         'ContentType' => $mime_type
+                    ]);
+
+                    
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->surat_pernyataan = $plainUrl;
+                }
+
+                if (empty($model->surat_pernyataan)){
+                    $model->surat_pernyataan = $surat_pernyataan;
+                }
+
                 $model->tanggal = \app\helpers\MyHelper::dmYtoYmd($model->tanggal);
                 $model->save();
 
@@ -268,7 +402,8 @@ class RiwayatPelanggaranController extends Controller
 
                 }
                 
-
+                
+                Yii::$app->session->setFlash("success","Data successfully saved");
                 $transaction->commit();
                 return $this->redirect(['profil', 'nim' => $model->nim]);
             }
@@ -305,6 +440,58 @@ class RiwayatPelanggaranController extends Controller
         $model->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDownloadSuratPernyataan($id)
+    {
+        $model = $this->findModel($id);
+        $file = $model->surat_pernyataan;
+        if(empty($model->surat_pernyataan)){
+            Yii::$app->session->setFlash('danger', 'Mohon maaf, file ini tidak ada');
+            return $this->redirect(['index']);
+        }
+        $filename = 'SP'.$model->nim.' - '.$model->nim0->nama_mahasiswa.'.pdf';
+
+        // Header content type
+        header('Content-type: application/pdf');
+        header('Content-Disposition: inline; filename="' . $filename . '"');
+        header('Content-Transfer-Encoding: binary');
+        header('Accept-Ranges: bytes');
+          
+        // Read the file
+        @readfile($file);
+        exit;
+    }
+
+    public function actionDownloadBukti($id){
+        $model = RiwayatPelanggaran::findOne($id);
+        if(!empty($model->bukti)){
+            try{
+                $image = imagecreatefromstring($this->getImage($model->bukti));
+
+                header('Content-Type: image/png');
+                imagepng($image);
+            }
+
+            catch(\Exception $e){
+                   
+            }
+                
+        }
+        
+
+        die();
+    }
+
+    function getImage($url){
+        $ch = curl_init ($url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+        $resource = curl_exec($ch);
+        curl_close ($ch);
+
+        return $resource;
     }
 
     /**

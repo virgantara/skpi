@@ -48,8 +48,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                                 
                             else{
-                                $foto_path = $this->theme->baseUrl."/images/avatars/profile-pic.jpg";
-                                echo '<img id="avatar" class="editable img-responsive" alt="Alex\'s Avatar" src="'.$foto_path.'" />';
+                                if($model->nim0->jenis_kelamin == 'L')
+                                    $foto_path = $this->theme->baseUrl."/images/avatars/avatar4.png";
+                                else
+                                    $foto_path = $this->theme->baseUrl."/images/avatars/avatar3.png";
+                                echo '<img id="avatar" width="240px" class="editable img-responsive" alt="Alex\'s Avatar" src="'.$foto_path.'" />';
                             }
 
                              ?>
@@ -62,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                                     <i class="ace-icon fa fa-circle light-green"></i>
                                     &nbsp;
-                                    <span class="white"><?=$mahasiswa['nama_mahasiswa'];?></span>
+                                    <span class="white"><?=$mahasiswa->nama_mahasiswa;?></span>
                                 </a>
 
                                 <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
@@ -100,12 +103,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <div class="profile-contact-info">
                         <div class="profile-contact-links align-left">
-                            <a href="<?=Url::to(['riwayat-pelanggaran/create','nim'=>$mahasiswa['nim_mhs']]);?>" class="btn btn-link" id="btn-tambah-pelanggaran">
+                            <a href="<?=Url::to(['riwayat-pelanggaran/create','nim'=>$mahasiswa->nim_mhs]);?>" class="btn btn-link" id="btn-tambah-pelanggaran">
                                 <i class="ace-icon fa fa-plus-circle bigger-120 green"></i>
                                 Tambah Pelanggaran
                             </a>
 
-                           <a href="<?=Url::to(['izin-mahasiswa/create','nim'=>$mahasiswa['nim_mhs']]);?>" class="btn btn-link" id="btn-tambah-perizinan">
+                           <a href="<?=Url::to(['izin-mahasiswa/create','nim'=>$mahasiswa->nim_mhs]);?>" class="btn btn-link" id="btn-tambah-perizinan">
                                 <i class="ace-icon fa fa-plus-circle bigger-120 green"></i>
                                 Tambah Perizinan
                             </a>
@@ -129,50 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
                 <div class="col-xs-12 col-sm-9">
-                    <!-- <div class="center">
-                        <span class="btn btn-app btn-sm btn-light no-hover">
-                            <span class="line-height-1 bigger-170 blue"> 1,411 </span>
 
-                            <br />
-                            <span class="line-height-1 smaller-90"> Views </span>
-                        </span>
-
-                        <span class="btn btn-app btn-sm btn-yellow no-hover">
-                            <span class="line-height-1 bigger-170"> 32 </span>
-
-                            <br />
-                            <span class="line-height-1 smaller-90"> Followers </span>
-                        </span>
-
-                        <span class="btn btn-app btn-sm btn-pink no-hover">
-                            <span class="line-height-1 bigger-170"> 4 </span>
-
-                            <br />
-                            <span class="line-height-1 smaller-90"> Projects </span>
-                        </span>
-
-                        <span class="btn btn-app btn-sm btn-grey no-hover">
-                            <span class="line-height-1 bigger-170"> 23 </span>
-
-                            <br />
-                            <span class="line-height-1 smaller-90"> Reviews </span>
-                        </span>
-
-                        <span class="btn btn-app btn-sm btn-success no-hover">
-                            <span class="line-height-1 bigger-170"> 7 </span>
-
-                            <br />
-                            <span class="line-height-1 smaller-90"> Albums </span>
-                        </span>
-
-                        <span class="btn btn-app btn-sm btn-primary no-hover">
-                            <span class="line-height-1 bigger-170"> 55 </span>
-
-                            <br />
-                            <span class="line-height-1 smaller-90"> Contacts </span>
-                        </span>
-                    </div>
- -->
                     <div class="space-12"></div>
 
                     <div class="profile-user-info profile-user-info-striped">
@@ -211,9 +171,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="profile-info-value">
                                 <span class="editable" >
                                 <?php
-                                echo $mahasiswa['kecamatan'];
-                                echo ' '.$mahasiswa['kab'];
-                                echo ' '.$mahasiswa['prov'];
+                                echo ucwords(strtolower($mahasiswa->alamat));
+                                $kabupaten = $mahasiswa['kabupaten'];
+                                if(!empty($kabupaten)){
+                                    echo ', '.$kabupaten->kab;
+                                    echo ', '.(!empty($kabupaten->provinsi) ? $kabupaten->provinsi->prov : '');
+                                }
                                 ?>
                                     
                                 </span>
@@ -230,28 +193,28 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="profile-info-name"> Kelas </div>
 
                             <div class="profile-info-value">
-                                <span class="editable" ><?=$mahasiswa['nama_kampus'];?></span>
+                                <span class="editable" ><?=$mahasiswa->kampus0->nama_kampus;?></span>
                             </div>
                         </div>
                         <div class="profile-info-row">
                             <div class="profile-info-name"> Fakultas </div>
 
                             <div class="profile-info-value">
-                                <span class="editable" ><?=$mahasiswa['nama_fakultas'];?></span>
+                                <span class="editable" ><?=$mahasiswa->kodeProdi->kodeFakultas->nama_fakultas;?></span>
                             </div>
                         </div>
                         <div class="profile-info-row">
                             <div class="profile-info-name"> Prodi </div>
 
                             <div class="profile-info-value">
-                                <span class="editable" ><?=$mahasiswa['nama_prodi'];?></span>
+                                <span class="editable" ><?=$mahasiswa->kodeProdi->nama_prodi;?></span>
                             </div>
                         </div>
                         <div class="profile-info-row">
                             <div class="profile-info-name"> Status Aktif </div>
 
                             <div class="profile-info-value">
-                                <span class="editable" ><?=$mahasiswa['status_aktivitas'];?></span>
+                                <span class="editable" ><?=$mahasiswa->status_aktivitas;?></span>
                             </div>
                         </div>
                     </div>
@@ -292,7 +255,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                             <div class="time">
                                                 <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                                <?=\app\helpers\MyHelper::hitungDurasi(date('Y-m-d H:i:s'),$value->created_at);?> yang lalu
+                                                <?=\app\helpers\MyHelper::hitungDurasi(date('Y-m-d H:i:s'),$value->created_at);?> yang lalu 
+                                                <?php 
+                                                if(!empty($value->surat_pernyataan)){
+                                                    echo Html::a('<i class="fa fa-download"></i>',['riwayat-pelanggaran/download-surat-pernyataan','id'=>$value->id],['title'=>'Download Surat Pernyataan','style'=>'margin-right:3px']);
+
+                                                }
+
+                                                if(!empty($value->bukti)){
+                                                    echo Html::a('<i class="fa fa-download"></i>',['riwayat-pelanggaran/download-bukti','id'=>$value->id],['title'=>'Download Bukti','target'=>'_blank']);
+
+                                                }
+
+                                                 ?>
+                                                
                                             </div>
                                         </div>
 

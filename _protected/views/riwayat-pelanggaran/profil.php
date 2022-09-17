@@ -88,39 +88,6 @@ $this->title = Yii::t('app', Yii::$app->name);
 							</a> -->
 						</div>
 
-						<div class="space-6"></div>
-
-						<div class="profile-social-links align-center">
-							<a href="#" class="tooltip-info" title="" data-original-title="Visit my Facebook">
-								<i class="middle ace-icon fa fa-facebook-square fa-2x blue"></i>
-							</a>
-
-							<a href="#" class="tooltip-info" title="" data-original-title="Visit my Twitter">
-								<i class="middle ace-icon fa fa-twitter-square fa-2x light-blue"></i>
-							</a>
-
-							<a href="#" class="tooltip-error" title="" data-original-title="Visit my Pinterest">
-								<i class="middle ace-icon fa fa-pinterest-square fa-2x red"></i>
-							</a>
-						</div>
-					</div>
-
-					<div class="hr hr12 dotted"></div>
-
-					<div class="clearfix">
-						<div class="grid2">
-							<span class="bigger-175 blue">25</span>
-
-							<br />
-							Followers
-						</div>
-
-						<div class="grid2">
-							<span class="bigger-175 blue">12</span>
-
-							<br />
-							Following
-						</div>
 					</div>
 
 					<div class="hr hr16 dotted"></div>

@@ -46,6 +46,9 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
             [['nim'], 'string', 'max' => 25],
             [['pelanggaran_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pelanggaran::className(), 'targetAttribute' => ['pelanggaran_id' => 'id']],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::className(), 'targetAttribute' => ['nim' => 'nim_mhs']],
+            [['bukti'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg, jpeg, png','maxSize' => 1024 * 1024 * 2],
+            [['surat_pernyataan'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf','maxSize' => 1024 * 1024 * 3],
+
         ];
     }
 
