@@ -259,7 +259,12 @@ if(!Yii::$app->user->isGuest){
 
                                    
                                 </div>
-                                <?=Alert::widget();?>
+                                <?php
+                                    foreach (Yii::$app->session->getAllFlashes() as $key => $message) {
+                                      echo '<div class="flash alert alert-' . $key . '">' . $message . '<button class="close" type="button" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button></div>';
+                                    }
+
+                                ?>
                                 <?=$content;?>
                                 <!-- PAGE CONTENT ENDS -->
                             </div><!-- /.col -->
