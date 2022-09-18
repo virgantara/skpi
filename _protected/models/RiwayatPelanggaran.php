@@ -42,7 +42,7 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
         return [
             [['pelanggaran_id', 'tanggal', 'nim', 'tahun_id','deskripsi'], 'required'],
             [['pelanggaran_id', 'tahun_id'], 'integer'],
-            [['tanggal', 'created_at', 'updated_at','status_kasus','deskripsi_pddikti','rekomendasi_dkp','rekomendasi_pimpinan'], 'safe'],
+            [['tanggal', 'created_at', 'updated_at','status_kasus','deskripsi_pddikti','rekomendasi_dkp','rekomendasi_pimpinan','nomor_sk','tanggal_sk'], 'safe'],
             [['nim'], 'string', 'max' => 25],
             [['pelanggaran_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pelanggaran::className(), 'targetAttribute' => ['pelanggaran_id' => 'id']],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::className(), 'targetAttribute' => ['nim' => 'nim_mhs']],
@@ -70,7 +70,9 @@ class RiwayatPelanggaran extends \yii\db\ActiveRecord
             'namaPelanggaran' => 'Pelanggaran',
             'namaKategori' => 'Kategori',
             'namaAsrama' => 'Asrama',
-            'namaKamar' => 'Kamar'
+            'namaKamar' => 'Kamar',
+            'nomor_sk' => 'Nomor SK',
+            'tanggal_sk' => 'Tanggal SK'
         ];
     }
 

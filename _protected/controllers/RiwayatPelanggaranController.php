@@ -3,11 +3,14 @@
 namespace app\controllers;
 
 use Yii;
+
+use app\helpers\MyHelper;
 use app\models\Asrama;
 use app\models\RiwayatKamar;
 use app\models\RiwayatPelanggaran;
 use app\models\RiwayatPelanggaranSearch;
 use app\models\SimakMastermahasiswa;
+use app\models\SimakMahasiswaLulusDo;
 use app\models\SimakKabupaten;
 use app\models\IzinMahasiswa;
 use yii\web\Controller;
@@ -384,7 +387,33 @@ class RiwayatPelanggaranController extends Controller
                 }
 
                 $model->tanggal = \app\helpers\MyHelper::dmYtoYmd($model->tanggal);
-                $model->save();
+                if($model->save()){
+                    if(!empty($model->deskripsi_pddikti)){
+                        $mhs = $model->nim0;
+                        if(!empty($mhs->id_reg_pd)){
+                            $model_lulus_do = SimakMahasiswaLulusDo::findOne(['id_registrasi_mahasiswa' => $mhs->id_reg_pd]);
+
+                            if(empty($model_lulus_do)){
+
+                                $model_lulus_do = new SimakMahasiswaLulusDo;
+                                $model_lulus_do->id = MyHelper::gen_uuid();
+                                $model_lulus_do->id_registrasi_mahasiswa = $mhs->id_reg_pd;
+                                $model_lulus_do->id_mahasiswa = $mhs->kode_pd;
+                                $model_lulus_do->mhs_id = $mhs->id;
+                            }
+                                
+                            $model_lulus_do->keterangan = $model->deskripsi_pddikti;
+                            $model_lulus_do->tanggal_sk = $model->tanggal_sk;
+                            $model_lulus_do->nomor_sk = $model->nomor_sk;
+                            $model_lulus_do->data_source = 'SIKAP';
+                            
+                            if(!$model_lulus_do->save()){
+                                throw new \Exception(MyHelper::logError($model_lulus_do));
+                            }                            
+                        }
+
+                    }
+                }
 
                 foreach ($model->riwayatHukumen as $key => $value) 
                 {

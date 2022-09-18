@@ -44,13 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 return '';
         }
     ],
-    [
-        'attribute' => 'tanggal',
-        'value' => 'tanggal',
-        'filterType' => GridView::FILTER_DATE_RANGE,
-        // 'filter' => \yii\jui\DatePicker::widget(['language' => 'en', 'dateFormat' => 'yyyy-MM-dd']),
-        // 'format' => 'html',
-    ],
+    
     'nim',
     'namaMahasiswa',
    
@@ -78,6 +72,13 @@ $this->params['breadcrumbs'][] = $this->title;
     'namaKamar',
     'kodePelanggaran',
     'namaPelanggaran',
+    [
+        'attribute' => 'tanggal',
+        'value' => 'tanggal',
+        'filterType' => GridView::FILTER_DATE_RANGE,
+        // 'filter' => \yii\jui\DatePicker::widget(['language' => 'en', 'dateFormat' => 'yyyy-MM-dd']),
+        // 'format' => 'html',
+    ],
     [
         'attribute' => 'namaKategori',
         'label' => 'Kategori',
@@ -125,6 +126,24 @@ $this->params['breadcrumbs'][] = $this->title;
             return '<span type="button" class="label label-'.$st.' " >'.$label.'</span>';
             
         },
+    ],
+    [
+        'header' => 'Unduh Dokumen',
+        'format' => 'raw',
+        'value' => function($data){
+            $html = '';
+            if(!empty($data->surat_pernyataan)){
+                $html .= Html::a('<i class="fa fa-download"></i> Surat Pernyataan',['riwayat-pelanggaran/download-surat-pernyataan','id'=>$data->id],['title'=>'Download Surat Pernyataan','style'=>'margin-bottom:3px','class'=>'btn btn-primary btn-sm']);
+
+            }
+
+            if(!empty($data->bukti)){
+                $html .= Html::a('<i class="fa fa-download"></i> Bukti/Foto',['riwayat-pelanggaran/download-bukti','id'=>$data->id],['title'=>'Download Bukti','target'=>'_blank','class'=>'btn btn-primary btn-sm']);
+
+            }
+
+            return $html;
+        }
     ],
     [
         'attribute' => 'statusAktif',
