@@ -394,7 +394,7 @@ $(document).on(\'click\',\'#btn-add-hukuman\', function(e) {
 	row += \'</div>\';  		      
 
 	$(".item-hukuman:last").after(row)
-	// $(this).parent().parent().parent().append(row);
+	$(this).parent().parent().parent().append(row);
 	
 	refreshNumbering();
 	$(\'input.tindakan\').last().focus();
