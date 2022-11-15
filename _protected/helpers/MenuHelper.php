@@ -46,30 +46,30 @@ class MenuHelper
 		    $menuItems[] = ['label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Perizinan </span><i class="caret"></i>', 'url' => '#',
 	         'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-	         'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor') || Yii::$app->user->can('opertorUnit'),
+	         'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor') || Yii::$app->user->can('operatorUnit'),
 	        'items'=>[
 	        	[
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Hari ini',  
 	                'url' => ['/izin-harian/today'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('opertorUnit'),
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('operatorUnit'),
 	               
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Riwayat Izin Harian',  
 	                'url' => ['/izin-harian/index'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('opertorUnit'),
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('operatorUnit'),
 	               
 	            ],
 	           	[
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Daftar Perizinan',  
 	                'url' => ['/izin-mahasiswa/index'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('opertorUnit'),
+	                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('kaprodi') || Yii::$app->user->can('kepalaBAAK')||Yii::$app->user->can('stafBAPAK')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('operatorUnit'),
 	               
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Input Perizinan',  
 	                'url' => ['/izin-mahasiswa/create'],	        
-	                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('stafBAPAK')|| Yii::$app->user->can('opertorUnit'), 
+	                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('stafBAPAK')|| Yii::$app->user->can('operatorUnit'), 
 	            ],
 	        ]];
 
@@ -82,12 +82,12 @@ class MenuHelper
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Today\'s Event',  
 		                'url' => ['events/daily','daily'=>'today'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event') || Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'), 
+		                'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event') || Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'), 
 		            ],
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Upcoming Events',  
 		                'url' => ['events/daily','daily'=>'upcoming'],	             
-		                'visible' => Yii::$app->user->can('operatorCabang')|| Yii::$app->user->can('event') || Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'),
+		                'visible' => Yii::$app->user->can('operatorCabang')|| Yii::$app->user->can('event') || Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 		            ],
 		            [
 		            	'label' => '<hr style="padding:0px;margin:0px">'
@@ -95,7 +95,7 @@ class MenuHelper
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Previous Events',  
 		                'url' => ['events/daily','daily'=>'previous'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang')|| Yii::$app->user->can('event') || Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'),
+		                'visible' => Yii::$app->user->can('operatorCabang')|| Yii::$app->user->can('event') || Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 		            ],
 		        ]
 		    ];
@@ -142,7 +142,7 @@ class MenuHelper
 
 	        
 
-	    if (Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'))
+	    if (Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'))
 	    {
          	$menuItems[] = ['label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Asrama </span><i class="caret"></i>', 
 		         'url' => '#',
@@ -154,7 +154,7 @@ class MenuHelper
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Penghuni Asrama',  
 		                'url' => ['asrama/mahasiswa'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('opertorUnit'), 
+		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('operatorUnit'), 
 		            ],
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Pindah Kamar',  
@@ -190,12 +190,12 @@ class MenuHelper
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Manage',  
 		                'url' => ['organisasi-mahasiswa/index'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'), 
+		                'visible' => Yii::$app->user->can('operatorCabang')||Yii::$app->user->can('asesor')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'), 
 		            ],
 		            [
 		            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Tambah',  
 		                'url' => ['organisasi-mahasiswa/create'],	        
-		                'visible' => Yii::$app->user->can('operatorCabang')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'),
+		                'visible' => Yii::$app->user->can('operatorCabang')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 		               
 		            ],
 		            
@@ -314,7 +314,7 @@ class MenuHelper
 	    
 
 	    // display Users to admin+ roles
-	    if (Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event') || Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit')){
+	    if (Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event') || Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit')){
 
 	        $menuItems[] = ['label' =>'<i class="menu-icon fa fa-book"></i><span class="menu-text"> Master </span><i class="caret"></i>', 'url' => '#',
 	         'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
@@ -324,7 +324,7 @@ class MenuHelper
 	            [
 	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Event <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	                'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('event')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'),
+	                'visible' => Yii::$app->user->can('admin') || Yii::$app->user->can('event')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 	                'url' => ['#'],
 	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	                'items' => [
@@ -332,14 +332,14 @@ class MenuHelper
 	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['events/index']],
 	                     [
 	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
-	                        'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('event')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'),
+	                        'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('event')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 	                        'url' => ['events/create']]
 	                ],
 	            ],
 	            [
 	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Venue <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	                'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'),
+	                'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 	                'url' => ['#'],
 	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	                'items' => [
@@ -347,7 +347,7 @@ class MenuHelper
 	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['venue/index']],
 	                     [
 	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
-	                        'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('event')|| Yii::$app->user->can('opertorUnit'),
+	                        'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('event')|| Yii::$app->user->can('operatorUnit'),
 	                        'url' => ['venue/create']]
 	                ],
 	            ],
@@ -466,7 +466,7 @@ class MenuHelper
 	            [
 	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Organisasi <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-	                'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'),
+	                'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 	                'url' => ['#'],
 	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 	                'items' => [
@@ -474,7 +474,7 @@ class MenuHelper
 	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Manage'),'url' => ['organisasi/index']],
 	                     [
 	                        'label' => ( '<i class="menu-icon fa fa-caret-right"></i>Tambah'),
-	                        'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('opertorUnit'),
+	                        'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 	                        'url' => ['organisasi/create']],
 	                      [
 			            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Sync',  
