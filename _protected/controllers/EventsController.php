@@ -34,6 +34,7 @@ class EventsController extends Controller
      */
     public function behaviors()
     {
+        // echo '<pre>';print_r(Yii::$app->user->identity);exit;
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -48,7 +49,7 @@ class EventsController extends Controller
                             'update','index','view','start','delete','bulk-registration'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator','admin','operatorCabang','event','akpam'],
+                        'roles' => ['theCreator','admin','operatorCabang','event','akpam','operatorUnit'],
                     ],
                     
                 ],

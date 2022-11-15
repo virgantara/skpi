@@ -98,8 +98,10 @@ class AuthItemController extends Controller
         $name = $id;
         $model = $this->findModel($name);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'name' => $model->name]);
+        if ($this->request->isPost && $model->load($this->request->post()) ) {
+            $model->rule_name = null;
+            $model->save();
+            return $this->redirect(['view', 'id' => $model->name]);
         }
 
         return $this->render('update', [
