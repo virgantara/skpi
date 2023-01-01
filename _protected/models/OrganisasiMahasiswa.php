@@ -43,7 +43,7 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
         return [
             [['organisasi_id', 'pembimbing_id', 'tahun_akademik'], 'required'],
             [['organisasi_id', 'pembimbing_id', 'tahun_akademik'], 'integer'],
-            [['tanggal_mulai', 'tanggal_selesai', 'tanggal_sk', 'created_at', 'updated_at'], 'safe'],
+            [['tanggal_mulai', 'tanggal_selesai', 'tanggal_sk', 'created_at', 'updated_at','file_sk'], 'safe'],
             [['no_sk'], 'string', 'max' => 255],
             [['kampus'], 'string', 'max' => 2],
             [['organisasi_id'], 'exist', 'skipOnError' => true, 'targetClass' => Organisasi::className(), 'targetAttribute' => ['organisasi_id' => 'id']],
@@ -59,16 +59,17 @@ class OrganisasiMahasiswa extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'organisasi_id' => 'Organisasi ID',
-            'pembimbing_id' => 'Pembimbing ID',
+            'organisasi_id' => 'Organisasi',
+            'pembimbing_id' => 'Pembimbing',
             'tanggal_mulai' => 'Tanggal Mulai',
             'tanggal_selesai' => 'Tanggal Selesai',
-            'no_sk' => 'No Sk',
-            'tanggal_sk' => 'Tanggal Sk',
+            'no_sk' => 'No SK',
+            'tanggal_sk' => 'Tanggal SK',
             'tahun_akademik' => 'Tahun Akademik',
             'kampus' => 'Kampus',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'file_sk' => 'Tautan File SK'
         ];
     }
 

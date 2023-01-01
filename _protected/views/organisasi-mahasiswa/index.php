@@ -7,7 +7,7 @@ use kartik\grid\GridView;
 /* @var $searchModel app\models\OrganisasiMahasiswaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Organisasi Mahasiswa';
+$this->title = 'UKM Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
 
 $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus','nama_kampus');
@@ -25,6 +25,8 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
 
     <?php
 }
+
+$list_organisasi = ArrayHelper::map(\app\models\Organisasi::getList(),'id','nama');
 ?>
    
 <?php
@@ -54,9 +56,32 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
                 }
             ],
             [
-                'filter' => ArrayHelper::map(\app\models\Organisasi::getList(),'id','nama'),
-                'format' => 'raw',
                 'attribute' => 'organisasi_id',
+                'class' => 'kartik\grid\EditableColumn',
+                'filter' => $list_organisasi,
+                'filterType' => GridView::FILTER_SELECT2,
+                'filterWidgetOptions' => [
+                    'options' => ['prompt' => ''],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'width'=>'resolve'
+                    ],
+                ],
+                // 'format' => 'raw',
+                
+                'editableOptions' => [
+                    'inputType' => \kartik\editable\Editable::INPUT_WIDGET,
+                    'widgetClass' => \kartik\select2\Select2::className(),
+                    
+                    'options' => [
+                        'data' => $list_organisasi,
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                        ],
+                    ],
+                    'asPopover' => false,
+
+                ],
                 'value' => function($data){
                     return !empty($data->organisasi) ? $data->organisasi->nama : '-';
                 }
@@ -99,6 +124,15 @@ $list_kampus = ArrayHelper::map(\app\models\SimakKampus::getList(),'kode_kampus'
             'tanggal_sk',
             'tanggal_mulai',
             'tanggal_selesai',
+            [
+                // 'class' => 'kartik\grid\EditableColumn',
+                'attribute' => 'file_sk',
+                 'format' => 'raw',
+                'value' => function($data){
+                    return (!empty($data->file_sk) ? Html::a('<i class="fa fa-download"></i> Unduh',$data->file_sk, ['class'=>'btn btn-primary','data-pjax' => 0,'target' => '_blank']) : null);
+                },
+                
+            ],
             //'created_at',
             //'updated_at',
 

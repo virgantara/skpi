@@ -84,6 +84,8 @@ $listKampus = \app\models\SimakKampus::find()->all();
         ]
      ])
      ?>
+
+    <?= $form->field($model, 'file_sk')->textInput(['maxlength' => true]) ?>
    
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
