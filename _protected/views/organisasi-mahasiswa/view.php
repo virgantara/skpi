@@ -61,9 +61,18 @@ $listJabatan = ArrayHelper::map(\app\models\OrganisasiJabatan::find()->all(),'id
                 'value' => function($data){
                     return !empty($data->kampus0) ? $data->kampus0->nama_kampus : '';
                 }
-            ]
+            ],
+             [
+                // 'class' => 'kartik\grid\EditableColumn',
+                'attribute' => 'file_sk',
+                'format' => 'raw',
+                'value' => function($data){
+                    return (!empty($data->file_sk) ? Html::a('<i class="fa fa-download"></i> Unduh',$data->file_sk, ['class'=>'btn btn-primary','data-pjax' => 0]) : null);
+                },
+                
+            ],
             
-        ],
+        ],  
     ]) ?>
           
     </div>

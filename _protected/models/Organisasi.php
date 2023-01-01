@@ -61,6 +61,6 @@ class Organisasi extends \yii\db\ActiveRecord
 
     public static function getList()
     {
-        return Organisasi::find()->all();
+        return Organisasi::find()->orderBy(['nama' => SORT_ASC])->all();
     }
 }
