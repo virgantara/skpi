@@ -9,6 +9,11 @@ use Yii;
 class MyHelper
 {
 
+	public static function getTingkatUKM()
+	{
+		return ['1'=>'Lokal','2'=>'Nasional','3'=>'Internasional','4'=>'Dalam Kampus'];
+	}
+
 	public static function listRekomendasi(){
 		return [
 			'0' => 'Dibina Tanpa Pemanggilan Orang Tua',

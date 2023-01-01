@@ -1,5 +1,6 @@
 <?php
 
+use app\helpers\MyHelper;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 
@@ -9,6 +10,7 @@ use kartik\grid\GridView;
 
 $this->title = 'Organisasi';
 $this->params['breadcrumbs'][] = $this->title;
+$list_tingkat = MyHelper::getTingkatUKM();
 ?>
 <div class="organisasi-index">
 
@@ -25,7 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
      <?php $gridColumns = [
             ['class' => 'yii\grid\SerialColumn'],
             'nama',
-            'tingkat',
+            [
+                'attribute' => 'tingkat',
+                'filter' => $list_tingkat,
+                'value' => function($data) use ($list_tingkat){
+                    return (!empty($list_tingkat[$data->tingkat]) ? $list_tingkat[$data->tingkat] : null);
+                }
+            ],
             'instansi',
             [
                 // 'class' => 'kartik\grid\EditableColumn',

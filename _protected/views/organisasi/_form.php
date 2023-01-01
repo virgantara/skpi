@@ -1,5 +1,5 @@
 <?php
-
+use app\helpers\MyHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -11,11 +11,9 @@ use yii\widgets\ActiveForm;
 <div class="organisasi-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <?= $form->field($model, 'tingkat')->radioList(MyHelper::getTingkatUKM(),['separator' => '&nbsp;&nbsp;&nbsp;']) ?>
 
     <?= $form->field($model, 'nama')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'tingkat')->dropDownList(['1'=>'Lokal','2'=>'Nasional','3'=>'Internasional','4'=>'Dalam Kampus']) ?>
-
     <?= $form->field($model, 'instansi')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'file_sk')->textInput(['maxlength' => true]) ?>
 
