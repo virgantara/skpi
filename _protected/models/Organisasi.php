@@ -31,6 +31,7 @@ class Organisasi extends \yii\db\ActiveRecord
     {
         return [
             [['nama'], 'required'],
+            [['file_sk'], 'safe'],
             [['nama', 'instansi'], 'string', 'max' => 255],
             [['tingkat'], 'string', 'max' => 1],
         ];
@@ -44,6 +45,7 @@ class Organisasi extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nama' => 'Nama',
+            'file_sk' => 'Tautan File SK Pendirian',
             'tingkat' => 'Tingkat',
             'instansi' => 'Instansi',
         ];

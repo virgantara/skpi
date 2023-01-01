@@ -464,7 +464,7 @@ class MenuHelper
 
 
 	            [
-	                'label' => '<i class="menu-icon fa fa-caret-right"></i>Organisasi <b class="arrow fa fa-angle-down"></b>',  
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>UKM <b class="arrow fa fa-angle-down"></b>',  
 	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 	                'visible' => Yii::$app->user->can('admin')|| Yii::$app->user->can('akpam')|| Yii::$app->user->can('operatorUnit'),
 	                'url' => ['#'],
