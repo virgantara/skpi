@@ -32,6 +32,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'nama',
             'tingkat',
+            [
+                // 'class' => 'kartik\grid\EditableColumn',
+                'attribute' => 'file_sk',
+                 'format' => 'raw',
+                'value' => function($data){
+                    return (!empty($data->file_sk) ? Html::a('<i class="fa fa-download"></i> Unduh',$data->file_sk, ['class'=>'btn btn-primary','data-pjax' => 0,'target' => '_blank']) : null);
+                },
+                
+            ],
             'instansi',
         ],
     ]) ?>

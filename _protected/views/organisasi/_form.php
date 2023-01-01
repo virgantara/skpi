@@ -17,6 +17,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'tingkat')->dropDownList(['1'=>'Lokal','2'=>'Nasional','3'=>'Internasional','4'=>'Dalam Kampus']) ?>
 
     <?= $form->field($model, 'instansi')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'file_sk')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

@@ -250,6 +250,7 @@ class OrganisasiController extends Controller
         $model = new Organisasi();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash("success","Data successfully saved");
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -270,7 +271,8 @@ class OrganisasiController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            Yii::$app->session->setFlash("success","Data successfully saved");
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
