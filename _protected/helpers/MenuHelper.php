@@ -619,9 +619,11 @@ class MenuHelper
 		        ]
 		    ];
 
-	    $menuItems[] = [
+	    if(Yii::$app->user->isGuest){
+	    	$menuItems[] = [
 	        'label' => '<i class="menu-icon fa fa-key"></i><span class="menu-text"> Login </span>', 
 	        'url' => ['site/login']];
+	    }
 
 		return $menuItems;
     }
