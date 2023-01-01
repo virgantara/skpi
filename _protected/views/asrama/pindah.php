@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
@@ -32,21 +33,21 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 				'class' => 'form-horizontal'
 			]
 		]); ?>
-		<?= $form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']) ?>
-		<div class="form-group" >
+		<?= $form->errorSummary($model, ['header' => '<div class="alert alert-danger">', 'footer' => '</div>']) ?>
+		<div class="form-group">
 			<label class="col-sm-3 control-label no-padding-right">Kelas</label>
 			<div class="col-sm-9 col-lg-4">
-				<?= $form->field($model,'kampus')->dropDownList(ArrayHelper::map(\app\models\SimakKampus::find()->all(),'id',function($data){
-					return $data->kode_kampus.' - '.$data->nama_kampus;
-				}),['class'=>'form-control','id' => 'kampus'])->label(false) ?>
+				<?= $form->field($model, 'kampus')->dropDownList(ArrayHelper::map(\app\models\SimakKampus::find()->all(), 'id', function ($data) {
+					return $data->kode_kampus . ' - ' . $data->nama_kampus;
+				}), ['class' => 'form-control', 'id' => 'kampus'])->label(false) ?>
 			</div>
-		</div>	
-		<div class="form-group" >
+		</div>
+		<div class="form-group">
 			<label class="col-sm-3 control-label no-padding-right">Fakultas</label>
 			<div class="col-sm-9 col-lg-4">
-				<?= $form->field($model,'kode_fakultas')->dropDownList(ArrayHelper::map(\app\models\SimakMasterfakultas::find()->all(),'id',function($data){
-					return $data->kode_fakultas.' - '.$data->nama_fakultas;
-				}),['class'=>'form-control','id'=>'fakultas_id'])->label(false) ?>
+				<?= $form->field($model, 'kode_fakultas')->dropDownList(ArrayHelper::map(\app\models\SimakMasterfakultas::find()->all(), 'id', function ($data) {
+					return $data->kode_fakultas . ' - ' . $data->nama_fakultas;
+				}), ['class' => 'form-control', 'id' => 'fakultas_id'])->label(false) ?>
 			</div>
 		</div>
 
@@ -54,26 +55,26 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 			<label class="col-sm-3 control-label no-padding-right">Prodi</label>
 			<div class="col-sm-9 col-lg-4">
 				<?= $form->field($model, 'kode_prodi')->widget(DepDrop::classname(), [
-					'options' => ['id'=>'kode_prodi'],
-                // 'pluginEvents'=> [
-                //     "depdrop.afterChange"=>"function(event, id, value) { 
-                //         console.log('value: ' + value + ' id: ' + id); 
-                //     }"
-                // ],
-					'pluginOptions'=>[
-						'depends'=>['fakultas_id'],
-						'params'=> ['selected_id'], 
+					'options' => ['id' => 'kode_prodi'],
+					// 'pluginEvents'=> [
+					//     "depdrop.afterChange"=>"function(event, id, value) { 
+					//         console.log('value: ' + value + ' id: ' + id); 
+					//     }"
+					// ],
+					'pluginOptions' => [
+						'depends' => ['fakultas_id'],
+						'params' => ['selected_id'],
 						'placeholder' => '...Pilih Prodi...',
 						'url' => Url::to(['/asrama/prodi'])
-					]   
+					]
 				])->label(false) ?>
 			</div>
 		</div>
 
-		<div class="form-group" >
+		<div class="form-group">
 			<label class="col-sm-3 control-label no-padding-right">Status Mahasiswa</label>
-				<div class="col-sm-9 col-lg-4">
-			<?= $form->field($model,'status_aktivitas')->dropDownList(['A'=>'Aktif','N'=>'Non Aktif','C'=>'Cuti'],['class'=>'form-control','id'=>'status_aktivitas'])->label(false) ?>
+			<div class="col-sm-9 col-lg-4">
+				<?= $form->field($model, 'status_aktivitas')->dropDownList(['A' => 'Aktif', 'N' => 'Non Aktif', 'C' => 'Cuti'], ['class' => 'form-control', 'id' => 'status_aktivitas'])->label(false) ?>
 			</div>
 		</div>
 
@@ -97,83 +98,92 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 						<th>JK</th>
 						<th>Semester</th>
 						<th>Konsulat</th>
-						
+
 						<th>Asrama dan Kamar</th>
 						<th>Pindah</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php 
-					$i=0;
-					if(!empty($results)){
+					<?php
+					$i = 0;
+					if (!empty($results)) {
 						$tahun = \app\models\SimakTahunakademik::getTahunAktif();
-						foreach($results as $m)
-						{
+						foreach ($results as $m) {
 
 							$konfirmasi = \app\models\SimakKonfirmasipembayaran::find()->where([
-				                'pembayaran' => '01',
-				                'status' => 1,
-				                'nim' => $m->nim_mhs,
-				                'tahun_id' => $tahun->tahun_id
-				            ])->one();
+								'pembayaran' => '01',
+								'status' => 1,
+								'nim' => $m->nim_mhs,
+								'tahun_id' => $tahun->tahun_id
+							])->one();
 
-				            if(empty($konfirmasi)) continue;
+							if (empty($konfirmasi)) continue;
 							$i++;
 
-							?>
+					?>
 							<tr>
-								<td><?=($i);?></td>
-								<td><?=$m->nim_mhs;?>
-							</td>
-							<td><?=$m->nama_mahasiswa;?></td>
-							<td><?=$m->jenis_kelamin;?></td>
-							<td><?=$m->semester;?></td>
-							<td><?=!empty($m->konsulat0) ? $m->konsulat0->name : 'konsulat name not set';?> - <?=!empty($m->konsulat0) ? $m->konsulat0->state->name : 'provinsi not set';?> - <?=!empty($m->konsulat0) ? $m->konsulat0->country->name : 'country name not set';?></td>
-							<td>
-								<span class="datakamar"><?=(!empty($m->kamar) ? $m->kamar->namaAsrama.' - '.$m->kamar->nama : '-');?></span>
-							</td>
-							<td>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right">Asrama</label>
-									<div class="col-sm-9">
+								<td><?= ($i); ?></td>
+								<td><?= $m->nim_mhs; ?>
+								</td>
+								<td><?= $m->nama_mahasiswa; ?></td>
+								<td><?= $m->jenis_kelamin; ?></td>
+								<td><?= $m->semester; ?></td>
+								<td><?= !empty($m->konsulat0) ? $m->konsulat0->name : 'konsulat name not set'; ?> - <?= !empty($m->konsulat0) ? $m->konsulat0->state->name : 'provinsi not set'; ?> - <?= !empty($m->konsulat0) ? $m->konsulat0->country->name : 'country name not set'; ?></td>
+								<td>
+									<span class="datakamar"><?= (!empty($m->kamar) ? $m->kamar->namaAsrama . ' - ' . $m->kamar->nama : '-'); ?></span>
+								</td>
+								<td>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">Asrama</label>
+										<div class="col-sm-9">
 
-										<?= Html::dropDownList('asrama','',[],['id'=>'asrama_'.$m->nim_mhs,'class'=>'form-control list_asrama','prompt'=>'- Pilih Asrama -']);?>
+											<?= Html::dropDownList('asrama', '', [], ['id' => 'asrama_' . $m->nim_mhs, 'class' => 'form-control list_asrama', 'prompt' => '- Pilih Asrama -']); ?>
+										</div>
 									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right">Kamar</label>
-									<div class="col-sm-4">
-										<?php echo DepDrop::widget([
-											'name' => 'kamar_id_'.$m->nim_mhs,
-											'options' => [
-												'class'=> 'kamar_id'
-											],
-											'pluginOptions'=>[
-												'depends'=>['asrama_'.$m->nim_mhs],
-												'placeholder' => '...Pilih Kamar...',
-												'url' => Url::to(['/kamar/kamar-list']),
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">Kamar</label>
+										<div class="col-sm-4">
+											<?php echo DepDrop::widget([
+												'name' => 'kamar_id_' . $m->nim_mhs,
+												'options' => [
+													'class' => 'kamar_id'
+												],
+												'pluginOptions' => [
+													'depends' => ['asrama_' . $m->nim_mhs],
+													'placeholder' => '...Pilih Kamar...',
+													'url' => Url::to(['/kamar/kamar-list']),
 
-											]   
-										])?>
-									</div>
-									<div class="col-sm-5">
-										<button type="button" class="btn btn-info btn-pindah" value="<?php echo $m->nim_mhs ?>">
-											<i class="fa fa-paper-plane"></i> Pindah
-										</button>
-									</div>
+												]
+											]) ?>
+										</div>
+										<div class="col-sm-5">
+											<button type="button" class="btn btn-info btn-pindah" value="<?php echo $m->nim_mhs ?>">
+												<i class="fa fa-paper-plane"></i> Pindah
+											</button>
+											<br>
+											<br>
+											<div class="icon">
+												<a href="/asrama/setnull?nim=<?php echo $m->nim_mhs ?>" onclick="myFunction()"><i class="fa fa-paper-plane"></i> Kosongkan Kamar</a>
+											</div>
+										</div>
+										<script>
+											function myFunction() {
+												confirm("Are you sure want to set him's/her's room to null?");
+											}
+										</script>
 
-								</div>
-							</td>
-						</tr>
-						<?php 
+									</div>
+								</td>
+							</tr>
+					<?php
+						}
 					}
-				}
-				?>
-			</tbody>
-		</table>
+					?>
+				</tbody>
+			</table>
 
-	</div>
-	<!-- <div class="row">
+		</div>
+		<!-- <div class="row">
 		<div class="col-xs-12">
 			<div class="clearfix form-actions">
 				<div class="col-md-offset-3 col-md-9">
@@ -188,8 +198,8 @@ $model->status_aktivitas = !empty($_GET['SimakMastermahasiswa']) ? $_GET['SimakM
 		</div>
 	</div> -->
 
-	<?php ActiveForm::end(); ?>
-</div>
+		<?php ActiveForm::end(); ?>
+	</div>
 </div>
 <?php
 
@@ -199,7 +209,7 @@ function getListAsrama(kampus_id){
 	$.ajax({
 
 		type : "POST",
-		url : "'.Url::to(['/asrama/list-asrama']).'",
+		url : "' . Url::to(['/asrama/list-asrama']) . '",
 		data : "kampus_id="+kampus_id,
 		success: function(data){
 			var hasil = $.parseJSON(data);
@@ -252,7 +262,7 @@ getListAsrama($("#kampus").val())
 		$.ajax({
 
 			type : "POST",
-			url : "'.Url::to(['/asrama/kamar']).'",
+			url : "' . Url::to(['/asrama/kamar']) . '",
 			data : {
 				dataku : obj
 			},
@@ -286,7 +296,7 @@ getListAsrama($("#kampus").val())
 	$("#fakultas_id").trigger("change");
 
 	setTimeout(function(){
-		$("#kode_prodi").val("'.(!empty($params['kode_prodi'])? $params['kode_prodi'] : '-').'");
+		$("#kode_prodi").val("' . (!empty($params['kode_prodi']) ? $params['kode_prodi'] : '-') . '");
 	},500);
 
 ', \yii\web\View::POS_READY);

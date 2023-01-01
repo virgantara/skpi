@@ -20,6 +20,7 @@ use yii\web\UploadedFile;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Protection;
+
 /**
  * AsramaController implements the CRUD actions for Asrama model.
  */
@@ -41,25 +42,21 @@ class AsramaController extends Controller
     }
 
     public function actionListAsrama()
-    {   
+    {
         $kampus_id = $_POST['kampus_id'];
         $results = [];
-        if (!empty($kampus_id)) 
-        {
-            $temp = Asrama::find()->where([ 'kampus_id' => $kampus_id ])->all();
-            foreach($temp as $t)
-            {
+        if (!empty($kampus_id)) {
+            $temp = Asrama::find()->where(['kampus_id' => $kampus_id])->all();
+            foreach ($temp as $t) {
                 $results[] = [
                     'id' => $t->id,
                     'nama' => $t->nama
                 ];
             }
             echo json_encode($results);
-
-            
         }
         die();
-    }    
+    }
 
     public function actionAjaxDapur()
     {
@@ -68,25 +65,22 @@ class AsramaController extends Controller
         $dapur_id = $dataku['dapur_id'];
         if (!empty($dataku['nimku'])) {
             if (!empty($dataku['dapur_id'])) {
-                $data = SimakMastermahasiswa::find()->where([ 'nim_mhs' => $nim ])->one();
+                $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
                 $kamarLama = $data->kamar;
-                
+
                 $data->dapur_id = $dapur_id;
                 $data->save();
-                
+
                 $results = [
                     'code' => 200,
                     'msg' => "Perpindahan Berhasil",
                     'dapur' => $data->dapur->nama,
                 ];
                 echo json_encode($results);
-
-            }
-            else{
+            } else {
                 echo "Dapur kosong, Isi terlebih dahulu";
             }
-        }
-        else {
+        } else {
             echo "NIM kosong, Isi terlebih dahulu";
         }
         die();
@@ -100,9 +94,8 @@ class AsramaController extends Controller
 
         $query = Dapur::find();
 
-        if(Yii::$app->user->identity->access_role == 'operatorCabang')
-        {
-            $query->where(['kampus'=>Yii::$app->user->identity->kampus]);
+        if (Yii::$app->user->identity->access_role == 'operatorCabang') {
+            $query->where(['kampus' => Yii::$app->user->identity->kampus]);
         }
 
         $listDapur = $query->all();
@@ -110,26 +103,23 @@ class AsramaController extends Controller
         $params = [];
 
         if (!empty($_GET['btn-search'])) {
-            if(!empty($_GET['SimakMastermahasiswa']))
-            {
+            if (!empty($_GET['SimakMastermahasiswa'])) {
                 $params = $_GET['SimakMastermahasiswa'];
                 $results = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
                     'kode_prodi' => !empty($params['kode_prodi']) ? $params['kode_prodi'] : '-',
-                    
+
                     'status_aktivitas' => $params['status_aktivitas'],
-                ])->orderBy(['semester'=>SORT_DESC,'nama_mahasiswa'=>SORT_ASC])->all();          
-
-
+                ])->orderBy(['semester' => SORT_DESC, 'nama_mahasiswa' => SORT_ASC])->all();
             }
         }
-        return $this->render('dapur',[
+        return $this->render('dapur', [
             'model' => $model,
             'results' => $results,
             'params' => $params,
             'listDapur' => $listDapur
         ]);
-    } 
+    }
 
     public function actionSync()
     {
@@ -139,94 +129,87 @@ class AsramaController extends Controller
 
 
 
-            $m = SimakMastermahasiswa::find()->where(['nim_mhs'=>$value->nim])->one();
+            $m = SimakMastermahasiswa::find()->where(['nim_mhs' => $value->nim])->one();
             $notfound = 0;
             $saved = 0;
 
 
-            if(!empty($m))
-            {        
+            if (!empty($m)) {
 
 
-                if(!empty($value->kamar) && !empty($value->asrama_id))
-                {
+                if (!empty($value->kamar) && !empty($value->asrama_id)) {
                     $kamar = \app\models\Kamar::find()->where([
                         'nama' => $value->kamar,
                         'asrama_id' => $value->asrama_id
                     ])->one();
-                    
-                    if(empty($kamar)){
+
+                    if (empty($kamar)) {
                         $kamar = new \app\models\Kamar;
                         $kamar->kapasitas = 0;
                     }
 
                     $kamar->nama = $value->kamar;
                     $kamar->asrama_id = $value->asrama_id;
-                    
-                    if($kamar->validate())
-                    {
+
+                    if ($kamar->validate()) {
                         $kamar->save();
                         $m->kamar_id = $kamar->id;
-                        $m->save(false,['kamar_id']);
+                        $m->save(false, ['kamar_id']);
                         $saved++;
-                    }
-
-                    else
-                    {
-                        print_r($kamar->getErrors());exit;
-                        
+                    } else {
+                        print_r($kamar->getErrors());
+                        exit;
                     }
                 }
                 // if($value->status_aktivitas != 'A')
                 // {
-                    // $m->status_aktivitas = $value->status_aktivitas;
-                    // $m->save(false,['status_aktivitas']);
+                // $m->status_aktivitas = $value->status_aktivitas;
+                // $m->save(false,['status_aktivitas']);
                 // }
-            }
-
-            else{
+            } else {
                 $notfound++;
             }
         }
-        echo 'NotFound: '.$notfound;
-        echo 'Saved: '.$saved;
+        echo 'NotFound: ' . $notfound;
+        echo 'Saved: ' . $saved;
         die();
     }
 
-    private function getProdiList($id){
-        $list = SimakMasterprogramstudi::find()->where(['kode_fakultas'=>$id])->all();
+    private function getProdiList($id)
+    {
+        $list = SimakMasterprogramstudi::find()->where(['kode_fakultas' => $id])->all();
         $result = [];
-        foreach($list as $item)
-        {
+        foreach ($list as $item) {
             $result[] = [
                 'id' => $item->kode_prodi,
-                'name' => $item->kode_prodi.' - '.$item->nama_prodi
+                'name' => $item->kode_prodi . ' - ' . $item->nama_prodi
             ];
         }
 
         return $result;
     }
 
-    public function actionProdi() {
+    public function actionProdi()
+    {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $out = [];
         if (isset($_POST['depdrop_all_params'])) {
             // print_r($_POST);
             $parents = $_POST['depdrop_all_params'];
             if ($parents != null) {
-                $cat_id = !empty($parents['fakultas_id']) ? $parents['fakultas_id']: '-';
+                $cat_id = !empty($parents['fakultas_id']) ? $parents['fakultas_id'] : '-';
                 $selected_id = !empty($parents['selected_id']) ? $parents['selected_id'] : '-';
-                $out = self::getProdiList($cat_id); 
+                $out = self::getProdiList($cat_id);
                 // the getSubCatList function will query the database based on the
                 // cat_id and return an array like below:
                 // [
                 //    ['id'=>'<sub-cat-id-1>', 'name'=>'<sub-cat-name1>'],
                 //    ['id'=>'<sub-cat_id_2>', 'name'=>'<sub-cat-name2>']
                 // ]
-                return ['output'=>$out, 'selected'=>$selected_id];
+                return ['output' => $out, 'selected' => $selected_id];
             }
         }
-        return ['output'=>'', 'selected'=>''];
+        return ['output' => '', 'selected' => ''];
     }
 
     public function actionKamar()
@@ -236,9 +219,9 @@ class AsramaController extends Controller
         $kamar = $dataku['kamarku'];
         if (!empty($dataku['nimku'])) {
             if (!empty($dataku['kamarku'])) {
-                $data = SimakMastermahasiswa::find()->where([ 'nim_mhs' => $nim ])->one();
+                $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
                 $kamarLama = $data->kamar;
-                
+
 
                 $data2 = new RiwayatKamar;
                 $data2->nim = $dataku['nimku'];
@@ -247,18 +230,14 @@ class AsramaController extends Controller
                 $data2->save();
 
                 $data->kamar_id = $kamar;
-                if($data->save())
-                {
+                if ($data->save()) {
                     $results = [
                         'code' => 200,
                         'msg' => "Perpindahan Berhasil",
                         'kamar' => $data->kamar->nama,
                         'asrama' => $data->kamar->namaAsrama,
                     ];
-                }
-
-                else
-                {
+                } else {
                     $errors = \app\helpers\MyHelper::logError($data);
                     $results = [
                         'code' => 400,
@@ -267,16 +246,13 @@ class AsramaController extends Controller
                         'asrama' => '',
                     ];
                 }
-                
-                
-                echo json_encode($results);
 
-            }
-            else{
+
+                echo json_encode($results);
+            } else {
                 echo "Kamar kosong, Isi terlebih dahulu";
             }
-        }
-        else {
+        } else {
             echo "Kamar kosong, Isi terlebih dahulu";
         }
         die();
@@ -286,39 +262,49 @@ class AsramaController extends Controller
     {
         $model = new SimakMastermahasiswa;
         $model->setScenario('asrama');
-        
+
         $results = [];
         $params = [];
 
         if (!empty($_GET['btn-search'])) {
-            if(!empty($_GET['SimakMastermahasiswa']))
-            {
+            if (!empty($_GET['SimakMastermahasiswa'])) {
                 $params = $_GET['SimakMastermahasiswa'];
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
-                    'kode_prodi' => !empty($params['kode_prodi']) ?$params['kode_prodi'] : '-',
-                    
+                    'kode_prodi' => !empty($params['kode_prodi']) ? $params['kode_prodi'] : '-',
+
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
 
-                if(Yii::$app->user->identity->access_role == 'operatorCabang')
-                {
-                    $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+                if (Yii::$app->user->identity->access_role == 'operatorCabang') {
+                    $query->andWhere(['kampus' => Yii::$app->user->identity->kampus]);
                 }
-                
-                $query->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]);          
+
+                $query->orderBy(['semester' => SORT_ASC, 'nama_mahasiswa' => SORT_ASC]);
                 $results = $query->all();
-
-
             }
         }
 
-        return $this->render('pindah',[
+        return $this->render('pindah', [
             'model' => $model,
             'results' => $results,
             'params' => $params,
         ]);
-    } 
+    }
+
+    public function actionSetnull($nim)
+    {
+        $kamar = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
+        $kamar->kamar_id = null;
+        // echo '<pre>';
+        // print_r($kamar->kamar_id);
+        // die;
+        $kamar->save();
+        return $this->redirect(['asrama/pindah']);
+
+        // $kamar = SimakMastermahasiswa::one();
+        // $kamar->upda
+    }
 
     public function actionMahasiswa()
     {
@@ -329,8 +315,7 @@ class AsramaController extends Controller
         $params = [];
 
         if (!empty($_GET['btn-search'])) {
-            if(!empty($_GET['SimakMastermahasiswa']))
-            {
+            if (!empty($_GET['SimakMastermahasiswa'])) {
                 $params = $_GET['SimakMastermahasiswa'];
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
@@ -339,20 +324,15 @@ class AsramaController extends Controller
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
 
-                if(Yii::$app->user->identity->access_role == 'operatorCabang')
-                {
-                    $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+                if (Yii::$app->user->identity->access_role == 'operatorCabang') {
+                    $query->andWhere(['kampus' => Yii::$app->user->identity->kampus]);
                 }
 
-                $query->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]);          
+                $query->orderBy(['semester' => SORT_ASC, 'nama_mahasiswa' => SORT_ASC]);
                 $results = $query->all();
-
             }
-        }
-
-        else if (!empty($_GET['btn-export'])) {
-            if(!empty($_GET['SimakMastermahasiswa']))
-            {
+        } else if (!empty($_GET['btn-export'])) {
+            if (!empty($_GET['SimakMastermahasiswa'])) {
                 $params = $_GET['SimakMastermahasiswa'];
                 $query = SimakMastermahasiswa::find()->where([
                     'kampus' => $params['kampus'],
@@ -361,63 +341,60 @@ class AsramaController extends Controller
                     'status_aktivitas' => $params['status_aktivitas']
                 ]);
 
-                if(Yii::$app->user->identity->access_role == 'operatorCabang')
-                {
-                    $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+                if (Yii::$app->user->identity->access_role == 'operatorCabang') {
+                    $query->andWhere(['kampus' => Yii::$app->user->identity->kampus]);
                 }
-                
-                $query->orderBy(['semester'=>SORT_ASC,'nama_mahasiswa'=>SORT_ASC]);          
+
+                $query->orderBy(['semester' => SORT_ASC, 'nama_mahasiswa' => SORT_ASC]);
                 $results = $query->all();
-    
+
 
                 $spreadsheet = new Spreadsheet();
                 $sheet = $spreadsheet->getActiveSheet();
 
                 $sheet
-                ->setCellValue('A1', 'No')
-                ->setCellValue('B1', 'NIM')
-                ->setCellValue('C1', 'Nama Mahasiswa')
-                ->setCellValue('D1', 'JK')
-                ->setCellValue('E1', 'Semester')
-                ->setCellValue('F1', 'Asrama')
-                ->setCellValue('G1', 'Kamar');
+                    ->setCellValue('A1', 'No')
+                    ->setCellValue('B1', 'NIM')
+                    ->setCellValue('C1', 'Nama Mahasiswa')
+                    ->setCellValue('D1', 'JK')
+                    ->setCellValue('E1', 'Semester')
+                    ->setCellValue('F1', 'Asrama')
+                    ->setCellValue('G1', 'Kamar');
 
-                $i= 1;
+                $i = 1;
                 $ii = 2;
 
-                foreach($results as $row)
-                {
-                    $sheet->setCellValue('A'.$ii, $i);
-                    $sheet->setCellValue('B'.$ii, $row->nim_mhs);
-                    $sheet->setCellValue('C'.$ii, $row->nama_mahasiswa);
-                    $sheet->setCellValue('D'.$ii, $row->jenis_kelamin);
-                    $sheet->setCellValue('E'.$ii, $row->semester);
-                    $sheet->setCellValue('F'.$ii, !empty($row->kamar) ? $row->kamar->namaAsrama : 'not set');
-                    $sheet->setCellValue('G'.$ii, !empty($row->kamar) ? $row->kamar->nama : 'not set');
+                foreach ($results as $row) {
+                    $sheet->setCellValue('A' . $ii, $i);
+                    $sheet->setCellValue('B' . $ii, $row->nim_mhs);
+                    $sheet->setCellValue('C' . $ii, $row->nama_mahasiswa);
+                    $sheet->setCellValue('D' . $ii, $row->jenis_kelamin);
+                    $sheet->setCellValue('E' . $ii, $row->semester);
+                    $sheet->setCellValue('F' . $ii, !empty($row->kamar) ? $row->kamar->namaAsrama : 'not set');
+                    $sheet->setCellValue('G' . $ii, !empty($row->kamar) ? $row->kamar->nama : 'not set');
 
                     $i++;
                     $ii++;
-                }       
+                }
 
-                foreach(range('A','G') as $columnID) {
+                foreach (range('A', 'G') as $columnID) {
                     $sheet->getColumnDimension($columnID)
-                    ->setAutoSize(true);
+                        ->setAutoSize(true);
                 }
 
                 $sheet->setTitle('Rincian Penghuni Kamar');
 
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment;filename="Rincian_Penghuni_Kamar.xlsx"');              
+                header('Content-Disposition: attachment;filename="Rincian_Penghuni_Kamar.xlsx"');
                 header('Cache-Control: max-age=0');
                 $writer = new Xlsx($spreadsheet);
                 $writer->save('php://output');
-                die();   
+                die();
             }
-
         }
 
 
-        return $this->render('mahasiswa',[
+        return $this->render('mahasiswa', [
             'model' => $model,
             'results' => $results,
             'params' => $params,
@@ -447,24 +424,24 @@ class AsramaController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
-    {   
+    {
 
         $model = $this->findModel($id);
         $model->scenario = 'sce_upload_file';
         if (Yii::$app->request->isPost) {
             $uploadedFile = UploadedFile::getInstance($model, 'dataKamar');
-            $extension =$uploadedFile->extension;
-            if($extension=='xlsx'){
+            $extension = $uploadedFile->extension;
+            if ($extension == 'xlsx') {
                 $inputFileType = 'Xlsx';
-            }else{
+            } else {
                 $inputFileType = 'Xls';
             }
 
-            
-            $sheetname =$model->dataKamar;
+
+            $sheetname = $model->dataKamar;
             $inputFileName = $uploadedFile->tempName;
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
-/**  Create a new Reader of the type that has been identified  **/
+            /**  Create a new Reader of the type that has been identified  **/
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
             $reader->setLoadSheetsOnly($sheetname);
@@ -474,9 +451,8 @@ class AsramaController extends Controller
             $highestRow = $worksheet->getHighestRow();
             $highestColumn = $worksheet->getHighestColumn();
             $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-              
-            for ($row = 1; $row <= $highestRow; ++$row) 
-            { 
+
+            for ($row = 1; $row <= $highestRow; ++$row) {
                 $asrama_id = $worksheet->getCellByColumnAndRow(1, $row)->getValue();
                 $nama_kamar = $worksheet->getCellByColumnAndRow(2, $row)->getValue(); // 10 artinya kolom 10
                 $kapasitas = $worksheet->getCellByColumnAndRow(3, $row)->getValue();
@@ -486,21 +462,20 @@ class AsramaController extends Controller
                     'asrama_id' => $asrama_id
                 ])->one();
 
-                if(empty($kamar))
-                {
+                if (empty($kamar)) {
                     $kamar = new \app\models\Kamar;
                     $kamar->nama = (string)$nama_kamar;
                     $kamar->asrama_id = $id;
                 }
 
                 $kamar->kapasitas = $kapasitas;
-                if(!$kamar->save()){
-                    print_r($kamar->getErrors());exit;
+                if (!$kamar->save()) {
+                    print_r($kamar->getErrors());
+                    exit;
                 }
-
             }
             // return;
-            
+
         }
 
         return $this->render('view', [
