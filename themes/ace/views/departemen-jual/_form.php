@@ -3,11 +3,8 @@
 use yii\helpers\Html;
 
 use yii\widgets\ActiveForm;
-use kartik\depdrop\DepDrop;
-use kartik\date\DatePicker;
 
-use kartik\select2\Select2;
-use yii\web\JsExpression;
+use kartik\date\DatePicker;
 
 $listData=\app\models\Perusahaan::getListPerusahaans();
 $where = [];
