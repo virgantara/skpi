@@ -8,6 +8,7 @@ use yii\widgets\ActiveForm;
 use kartik\datetime\DateTimePicker;
 use kartik\date\DatePicker;
 use dosamigos\ckeditor\CKEditor;
+use kartik\select2\Select2;
 
 use app\models\Pelanggaran;
 use app\models\Hukuman;
@@ -17,7 +18,9 @@ $list_rekomendasi = MyHelper::listRekomendasi();
 /* @var $model app\models\RiwayatPelanggaran */
 /* @var $form yii\widgets\ActiveForm */
 
-
+$list_pelanggaran = ArrayHelper::map(Pelanggaran::find()->all(),'id',function($data){
+						return '['.$data->kategori->nama.'] '.$data->kode.' - '.$data->nama;
+					});
 ?>
 <?php $form = ActiveForm::begin([
 		'fieldConfig' => [
@@ -140,7 +143,7 @@ $list_rekomendasi = MyHelper::listRekomendasi();
 		        <h3>Data Pelanggaran</h3>
 		        <hr>
 				<div class="row">
-			   		<label class="col-sm-3 control-label no-padding-right">Status Kasus</label>
+			   		<label class="col-sm-3 control-label no-padding-right">Status Kasus *</label>
 					<div class="col-sm-9">
 					<?= $form->field($model,'status_kasus')->radioList(['0'=>'WAITING','1'=>'ON-PROCESS','2'=>'CLOSED'],['separator' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'])->label(false) ?>
 
@@ -148,16 +151,22 @@ $list_rekomendasi = MyHelper::listRekomendasi();
 					</div>
 				</div>
 		          	<div class="row">
-			   		<label class="col-sm-3 control-label no-padding-right">Pelanggaran</label>
+			   		<label class="col-sm-3 control-label no-padding-right">Pelanggaran *</label>
 					<div class="col-sm-9">
-					<?= $form->field($model,'pelanggaran_id')->dropDownList(ArrayHelper::map(Pelanggaran::find()->all(),'id',function($data){
-						return '['.$data->kategori->nama.'] '.$data->kode.' - '.$data->nama;
-					}),['class'=>'form-control'])->label(false) ?>
+					<?= $form->field($model, 'pelanggaran_id')->widget(Select2::classname(), [
+			            'data' => $list_pelanggaran,
+			            'options'=>['placeholder'=>Yii::t('app','- Pilih Pelanggaran -')],
+			            'pluginOptions' => [
+			                'allowClear' => true,
+			            ],
+			        ])->label(false) ?>
+
+					
 					<label class="error_diagnosis"></label>
 					</div>
 				</div>
 				<div class="row">
-			   		<label class="col-sm-3 control-label no-padding-right">Deskripsi Pelanggaran</label>
+			   		<label class="col-sm-3 control-label no-padding-right">Deskripsi Pelanggaran *</label>
 					<div class="col-sm-9">
 					 <?= $form->field($model, 'deskripsi')->widget(CKEditor::className(), [
 				        'options' => ['rows' => 6],
@@ -168,7 +177,7 @@ $list_rekomendasi = MyHelper::listRekomendasi();
 				</div>
 				
 				<div class="row">
-			   		<label class="col-sm-3 control-label no-padding-right">Tanggal Pelanggaran</label>
+			   		<label class="col-sm-3 control-label no-padding-right">Tanggal Pelanggaran *</label>
 					<div class="col-sm-9">
 						<?= $form->field($model, 'tanggal')->widget(DateTimePicker::classname(), [
 				            'options' => ['placeholder' => 'Input tanggal & jam pelanggaran ...'],
@@ -250,6 +259,12 @@ $list_rekomendasi = MyHelper::listRekomendasi();
 		   	<?php
 		   			$index++;
 		   		}	
+		   	}
+
+		   	else{
+		   	?>
+		   	<div class="row item-hukuman"></div>
+		   	<?php
 		   	}
 		   	?>
         	
