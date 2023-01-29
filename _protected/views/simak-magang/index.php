@@ -120,6 +120,36 @@ $list_lokasi_magang = ["1" => "Dalam Negeri","2" => "Luar Negeri"];
                     return $html;
                 }
             ],
+            [
+                'attribute' => 'file_sk_penerimaan_magang',
+                'format' => 'raw',
+                'value' => function($data){
+                    $html = '';
+                    if(!empty($data->file_sk_penerimaan_magang))
+                        $html .= Html::a('<i class="fa fa-download"></i> Unduh File',['download-sk-magang','id' => $data->id],['class' => 'btn btn-primary','target'=>'_blank','data-pjax'=>0,'style'=>'margin-bottom:3px']);
+                    else{
+                        $html .= '<span style="color:red">- Belum unggah</span>';
+                    }
+                    
+
+                    return $html;
+                }
+            ],
+            [
+                'attribute' => 'file_surat_tugas',
+                'format' => 'raw',
+                'value' => function($data){
+                    $html = '';
+                    if(!empty($data->file_surat_tugas))
+                        $html .= Html::a('<i class="fa fa-download"></i> Unduh File',['download-surat-tugas','id' => $data->id],['class' => 'btn btn-primary','target'=>'_blank','data-pjax'=>0,'style'=>'margin-bottom:3px']);
+                    else{
+                        $html .= '<span style="color:red">- Belum unggah</span>';
+                    }
+                    
+
+                    return $html;
+                }
+            ],
     [
         'class' => 'yii\grid\ActionColumn',
         'template' => '{view} ',
