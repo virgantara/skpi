@@ -20,6 +20,39 @@ class MenuHelper
 		        'url' => ['site/index']];
 		// }
 
+		$menuItems[] = [
+			'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> SIMKATMAWA </span><i class="caret"></i>', 
+			'url' => '#',
+			'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+			'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+			'items'=>[
+	           	
+	            [
+	                'label' => '<i class="menu-icon fa fa-caret-right"></i>MBKM <b class="arrow fa fa-angle-down"></b>',  
+	                'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+	                'url' => ['#'],
+	                 'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+	                'items' => [
+
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Pertukaran Pelajar'),'url' => '#'],
+	                     ['label' => ( '<i class="menu-icon fa fa-caret-right"></i>Magang'),'url' => ['simak-magang/index']],
+	                     
+	                ],
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Non Lomba',  
+	                'url' => ['/asrama/pindah'],	        
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Mandiri',  
+	                'url' => ['/asrama/pindah'],	        
+	            ],
+	            [
+	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Belmawa',  
+	                'url' => ['/asrama/pindah'],	        
+	            ],
+	        ]
+	    ];
 
 	    if (Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event') || Yii::$app->user->can('akpam'))
 	    {
