@@ -51,6 +51,50 @@ class SimakMagangController extends Controller
         ];
     }
 
+    public function actionDownloadSuratTugas($id)
+    {
+        $model = $this->findModel($id);
+        if(empty($model->file_surat_tugas)){
+            Yii::$app->session->setFlash('danger', 'Mohon maaf, file ini tidak ada');
+            return $this->redirect(['view','id'=>$id]);
+        }
+
+        $file = $model->file_surat_tugas;
+
+        $filename = 'Surat Tugas Magang '.$model->nim.'.pdf';
+
+        header('Content-type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Transfer-Encoding: binary');
+        header('Accept-Ranges: bytes');
+          
+        // Read the file
+        @readfile($file);
+        exit;
+    }
+
+    public function actionDownloadSkMagang($id)
+    {
+        $model = $this->findModel($id);
+        if(empty($model->file_sk_penerimaan_magang)){
+            Yii::$app->session->setFlash('danger', 'Mohon maaf, file ini tidak ada');
+            return $this->redirect(['view','id'=>$id]);
+        }
+
+        $file = $model->file_sk_penerimaan_magang;
+
+        $filename = 'SK Penerimaan Magang '.$model->nim.'.pdf';
+
+        header('Content-type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Transfer-Encoding: binary');
+        header('Accept-Ranges: bytes');
+          
+        // Read the file
+        @readfile($file);
+        exit;
+    }
+
     public function actionDownload($id)
     {
         $model = $this->findModel($id);
