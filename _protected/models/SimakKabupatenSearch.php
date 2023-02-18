@@ -61,7 +61,7 @@ class SimakKabupatenSearch extends SimakKabupaten
             'kode' => $this->kode,
             'id_provinsi' => $this->id_provinsi,
             'created_by' => $this->created_by,
-            'date_created' => $this->date_created,
+            // 'date_created' => $this->date_created,
             'updated_by' => $this->updated_by,
             'last_updated' => $this->last_updated,
         ]);

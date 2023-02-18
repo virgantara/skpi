@@ -36,7 +36,7 @@ class OrganisasiController extends Controller
                             'update','delete','create','index','ajax-sync'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator','admin','operatorCabang','akpam'],
+                        'roles' => ['theCreator','admin','operatorCabang','akpam', 'operatorUnit'],
                     ],
                     [
                         'actions' => [

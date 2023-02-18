@@ -60,10 +60,8 @@ $listAsrama = $query->all();
       <a data-toggle="tab" href="#akpam" aria-expanded="true">Akpam</a>
     </li>
     <?php 
-
-    if(!Yii::$app->user->isGuest){
+    if(!Yii::$app->user->isGuest && !Yii::$app->user->identity->access_role==='opertorUnit'){
      ?>
-    
     <li class="">
       <a data-toggle="tab" href="#dropdown14" aria-expanded="false">Pelanggaran Disiplin</a>
     </li>
