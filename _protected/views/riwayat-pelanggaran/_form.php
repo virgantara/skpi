@@ -263,11 +263,21 @@ $list_pelanggaran = ArrayHelper::map(Pelanggaran::find()->all(),'id',function($d
 
 		   	else{
 		   	?>
-		   	<div class="row item-hukuman"></div>
+		   	<!-- <div class="row item-hukuman">
+		   		
+		   	</div> -->
 		   	<?php
 		   	}
 		   	?>
-        	
+        	<div class="row item-hukuman">
+		   		<label class="col-sm-3 control-label no-padding-right">Hukuman <span class="tnumbering"><?=$index?></span></label>
+				<div class="col-sm-6">
+				<input name="tindakan[]" value=""  class="tindakan form-control" placeholder="Type a new item" />
+				<input name="tindakan_id[]" value=""  type="hidden"/>
+				<label class="error_diagnosis"></label>
+				</div>
+				<div class="col-sm-3"><a href="javascript:void(0)" class="btn btn-danger tremove"><i class="fa fa-trash"></i>&nbsp;Remove</a></div>
+			</div>
         	<h3>Rekomendasi</h3>
 			<hr>
 
@@ -398,7 +408,7 @@ function refreshNumbering(){
 
 $(document).on(\'click\',\'#btn-add-hukuman\', function(e) {
 
-	var row = \'	<div class="row item-hukuman">\';
+	var row = \'<div class="row item-hukuman">\';
 		row += \'<label class="col-sm-3 control-label no-padding-right">Hukuman <span class="tnumbering"></span></label>\';
 	row += \'<div class="col-sm-6">\';
 	row += \'<input name="tindakan[]" class="tindakan form-control" placeholder="Type a new item" />\';
@@ -409,7 +419,7 @@ $(document).on(\'click\',\'#btn-add-hukuman\', function(e) {
 	row += \'</div>\';  		      
 
 	$(".item-hukuman:last").after(row)
-	$(this).parent().parent().parent().append(row);
+	// $(this).parent().parent().append(row);
 	
 	refreshNumbering();
 	$(\'input.tindakan\').last().focus();
