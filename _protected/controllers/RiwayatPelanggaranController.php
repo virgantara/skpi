@@ -20,6 +20,7 @@ use yii\httpclient\Client;
 use app\models\RiwayatHukuman;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
+use yii\filters\AccessControl;
 
 /**
  * RiwayatPelanggaranController implements the CRUD actions for RiwayatPelanggaran model.
@@ -32,15 +33,33 @@ class RiwayatPelanggaranController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'denyCallback' => function ($rule, $action) {
+                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                },
+                'only' => ['update','index','view','delete','start','profil'],
+                'rules' => [
+                    
+                    [
+                        'actions' => [
+                            'update','index','view','start','delete','profil'
+                        ],
+                        'allow' => true,
+                        'roles' => ['theCreator','admin','operatorCabang','event','akpam'],
+                    ],
+                    
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
+                    'register' => ['post'],
                 ],
             ],
         ];
     }
-
     public function actionProfil($nim)
     {
         $model = new RiwayatPelanggaran;
@@ -281,6 +300,7 @@ class RiwayatPelanggaranController extends Controller
                 
 
                 $transaction->commit();
+                Yii::$app->session->setFlash("success","Data successfully saved");
                 return $this->redirect(['profil', 'nim' => $nim]);
             }
         } catch (\Exception $e) {
@@ -433,6 +453,7 @@ class RiwayatPelanggaranController extends Controller
                 
                 
                 Yii::$app->session->setFlash("success","Data successfully saved");
+
                 $transaction->commit();
                 return $this->redirect(['profil', 'nim' => $model->nim]);
             }
