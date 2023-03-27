@@ -54,6 +54,10 @@ class MenuHelper
 	        ]
 	    ];
 
+	    $menuItems[] = [
+		        'label' => '<i class="menu-icon fa fa-users"></i><span class="menu-text"> Kompetensi </span>', 
+		        'url' => ['simak-kegiatan-kompetensi/kartu-kompetensi']];
+
 	    if (Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('event') || Yii::$app->user->can('akpam'))
 	    {
 	        

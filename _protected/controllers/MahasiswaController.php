@@ -54,6 +54,66 @@ class MahasiswaController extends Controller
         ];
     }
 
+    public function actionAjaxCariMahasiswa() {
+
+        $q = $_GET['term'];
+        
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token'=>$client_token];
+
+        $prodi = !empty($_GET['prodi']) ? $_GET['prodi'] : null;
+        
+        $params = [
+            'key' => $q,
+            'kampus' => !empty($_GET['kampus']) ? $_GET['kampus'] : null,
+            'prodi' => $prodi,
+            'semester' => !empty($_GET['semester']) ? $_GET['semester'] : null,
+            'status' => !empty($_GET['status']) ? $_GET['status'] : null
+        ];
+        $response = $client->get('/m/cari', $params,$headers)->send();
+        
+        $out = [];
+
+        
+        if ($response->isOk) {
+            $result = $response->data['values'];
+            // print_r($result);exit;
+            if(!empty($result))
+            {
+                foreach ($result as $d) {
+                    $out[] = [
+                        'id' => $d['id'],
+                        'nim' => $d['nim_mhs'],
+                        'label'=> $d['nim_mhs'].' - '.$d['nama_mahasiswa'].' - '.$d['nama_prodi'].' - '.$d['nama_kampus'],
+                        'prodi' => $d['kode_prodi'],
+                        'nama_prodi' => $d['nama_prodi'],
+                        'kampus' => $d['kampus'],
+                        'nama_kampus' => $d['nama_kampus'],
+                        'semester' => $d['semester'],
+                        'kode_pd' => $d['kode_pd']
+
+                    ];
+                }
+            }
+
+            else
+            {
+                $out[] = [
+                    'id' => 0,
+                    'label'=> 'Data mahasiswa tidak ditemukan',
+
+                ];
+            }
+        }
+        
+
+        echo \yii\helpers\Json::encode($out);
+
+
+    }
+
     public function actionFoto($id){
         $model = SimakMastermahasiswa::findOne($id);
         if(!empty($model->foto_path)){
