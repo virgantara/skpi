@@ -75,4 +75,34 @@ class SimakIndukKegiatan extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SimakJenisKegiatan::className(), ['induk_id' => 'id']);
     }
+
+    public function getMaxKompetensi()
+    {
+        $query = SimakKompetensiRangeNilai::find()->select(['nilai_maksimal']);
+        $query->joinWith(['indukKompetensi as ik']);
+
+        $query->where([
+            'ik.induk_id' => $this->id,
+            'label' => 'Excellent'
+        ]);
+
+        $query->orderBy(['nilai_maksimal'=>SORT_DESC]);
+        $total = $query->sum('nilai_maksimal');
+        
+        
+        return $total;
+    }
+
+    public function getRangeNilai($value)
+    {
+        $query = SimakIndukRangeNilai::find();
+
+        $query->where([
+            'induk_id' => $this->id
+        ]);
+
+        $query->andWhere($value. ' >= nilai_minimal AND '.$value.' <= nilai_maksimal');
+
+        return $query->one();
+    }
 }
