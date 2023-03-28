@@ -48,12 +48,15 @@ $tahun_id = $tahun_akademik->tahun_id;
         <?= Html::textInput('nama_mahasiswa', !empty($mhs) ? $mhs->nama_mahasiswa : '', ['id' => 'nama_mahasiswa', 'class' => 'form-control', 'placeholder' => 'Ketik NIM atau Nama Mahasiswa']) ?>
         <?= Html::hiddenInput('nim', !empty($mhs) ? $mhs->nim_mhs : '', ['id' => 'nim']) ?>
       </div>
+      <div class="form-group">
+        <label class="control-label ">Verification Code</label>
       <?php echo $form->field($model, 'captcha')->widget(Captcha::className(), [
+          'options' => ['placeholder' => 'Please type above captcha',],
           'imageOptions' => [
               'id' => 'my-captcha-image'
           ]
       ])->label(FALSE); ?>
-    
+    </div>
     <div class="form-group clearfix">
       <button type="submit" class="btn btn-primary" name="btn-cari" value="1"><i class="fa fa-search"></i> Cari</button>
 
@@ -118,6 +121,7 @@ $tahun_id = $tahun_akademik->tahun_id;
 
       </div>
     </div>
+    <?=Html::a('* Rubrik Kompetensi',['simak-kegiatan-kompetensi/rubrik']);?>
   </div>
 </div>
 

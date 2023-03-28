@@ -50,6 +50,16 @@ class SimakKegiatanKompetensiController extends Controller
         ];
     }
 
+    public function actionRubrik()
+    {
+
+        
+
+        return $this->render('rubrik', [
+
+        ]);
+    }
+
     public function actionKartuKompetensi()
     {
         $model = new SimakKegiatanKompetensi;
