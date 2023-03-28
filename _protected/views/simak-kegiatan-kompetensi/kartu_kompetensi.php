@@ -48,13 +48,12 @@ $tahun_id = $tahun_akademik->tahun_id;
         <?= Html::textInput('nama_mahasiswa', !empty($mhs) ? $mhs->nama_mahasiswa : '', ['id' => 'nama_mahasiswa', 'class' => 'form-control', 'placeholder' => 'Ketik NIM atau Nama Mahasiswa']) ?>
         <?= Html::hiddenInput('nim', !empty($mhs) ? $mhs->nim_mhs : '', ['id' => 'nim']) ?>
       </div>
-
-    <?= $form->field($model, 'captcha')->widget(Captcha::className(), 
-            ['template' => '<div class="captcha_img">{image}</div>'
-                . '<a class="refreshcaptcha" href="#">'
-                . Html::img('/images/imageName.png',[]).'</a>'
-                . 'Verification Code{input}',
-            ])->label(FALSE); ?> 
+      <?php echo $form->field($model, 'captcha')->widget(Captcha::className(), [
+          'imageOptions' => [
+              'id' => 'my-captcha-image'
+          ]
+      ])->label(FALSE); ?>
+    
     <div class="form-group clearfix">
       <button type="submit" class="btn btn-primary" name="btn-cari" value="1"><i class="fa fa-search"></i> Cari</button>
 
@@ -85,7 +84,7 @@ $tahun_id = $tahun_akademik->tahun_id;
               <th>No</th>
 
               <th>Kompetensi</th>
-              <th> Nilai</th>
+              <th>Nilai Akhir</th>
               <th>Predikat</th>
 
             </tr>
@@ -127,7 +126,7 @@ $tahun_id = $tahun_akademik->tahun_id;
 
 $this->registerJs(' 
 
-
+$("#my-captcha-image").yiiCaptcha("refresh");
 
 $(document).bind("keyup.autocomplete",function(){
   $(\'#nama_mahasiswa\').autocomplete({

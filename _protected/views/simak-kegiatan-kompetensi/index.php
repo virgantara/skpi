@@ -12,6 +12,10 @@ use yii\grid\GridView;
 
 $this->title = 'Kegiatan Kompetensi';
 $this->params['breadcrumbs'][] = $this->title;
+
+$results = $hasil['results'][0];
+$predikat = $hasil['predikat'][$hasil['kpt_id']];
+
 ?>
 <div class="simak-kegiatan-kompetensi-index">
 
@@ -32,9 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php 
             $i = 0;
             $total = 0;
-            foreach($results[0] as $keg){
+
+            foreach($results as $keg){
                 // echo '<pre>';
-                // print_r($results);exit;
+                // print_r($keg);
+                // print_r();exit;
                 $keg = (object)$keg;
                 $is_approved = $keg->is_approved;
                 
@@ -60,8 +66,18 @@ $this->params['breadcrumbs'][] = $this->title;
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3" class="text-right">Total</td>
+                <td colspan="3" class="text-right">Total AKPAM</td>
                 <td><?=$total?></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right" style="font-size:1.5em">Total Nilai Kompetensi</td>
+                <td style="font-size:1.5em"><?=$predikat['nilai_akhir']?></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right" style="font-size:1.5em">Predikat</td>
+                <td ><span style="font-size:1.5em;height: 32px" class="label label-<?= $predikat['color']; ?>"><?= $predikat['label']; ?></span></td>
                 <td></td>
             </tr>
         </tfoot>
