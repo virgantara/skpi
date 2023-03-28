@@ -53,6 +53,7 @@ class SimakKegiatanKompetensiController extends Controller
     public function actionKartuKompetensi()
     {
         $model = new SimakKegiatanKompetensi;
+
         $listTahun = SimakTahunakademik::find()->orderBy(['tahun_id' => SORT_DESC])->all();
         
         $nim = '';
@@ -170,7 +171,7 @@ class SimakKegiatanKompetensiController extends Controller
             // 'list_kegiatan_mhs' => $list_kegiatan_mhs,
             // 'list_kompetensi' => $list_kompetensi,
             // 'listJenisKegiatan' => $listJenisKegiatan,
-            'results' => $results
+            'hasil' => $results
         ]);
     }
 
