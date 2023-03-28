@@ -10,12 +10,14 @@ use yii\grid\GridView;
 /** @var app\models\SimakKegiatanKompetensiSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Kegiatan Kompetensi';
+$this->title = 'Rincian Kegiatan Mahasiswa per Kompetensi';
 $this->params['breadcrumbs'][] = $this->title;
 
 $results = $hasil['results'][0];
 $predikat = $hasil['predikat'][$hasil['kpt_id']];
-
+//                 echo '<pre>';
+//                 print_r($predikat);
+// exit;
 ?>
 <div class="simak-kegiatan-kompetensi-index">
 
@@ -24,10 +26,12 @@ $predikat = $hasil['predikat'][$hasil['kpt_id']];
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th rowspan="2">No</th>
-                <th rowspan="2">Kategori</th>
-                <th rowspan="2">Nama Kegiatan</th>
-                <th rowspan="2">Nilai</th>
+                <th >No</th>
+                <th>Kompetensi</th>
+                <th >Kategori</th>
+                <th >Nama Kegiatan</th>
+                <th>Instansi</th>
+                <th >Nilai</th>
                 
             </tr>
             
@@ -38,9 +42,7 @@ $predikat = $hasil['predikat'][$hasil['kpt_id']];
             $total = 0;
 
             foreach($results as $keg){
-                // echo '<pre>';
-                // print_r($keg);
-                // print_r();exit;
+
                 $keg = (object)$keg;
                 $is_approved = $keg->is_approved;
                 
@@ -53,8 +55,10 @@ $predikat = $hasil['predikat'][$hasil['kpt_id']];
             
             <tr>
                 <td><?=$i+1?></td>
+                <td><?=$predikat['kompetensi']?></td>
                 <td><?=$keg->kategori?></td>
                 <td><?=$keg->tema?></td>
+                <td><?=$keg->instansi?></td>
                 <td><?=$keg->nilai?></td>
         
             </tr>
@@ -66,19 +70,17 @@ $predikat = $hasil['predikat'][$hasil['kpt_id']];
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3" class="text-right">Total AKPAM</td>
+                <td colspan="5" class="text-right">Total AKPAM</td>
                 <td><?=$total?></td>
-                <td></td>
+               
             </tr>
             <tr>
-                <td colspan="3" class="text-right" style="font-size:1.5em">Total Nilai Kompetensi</td>
-                <td style="font-size:1.5em"><?=$predikat['nilai_akhir']?></td>
-                <td></td>
+                <td colspan="6" class="text-center" style="font-size:1.5em">Total Nilai Kompetensi : <?=$predikat['nilai_akhir']?></td>
+                
             </tr>
             <tr>
-                <td colspan="3" class="text-right" style="font-size:1.5em">Predikat</td>
-                <td ><span style="font-size:1.5em;height: 32px" class="label label-<?= $predikat['color']; ?>"><?= $predikat['label']; ?></span></td>
-                <td></td>
+                <td colspan="6" class="text-center" style="font-size:1.5em;height: 32px">Predikat <span style="height: 32px;font-size: 100%" class="label label-<?= $predikat['color']; ?>"><?= $predikat['label']; ?></span></td>
+                
             </tr>
         </tfoot>
     </table>
