@@ -408,6 +408,7 @@ function refreshNumbering(){
 
 $(document).on(\'click\',\'#btn-add-hukuman\', function(e) {
 
+
 	var row = \'<div class="row item-hukuman">\';
 		row += \'<label class="col-sm-3 control-label no-padding-right">Hukuman <span class="tnumbering"></span></label>\';
 	row += \'<div class="col-sm-6">\';
@@ -443,7 +444,7 @@ $(document).bind("keyup.autocomplete",function(){
       },
       source:function(request, response) {
         $.ajax({
-                url: "'. Url::to(["api/get-hukuman"]).'",
+                url: "/api/get-hukuman",
                 dataType: "json",
                 data: {
                     term: request.term,
@@ -461,9 +462,12 @@ $(document).bind("keyup.autocomplete",function(){
 
 $(document).on(\'click\',\'a.tremove\',function(e){
 	e.preventDefault();
+	if ($(".item-hukuman").size() > 1){
+		
 	
-	$(this).parent().parent().remove();
-	refreshNumbering();
+		$(this).parent().parent().remove();
+		refreshNumbering();
+	}
 });
 
 $(document).on(\'click\',\'#btn-submit\',function(e){
