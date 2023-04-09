@@ -41,15 +41,15 @@ class MenuHelper
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Non Lomba',  
-	                'url' => ['/asrama/pindah'],	        
+	                'url' => '#',	        
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Mandiri',  
-	                'url' => ['/asrama/pindah'],	        
+	                'url' => '#',	        
 	            ],
 	            [
 	            	'label' => '<i class="menu-icon fa fa-caret-right"></i> Belmawa',  
-	                'url' => ['/asrama/pindah'],	        
+	                'url' => '#',	        
 	            ],
 	        ]
 	    ];
