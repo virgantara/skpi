@@ -24,7 +24,22 @@ $this->title = Yii::t('app', Yii::$app->name);
 				<div class="col-xs-12 col-sm-3 center">
 					<div>
 						<span class="profile-picture">
-							<img id="avatar" class="editable img-responsive" alt="Alex's Avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/profile-pic.jpg" />
+							 <?php 
+				            $foto_path = '';
+				            if(!empty($mahasiswa['foto_path'])){
+				                $foto_path = Url::to(['mahasiswa/foto','id'=>$mahasiswa['id']]);
+				                echo  Html::a(Html::img($foto_path,['width'=>'240px']),'',['class'=>'popupModal','loading'=>'lazy','data-pjax'=>0,'data-item'=>Url::to(['mahasiswa/foto','id'=>$mahasiswa['id']])]);
+				            }
+				                
+				            else{
+				                if($mahasiswa['jenis_kelamin'] == 'L')
+				                    $foto_path = $this->theme->baseUrl."/images/avatars/avatar4.png";
+				                else
+				                    $foto_path = $this->theme->baseUrl."/images/avatars/avatar3.png";
+				                echo '<img id="avatar" loading="lazy"  width="240px" class="editable img-responsive" alt="Alex\'s Avatar" src="'.$foto_path.'" />';
+				            }
+
+				             ?>
 						</span>
 
 						<div class="space-4"></div>
@@ -250,7 +265,7 @@ $this->title = Yii::t('app', Yii::$app->name);
 								<div id="profile-feed-1" class="profile-feed">
 									<div class="profile-activity clearfix">
 										<div>
-											<img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+											<img  loading="lazy" class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$foto_path?>" />
 											<a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
 											melakukan pelanggaran <?=$value->pelanggaran->kategori->nama;?>
 											yaitu <?=$value->pelanggaran->nama;?> pada tanggal <?=MyHelper::YmdtodmY($value->tanggal);?>
@@ -288,7 +303,7 @@ $this->title = Yii::t('app', Yii::$app->name);
 								<div id="profile-feed-1" class="profile-feed">
 									<div class="profile-activity clearfix">
 										<div>
-											<img class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$this->theme->baseUrl;?>/images/avatars/avatar5.png" />
+											<img loading="lazy" class="pull-left" alt="<?=$mahasiswa['nama_mahasiswa'];?>'s avatar" src="<?=$foto_path?>" />
 											<a class="user" href="#"><?=$mahasiswa['nama_mahasiswa'];?></a>
 											izin <?=$value->keperluan_id == '1' ? 'Pribadi' : 'Kampus';?>
 											yaitu <?=$value->alasan;?>. Berangkat tanggal <?=MyHelper::YmdtodmY($value->tanggal_berangkat,true);?> dan pulang tanggal <?=MyHelper::YmdtodmY($value->tanggal_pulang,true);?> 
@@ -335,10 +350,23 @@ $this->title = Yii::t('app', Yii::$app->name);
 		</div>
 	</div>
 </div>
+
+ <?php
+        yii\bootstrap\Modal::begin(['id' =>'modal','size'=>'modal-lg',]);
+        echo '<div class="text-center">';
+        echo '<img width="100%" id="img">';
+        echo '</div>';
+        yii\bootstrap\Modal::end();
+    ?>
 <?php
 
 $this->registerJs(' 
+	$(document).on("click",".popupModal",function(e){
+    e.preventDefault();
+    var m = $("#modal").modal("show").find("#img");
 
+    m.attr("src",$(this).data("item"))
+})
 	$("#btn-tambah-pelanggaran").on(ace.click_event, function() {
 		
 	});
