@@ -132,11 +132,12 @@ $list_pelanggaran = ArrayHelper::map(Pelanggaran::find()->all(),'id',function($d
 	  </div>
 	</div>
 </div>
+
 <div class="row">
 	<div class="col-sm-12 col-lg-6 col-md-6">
 	      <div class="widget-box widget-color-red">
 	        <div class="widget-header">
-	          <h4 class="widget-title lighter smaller">Data Hukuman</h4>
+	          <h4 class="widget-title lighter smaller">Violation</h4>
 	        </div>
 	        <div class="widget-body">
 	          	<div class="widget-main">
@@ -224,61 +225,22 @@ $list_pelanggaran = ArrayHelper::map(Pelanggaran::find()->all(),'id',function($d
 	<div class="col-sm-12 col-lg-6 col-md-6">
 		<div class="widget-box widget-color-red">
         <div class="widget-header">
-          <h4 class="widget-title lighter smaller">Data Rekomendasi</h4>
+          <h4 class="widget-title lighter smaller">Recommendation</h4>
         </div>
         <div class="widget-body">
         	<div class="widget-main">
-        	<h3>Hukuman</h3>
-        	<hr>
-			<div class="row">
-				<label class="col-sm-3"></label>
-				<div class="col-sm-9">
-					<a href="javascript:void(0)" id="btn-add-hukuman" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add Hukuman</a>
-					<div class="help-block"></div>
-				</div>
-			</div>
-		   	<?php
-		   	$index =1 ;
-
-		   	if(!$model->isNewRecord)
-		   	{
-		   		foreach($model->riwayatHukumen as $item)
-		   		{
-		   			
-		   	?>
-		   	
-		   	<div class="row item-hukuman">
-		   		<label class="col-sm-3 control-label no-padding-right">Hukuman <span class="tnumbering"><?=$index;?></span></label>
-				<div class="col-sm-6">
-				<input name="tindakan[]" value="<?=$item->hukuman->nama;?>"  class="tindakan form-control" placeholder="Type a new item" />
-				<input name="tindakan_id[]" value="<?=$item->hukuman_id;?>"  type="hidden"/>
-				<label class="error_diagnosis"></label>
-				</div>
-				<div class="col-sm-3"><a href="javascript:void(0)" class="btn btn-danger tremove"><i class="fa fa-trash"></i>&nbsp;Remove</a></div>
-			</div>
-		   	<?php
-		   			$index++;
-		   		}	
-		   	}
-
-		   	else{
-		   	?>
-		   	<!-- <div class="row item-hukuman">
-		   		
-		   	</div> -->
-		   	<?php
-		   	}
-		   	?>
-        	<div class="row item-hukuman">
-		   		<label class="col-sm-3 control-label no-padding-right">Hukuman <span class="tnumbering"><?=$index?></span></label>
-				<div class="col-sm-6">
-				<input name="tindakan[]" value=""  class="tindakan form-control" placeholder="Type a new item" />
-				<input name="tindakan_id[]" value=""  type="hidden"/>
-				<label class="error_diagnosis"></label>
-				</div>
-				<div class="col-sm-3"><a href="javascript:void(0)" class="btn btn-danger tremove"><i class="fa fa-trash"></i>&nbsp;Remove</a></div>
-			</div>
-        	<h3>Rekomendasi</h3>
+        	
+			<p>
+<div class="row">
+	<div class="col-md-12">
+		<div class="alert alert-danger">
+			<i class="fa fa-warning"></i>
+			Pengisian Hukuman pindah di menu Pelanggaran > Daftar Pelanggaran > Klik icon <i class="fa fa-pencil"></i> pensil.
+		</div>
+	</div>
+</div>
+</p>
+        	<h3>Recommendation</h3>
 			<hr>
 
 			<div class="row">

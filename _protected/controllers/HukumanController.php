@@ -29,6 +29,39 @@ class HukumanController extends Controller
         ];
     }
 
+    private function getHukumanList($id)
+    {
+        $list = Hukuman::find()->where(['kategori_id' => $id])->orderBy(['nama' => SORT_ASC])->all();
+        $result = [];
+        foreach ($list as $item) {
+            $result[] = [
+                'id' => $item->id,
+                'name' => $item->nama
+            ];
+        }
+
+        return $result;
+    }
+
+
+    public function actionList()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = [];
+        if (isset($_POST['depdrop_all_params'])) {
+         
+            $parents = $_POST['depdrop_all_params'];
+            if ($parents != null) {
+                $cat_id = !empty($parents['kategori_id']) ? $parents['kategori_id'] : '-';
+                $out = self::getHukumanList($cat_id);
+                return ['output' => $out, 'selected' => $cat_id];
+                exit;
+            }
+        }
+        return ['output' => '', 'selected' => ''];
+        exit;
+    }
+
     /**
      * Lists all Hukuman models.
      * @return mixed
