@@ -287,16 +287,16 @@ class RiwayatPelanggaranController extends Controller
                 $model->tanggal = \app\helpers\MyHelper::dmYtoYmd($model->tanggal);
                 $model->save();
 
-                foreach($_POST['tindakan_id'] as $item)
-                {
-                    if(empty($item)) continue;
+                // foreach($_POST['tindakan_id'] as $item)
+                // {
+                //     if(empty($item)) continue;
 
-                    $rh = new RiwayatHukuman;
-                    $rh->pelanggaran_id = $model->id;
-                    $rh->hukuman_id = $item;
-                    $rh->save();
+                //     $rh = new RiwayatHukuman;
+                //     $rh->pelanggaran_id = $model->id;
+                //     $rh->hukuman_id = $item;
+                //     $rh->save();
 
-                }
+                // }
                 
 
                 $transaction->commit();
@@ -440,16 +440,16 @@ class RiwayatPelanggaranController extends Controller
                     $value->delete();
                 }     
                 
-                foreach($_POST['tindakan_id'] as $item)
-                {
-                    if(empty($item)) continue;
+                // foreach($_POST['tindakan_id'] as $item)
+                // {
+                //     if(empty($item)) continue;
 
-                    $rh = new RiwayatHukuman;
-                    $rh->pelanggaran_id = $model->id;
-                    $rh->hukuman_id = $item;
-                    $rh->save();
+                //     $rh = new RiwayatHukuman;
+                //     $rh->pelanggaran_id = $model->id;
+                //     $rh->hukuman_id = $item;
+                //     $rh->save();
 
-                }
+                // }
                 
                 
                 Yii::$app->session->setFlash("success","Data successfully saved");
