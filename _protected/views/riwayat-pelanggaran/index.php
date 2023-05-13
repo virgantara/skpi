@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             if(!empty($data->nim0->foto_path)){
                 // // return Html::img(Url::to(['simak-mastermahasiswa/foto','id'=>$data->id]),['width'=>'70px']);
                 // return Html::a(Html::img($data->foto_path,['width'=>'70px']),'',['class'=>'popupModal','data-pjax'=>0,'data-item'=>$data->foto_path]);
-                return Html::a(Html::img(Url::to(['mahasiswa/foto','id'=>$data->nim0->id]),['width'=>'70px']),'',['class'=>'popupModal','data-pjax'=>0,'data-item'=>Url::to(['mahasiswa/foto','id'=>$data->nim0->id])]);
+                return Html::a(Html::img(Url::to(['mahasiswa/foto','id'=>$data->nim0->id]),['width'=>'70px']),'',['class'=>'popupModal','data-pjax'=>0,'loading'=>'lazy','data-item'=>Url::to(['mahasiswa/foto','id'=>$data->nim0->id])]);
             }
                 
             else
