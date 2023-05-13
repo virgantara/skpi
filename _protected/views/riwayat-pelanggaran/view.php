@@ -67,34 +67,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                     &nbsp;
                                     <span class="white"><?=$mahasiswa->nama_mahasiswa;?></span>
                                 </a>
-
-                                <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
-                                    <li class="dropdown-header"> Change Status </li>
-
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-circle green"></i>
-&nbsp;
-                                            <span class="green">Available</span>
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-circle red"></i>
-&nbsp;
-                                            <span class="red">Busy</span>
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-circle grey"></i>
-&nbsp;
-                                            <span class="grey">Invisible</span>
-                                        </a>
-                                    </li>
-                                </ul>
                             </div>
                         </div>
                     </div>
@@ -126,7 +98,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <div class="hr hr12 dotted"></div>
 
-                   
+                    <a href="<?=Url::to(['riwayat-hukuman/index','pelanggaran_id'=>$model->id]);?>" class="btn btn-link" >
+                                <i class="ace-icon fa fa-list bigger-120 red"></i>
+                                Riwayat Hukuman
+                            </a>
 
                     <div class="hr hr16 dotted"></div>
                 </div>

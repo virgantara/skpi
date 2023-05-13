@@ -3,7 +3,6 @@ use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use kartik\depdrop\DepDrop;
 
 use yii\jui\AutoComplete;
 use yii\web\JsExpression;
