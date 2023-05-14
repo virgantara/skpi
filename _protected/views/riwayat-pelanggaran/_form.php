@@ -231,6 +231,7 @@ $list_pelanggaran = ArrayHelper::map(Pelanggaran::find()->all(),'id',function($d
         <div class="widget-body">
         	<div class="widget-main">
         	<?= $form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);?>
+        	<?= $form->errorSummary($mahasiswa,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);?><?= $form->errorSummary($kabupaten,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);?>
 			<p>
 <div class="row">
 	<div class="col-md-12">
