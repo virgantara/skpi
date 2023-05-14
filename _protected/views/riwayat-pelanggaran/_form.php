@@ -143,6 +143,7 @@ $list_pelanggaran = ArrayHelper::map(Pelanggaran::find()->all(),'id',function($d
 	          	<div class="widget-main">
 		        <h3>Data Pelanggaran</h3>
 		        <hr>
+		            
 				<div class="row">
 			   		<label class="col-sm-3 control-label no-padding-right">Status Kasus *</label>
 					<div class="col-sm-9">
@@ -229,7 +230,7 @@ $list_pelanggaran = ArrayHelper::map(Pelanggaran::find()->all(),'id',function($d
         </div>
         <div class="widget-body">
         	<div class="widget-main">
-        	
+        	<?= $form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);?>
 			<p>
 <div class="row">
 	<div class="col-md-12">
