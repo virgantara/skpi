@@ -23,11 +23,11 @@ $list_pelanggaran = ArrayHelper::map(Pelanggaran::find()->all(),'id',function($d
 					});
 ?>
 <?php $form = ActiveForm::begin([
-		'fieldConfig' => [
-	        'options' => [
-	            'tag' => false,
-	        ],
-	    ],
+		// 'fieldConfig' => [
+	    //     'options' => [
+	    //         'tag' => false,
+	    //     ],
+	    // ],
     	'options' => [
     		'enctype' => 'multipart/form-data',
     		'class' => 'form-horizontal',
@@ -434,22 +434,22 @@ $(document).on(\'click\',\'a.tremove\',function(e){
 	}
 });
 
-$(document).on(\'click\',\'#btn-submit\',function(e){
-	e.preventDefault();
-	Swal.fire({
-		title: \'Do you want to save this?\',
-		text: "You won\'t be able to revert this!",
-		icon: \'warning\',
-		showCancelButton: true,
-		confirmButtonColor: \'#3085d6\',
-		cancelButtonColor: \'#d33\',
-		confirmButtonText: \'Yes, save now!\'
-	}).then((result) => {
-		if(result.isConfirmed)
-			$("#form-pelanggaran").submit()
-	})
+// $(document).on(\'click\',\'#btn-submit\',function(e){
+// 	e.preventDefault();
+// 	Swal.fire({
+// 		title: \'Do you want to save this?\',
+// 		text: "You won\'t be able to revert this!",
+// 		icon: \'warning\',
+// 		showCancelButton: true,
+// 		confirmButtonColor: \'#3085d6\',
+// 		cancelButtonColor: \'#d33\',
+// 		confirmButtonText: \'Yes, save now!\'
+// 	}).then((result) => {
+// 		if(result.isConfirmed)
+// 			$("#form-pelanggaran").submit()
+// 	})
 	
-});
+// });
 
     ', \yii\web\View::POS_READY);
 
