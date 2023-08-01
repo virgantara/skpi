@@ -37,20 +37,42 @@ class MenuHelper
 					'items' => [
 
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pertukaran Pelajar'), 'url' => '#'],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Magang'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Magang/Praktik Kerja'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Mengajar disekolah'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Penelitian/Riset'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Kemanusiaan'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Desa'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Wirausaha/Proyek Independen'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pengabdian Mahasiswa Kepada Masyarakat'), 'url' => ['simak-magang/index']],
 
 					],
 				],
 				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Non Lomba',
-					'url' => '#',
+					'label' => '<i class="menu-icon fa fa-caret-right"></i>Non Lomba <b class="arrow fa fa-angle-down"></b>',
+					'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+					'url' => ['#'],
+					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+					'items' => [
+
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pembinaan Mental Kebangsaan'), 'url' => '#'],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Kegiatan Mandiri'), 'url' => ['simak-magang/index']],
+
+					],
 				],
 				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Mandiri',
-					'url' => '#',
+					'label' => '<i class="menu-icon fa fa-caret-right"></i>Mandiri <b class="arrow fa fa-angle-down"></b>',
+					'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+					'url' => ['#'],
+					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+					'items' => [
+
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Rekognisi'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Kegiatan Mandiri'), 'url' => ['simak-magang/index']],
+
+					],
 				],
 				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Belmawa',
+					'label' => '<i class="menu-icon fa fa-caret-right"></i> Kegiatan Belmawa',
 					'url' => '#',
 				],
 			]
