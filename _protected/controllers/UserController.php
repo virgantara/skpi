@@ -1,6 +1,8 @@
 <?php
+
 namespace app\controllers;
 
+use app\models\SimakMasterprogramstudi;
 use app\models\User;
 use app\models\UserSearch;
 use yii\web\NotFoundHttpException;
@@ -27,12 +29,12 @@ class UserController extends AppController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                         'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'prodi'],
                         'allow' => true,
                         'roles' => ['theCreator'],
                     ],
@@ -70,27 +72,21 @@ class UserController extends AppController
             $model = User::findOne($id);
 
             // store a default json response as desired by editable
-            $out = json_encode(['output'=>'', 'message'=>'']);
+            $out = json_encode(['output' => '', 'message' => '']);
 
-            
+
             $posted = current($_POST['User']);
             $post = ['User' => $posted];
 
             // load model like any single model validation
             if ($model->load($post)) {
-            // can save model or do something before saving model
-                if($model->save())
-                {
-                    $out = json_encode(['output'=>'', 'message'=>'']);
-                }
-
-                else
-                {
+                // can save model or do something before saving model
+                if ($model->save()) {
+                    $out = json_encode(['output' => '', 'message' => '']);
+                } else {
                     $error = \app\helpers\MyHelper::logError($model);
-                    $out = json_encode(['output'=>'', 'message'=>'Oops, '.$error]);   
+                    $out = json_encode(['output' => '', 'message' => 'Oops, ' . $error]);
                 }
-
-                
             }
             // return ajax json encoded response and exit
             echo $out;
@@ -102,6 +98,8 @@ class UserController extends AppController
             'dataProvider' => $dataProvider,
         ]);
     }
+
+
 
     /**
      * Displays a single User model.
@@ -145,7 +143,7 @@ class UserController extends AppController
             Yii::$app->session->setFlash('error', Yii::t('app', 'There was some error while saving user role.'));
         }
 
-       
+
 
         return $this->redirect('index');
     }
@@ -169,7 +167,7 @@ class UserController extends AppController
         // get user role if he has one  
         if ($roles = $auth->getRolesByUser($id)) {
             // it's enough for us the get first assigned role name
-            $role = array_keys($roles)[0]; 
+            $role = array_keys($roles)[0];
         }
 
         // if user has role, set oldRole to that role name, else offer 'member' as sensitive default
@@ -190,8 +188,8 @@ class UserController extends AppController
         // if admin is activating user manually we want to remove account activation token
         if ($user->status == User::STATUS_ACTIVE && $user->account_activation_token != null) {
             $user->removeAccountActivationToken();
-        }         
-        
+        }
+
         $user->access_role = $user->item_name;
         if (!$user->save()) {
             return $this->render('update', ['user' => $user, 'role' => $user->item_name]);
@@ -201,7 +199,7 @@ class UserController extends AppController
         $newRole = $auth->getRole($user->item_name);
         // get user id too
         $userId = $user->getId();
-        
+
         // we have to revoke the old role first and then assign the new one
         // this will happen if user actually had something to revoke
         if ($auth->revoke($oldRole, $userId)) {
@@ -242,7 +240,7 @@ class UserController extends AppController
         // get user role if he has one  
         if ($roles = $auth->getRolesByUser($id)) {
             // it's enough for us the get first assigned role name
-            $role = array_keys($roles)[0]; 
+            $role = array_keys($roles)[0];
         }
 
         // remove role if user had it
@@ -256,7 +254,7 @@ class UserController extends AppController
         }
 
         Yii::$app->session->setFlash('success', Yii::t('app', 'You have successfuly deleted user and his role.'));
-        
+
         return $this->redirect(['index']);
     }
 
@@ -275,7 +273,7 @@ class UserController extends AppController
 
         if (is_null($model)) {
             throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-        } 
+        }
 
         return $model;
     }
