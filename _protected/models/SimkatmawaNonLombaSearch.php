@@ -44,7 +44,7 @@ class SimkatmawaNonLombaSearch extends SimkatmawaNonLomba
         $query = SimkatmawaNonLomba::find();
 
         // add conditions that should always apply here
-        if (Yii::$app->user->identity->access_role == "operatorUnit"){
+        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == "operatorUnit") {
             $query->andWhere(['user_id' => Yii::$app->user->identity->id]);
         }
 
