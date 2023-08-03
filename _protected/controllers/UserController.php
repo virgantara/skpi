@@ -104,7 +104,10 @@ class UserController extends AppController
     {
 
         $listProdi = SimakMasterprogramstudi::find()->all();
-        $listUser = User::find()->where(['access_role' => 'operatorUnit'])->all();
+        $listUser = User::find()
+            ->where(['access_role' => 'operatorUnit'])
+            ->andWhere(['like', 'username', 'prodi'])
+            ->all();
 
         return $this->render('prodi', [
             'listProdi' => $listProdi,

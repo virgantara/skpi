@@ -36,7 +36,7 @@ class MenuHelper
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pertukaran Pelajar'), 'url' => '#'],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pertukaran Pelajar'), 'url' => ['mbkm/pertukaran-pelajar']],
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Magang/Praktik Kerja'), 'url' => ['simak-magang/index']],
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Mengajar disekolah'), 'url' => ['simak-magang/index']],
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Penelitian/Riset'), 'url' => ['simak-magang/index']],
@@ -54,8 +54,7 @@ class MenuHelper
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pembinaan Mental Kebangsaan'), 'url' => '#'],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Kegiatan Mandiri'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pembinaan Mental Kebangsaan'), 'url' => ['simkatmawa-non-lomba/pembinaan-mental-kebangsaan']],
 
 					],
 				],
@@ -66,7 +65,7 @@ class MenuHelper
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Rekognisi'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Rekognisi'), 'url' => ['simkatmawa-mandiri/rekognisi']],
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Kegiatan Mandiri'), 'url' => ['simak-magang/index']],
 
 					],
@@ -74,6 +73,18 @@ class MenuHelper
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Kegiatan Belmawa',
 					'url' => '#',
+				],
+				[
+					'label' => '<i class="menu-icon fa fa-cog"></i>Master <b class="arrow fa fa-angle-down"></b>',
+					'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+					'visible' => Yii::$app->user->can('theCreator'),
+					'url' => ['#'],
+					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+					'items' => [
+
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori kegiatan pembinaan mental kebangsaan'), 'url' => ['simkatmawa-kegiatan/index']],
+
+					],
 				],
 			]
 		];
