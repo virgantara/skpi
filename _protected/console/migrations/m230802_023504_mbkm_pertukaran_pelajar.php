@@ -14,6 +14,12 @@ class m230802_023504_mbkm_pertukaran_pelajar extends Migration
 
     public function safeUp()
     {
+        $this->createTable('{{%user_prodi}}', [
+            'id' => $this->primaryKey(),
+            'user_id' => $this->integer(),
+            'prodi_id' => $this->integer(),
+        ]);
+
         $this->createTable('{{%simkatmawa_mbkm}}', [
             'id' => $this->primaryKey(),
             'nim' => $this->string(25)->notNull(),
@@ -47,6 +53,7 @@ class m230802_023504_mbkm_pertukaran_pelajar extends Migration
 
         $this->createTable('{{%simkatmawa_non_lomba}}', [
             'id' => $this->primaryKey(),
+            'user_id' => $this->integer(),
             'nama_kegiatan' => $this->string(255)->notNull(),
             'simkatmawa_kegiatan_id' => $this->integer(), // master
             'tanggal_mulai' => $this->date()->null()->defaultValue(null),
@@ -94,8 +101,12 @@ class m230802_023504_mbkm_pertukaran_pelajar extends Migration
             'updated_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP')->append('ON UPDATE CURRENT_TIMESTAMP'),
         ]);
 
+        // Add foreign key for 'user_prodi' table
+        $this->addForeignKey('fk-user_prodi-user_id', '{{%user_prodi}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
+        
         // Add foreign key for 'simkatmawa_non_lomba' table
         $this->addForeignKey('fk-simkatmawa_non_lomba-simkatmawa_kegiatan_id', '{{%simkatmawa_non_lomba}}', 'simkatmawa_kegiatan_id', '{{%simkatmawa_kegiatan}}', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk-simkatmawa_non_lomba-user_id', '{{%simkatmawa_non_lomba}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
 
         // Add foreign key for 'simkatmawa_mandiri' table
         $this->addForeignKey('fk-simkatmawa_mandiri-simkatmawa_rekognisi_id', '{{%simkatmawa_mandiri}}', 'simkatmawa_rekognisi_id', '{{%simkatmawa_rekognisi}}', 'id', 'CASCADE', 'CASCADE');
@@ -104,8 +115,12 @@ class m230802_023504_mbkm_pertukaran_pelajar extends Migration
     public function safeDown()
     {
 
+        // Drop foreign key for 'user_prodi' table
+        $this->dropForeignKey('fk-user_prodi-user_id', '{{%user_prodi}}');
+
         // Drop foreign key for 'simkatmawa_non_lomba' table
         $this->dropForeignKey('fk-simkatmawa_non_lomba-simkatmawa_kegiatan_id', '{{%simkatmawa_non_lomba}}');
+        $this->dropForeignKey('fk-simkatmawa_non_lomba-user_id', '{{%simkatmawa_non_lomba}}');
 
         // Drop foreign key for 'simkatmawa_mandiri' table
         $this->dropForeignKey('fk-simkatmawa_mandiri-simkatmawa_rekognisi_id', '{{%simkatmawa_mandiri}}');
@@ -120,5 +135,6 @@ class m230802_023504_mbkm_pertukaran_pelajar extends Migration
         $this->dropTable('{{%simkatmawa_kegiatan}}');
         $this->dropTable('{{%simkatmawa_non_lomba}}');
         $this->dropTable('{{%simkatmawa_mbkm}}');
+        $this->dropTable('{{%user_prodi}}');
     }
 }

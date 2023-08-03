@@ -100,20 +100,6 @@ class UserController extends AppController
     }
 
 
-    public function actionProdi()
-    {
-
-        $listProdi = SimakMasterprogramstudi::find()->all();
-        $listUser = User::find()
-            ->where(['access_role' => 'operatorUnit'])
-            ->andWhere(['like', 'username', 'prodi'])
-            ->all();
-
-        return $this->render('prodi', [
-            'listProdi' => $listProdi,
-            'listUser' => $listUser,
-        ]);
-    }
 
     /**
      * Displays a single User model.

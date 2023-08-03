@@ -695,7 +695,7 @@ class MenuHelper
 
 			$menuItems[] = ['label' => '<i class="menu-icon fa fa-users"></i><span class="menu-text"> Users </span>', 'url' => ['/user/index']];
 
-			$menuItems[] = ['label' => '<i class="menu-icon fa fa-cog"></i><span class="menu-text"> Prodi </span>', 'url' => ['/user/prodi']];
+			$menuItems[] = ['label' => '<i class="menu-icon fa fa-cog"></i><span class="menu-text"> Prodi </span>', 'url' => ['/user-prodi/index']];
 		}
 		$menuItems[] = [
 			'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Auth </span><i class="caret"></i>',
