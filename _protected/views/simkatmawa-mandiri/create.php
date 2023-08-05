@@ -6,7 +6,8 @@ use yii\helpers\Html;
 /** @var app\models\SimkatmawaMandiri $model */
 
 $this->title = 'Create Simkatmawa Mandiri';
-$this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Mandiris', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Mandiri', 'url' => [$form]];
+$this->params['breadcrumbs'][] = ['label' => ucwords($form), 'url' => [$form]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="simkatmawa-mandiri-create">
@@ -14,9 +15,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php
-    switch ($id) {
-        case 0:
-            echo $this->render('_form_rekognisi', [
+    switch ($form) {
+        case 'rekognisi':
+            echo $this->render('rekognisi_form', [
                 'model' => $model,
             ]);
             break;

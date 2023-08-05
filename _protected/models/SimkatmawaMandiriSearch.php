@@ -17,8 +17,8 @@ class SimkatmawaMandiriSearch extends SimkatmawaMandiri
     public function rules()
     {
         return [
-            [['id', 'simkatmawa_rekognisi_id', 'level', 'apresiasi'], 'integer'],
-            [['nim', 'nama_kegiatan', 'penyelenggara', 'tempat_pelaksanaan', 'url_kegiatan', 'tanggal_mulai', 'tanggal_selesai', 'sertifikat_path', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path', 'surat_tugas_path', 'laporan_path', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'user_id', 'simkatmawa_rekognisi_id', 'level', 'apresiasi'], 'integer'],
+            [['jenis_simkatmawa', 'nama_kegiatan', 'penyelenggara', 'tempat_pelaksanaan', 'url_kegiatan', 'tanggal_mulai', 'tanggal_selesai', 'sertifikat_path', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path', 'surat_tugas_path', 'laporan_path', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -38,11 +38,12 @@ class SimkatmawaMandiriSearch extends SimkatmawaMandiri
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $jenisSimkatmawa)
     {
         $query = SimkatmawaMandiri::find();
 
         // add conditions that should always apply here
+        $query->andWhere(['jenis_simkatmawa' => $jenisSimkatmawa]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -59,6 +60,7 @@ class SimkatmawaMandiriSearch extends SimkatmawaMandiri
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'simkatmawa_rekognisi_id' => $this->simkatmawa_rekognisi_id,
             'level' => $this->level,
             'apresiasi' => $this->apresiasi,
@@ -68,7 +70,7 @@ class SimkatmawaMandiriSearch extends SimkatmawaMandiri
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'nim', $this->nim])
+        $query->andFilterWhere(['like', 'jenis_simkatmawa', $this->jenis_simkatmawa])
             ->andFilterWhere(['like', 'nama_kegiatan', $this->nama_kegiatan])
             ->andFilterWhere(['like', 'penyelenggara', $this->penyelenggara])
             ->andFilterWhere(['like', 'tempat_pelaksanaan', $this->tempat_pelaksanaan])

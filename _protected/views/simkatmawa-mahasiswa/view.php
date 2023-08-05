@@ -4,14 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var app\models\SimkatmawaMandiri $model */
+/** @var app\models\SimkatmawaMahasiswa $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Mandiris', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Mahasiswas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="simkatmawa-mandiri-view">
+<div class="simkatmawa-mahasiswa-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -30,24 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'user_id',
-            'nama_kegiatan',
-            'penyelenggara',
-            'tempat_pelaksanaan',
-            'simkatmawa_rekognisi_id',
-            'level',
-            'apresiasi',
-            'url_kegiatan:url',
-            'tanggal_mulai',
-            'tanggal_selesai',
-            'sertifikat_path',
-            'foto_penyerahan_path',
-            'foto_kegiatan_path',
-            'foto_karya_path',
-            'surat_tugas_path',
-            'laporan_path',
-            'created_at',
-            'updated_at',
+            'simkatmawa_mandiri_id',
+            'nim',
         ],
     ]) ?>
 

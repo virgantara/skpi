@@ -32,17 +32,17 @@ class MahasiswaController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['update','index','view','konsulat','konsulat-wni'],
+                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni'],
                 'rules' => [
-                    
+
                     [
                         'actions' => [
-                            'update','index','view','konsulat','konsulat-wni'
+                            'update', 'index', 'view', 'konsulat', 'konsulat-wni'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator','admin','operatorCabang'],
+                        'roles' => ['theCreator', 'admin', 'operatorCabang'],
                     ],
-                    
+
                 ],
             ],
             'verbs' => [
@@ -54,17 +54,18 @@ class MahasiswaController extends Controller
         ];
     }
 
-    public function actionAjaxCariMahasiswa() {
+    public function actionAjaxCariMahasiswa()
+    {
 
         $q = $_GET['term'];
-        
+
         $api_baseurl = Yii::$app->params['api_baseurl'];
         $client = new Client(['baseUrl' => $api_baseurl]);
         $client_token = Yii::$app->params['client_token'];
-        $headers = ['x-access-token'=>$client_token];
+        $headers = ['x-access-token' => $client_token];
 
         $prodi = !empty($_GET['prodi']) ? $_GET['prodi'] : null;
-        
+
         $params = [
             'key' => $q,
             'kampus' => !empty($_GET['kampus']) ? $_GET['kampus'] : null,
@@ -72,21 +73,20 @@ class MahasiswaController extends Controller
             'semester' => !empty($_GET['semester']) ? $_GET['semester'] : null,
             'status' => !empty($_GET['status']) ? $_GET['status'] : null
         ];
-        $response = $client->get('/m/cari', $params,$headers)->send();
-        
+        $response = $client->get('/m/cari', $params, $headers)->send();
+
         $out = [];
 
-        
+
         if ($response->isOk) {
             $result = $response->data['values'];
             // print_r($result);exit;
-            if(!empty($result))
-            {
+            if (!empty($result)) {
                 foreach ($result as $d) {
                     $out[] = [
                         'id' => $d['id'],
                         'nim' => $d['nim_mhs'],
-                        'label'=> $d['nim_mhs'].' - '.$d['nama_mahasiswa'].' - '.$d['nama_prodi'].' - '.$d['nama_kampus'],
+                        'label' => $d['nim_mhs'] . ' - ' . $d['nama_mahasiswa'] . ' - ' . $d['nama_prodi'] . ' - ' . $d['nama_kampus'],
                         'prodi' => $d['kode_prodi'],
                         'nama_prodi' => $d['nama_prodi'],
                         'kampus' => $d['kampus'],
@@ -96,51 +96,88 @@ class MahasiswaController extends Controller
 
                     ];
                 }
-            }
-
-            else
-            {
+            } else {
                 $out[] = [
                     'id' => 0,
-                    'label'=> 'Data mahasiswa tidak ditemukan',
+                    'label' => 'Data mahasiswa tidak ditemukan',
 
                 ];
             }
         }
-        
+
 
         echo \yii\helpers\Json::encode($out);
-
-
     }
 
-    public function actionFoto($id){
+    public function actionAjaxCariMahasiswaByNim()
+    {
+
+        $q = $_GET['term'];
+
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token' => $client_token];
+
+        $params = [
+            'nim' => $q,
+        ];
+        $response = $client->get('/m/profil/nim', $params, $headers)->send();
+
+        $out = [];
+
+
+        if ($response->isOk) {
+            $result = $response->data['values'];
+            // print_r($result);exit;
+            if (!empty($result)) {
+                foreach ($result as $d) {
+                    $out[] = [
+                        'id' => $d['id'],
+                        'nim' => $d['nim_mhs'],
+                        'nama_mahasiswa' => $d['nama_mahasiswa'],
+                        'label' => $d['nim_mhs'] . ' - ' . $d['nama_mahasiswa'] . ' - ' . $d['nama_prodi'] . ' - ' . $d['nama_kampus'],
+                        'items' => $d
+                    ];
+                }
+            } else {
+                $out[] = [
+                    'id' => 0,
+                    'label' => 'Data mahasiswa tidak ditemukan',
+
+                ];
+            }
+        }
+
+
+        echo \yii\helpers\Json::encode($out);
+    }
+
+    public function actionFoto($id)
+    {
         $model = SimakMastermahasiswa::findOne($id);
-        if(!empty($model->foto_path)){
-            try{
+        if (!empty($model->foto_path)) {
+            try {
                 $image = imagecreatefromstring($this->getImage($model->foto_path));
 
                 header('Content-Type: image/png');
                 imagepng($image);
+            } catch (\Exception $e) {
             }
-
-            catch(\Exception $e){
-                   
-            }
-                
         }
-        
+
 
         die();
     }
 
-    function getImage($url){
-        $ch = curl_init ($url);
+    function getImage($url)
+    {
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
         $resource = curl_exec($ch);
-        curl_close ($ch);
+        curl_close($ch);
 
         return $resource;
     }
@@ -149,37 +186,31 @@ class MahasiswaController extends Controller
     {
         $model = new SimakMastermahasiswa;
         $results = [];
-        
+
         if (!empty($_GET['SimakMastermahasiswa']['kabupaten']) && !empty($_GET['SimakMastermahasiswa']['status_aktivitas'])) {
-            
+
             $results = SimakMastermahasiswa::find()->where([
                 'kabupaten' => $_GET['SimakMastermahasiswa']['kabupaten'],
                 'status_aktivitas' => $_GET['SimakMastermahasiswa']['status_aktivitas'],
                 'status_warga' => 'WNI'
-            ])->all();          
-            
+            ])->all();
         }
-        
-        if(!empty($_POST['btn-update-all']))
-        {
+
+        if (!empty($_POST['btn-update-all'])) {
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction();
             $errors = '';
             $hasil = [];
-            
-            try 
-            {
+
+            try {
 
 
-                foreach($_POST['nim'] as $q => $nim)
-                {
+                foreach ($_POST['nim'] as $q => $nim) {
                     $mhs = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
                     $konsul = !empty($_POST['konsulat'][$q]) ? $_POST['konsulat'][$q] : null;
-                    if(!empty($mhs))
-                    {
+                    if (!empty($mhs)) {
                         $mhs->konsulat = $konsul;
-                        if(!$mhs->save())
-                        {
+                        if (!$mhs->save()) {
                             $errors .= \app\helpers\MyHelper::logError($mhs);
                             throw new \Exception;
                         }
@@ -189,44 +220,37 @@ class MahasiswaController extends Controller
                 $transaction->commit();
 
                 return $this->redirect(['konsulat-wni']);
-                    
-                
-            } 
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 $transaction->rollBack();
                 $errors .= $e->getMessage();
                 Yii::$app->session->setFlash('danger', $errors);
-                
-            } 
-            catch (\Throwable $e) {
+            } catch (\Throwable $e) {
                 $transaction->rollBack();
                 $errors .= $e->getMessage();
                 Yii::$app->session->setFlash('danger', $errors);
             }
         }
-        return $this->render('konsulat_wni',[
+        return $this->render('konsulat_wni', [
             'model' => $model,
             'results' => $results,
         ]);
+    }
 
-        
-    } 
 
-    
 
     public function actionKonsulatRekap()
     {
         $query = new \yii\db\Query();
-        $results = $query->select(['konsulat', 'c.name','c.latitude','c.longitude', 'count(*) as total'])
-        ->from('simak_mastermahasiswa m')
-        ->innerJoin('cities c', 'm.konsulat = c.id')
-        ->groupBy(['m.konsulat', 'c.name','c.latitude','c.longitude'])
-        ->orderBy('total DESC')
-        // ->limit(10)
-        ->all();
+        $results = $query->select(['konsulat', 'c.name', 'c.latitude', 'c.longitude', 'count(*) as total'])
+            ->from('simak_mastermahasiswa m')
+            ->innerJoin('cities c', 'm.konsulat = c.id')
+            ->groupBy(['m.konsulat', 'c.name', 'c.latitude', 'c.longitude'])
+            ->orderBy('total DESC')
+            // ->limit(10)
+            ->all();
 
-        return $this->render('konsulat_rekap',[
-            'results' => $results 
+        return $this->render('konsulat_rekap', [
+            'results' => $results
         ]);
     }
 
@@ -238,56 +262,45 @@ class MahasiswaController extends Controller
         if (!empty($dataku['nim'])) {
             if (!empty($dataku['city'])) {
                 $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
-                
-                if(empty($data->konsulat))
-                {
+
+                if (empty($data->konsulat)) {
                     $data->konsulat = $city;
-                    $data->save(false,['konsulat']);
-                
+                    $data->save(false, ['konsulat']);
+
                     $results = [
                         'code' => 200,
                         'msg' => "Berhasil",
-                        
-                    ];
-                }
 
-                else if($city == $data->konsulat)
-                {
+                    ];
+                } else if ($city == $data->konsulat) {
                     $results = [
                         'code' => 500,
                         'msg' => "Oops, mahasiswa ini sudah di konsulat ini",
-                        
-                    ];
-                }
 
-                else
-                {
+                    ];
+                } else {
                     $results = [
                         'code' => 500,
                         'msg' => "Oops, mahasiswa ini sudah ada di konsulat lain",
-                        
+
                     ];
                 }
-
-            }
-            else{
+            } else {
                 $results = [
                     'code' => 500,
                     'msg' => "Konsulat kosong, Isi terlebih dahulu",
-                    
-                ];
 
+                ];
             }
-        }
-        else {
+        } else {
             $results = [
-                    'code' => 500,
-                    'msg' => "NIM kosong, Isi terlebih dahulu",
-                    
-                ];
+                'code' => 500,
+                'msg' => "NIM kosong, Isi terlebih dahulu",
+
+            ];
         }
 
-         echo json_encode($results);
+        echo json_encode($results);
         die();
     }
 
@@ -298,18 +311,17 @@ class MahasiswaController extends Controller
         if (!empty($dataku['nim'])) {
             $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
             $data->konsulat = null;
-            $data->save(false,['konsulat']);
+            $data->save(false, ['konsulat']);
             $results = [
                 'code' => 200,
                 'msg' => "Berhasil",
-                
+
             ];
-        }
-        else {
+        } else {
             $results = [
                 'code' => 500,
                 'msg' => "NIM kosong, Isi terlebih dahulu",
-                
+
             ];
         }
 
@@ -317,27 +329,26 @@ class MahasiswaController extends Controller
         die();
     }
 
-    
+
 
     public function actionKonsulat()
     {
         $model = new SimakMastermahasiswa;
         $results = [];
-        
+
         if (!empty($_GET['SimakMastermahasiswa']['konsulat'])) {
-            
+
             $results = SimakMastermahasiswa::find()->where([
                 'konsulat' => $_GET['SimakMastermahasiswa']['konsulat'],
-            ])->all();          
-            
+            ])->all();
         }
 
         // print_r($_GET['SimakMastermahasiswa']['konsulat']);exit;
-        return $this->render('konsulat',[
+        return $this->render('konsulat', [
             'model' => $model,
             'results' => $results,
         ]);
-    } 
+    }
 
     /**
      * Lists all SimakMastermahasiswa models.
@@ -347,11 +358,11 @@ class MahasiswaController extends Controller
     {
         $searchModel = new MahasiswaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $listKampus = ArrayHelper::map(\app\models\SimakKampus::find()->all(),'kode_kampus','nama_kampus');
-        $prodis = ArrayHelper::map(\app\models\SimakMasterprogramstudi::find()->all(),'kode_prodi','nama_prodi');
-        $fakultas = ArrayHelper::map(\app\models\SimakMasterfakultas::find()->all(),'kode_fakultas','nama_fakultas');
+        $listKampus = ArrayHelper::map(\app\models\SimakKampus::find()->all(), 'kode_kampus', 'nama_kampus');
+        $prodis = ArrayHelper::map(\app\models\SimakMasterprogramstudi::find()->all(), 'kode_prodi', 'nama_prodi');
+        $fakultas = ArrayHelper::map(\app\models\SimakMasterfakultas::find()->all(), 'kode_fakultas', 'nama_fakultas');
 
-        $status_aktif = ArrayHelper::map(\app\models\SimakPilihan::find()->where(['kode'=>'05'])->all(),'value','label');
+        $status_aktif = ArrayHelper::map(\app\models\SimakPilihan::find()->where(['kode' => '05'])->all(), 'value', 'label');
 
         if (Yii::$app->request->post('hasEditable')) {
             // instantiate your book model for saving
@@ -359,27 +370,21 @@ class MahasiswaController extends Controller
             $model = SimakMastermahasiswa::findOne($id);
 
             // store a default json response as desired by editable
-            $out = json_encode(['output'=>'', 'message'=>'']);
+            $out = json_encode(['output' => '', 'message' => '']);
 
-            
+
             $posted = current($_POST['SimakMastermahasiswa']);
             $post = ['SimakMastermahasiswa' => $posted];
 
             // load model like any single model validation
             if ($model->load($post)) {
-            // can save model or do something before saving model
-                if($model->save())
-                {
-                    $out = json_encode(['output'=>'', 'message'=>'']);
-                }
-
-                else
-                {
+                // can save model or do something before saving model
+                if ($model->save()) {
+                    $out = json_encode(['output' => '', 'message' => '']);
+                } else {
                     $error = \app\helpers\MyHelper::logError($model);
-                    $out = json_encode(['output'=>'', 'message'=>'Oops, '.$error]);   
+                    $out = json_encode(['output' => '', 'message' => 'Oops, ' . $error]);
                 }
-
-                
             }
             // return ajax json encoded response and exit
             echo $out;
@@ -406,50 +411,47 @@ class MahasiswaController extends Controller
     {
         $model = $this->findModel($id);
         $query = RiwayatPelanggaran::find()->where([
-            'nim'=> $model->nim_mhs
+            'nim' => $model->nim_mhs
         ]);
 
-        $query->orderBy(['created_at'=>SORT_DESC]);
+        $query->orderBy(['created_at' => SORT_DESC]);
 
         $riwayat = $query->all();
 
         $query = RiwayatKamar::find()->where([
-            'nim'=> $model->nim_mhs
+            'nim' => $model->nim_mhs
         ]);
 
         $querykrs = new \yii\db\Query();
-        $querykrsmhs = $querykrs->select(['c.label as tahun','SUM(a.sks) as jumlah','SUM(a.sks * b.angka) as nilai', 'SUM(a.sks * b.angka) / SUM(a.sks) as ip'])
-                ->from('simak_datakrs a')
-                ->innerJoin('simak_konversi b', 'a.nilai_huruf = b.huruf')
-                ->innerJoin('simak_pilihan c', 'a.tahun_akademik = c.value')
-                ->where(['a.mahasiswa' => $model->nim_mhs])
-                ->andWhere(['!=', 'a.nilai_huruf', "NULL" ])
-                ->andWhere(['>', 'a.sks', '0'])
-                ->groupBy(['c.label'])
-                ->orderBy('c.label ASC')
-                ->all();
+        $querykrsmhs = $querykrs->select(['c.label as tahun', 'SUM(a.sks) as jumlah', 'SUM(a.sks * b.angka) as nilai', 'SUM(a.sks * b.angka) / SUM(a.sks) as ip'])
+            ->from('simak_datakrs a')
+            ->innerJoin('simak_konversi b', 'a.nilai_huruf = b.huruf')
+            ->innerJoin('simak_pilihan c', 'a.tahun_akademik = c.value')
+            ->where(['a.mahasiswa' => $model->nim_mhs])
+            ->andWhere(['!=', 'a.nilai_huruf', "NULL"])
+            ->andWhere(['>', 'a.sks', '0'])
+            ->groupBy(['c.label'])
+            ->orderBy('c.label ASC')
+            ->all();
 
-        $query->orderBy(['created_at'=>SORT_DESC]);
+        $query->orderBy(['created_at' => SORT_DESC]);
 
         $riwayatKamar = $query->all();
 
         $api_baseurl = Yii::$app->params['api_baseurl'];
         $client = new Client(['baseUrl' => $api_baseurl]);
         $client_token = Yii::$app->params['client_token'];
-        $headers = ['x-access-token'=>$client_token];
-        $response = $client->get('/b/tagihan/mahasiswa', ['nim' => $model->nim_mhs],$headers)->send();
-        
+        $headers = ['x-access-token' => $client_token];
+        $response = $client->get('/b/tagihan/mahasiswa', ['nim' => $model->nim_mhs], $headers)->send();
+
         $riwayatPembayaran = [];
-       
+
         if ($response->isOk) {
             $result = $response->data['values'];
             // print_r($result);exit;
-            if(!empty($result))
-            {
+            if (!empty($result)) {
                 $riwayatPembayaran = $result;
             }
-
-          
         }
 
         return $this->render('view', [
@@ -493,16 +495,16 @@ class MahasiswaController extends Controller
         // $states = \app\models\States::find()->all();
 
         if ($model->load(Yii::$app->request->post())) {
-            if(!$model->save())
-            {
-                print_r($model->getErrors());exit;
+            if (!$model->save()) {
+                print_r($model->getErrors());
+                exit;
             }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
-            
+
         ]);
     }
 

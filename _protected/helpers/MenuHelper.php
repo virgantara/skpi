@@ -83,6 +83,7 @@ class MenuHelper
 					'items' => [
 
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori kegiatan pembinaan mental kebangsaan'), 'url' => ['simkatmawa-kegiatan/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori rekognisi'), 'url' => ['simkatmawa-rekognisi/index']],
 
 					],
 				],
