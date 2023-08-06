@@ -10,7 +10,7 @@ use yii\grid\ActionColumn;
 /** @var app\models\SimkatmawaMandiriSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Rekognisi';
+$this->title = 'Kegiatan Mandiri';
 $this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Mandiri', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
     if (!Yii::$app->user->isGuest) :
     ?>
         <p>
-            <?= Html::a('<i class="fa fa-plus"></i> Input Kegiatan', ['create-rekognisi'], ['class' => 'btn btn-sm btn-success']) ?>
+            <?= Html::a('<i class="fa fa-plus"></i> Input Kegiatan', ['create-kegiatan-mandiri'], ['class' => 'btn btn-sm btn-success']) ?>
         </p>
     <?php
     endif;

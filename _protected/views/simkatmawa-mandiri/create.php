@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 $this->title = 'Create Simkatmawa Mandiri';
 $this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Mandiri', 'url' => [$form]];
-$this->params['breadcrumbs'][] = ['label' => ucwords($form), 'url' => [$form]];
+$this->params['breadcrumbs'][] = ['label' => ucwords(str_replace('-', ' ', $form)), 'url' => [$form]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="simkatmawa-mandiri-create">
@@ -22,8 +22,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ]);
             break;
 
-        case 1:
-            echo $this->render('_form_kegiatan_mandiri', [
+        case 'kegiatan-mandiri':
+            echo $this->render('kegiatan_mandiri_form', [
                 'model' => $model,
             ]);
             break;

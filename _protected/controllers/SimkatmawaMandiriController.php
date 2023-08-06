@@ -42,12 +42,30 @@ class SimkatmawaMandiriController extends Controller
      * @return string
      */
 
+    public function actionIndex()
+    {
+        return $this->render('index', [
+            // 'model' => $this->findModel($id),
+        ]);
+    }
+
     public function actionRekognisi()
     {
         $searchModel = new SimkatmawaMandiriSearch();
         $dataProvider = $searchModel->search($this->request->queryParams, 'rekognisi');
 
         return $this->render('rekognisi', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionKegiatanMandiri()
+    {
+        $searchModel = new SimkatmawaMandiriSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'kegiatan-mandiri');
+
+        return $this->render('kegiatan_mandiri', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -63,6 +81,14 @@ class SimkatmawaMandiriController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+        ]);
+    }
+
+    public function actionDetailMahasiswa($id)
+    {
+        return $this->render('detail-mahasiswa', [
+            'model' => $this->findModel($id),
+            'dataMahasiswa' => SimkatmawaMahasiswa::findAll(['simkatmawa_mandiri_id' => $id])
         ]);
     }
 
@@ -92,6 +118,100 @@ class SimkatmawaMandiriController extends Controller
             'model' => $model,
             'form' => "rekognisi"
         ]);
+    }
+
+
+    public function actionCreateKegiatanMandiri()
+    {
+        $model = new SimkatmawaMandiri();
+
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost, 'kegiatan-mandiri');
+
+            if ($insert->id) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['kegiatan-mandiri']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['kegiatan-mandiri']);
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'form' => "kegiatan-mandiri"
+        ]);
+    }
+
+    public function actionDownload($id, $file)
+    {
+        $model = SimkatmawaMandiri::findOne($id);
+        $file_path = $model->$file;
+        $file = file_get_contents($file_path);
+        $nama = basename($file_path);
+        $parts = explode('-', $nama);
+        $jenisData = $parts[0];
+        $curdate = date('d-m-y');
+        $filename = $jenisData . '-' . $model->nama_kegiatan . '-' .  $curdate;
+        header('Content-type: application/pdf');
+        header('Content-Disposition: inline; filename="' . $filename . '"');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: ' . strlen($file));
+        header('Accept-Ranges: bytes');
+        echo $file;
+        exit;
+    }
+
+    /**
+     * Updates an existing SimkatmawaMandiri model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param int $id ID
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Deletes an existing SimkatmawaMandiri model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param int $id ID
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDelete($id, $jenisSimkatmawa)
+    {
+        if ($this->findModel($id)->delete() && SimkatmawaMahasiswa::deleteAll(['simkatmawa_mandiri_id' => $id])) {
+        }
+        Yii::$app->session->setFlash('success', "Data Berhasil Dihapus");
+        return $this->redirect([$jenisSimkatmawa]);
+    }
+
+    /**
+     * Finds the SimkatmawaMandiri model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param int $id ID
+     * @return SimkatmawaMandiri the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = SimkatmawaMandiri::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 
     protected function insertSimkatmawa($dataPost, $jenisSimkatmawa, $dataMhs = null)
@@ -231,75 +351,5 @@ class SimkatmawaMandiriController extends Controller
         }
 
         die();
-    }
-
-
-    public function actionDownload($id, $file)
-    {
-        $model = SimkatmawaMandiri::findOne($id);
-        $file_path = $model->$file;
-        $file = file_get_contents($file_path);
-        $nama = basename($file_path);
-        $parts = explode('-', $nama);
-        $jenisData = $parts[0];
-        $curdate = date('d-m-y');
-        $filename = $jenisData . '-' . $model->nama_kegiatan . '-' .  $curdate;
-        header('Content-type: application/pdf');
-        header('Content-Disposition: inline; filename="' . $filename . '"');
-        header('Content-Transfer-Encoding: binary');
-        header('Content-Length: ' . strlen($file));
-        header('Accept-Ranges: bytes');
-        echo $file;
-        exit;
-    }
-
-    /**
-     * Updates an existing SimkatmawaMandiri model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Deletes an existing SimkatmawaMandiri model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the SimkatmawaMandiri model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return SimkatmawaMandiri the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = SimkatmawaMandiri::findOne(['id' => $id])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

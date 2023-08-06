@@ -38,12 +38,14 @@ class SimkatmawaMandiriSearch extends SimkatmawaMandiri
      *
      * @return ActiveDataProvider
      */
+
     public function search($params, $jenisSimkatmawa)
     {
         $query = SimkatmawaMandiri::find();
 
         // add conditions that should always apply here
         $query->andWhere(['jenis_simkatmawa' => $jenisSimkatmawa]);
+        $query->orderBy(['id' => SORT_DESC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

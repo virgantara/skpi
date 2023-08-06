@@ -59,14 +59,14 @@ class MenuHelper
 					],
 				],
 				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i>Mandiri <b class="arrow fa fa-angle-down"></b>',
+					'label' => '<i class="menu-icon fa fa-caret-right {url}"></i>Mandiri  <b class="arrow fa fa-angle-down"></b>',
+					'url' => ['simkatmawa-mandiri/index'],
 					'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-					'url' => ['#'],
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Rekognisi'), 'url' => ['simkatmawa-mandiri/rekognisi']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Kegiatan Mandiri'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Kegiatan Mandiri'), 'url' => ['simkatmawa-mandiri/kegiatan-mandiri']],
 
 					],
 				],
