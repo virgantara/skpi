@@ -17,7 +17,7 @@ class SimkatmawaMahasiswaSearch extends SimkatmawaMahasiswa
     public function rules()
     {
         return [
-            [['id', 'simkatmawa_mandiri_id'], 'integer'],
+            [['id', 'simkatmawa_mandiri_id', 'simkatmawa_mbkm_id'], 'integer'],
             [['nim'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class SimkatmawaMahasiswaSearch extends SimkatmawaMahasiswa
         $query->andFilterWhere([
             'id' => $this->id,
             'simkatmawa_mandiri_id' => $this->simkatmawa_mandiri_id,
+            'simkatmawa_mbkm_id' => $this->simkatmawa_mbkm_id,
         ]);
 
         $query->andFilterWhere(['like', 'nim', $this->nim]);

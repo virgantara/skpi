@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Mbkm;
+use app\models\SimkatmawaMbkm;
 
 /**
- * MbkmSearch represents the model behind the search form of `app\models\Mbkm`.
+ * SimkatmawaMbkmSearch represents the model behind the search form of `app\models\SimkatmawaMbkm`.
  */
-class MbkmSearch extends Mbkm
+class SimkatmawaMbkmSearch extends SimkatmawaMbkm
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,8 @@ class MbkmSearch extends Mbkm
     public function rules()
     {
         return [
-            [['id', 'mbkm_jenis_id', 'level', 'apresiasi', 'status_sks', 'hasil_jenis', 'rekognisi_id', 'kategori_pembinaan_id', 'kategori_belmawa_id'], 'integer'],
-            [['nim', 'nama_program', 'tempat_pelaksanaan', 'tanggal_mulai', 'tanggal_selesai', 'penyelenggara', 'sk_penerimaan_path', 'surat_tugas_path', 'rekomendasi_path', 'khs_pt_path', 'sertifikat_path', 'laporan_path', 'hasil_path', 'url_berita', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'user_id', 'level', 'status_sks', 'hasil_jenis', 'rekognisi_id', 'kategori_pembinaan_id', 'kategori_belmawa_id'], 'integer'],
+            [['jenis_simkatmawa', 'nama_program', 'tempat_pelaksanaan', 'tanggal_mulai', 'tanggal_selesai', 'penyelenggara', 'judul_penelitian', 'sk_penerimaan_path', 'surat_tugas_path', 'rekomendasi_path', 'khs_pt_path', 'sertifikat_path', 'laporan_path', 'hasil_path', 'url_berita', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -40,7 +40,7 @@ class MbkmSearch extends Mbkm
      */
     public function search($params)
     {
-        $query = Mbkm::find();
+        $query = SimkatmawaMbkm::find();
 
         // add conditions that should always apply here
 
@@ -59,11 +59,10 @@ class MbkmSearch extends Mbkm
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'mbkm_jenis_id' => $this->mbkm_jenis_id,
+            'user_id' => $this->user_id,
             'tanggal_mulai' => $this->tanggal_mulai,
             'tanggal_selesai' => $this->tanggal_selesai,
             'level' => $this->level,
-            'apresiasi' => $this->apresiasi,
             'status_sks' => $this->status_sks,
             'hasil_jenis' => $this->hasil_jenis,
             'rekognisi_id' => $this->rekognisi_id,
@@ -73,10 +72,11 @@ class MbkmSearch extends Mbkm
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'nim', $this->nim])
+        $query->andFilterWhere(['like', 'jenis_simkatmawa', $this->jenis_simkatmawa])
             ->andFilterWhere(['like', 'nama_program', $this->nama_program])
             ->andFilterWhere(['like', 'tempat_pelaksanaan', $this->tempat_pelaksanaan])
             ->andFilterWhere(['like', 'penyelenggara', $this->penyelenggara])
+            ->andFilterWhere(['like', 'judul_penelitian', $this->judul_penelitian])
             ->andFilterWhere(['like', 'sk_penerimaan_path', $this->sk_penerimaan_path])
             ->andFilterWhere(['like', 'surat_tugas_path', $this->surat_tugas_path])
             ->andFilterWhere(['like', 'rekomendasi_path', $this->rekomendasi_path])

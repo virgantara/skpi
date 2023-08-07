@@ -36,14 +36,15 @@ class MenuHelper
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pertukaran Pelajar'), 'url' => ['mbkm/pertukaran-pelajar']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Magang/Praktik Kerja'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Mengajar disekolah'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Penelitian/Riset'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Kemanusiaan'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Desa'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Wirausaha/Proyek Independen'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pengabdian Mahasiswa Kepada Masyarakat'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pertukaran Pelajar'), 'url' => ['simkatmawa-mbkm/pertukaran-pelajar']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Magang / Praktik Kerja'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Mengajar di Sekolah'), 'url' => ['simkatmawa-mbkm/mengajar-di-sekolah']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Penelitian / Riset'), 'url' => ['simkatmawa-mbkm/penelitian']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Kemanusiaan'), 'url' => ['simkatmawa-mbkm/proyek-kemanusiaan']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Desa'), 'url' => ['simkatmawa-mbkm/proyek-desa']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Wirausaha'), 'url' => ['simkatmawa-mbkm/wirausaha']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Studi / Proyek Independen'), 'url' => ['simkatmawa-mbkm/studi']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pengabdian Mahasiswa Kepada Masyarakat'), 'url' => ['simkatmawa-mbkm/pengabdian-masyarakat']],
 
 					],
 				],

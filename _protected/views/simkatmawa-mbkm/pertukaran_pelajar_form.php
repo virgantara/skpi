@@ -1,37 +1,35 @@
 <?php
 
 use app\helpers\MyHelper;
-use app\models\SimkatmawaRekognisi;
 use kartik\date\DatePicker;
 use kartik\select2\Select2;
 use richardfan\widget\JSRegister;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var app\models\SimkatmawaMandiri $model */
+/** @var app\models\SimkatmawaMbkm $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="simkatmawa-mandiri-form">
+<div class="simkatmawa-mbkm-form">
     <div class="row">
         <div class="col-sm-12">
 
             <div class="widget-box widget-color-blue2">
                 <div class="widget-header">
-                    <h4 class="widget-title lighter smaller">Rekognisi</h4>
+                    <h4 class="widget-title lighter smaller">Pertukaran Pelajar</h4>
                 </div>
                 <div class="widget-body">
                     <div class="widget-main">
 
                         <?php $form = ActiveForm::begin(); ?>
 
-                        <?= $form->field($model, 'nama_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama kegiatan"]) ?>
-
-                        <?= $form->field($model, 'penyelenggara')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama penyelenggara"]) ?>
+                        <?= $form->field($model, 'nama_program')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama kegiatan"]) ?>
 
                         <?= $form->field($model, 'tempat_pelaksanaan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan tempat kegiatan"]) ?>
+
+                        <?= $form->field($model, 'penyelenggara')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama penyelenggara"]) ?>
 
                         <?= $form->field($model, 'tanggal_mulai')->widget(DatePicker::classname(), [
                             'options' => ['placeholder' => 'Input tanggal mulai ...', 'autocomplete' => 'off'],
@@ -52,36 +50,37 @@ use yii\widgets\ActiveForm;
                         ?>
 
                         <?= $form->field($model, 'level')->widget(Select2::classname(), [
-                            'data' => MyHelper::listSimkatmawaLevel()[0],
+                            'data' => MyHelper::listSimkatmawaLevel()[1],
                             'options' => ['placeholder' => Yii::t('app', '- Pilih Level -')],
                             'pluginOptions' => [
                                 'allowClear' => true,
                             ],
                         ]) ?>
 
-                        <?= $form->field($model, 'apresiasi')->widget(Select2::classname(), [
-                            'data' => MyHelper::listSimkatmawaApresiasi(),
-                            'options' => ['placeholder' => Yii::t('app', '- Pilih Apresiasi -')],
+                        <?= $form->field($model, 'status_sks')->widget(Select2::classname(), [
+                            'data' => MyHelper::listStatusSks(),
+                            'options' => ['placeholder' => Yii::t('app', '- Pilih Status SKS -')],
                             'pluginOptions' => [
                                 'allowClear' => true,
                             ],
                         ]) ?>
 
-                        <?= $form->field($model, 'sertifikat_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Sertifikat Apresiasi') ?>
+                        <?= $form->field($model, 'sk_penerimaan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('SK Penerimaan Pertukaran Pelajar') ?>
                         <small>File: pdf Max size: 5 MB</small>
 
-                        <?= $form->field($model, 'foto_kegiatan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Dokumentasi Piala/Medali') ?>
+                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Tugas / Surat Izin dari Fakultas') ?>
                         <small>File: pdf Max size: 5 MB</small>
 
-                        <?= $form->field($model, 'url_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan url kegiatan"]) ?>
-
-                        <?= $form->field($model, 'foto_penyerahan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'rekomendasi_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Rekomendasi dari PT Asal') ?>
                         <small>File: pdf Max size: 5 MB</small>
 
-                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'khs_pt_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('KHS dari PT Penerima') ?>
                         <small>File: pdf Max size: 5 MB</small>
 
-                        <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'sertifikat_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Sertifikat Pertukaran Pelajar') ?>
+                        <small>File: pdf Max size: 5 MB</small>
+
+                        <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Laporan Akademik Pelaksanakan Kegiatan') ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <div class="widget-box widget-color-blue2">

@@ -3,9 +3,8 @@
 namespace app\controllers;
 
 use app\models\SimkatmawaMahasiswa;
-use app\models\SimkatmawaMandiri;
-use app\models\SimkatmawaMandiriSearch;
-use app\models\SimkatmawaRekognisi;
+use app\models\SimkatmawaMbkm;
+use app\models\SimkatmawaMbkmSearch;
 use DateTime;
 use Yii;
 use yii\web\Controller;
@@ -14,9 +13,9 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 
 /**
- * SimkatmawaMandiriController implements the CRUD actions for SimkatmawaMandiri model.
+ * SimkatmawaMbkmController implements the CRUD actions for SimkatmawaMbkm model.
  */
-class SimkatmawaMandiriController extends Controller
+class SimkatmawaMbkmController extends Controller
 {
     /**
      * @inheritDoc
@@ -37,42 +36,56 @@ class SimkatmawaMandiriController extends Controller
     }
 
     /**
-     * Lists all SimkatmawaMandiri models.
+     * Lists all SimkatmawaMbkm models.
      *
      * @return string
      */
-
     public function actionIndex()
     {
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
         return $this->render('index', [
-            // 'model' => $this->findModel($id),
-        ]);
-    }
-
-    public function actionRekognisi()
-    {
-        $searchModel = new SimkatmawaMandiriSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams, 'rekognisi');
-
-        return $this->render('rekognisi', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
-    public function actionKegiatanMandiri()
+    public function actionPertukaranPelajar()
     {
-        $searchModel = new SimkatmawaMandiriSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams, 'kegiatan-mandiri');
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'pertukaran-pelajar');
 
-        return $this->render('kegiatan_mandiri', [
+        return $this->render('pertukaran_pelajar', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionMengajarDiSekolah()
+    {
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'mengajar-di-sekolah');
+
+        return $this->render('mengajar_di_sekolah', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionPenelitian()
+    {
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'penelitian');
+
+        return $this->render('penelitian', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * Displays a single SimkatmawaMandiri model.
+     * Displays a single SimkatmawaMbkm model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -84,87 +97,98 @@ class SimkatmawaMandiriController extends Controller
         ]);
     }
 
-    public function actionDetailMahasiswa($id)
-    {
-        return $this->render('detail-mahasiswa', [
-            'model' => $this->findModel($id),
-            'dataMahasiswa' => SimkatmawaMahasiswa::findAll(['simkatmawa_mandiri_id' => $id])
-        ]);
-    }
-
     /**
-     * Creates a new SimkatmawaMandiri model.
+     * Creates a new SimkatmawaMbkm model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreateRekognisi()
+    public function actionCreate()
     {
-        $model = new SimkatmawaMandiri();
+        $model = new SimkatmawaMbkm();
+
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionCreatePertukaranPelajar()
+    {
+        $model = new SimkatmawaMbkm();
 
         $dataPost   = $_POST;
         if (!empty($dataPost)) {
-            $insert = $this->insertSimkatmawa($dataPost, 'rekognisi');
+            $insert = $this->insertSimkatmawa($dataPost, 'pertukaran-pelajar');
 
             if ($insert->id) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
-                return $this->redirect(['rekognisi']);
+                return $this->redirect(['pertukaran-pelajar']);
             } else {
                 Yii::$app->session->setFlash('danger', $insert);
-                return $this->redirect(['rekognisi']);
+                return $this->redirect(['pertukaran-pelajar']);
             }
         }
 
         return $this->render('create', [
             'model' => $model,
-            'form' => "rekognisi"
+            'form' => "pertukaran-pelajar"
         ]);
     }
 
-
-    public function actionCreateKegiatanMandiri()
+    public function actionCreateMengajarDiSekolah()
     {
-        $model = new SimkatmawaMandiri();
+        $model = new SimkatmawaMbkm();
 
         $dataPost   = $_POST;
         if (!empty($dataPost)) {
-            $insert = $this->insertSimkatmawa($dataPost, 'kegiatan-mandiri');
+            $insert = $this->insertSimkatmawa($dataPost, 'mengajar-di-sekolah');
 
             if ($insert->id) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
-                return $this->redirect(['kegiatan-mandiri']);
+                return $this->redirect(['mengajar-di-sekolah']);
             } else {
                 Yii::$app->session->setFlash('danger', $insert);
-                return $this->redirect(['kegiatan-mandiri']);
+                return $this->redirect(['mengajar-di-sekolah']);
             }
         }
 
         return $this->render('create', [
             'model' => $model,
-            'form' => "kegiatan-mandiri"
+            'form' => "mengajar-di-sekolah"
         ]);
     }
 
-    public function actionDownload($id, $file)
+    public function actionCreatePenelitian()
     {
-        $model = SimkatmawaMandiri::findOne($id);
-        $file_path = $model->$file;
-        $file = file_get_contents($file_path);
-        $nama = basename($file_path);
-        $parts = explode('-', $nama);
-        $jenisData = $parts[0];
-        $curdate = date('d-m-y');
-        $filename = $jenisData . '-' . $model->nama_kegiatan . '-' .  $curdate;
-        header('Content-type: application/pdf');
-        header('Content-Disposition: inline; filename="' . $filename . '"');
-        header('Content-Transfer-Encoding: binary');
-        header('Content-Length: ' . strlen($file));
-        header('Accept-Ranges: bytes');
-        echo $file;
-        exit;
-    }
+        $model = new SimkatmawaMbkm();
 
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost, 'penelitian');
+
+            if ($insert->id) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['penelitian']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['penelitian']);
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'form' => "penelitian"
+        ]);
+    }
     /**
-     * Updates an existing SimkatmawaMandiri model.
+     * Updates an existing SimkatmawaMbkm model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -183,38 +207,60 @@ class SimkatmawaMandiriController extends Controller
         ]);
     }
 
+
+    public function actionDownload($id, $file)
+    {
+        $model = SimkatmawaMbkm::findOne($id);
+        $file_path = $model->$file;
+        $file = file_get_contents($file_path);
+        $nama = basename($file_path);
+        $parts = explode('-', $nama);
+        $jenisData = $parts[0];
+        $curdate = date('d-m-y');
+        $filename = $jenisData . '-' . $model->nama_program . '-' .  $curdate;
+        header('Content-type: application/pdf');
+        header('Content-Disposition: inline; filename="' . $filename . '"');
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: ' . strlen($file));
+        header('Accept-Ranges: bytes');
+        echo $file;
+        exit;
+    }
+
     /**
-     * Deletes an existing SimkatmawaMandiri model.
+     * Deletes an existing SimkatmawaMbkm model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
+
     public function actionDelete($id, $jenisSimkatmawa)
     {
-        if ($this->findModel($id)->delete() && SimkatmawaMahasiswa::deleteAll(['simkatmawa_mandiri_id' => $id])) {
+        if ($this->findModel($id)->delete() && SimkatmawaMahasiswa::deleteAll(['simkatmawa_mbkm_id' => $id])) {
         }
         Yii::$app->session->setFlash('success', "Data Berhasil Dihapus");
         return $this->redirect([$jenisSimkatmawa]);
     }
 
     /**
-     * Finds the SimkatmawaMandiri model based on its primary key value.
+     * Finds the SimkatmawaMbkm model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return SimkatmawaMandiri the loaded model
+     * @return SimkatmawaMbkm the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = SimkatmawaMandiri::findOne(['id' => $id])) !== null) {
+        if (($model = SimkatmawaMbkm::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    protected function insertSimkatmawa($dataPost, $jenisSimkatmawa, $dataMhs = null)
+
+    protected function insertSimkatmawa($dataPost, $jenisSimkatmawa)
     {
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
@@ -228,40 +274,42 @@ class SimkatmawaMandiriController extends Controller
             $dataPost   = $_POST;
             if (Yii::$app->request->post()) {
 
-                if (isset($dataPost['SimkatmawaMandiri']['id'])) {
-                    $model = $this->findModel($dataPost['SimkatmawaMandiri']['id']);
+                if (isset($dataPost['SimkatmawaMbkm']['id'])) {
+                    $model = $this->findModel($dataPost['SimkatmawaMbkm']['id']);
                 } else {
-                    $model = new SimkatmawaMandiri;
+                    $model = new SimkatmawaMbkm;
                 }
 
-                $model->attributes = $dataPost['SimkatmawaMandiri'];
+                $model->attributes = $dataPost['SimkatmawaMbkm'];
                 $model->user_id = Yii::$app->user->identity->id;
                 $model->jenis_simkatmawa = $jenisSimkatmawa;
 
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaMandiri']['tanggal_mulai']);
+                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaMbkm']['tanggal_mulai']);
                 $formattedDateMulai = $dateTime->format('Y-m-d');
                 $model->tanggal_mulai = $formattedDateMulai;
 
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaMandiri']['tanggal_selesai']);
+                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaMbkm']['tanggal_selesai']);
                 $formattedDateSelesai = $dateTime->format('Y-m-d');
                 $model->tanggal_selesai = $formattedDateSelesai;
 
-                $fotoKaryaPath = UploadedFile::getInstance($model, 'foto_karya_path');
-                $fotoPenyerahanPath = UploadedFile::getInstance($model, 'foto_penyerahan_path');
-                $laporanPath = UploadedFile::getInstance($model, 'laporan_path');
-                $fotoKegiatanPath = UploadedFile::getInstance($model, 'foto_kegiatan_path');
-                $sertifikatPath = UploadedFile::getInstance($model, 'sertifikat_path');
+                $skPenerimaanPath = UploadedFile::getInstance($model, 'sk_penerimaan_path');
                 $suratTugasPath = UploadedFile::getInstance($model, 'surat_tugas_path');
-
-                $jenisKegiatan = SimkatmawaRekognisi::findOne($model->simkatmawa_rekognisi_id);
+                $rekomendasiPath = UploadedFile::getInstance($model, 'rekomendasi_path');
+                $khsPtPath = UploadedFile::getInstance($model, 'khs_pt_path');
+                $sertifikatPath = UploadedFile::getInstance($model, 'sertifikat_path');
+                $laporanPath = UploadedFile::getInstance($model, 'laporan_path');
 
                 $curdate    = date('d-m-y');
+                $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
 
-                if (isset($fotoKaryaPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
-                    $s3path     = $fotoKaryaPath->tempName;
-                    $s3type     = $fotoKaryaPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'foto_karya-' . $file_name . '.pdf';
+
+                if (isset($skPenerimaanPath)) {
+
+
+                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $s3path     = $skPenerimaanPath->tempName;
+                    $s3type     = $skPenerimaanPath->type;
+                    $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'sk_penerimaan-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -270,14 +318,14 @@ class SimkatmawaMandiriController extends Controller
                         'ContenType'    => $s3type,
                     ]);
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
-                    $model->foto_karya_path = $plainUrl;
+                    $model->sk_penerimaan_path = $plainUrl;
                 }
 
-                if (isset($fotoPenyerahanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
-                    $s3path     = $fotoPenyerahanPath->tempName;
-                    $s3type     = $fotoPenyerahanPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'foto_penyerahan-' . $file_name . '.pdf';
+                if (isset($suratTugasPath)) {
+                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $s3path     = $suratTugasPath->tempName;
+                    $s3type     = $suratTugasPath->type;
+                    $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'surat_tugas-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -286,14 +334,14 @@ class SimkatmawaMandiriController extends Controller
                         'ContenType'    => $s3type,
                     ]);
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
-                    $model->foto_penyerahan_path = $plainUrl;
+                    $model->surat_tugas_path = $plainUrl;
                 }
 
-                if (isset($laporanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
-                    $s3path     = $laporanPath->tempName;
-                    $s3type     = $laporanPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
+                if (isset($rekomendasiPath)) {
+                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $s3path     = $rekomendasiPath->tempName;
+                    $s3type     = $rekomendasiPath->type;
+                    $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'rekomendasi-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -302,14 +350,14 @@ class SimkatmawaMandiriController extends Controller
                         'ContenType'    => $s3type,
                     ]);
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
-                    $model->laporan_path = $plainUrl;
+                    $model->rekomendasi_path = $plainUrl;
                 }
 
-                if (isset($fotoKegiatanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
-                    $s3path     = $fotoKegiatanPath->tempName;
-                    $s3type     = $fotoKegiatanPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'foto_kegiatan-' . $file_name . '.pdf';
+                if (isset($khsPtPath)) {
+                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $s3path     = $khsPtPath->tempName;
+                    $s3type     = $khsPtPath->type;
+                    $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'khs_pt-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -318,14 +366,14 @@ class SimkatmawaMandiriController extends Controller
                         'ContenType'    => $s3type,
                     ]);
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
-                    $model->foto_kegiatan_path = $plainUrl;
+                    $model->khs_pt_path = $plainUrl;
                 }
 
                 if (isset($sertifikatPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = $model->nama_program . '-' . $curdate;
                     $s3path     = $sertifikatPath->tempName;
                     $s3type     = $sertifikatPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'sertifikat-' . $file_name . '.pdf';
+                    $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'sertifikat-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -337,11 +385,11 @@ class SimkatmawaMandiriController extends Controller
                     $model->sertifikat_path = $plainUrl;
                 }
 
-                if (isset($suratTugasPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
-                    $s3path     = $suratTugasPath->tempName;
-                    $s3type     = $suratTugasPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'surat_tugas-' . $file_name . '.pdf';
+                if (isset($laporanPath)) {
+                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $s3path     = $laporanPath->tempName;
+                    $s3type     = $laporanPath->type;
+                    $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'laporan-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -350,7 +398,7 @@ class SimkatmawaMandiriController extends Controller
                         'ContenType'    => $s3type,
                     ]);
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
-                    $model->surat_tugas_path = $plainUrl;
+                    $model->laporan_path = $plainUrl;
                 }
 
                 if ($model->save()) {
@@ -365,7 +413,7 @@ class SimkatmawaMandiriController extends Controller
                                 $nim = $matches[0];
 
                                 $mahasiswa->nim = $nim;
-                                $mahasiswa->simkatmawa_mandiri_id = $model->id;
+                                $mahasiswa->simkatmawa_mbkm_id = $model->id;
                                 $mahasiswa->save();
                             }
                         }

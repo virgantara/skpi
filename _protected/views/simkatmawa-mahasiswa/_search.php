@@ -19,6 +19,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'simkatmawa_mandiri_id') ?>
 
+    <?= $form->field($model, 'simkatmawa_mbkm_id') ?>
+
     <?= $form->field($model, 'nim') ?>
 
     <div class="form-group">

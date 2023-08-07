@@ -61,70 +61,102 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                 <div class="space"></div>
 
-                                <div>
-                                    <?= DetailView::widget([
-                                        'model' => $model,
-                                        'attributes' => [
-                                            'nama_kegiatan',
-                                            'penyelenggara',
-                                            'tempat_pelaksanaan',
-                                            'simkatmawaRekognisi.nama',
-                                            'level',
-                                            'apresiasi',
-                                            [
-                                                'attribute' => 'url_kegiatan',
-                                                'format' => 'raw',
-                                                'hAlign' => 'center',
-                                                'value' => function ($model) {
-                                                    return Html::a('<i class="fa fa-link"></i>', $model->url_kegiatan, ['target' => '_blank']);
-                                                }
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <?= DetailView::widget([
+                                            'model' => $model,
+                                            'attributes' => [
+                                                'nama_kegiatan',
+                                                'penyelenggara',
+                                                'tempat_pelaksanaan',
+                                                'simkatmawaRekognisi.nama',
+                                                'level',
+                                                'apresiasi',
+                                                'tanggal_mulai',
+                                                'tanggal_selesai',
                                             ],
-                                            'tanggal_mulai',
-                                            'tanggal_selesai',
-                                            [
-                                                'attribute' => 'sertifikat_path',
-                                                'format' => 'raw',
-                                                'value' => function ($model) {
-                                                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                }
+                                        ]) ?>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <?= DetailView::widget([
+                                            'model' => $model,
+                                            'attributes' => [
+                                                [
+                                                    'attribute' => 'url_kegiatan',
+                                                    'format' => 'raw',
+                                                    'hAlign' => 'center',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->url_kegiatan)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('<i class="fa fa-link"></i>', $model->url_kegiatan, ['target' => '_blank']);
+                                                    }
+                                                ],
+                                                [
+                                                    'attribute' => 'sertifikat_path',
+                                                    'format' => 'raw',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->sertifikat_path)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                    }
+                                                ],
+                                                [
+                                                    'attribute' => 'foto_penyerahan_path',
+                                                    'format' => 'raw',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->foto_penyerahan_path)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_penyerahan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                    }
+                                                ],
+                                                [
+                                                    'attribute' => 'foto_kegiatan_path',
+                                                    'format' => 'raw',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->foto_kegiatan_path)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                    }
+                                                ],
+                                                [
+                                                    'attribute' => 'foto_karya_path',
+                                                    'format' => 'raw',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->foto_karya_path)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_karya_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                    }
+                                                ],
+                                                [
+                                                    'attribute' => 'surat_tugas_path',
+                                                    'format' => 'raw',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->surat_tugas_path)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                    }
+                                                ],
+                                                [
+                                                    'attribute' => 'laporan_path',
+                                                    'format' => 'raw',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->laporan_path)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                    }
+                                                ],
                                             ],
-                                            [
-                                                'attribute' => 'foto_penyerahan_path',
-                                                'format' => 'raw',
-                                                'value' => function ($model) {
-                                                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_penyerahan_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                }
-                                            ],
-                                            [
-                                                'attribute' => 'foto_kegiatan_path',
-                                                'format' => 'raw',
-                                                'value' => function ($model) {
-                                                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                }
-                                            ],
-                                            [
-                                                'attribute' => 'foto_karya_path',
-                                                'format' => 'raw',
-                                                'value' => function ($model) {
-                                                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_karya_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                }
-                                            ],
-                                            [
-                                                'attribute' => 'surat_tugas_path',
-                                                'format' => 'raw',
-                                                'value' => function ($model) {
-                                                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                }
-                                            ],
-                                            [
-                                                'attribute' => 'laporan_path',
-                                                'format' => 'raw',
-                                                'value' => function ($model) {
-                                                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                }
-                                            ],
-                                        ],
-                                    ]) ?>
+                                        ]) ?>
+                                    </div>
                                 </div>
 
                                 <div class="hr hr8 hr-double hr-dotted"></div>

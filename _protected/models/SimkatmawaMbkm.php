@@ -5,18 +5,18 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "erp_mbkm".
+ * This is the model class for table "erp_simkatmawa_mbkm".
  *
  * @property int $id
- * @property string $nim
- * @property int $mbkm_jenis_id
+ * @property int|null $user_id
+ * @property string|null $jenis_simkatmawa
  * @property string $nama_program
  * @property string $tempat_pelaksanaan
  * @property string|null $tanggal_mulai
  * @property string|null $tanggal_selesai
  * @property string|null $penyelenggara
  * @property int|null $level
- * @property int|null $apresiasi
+ * @property string|null $judul_penelitian
  * @property int|null $status_sks
  * @property string|null $sk_penerimaan_path
  * @property string|null $surat_tugas_path
@@ -36,18 +36,17 @@ use Yii;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
- * @property KategoriBelmawa $kategoriBelmawa
- * @property MbkmJenis $mbkmJenis
- * @property SimakMastermahasiswa $nim0
+ * @property SimkatmawaMahasiswa[] $simkatmawaMahasiswas
+ * @property User $user
  */
-class Mbkm extends \yii\db\ActiveRecord
+class SimkatmawaMbkm extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'erp_mbkm';
+        return 'erp_simkatmawa_mbkm';
     }
 
     /**
@@ -56,14 +55,12 @@ class Mbkm extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nim', 'mbkm_jenis_id', 'nama_program', 'tempat_pelaksanaan'], 'required'],
-            [['mbkm_jenis_id', 'level', 'apresiasi', 'status_sks', 'hasil_jenis', 'rekognisi_id', 'kategori_pembinaan_id', 'kategori_belmawa_id'], 'integer'],
+            [['user_id', 'level', 'status_sks', 'hasil_jenis', 'rekognisi_id', 'kategori_pembinaan_id', 'kategori_belmawa_id'], 'integer'],
+            [['nama_program', 'tempat_pelaksanaan'], 'required'],
             [['tanggal_mulai', 'tanggal_selesai', 'created_at', 'updated_at'], 'safe'],
-            [['nim'], 'string', 'max' => 25],
-            [['nama_program', 'tempat_pelaksanaan', 'penyelenggara', 'sk_penerimaan_path', 'surat_tugas_path', 'rekomendasi_path', 'khs_pt_path', 'sertifikat_path', 'laporan_path', 'hasil_path', 'url_berita', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path'], 'string', 'max' => 255],
-            [['kategori_belmawa_id'], 'exist', 'skipOnError' => true, 'targetClass' => KategoriBelmawa::class, 'targetAttribute' => ['kategori_belmawa_id' => 'id']],
-            [['mbkm_jenis_id'], 'exist', 'skipOnError' => true, 'targetClass' => MbkmJenis::class, 'targetAttribute' => ['mbkm_jenis_id' => 'id']],
-            [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::class, 'targetAttribute' => ['nim' => 'nim_mhs']],
+            [['jenis_simkatmawa'], 'string', 'max' => 150],
+            [['nama_program', 'tempat_pelaksanaan', 'penyelenggara', 'judul_penelitian', 'sk_penerimaan_path', 'surat_tugas_path', 'rekomendasi_path', 'khs_pt_path', 'sertifikat_path', 'laporan_path', 'hasil_path', 'url_berita', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path'], 'string', 'max' => 255],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -74,15 +71,15 @@ class Mbkm extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nim' => 'Nim',
-            'mbkm_jenis_id' => 'Mbkm Jenis ID',
+            'user_id' => 'User ID',
+            'jenis_simkatmawa' => 'Jenis Simkatmawa',
             'nama_program' => 'Nama Program',
             'tempat_pelaksanaan' => 'Tempat Pelaksanaan',
             'tanggal_mulai' => 'Tanggal Mulai',
             'tanggal_selesai' => 'Tanggal Selesai',
             'penyelenggara' => 'Penyelenggara',
             'level' => 'Level',
-            'apresiasi' => 'Apresiasi',
+            'judul_penelitian' => 'Judul Penelitian',
             'status_sks' => 'Status Sks',
             'sk_penerimaan_path' => 'Sk Penerimaan Path',
             'surat_tugas_path' => 'Surat Tugas Path',
@@ -105,32 +102,22 @@ class Mbkm extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[KategoriBelmawa]].
+     * Gets query for [[SimkatmawaMahasiswas]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getKategoriBelmawa()
+    public function getSimkatmawaMahasiswas()
     {
-        return $this->hasOne(KategoriBelmawa::class, ['id' => 'kategori_belmawa_id']);
+        return $this->hasMany(SimkatmawaMahasiswa::class, ['simkatmawa_mbkm_id' => 'id']);
     }
 
     /**
-     * Gets query for [[MbkmJenis]].
+     * Gets query for [[User]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getMbkmJenis()
+    public function getUser()
     {
-        return $this->hasOne(MbkmJenis::class, ['id' => 'mbkm_jenis_id']);
-    }
-
-    /**
-     * Gets query for [[Nim0]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getNim0()
-    {
-        return $this->hasOne(SimakMastermahasiswa::class, ['nim_mhs' => 'nim']);
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

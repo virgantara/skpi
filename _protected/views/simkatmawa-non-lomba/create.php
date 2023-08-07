@@ -7,6 +7,7 @@ use yii\helpers\Html;
 
 $this->title = 'Create Simkatmawa Non Lomba';
 $this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Non Lomba', 'url' => ['pembinaan-mental-kebangsaan']];
+$this->params['breadcrumbs'][] = ['label' => 'Pembinaan Mental Kebangsaan', 'url' => ['pembinaan-mental-kebangsaan']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="simkatmawa-non-lomba-create">

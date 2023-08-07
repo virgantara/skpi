@@ -12,7 +12,8 @@ use yii\helpers\ArrayHelper;
 /** @var app\models\SimkatmawaNonLombaSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Simkatmawa Non Lomba - Pembinaan Mental Kebangsaan';
+$this->title = 'Pembinaan Mental Kebangsaan';
+$this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Non Lomba', 'url' => ['pembinaan-mental-kebangsaan']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="simkatmawa-non-lomba-index">
@@ -57,6 +58,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'hAlign' => 'center',
                 'value' => function ($model) {
+                    if (empty($model->laporan_path)) {
+                        return '-';
+                    }
                     return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
                 }
             ],
@@ -65,6 +69,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'hAlign' => 'center',
                 'value' => function ($model) {
+                    if (empty($model->foto_kegiatan_path)) {
+                        return '-';
+                    }
                     return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank', 'data-pjax' => 0]);
                 }
             ],
@@ -73,6 +80,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'hAlign' => 'center',
                 'value' => function ($model) {
+                    if (empty($model->url_kegiatan)) {
+                        return '-';
+                    }
                     return Html::a('<i class="fa fa-link"></i>', $model->url_kegiatan, ['target' => '_blank']);
                 }
             ],
