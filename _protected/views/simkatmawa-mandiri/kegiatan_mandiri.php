@@ -104,7 +104,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['class' => 'text-center'],
-                'template' => '{mhs} {update} {delete}',
+                'template' => '{view} {update} {delete}',
                 'buttons' => [
 
                     'mhs' => function ($url, $model) {
@@ -114,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'view' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-eye"></i>', $url, [
+                        return Html::a('<i class="fa fa-list"></i>', $url, [
                             'title' => Yii::t('app', 'Detail Data'),
                             'data-pjax' => 0,
                         ]);

@@ -38,11 +38,14 @@ class SimkatmawaMbkmSearch extends SimkatmawaMbkm
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $jenisSimkatmawa = null)
     {
         $query = SimkatmawaMbkm::find();
 
         // add conditions that should always apply here
+        if ($jenisSimkatmawa != null) {
+            $query->andWhere(['jenis_simkatmawa' => $jenisSimkatmawa]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

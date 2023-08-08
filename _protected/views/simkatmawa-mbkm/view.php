@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var app\models\SimkatmawaMbkm $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Simkatmawa Mbkms', 'url' => ['index']];
+$this->title = $model->nama_program;
+$this->params['breadcrumbs'][] = ['label' => 'Simkatmawa MBKM', 'url' => ['index']];$this->params['breadcrumbs'][] = ['label' => ucwords($model->jenis_simkatmawa), 'url' => [$model->jenis_simkatmawa]];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -26,37 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'jenis_simkatmawa',
-            'nama_program',
-            'tempat_pelaksanaan',
-            'tanggal_mulai',
-            'tanggal_selesai',
-            'penyelenggara',
-            'level',
-            'apresiasi',
-            'status_sks',
-            'sk_penerimaan_path',
-            'surat_tugas_path',
-            'rekomendasi_path',
-            'khs_pt_path',
-            'sertifikat_path',
-            'laporan_path',
-            'hasil_path',
-            'hasil_jenis',
-            'rekognisi_id',
-            'kategori_pembinaan_id',
-            'kategori_belmawa_id',
-            'url_berita:url',
-            'foto_penyerahan_path',
-            'foto_kegiatan_path',
-            'foto_karya_path',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
+    
 
 </div>

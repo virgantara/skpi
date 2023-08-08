@@ -84,6 +84,61 @@ class SimkatmawaMbkmController extends Controller
         ]);
     }
 
+    public function actionProyekKemanusiaan()
+    {
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'proyek-kemanusiaan');
+
+        return $this->render('proyek_kemanusiaan', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionProyekDesa()
+    {
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'proyek-desa');
+
+        return $this->render('proyek_desa', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionWirausaha()
+    {
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'wirausaha');
+
+        return $this->render('wirausaha', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionStudi()
+    {
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'studi');
+
+        return $this->render('studi', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionPengabdianMasyarakat()
+    {
+        $searchModel = new SimkatmawaMbkmSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams, 'pengabdian-masyarakat');
+
+        return $this->render('pengabdian_masyarakat', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
     /**
      * Displays a single SimkatmawaMbkm model.
      * @param int $id ID
@@ -92,7 +147,9 @@ class SimkatmawaMbkmController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        $model = $this->findModel($id);
+        $path = str_replace("-", "_", $model->jenis_simkatmawa) . '_view';
+        return $this->render($path, [
             'model' => $this->findModel($id),
         ]);
     }
@@ -185,6 +242,121 @@ class SimkatmawaMbkmController extends Controller
         return $this->render('create', [
             'model' => $model,
             'form' => "penelitian"
+        ]);
+    }
+
+    public function actionCreateProyekKemanusiaan()
+    {
+        $model = new SimkatmawaMbkm();
+
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost, 'proyek-kemanusiaan');
+
+            if ($insert->id) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['proyek-kemanusiaan']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['proyek-kemanusiaan']);
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'form' => "proyek-kemanusiaan"
+        ]);
+    }
+
+    public function actionCreateProyekDesa()
+    {
+        $model = new SimkatmawaMbkm();
+
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost, 'proyek-desa');
+
+            if ($insert->id) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['proyek-desa']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['proyek-desa']);
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'form' => "proyek-desa"
+        ]);
+    }
+
+    public function actionCreateWirausaha()
+    {
+        $model = new SimkatmawaMbkm();
+
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost, 'wirausaha');
+
+            if ($insert->id) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['wirausaha']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['wirausaha']);
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'form' => "wirausaha"
+        ]);
+    }
+
+    public function actionCreateStudi()
+    {
+        $model = new SimkatmawaMbkm();
+
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost, 'studi');
+
+            if ($insert->id) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['studi']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['studi']);
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'form' => "studi"
+        ]);
+    }
+
+    public function actionCreatePengabdianMasyarakat()
+    {
+        $model = new SimkatmawaMbkm();
+
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost, 'pengabdian-masyarakat');
+
+            if ($insert->id) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['pengabdian-masyarakat']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['pengabdian-masyarakat']);
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'form' => "pengabdian-masyarakat"
         ]);
     }
     /**
@@ -298,6 +470,7 @@ class SimkatmawaMbkmController extends Controller
                 $khsPtPath = UploadedFile::getInstance($model, 'khs_pt_path');
                 $sertifikatPath = UploadedFile::getInstance($model, 'sertifikat_path');
                 $laporanPath = UploadedFile::getInstance($model, 'laporan_path');
+                $hasilPath = UploadedFile::getInstance($model, 'hasil_path');
 
                 $curdate    = date('d-m-y');
                 $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
@@ -399,6 +572,22 @@ class SimkatmawaMbkmController extends Controller
                     ]);
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->laporan_path = $plainUrl;
+                }
+
+                if (isset($hasilPath)) {
+                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $s3path     = $hasilPath->tempName;
+                    $s3type     = $hasilPath->type;
+                    $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'hasil-' . $file_name . '.pdf';
+                    $insert = $s3new->putObject([
+                        'Bucket'        => 'sikap',
+                        'Key'           => $key,
+                        'Body'          => 'Body',
+                        'SourceFile'    => $s3path,
+                        'ContenType'    => $s3type,
+                    ]);
+                    $plainUrl = $s3new->getObjectUrl('sikap', $key);
+                    $model->hasil_path = $plainUrl;
                 }
 
                 if ($model->save()) {

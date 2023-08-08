@@ -11,7 +11,7 @@ use yii\grid\ActionColumn;
 /** @var app\models\SimkatmawaMbkmSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Pertukaran Pelajar';
+$this->title = 'Wirausaha';
 $this->params['breadcrumbs'][] = ['label' => 'Simkatmawa MBKM', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('<i class="fa fa-plus"></i> Input Kegiatan', ['create-pertukaran-pelajar'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('<i class="fa fa-plus"></i> Input Kegiatan', ['create-wirausaha'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); 
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'nama_program',
-                'label' => 'Pertukaran Pelajar'
+                'label' => 'Wirausaha'
             ],
             [
                 'label' => 'Jumlah Mahasiswa',

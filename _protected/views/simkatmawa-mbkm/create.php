@@ -33,6 +33,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 'model' => $model,
             ]);
             break;
+        case 'proyek-kemanusiaan':
+            echo $this->render('proyek_kemanusiaan_form', [
+                'model' => $model,
+            ]);
+            break;
+        case 'proyek-desa':
+            echo $this->render('proyek_desa_form', [
+                'model' => $model,
+            ]);
+            break;
+        case 'wirausaha':
+            echo $this->render('wirausaha_form', [
+                'model' => $model,
+            ]);
+            break;
+        case 'studi':
+            echo $this->render('studi_form', [
+                'model' => $model,
+            ]);
+            break;
+        case 'pengabdian-masyarakat':
+            echo $this->render('pengabdian_masyarakat_form', [
+                'model' => $model,
+            ]);
+            break;
 
 
         default:
