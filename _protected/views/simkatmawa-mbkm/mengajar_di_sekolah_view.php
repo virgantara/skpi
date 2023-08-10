@@ -1,5 +1,6 @@
 <?php
 
+use app\helpers\MyHelper;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -8,7 +9,7 @@ use yii\widgets\DetailView;
 
 $this->title = $model->nama_program;
 $this->params['breadcrumbs'][] = ['label' => 'Simkatmawa MBKM', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => ucwords($model->jenis_simkatmawa), 'url' => [$model->jenis_simkatmawa]];
+$this->params['breadcrumbs'][] = ['label' => ucwords(str_replace('-', ' ', $model->jenis_simkatmawa)), 'url' => [$model->jenis_simkatmawa]];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -67,14 +68,20 @@ $this->params['breadcrumbs'][] = $this->title;
                                         <?= DetailView::widget([
                                             'model' => $model,
                                             'attributes' => [
-                                                'nama_kegiatan',
-                                                'penyelenggara',
+                                                'nama_program',
                                                 'tempat_pelaksanaan',
-                                                'simkatmawaRekognisi.nama',
-                                                'level',
-                                                'apresiasi',
-                                                'tanggal_mulai',
-                                                'tanggal_selesai',
+                                                [
+                                                    'attribute' => 'tanggal_mulai',
+                                                    'value' => function ($model) {
+                                                        return MyHelper::converTanggalIndoLengkap($model->tanggal_mulai);
+                                                    }
+                                                ],
+                                                [
+                                                    'attribute' => 'tanggal_selesai',
+                                                    'value' => function ($model) {
+                                                        return MyHelper::converTanggalIndoLengkap($model->tanggal_selesai);
+                                                    }
+                                                ],
                                             ],
                                         ]) ?>
                                     </div>
@@ -84,58 +91,20 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'model' => $model,
                                             'attributes' => [
                                                 [
-                                                    'attribute' => 'url_kegiatan',
+                                                    'attribute' => 'sk_penerimaan_path',
+                                                    'label' => 'SK Mengajar dari Sekolah Penerima',
                                                     'format' => 'raw',
                                                     'hAlign' => 'center',
                                                     'value' => function ($model) {
-                                                        if (empty($model->url_kegiatan)) {
+                                                        if (empty($model->sk_penerimaan_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-link"></i>', $model->url_kegiatan, ['target' => '_blank']);
-                                                    }
-                                                ],
-                                                [
-                                                    'attribute' => 'sertifikat_path',
-                                                    'format' => 'raw',
-                                                    'value' => function ($model) {
-                                                        if (empty($model->sertifikat_path)) {
-                                                            return '-';
-                                                        }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                    }
-                                                ],
-                                                [
-                                                    'attribute' => 'foto_penyerahan_path',
-                                                    'format' => 'raw',
-                                                    'value' => function ($model) {
-                                                        if (empty($model->foto_penyerahan_path)) {
-                                                            return '-';
-                                                        }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_penyerahan_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                    }
-                                                ],
-                                                [
-                                                    'attribute' => 'foto_kegiatan_path',
-                                                    'format' => 'raw',
-                                                    'value' => function ($model) {
-                                                        if (empty($model->foto_kegiatan_path)) {
-                                                            return '-';
-                                                        }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                                                    }
-                                                ],
-                                                [
-                                                    'attribute' => 'foto_karya_path',
-                                                    'format' => 'raw',
-                                                    'value' => function ($model) {
-                                                        if (empty($model->foto_karya_path)) {
-                                                            return '-';
-                                                        }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_karya_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sk_penerimaan_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                                 [
                                                     'attribute' => 'surat_tugas_path',
+                                                    'label' => 'Surat Tugas / Surat Izin',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
                                                         if (empty($model->surat_tugas_path)) {
@@ -145,7 +114,19 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     }
                                                 ],
                                                 [
+                                                    'attribute' => 'sertifikat_path',
+                                                    'label' => 'Sertifikat Mengajar',
+                                                    'format' => 'raw',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->sertifikat_path)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                    }
+                                                ],
+                                                [
                                                     'attribute' => 'laporan_path',
+                                                    'label' => 'Laporan Akademik Pelaksanakan Kegiatan',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
                                                         if (empty($model->laporan_path)) {

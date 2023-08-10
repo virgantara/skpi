@@ -69,6 +69,16 @@ use yii\widgets\ActiveForm;
                         <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Laporan Akademik Pelaksanakan Kegiatan') ?>
                         <small>File: pdf Max size: 5 MB</small>
 
+                        <?= $form->field($model, 'hasil_jenis')->radioList(
+                            MyHelper::listHasilPenelitian(),
+                            [
+                                'class' => 'radio-list', // You can add custom classes here
+                            ]
+                        ) ?>
+
+                        <?= $form->field($model, 'hasil_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Dokumen Hasil Penelitian') ?>
+                        <small>File: pdf Max size: 5 MB</small>
+
                         <div class="widget-box widget-color-blue2">
                             <div class="widget-header">
                                 <h4 class="widget-title lighter smaller">Mahasiswa</h4>

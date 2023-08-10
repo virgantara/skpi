@@ -49,6 +49,14 @@ class MyHelper
 		];
 	}
 
+	public static function listHasilPenelitian()
+	{
+		return [
+			0 => 'Prosiding',
+			1 => 'Artikel Jurnal (Submit / Review / Accept / Publish)',
+		];
+	}
+
 	public static function listSimkatmawaMbkm()
 	{
 		return [
@@ -79,7 +87,7 @@ class MyHelper
 			]
 		];
 	}
-	
+
 	public static function listStatusSks()
 	{
 		return [
@@ -177,6 +185,54 @@ class MyHelper
 
 
 		return $roles;
+	}
+
+
+	public static function convertTanggalIndo($date)
+	{
+		$bulan = array(
+			1 =>   'Januari',
+			'Februari',
+			'Maret',
+			'April',
+			'Mei',
+			'Juni',
+			'Juli',
+			'Agustus',
+			'September',
+			'Oktober',
+			'November',
+			'Desember'
+		);
+		$date = date("Y-m-d", strtotime($date));
+		$pecahkan = explode('-', $date);
+
+		// variabel pecahkan 0 = tanggal
+		// variabel pecahkan 1 = bulan
+		// variabel pecahkan 2 = tahun
+		if (!empty($pecahkan[2]) && !empty($pecahkan[1]) && !empty($pecahkan[0]))
+			return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
+		else
+			return 'invalid date format';
+	}
+
+	public static function converTanggalIndoLengkap($date)
+	{
+		$timestamp = strtotime($date);
+
+		// Convert the day name to Indonesian
+		$dayName = date("l", $timestamp);
+		$dayNames = array(
+			'Sunday' => 'Ahad',
+			'Monday' => 'Senin',
+			'Tuesday' => 'Selasa',
+			'Wednesday' => 'Rabu',
+			'Thursday' => 'Kamis',
+			'Friday' => 'Jum`at',
+			'Saturday' => 'Sabtu'
+		);
+		$dayNameIndonesian = $dayNames[$dayName];
+		return $dayNameIndonesian . ', ' . MyHelper::convertTanggalIndo($date);
 	}
 
 	public static function getKampusList()

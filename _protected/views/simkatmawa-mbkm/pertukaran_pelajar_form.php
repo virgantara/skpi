@@ -48,22 +48,20 @@ use yii\widgets\ActiveForm;
                             ]
                         ]);
                         ?>
+                        
+                        <?= $form->field($model, 'level')->radioList(
+                            MyHelper::listSimkatmawaLevel()[1],
+                            [
+                                'class' => 'radio-list', // You can add custom classes here
+                            ]
+                        ) ?>
 
-                        <?= $form->field($model, 'level')->widget(Select2::classname(), [
-                            'data' => MyHelper::listSimkatmawaLevel()[1],
-                            'options' => ['placeholder' => Yii::t('app', '- Pilih Level -')],
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                            ],
-                        ]) ?>
-
-                        <?= $form->field($model, 'status_sks')->widget(Select2::classname(), [
-                            'data' => MyHelper::listStatusSks(),
-                            'options' => ['placeholder' => Yii::t('app', '- Pilih Status SKS -')],
-                            'pluginOptions' => [
-                                'allowClear' => true,
-                            ],
-                        ]) ?>
+                        <?= $form->field($model, 'status_sks')->radioList(
+                            MyHelper::listStatusSks(),
+                            [
+                                'class' => 'radio-list', // You can add custom classes here
+                            ]
+                        ) ?>
 
                         <?= $form->field($model, 'sk_penerimaan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('SK Penerimaan Pertukaran Pelajar') ?>
                         <small>File: pdf Max size: 5 MB</small>
