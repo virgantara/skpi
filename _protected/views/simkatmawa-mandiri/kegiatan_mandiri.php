@@ -1,5 +1,6 @@
 <?php
 
+use app\helpers\MyHelper;
 use app\models\SimkatmawaMandiri;
 use kartik\grid\GridView;
 use yii\helpers\Html;
@@ -36,17 +37,23 @@ $this->params['breadcrumbs'][] = $this->title;
         // 'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
+            [
+                'attribute' => 'level',
+                'label' => 'Kategori Kegiatan',
+                'value' => function ($model) {
+                    return MyHelper::listSimkatmawaLevel()[0][$model->level];
+                }
+            ],
             'nama_kegiatan',
             [
-                'attribute' => 'simkatmawa_rekognisi_id',
-                'label' => 'Nama Rekognisi',
-                'value' => 'simkatmawaRekognisi.nama'
+                'label' => 'Tahun Kegiatan',
+                'value' => function ($model) {
+                    return date('Y', strtotime($model->tanggal_mulai));
+                }
             ],
-            'tanggal_mulai',
-            'tanggal_selesai',
             [
                 'attribute' => 'sertifikat_path',
+                'label' => 'Sertifikat/Piala/Medali',
                 'format' => 'raw',
                 'hAlign' => 'center',
                 'value' => function ($model) {
@@ -69,6 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'foto_kegiatan_path',
+                'label' => 'Foto Kegiatan',
                 'format' => 'raw',
                 'hAlign' => 'center',
                 'value' => function ($model) {
@@ -80,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'surat_tugas_path',
-                'label' => 'Surat undangan',
+                'label' => 'Surat Tugas/Undangan',
                 'format' => 'raw',
                 'hAlign' => 'center',
                 'value' => function ($model) {
@@ -91,15 +99,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute' => 'laporan_path',
-                'format' => 'raw',
-                'hAlign' => 'center',
-                'value' => function ($model) {
-                    if (empty($model->laporan_path)) {
-                        return '-';
-                    }
-                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                }
+                'attribute' => 'penyelenggara',
+                'label' => 'Nama PT',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

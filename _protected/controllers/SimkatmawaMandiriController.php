@@ -79,7 +79,9 @@ class SimkatmawaMandiriController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
+        $model = $this->findModel($id);
+        $path = str_replace("-", "_", $model->jenis_simkatmawa) . '_view';
+        return $this->render($path, [
             'model' => $this->findModel($id),
         ]);
     }
@@ -214,7 +216,7 @@ class SimkatmawaMandiriController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    protected function insertSimkatmawa($dataPost, $jenisSimkatmawa, $dataMhs = null)
+    protected function insertSimkatmawa($dataPost, $jenisSimkatmawa)
     {
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
@@ -253,15 +255,14 @@ class SimkatmawaMandiriController extends Controller
                 $sertifikatPath = UploadedFile::getInstance($model, 'sertifikat_path');
                 $suratTugasPath = UploadedFile::getInstance($model, 'surat_tugas_path');
 
-                $jenisKegiatan = SimkatmawaRekognisi::findOne($model->simkatmawa_rekognisi_id);
-
                 $curdate    = date('d-m-y');
+                $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
 
                 if (isset($fotoKaryaPath)) {
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $fotoKaryaPath->tempName;
                     $s3type     = $fotoKaryaPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'foto_karya-' . $file_name . '.pdf';
+                    $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'foto_karya-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -277,7 +278,7 @@ class SimkatmawaMandiriController extends Controller
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $fotoPenyerahanPath->tempName;
                     $s3type     = $fotoPenyerahanPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'foto_penyerahan-' . $file_name . '.pdf';
+                    $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'foto_penyerahan-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -293,7 +294,7 @@ class SimkatmawaMandiriController extends Controller
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
                     $s3type     = $laporanPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
+                    $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -309,7 +310,7 @@ class SimkatmawaMandiriController extends Controller
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $fotoKegiatanPath->tempName;
                     $s3type     = $fotoKegiatanPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'foto_kegiatan-' . $file_name . '.pdf';
+                    $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'foto_kegiatan-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -325,7 +326,7 @@ class SimkatmawaMandiriController extends Controller
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $sertifikatPath->tempName;
                     $s3type     = $sertifikatPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'sertifikat-' . $file_name . '.pdf';
+                    $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'sertifikat-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -341,7 +342,7 @@ class SimkatmawaMandiriController extends Controller
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $suratTugasPath->tempName;
                     $s3type     = $suratTugasPath->type;
-                    $key        = 'SimkatmawaMandiri' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'surat_tugas-' . $file_name . '.pdf';
+                    $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'surat_tugas-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,

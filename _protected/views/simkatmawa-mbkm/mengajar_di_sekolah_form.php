@@ -33,21 +33,13 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'tanggal_mulai')->widget(DatePicker::classname(), [
                             'options' => ['placeholder' => 'Input tanggal mulai ...', 'autocomplete' => 'off'],
-                            'pluginOptions' => [
-                                'autoclose' => true,
-                                'format' => 'dd-mm-yyyy'
-                            ]
-                        ]);
-                        ?>
+                            'pluginOptions' => ['autoclose' => true, 'format' => 'dd-mm-yyyy']
+                        ]); ?>
 
                         <?= $form->field($model, 'tanggal_selesai')->widget(DatePicker::classname(), [
                             'options' => ['placeholder' => 'Input tanggal selesai ...', 'autocomplete' => 'off'],
-                            'pluginOptions' => [
-                                'autoclose' => true,
-                                'format' => 'dd-mm-yyyy'
-                            ]
-                        ]);
-                        ?>
+                            'pluginOptions' => ['autoclose' => true, 'format' => 'dd-mm-yyyy']
+                        ]); ?>
 
                         <?= $form->field($model, 'sk_penerimaan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('SK Mengajar dari Sekolah Penerima') ?>
                         <small>File: pdf Max size: 5 MB</small>
