@@ -88,6 +88,28 @@ class m230802_023504_simkatmawa extends Migration
             'updated_at' => $this->timestamp()->null()->defaultExpression("CURRENT_TIMESTAMP"),
         ]);
 
+        $this->createTable('{{%simkatmawa_belmawa}}', [
+            'id' => $this->primaryKey(),
+            'user_id' => $this->integer(),
+            'simkatmawa_belmawa_kategori_id' => $this->integer(),       // master
+            'jenis_simkatmawa' => $this->string(20),
+            'nama_kegiatan' => $this->string(255)->notNull(),
+            'peringkat' => $this->string(150),
+            'keterangan' => $this->string(500),
+            'tahun' => $this->string(4),
+            'url_kegiatan' => $this->string(255),
+            'laporan_path' => $this->string(255)->null()->defaultValue(null),
+            'created_at' => $this->timestamp()->null()->defaultExpression("CURRENT_TIMESTAMP"),
+            'updated_at' => $this->timestamp()->null()->defaultExpression("CURRENT_TIMESTAMP"),
+        ]);
+
+        $this->createTable('{{%simkatmawa_belmawa_kategori}}', [
+            'id' => $this->primaryKey(),
+            'nama' => $this->string(150),
+            'created_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
+            'updated_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP')->append('ON UPDATE CURRENT_TIMESTAMP'),
+        ]);
+
         $this->createTable('{{%simkatmawa_kegiatan}}', [
             'id' => $this->primaryKey(),
             'nama' => $this->string(150),
@@ -104,20 +126,22 @@ class m230802_023504_simkatmawa extends Migration
 
         $this->createTable('{{%simkatmawa_mahasiswa}}', [
             'id' => $this->primaryKey(),
-            'simkatmawa_mandiri_id' => $this->integer(),
             'simkatmawa_mbkm_id' => $this->integer(),
+            'simkatmawa_mandiri_id' => $this->integer(),
+            'simkatmawa_belmawa_id' => $this->integer(),
             'nim' => $this->string(25),
         ]);
-        
+
         // Add foreign key for 'simkatmawa_mbkm' table
         $this->addForeignKey('fk-simkatmawa_mbkm-user_id', '{{%simkatmawa_mbkm}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
 
         // Add foreign key for 'user_prodi' table
         $this->addForeignKey('fk-user_prodi-user_id', '{{%user_prodi}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
-        
+
         // Add foreign key for 'simkatmawa_mahasiswa' table
         $this->addForeignKey('fk-simkatmawa_mahasiswa-simkatmawa_mandiri_id', '{{%simkatmawa_mahasiswa}}', 'simkatmawa_mandiri_id', '{{%simkatmawa_mandiri}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-simkatmawa_mahasiswa-simkatmawa_mbkm_id', '{{%simkatmawa_mahasiswa}}', 'simkatmawa_mbkm_id', '{{%simkatmawa_mbkm}}', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk-simkatmawa_mahasiswa-simkatmawa_belmawa_id', '{{%simkatmawa_mahasiswa}}', 'simkatmawa_belmawa_id', '{{%simkatmawa_belmawa}}', 'id', 'CASCADE', 'CASCADE');
 
         // Add foreign key for 'simkatmawa_non_lomba' table
         $this->addForeignKey('fk-simkatmawa_non_lomba-simkatmawa_kegiatan_id', '{{%simkatmawa_non_lomba}}', 'simkatmawa_kegiatan_id', '{{%simkatmawa_kegiatan}}', 'id', 'CASCADE', 'CASCADE');
@@ -126,6 +150,10 @@ class m230802_023504_simkatmawa extends Migration
         // Add foreign key for 'simkatmawa_mandiri' table
         $this->addForeignKey('fk-simkatmawa_mandiri-user_id', '{{%simkatmawa_mandiri}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
         $this->addForeignKey('fk-simkatmawa_mandiri-simkatmawa_rekognisi_id', '{{%simkatmawa_mandiri}}', 'simkatmawa_rekognisi_id', '{{%simkatmawa_rekognisi}}', 'id', 'CASCADE', 'CASCADE');
+
+        // Add foreign key for 'simkatmawa_belmawa' table
+        $this->addForeignKey('fk-simkatmawa_belmawa-user_id', '{{%simkatmawa_belmawa}}', 'user_id', '{{%user}}', 'id', 'CASCADE', 'CASCADE');
+        $this->addForeignKey('fk-simkatmawa_belmawa-simkatmawa_belmawa_kategori_id', '{{%simkatmawa_belmawa}}', 'simkatmawa_belmawa_kategori_id', '{{%simkatmawa_belmawa_kategori}}', 'id', 'CASCADE', 'CASCADE');
     }
 
     public function safeDown()
@@ -140,6 +168,7 @@ class m230802_023504_simkatmawa extends Migration
         // Drop foreign key for 'simkatmawa_mahasiswa' table
         $this->dropForeignKey('fk-simkatmawa_mahasiswa-simkatmawa_mandiri_id', '{{%simkatmawa_mahasiswa}}');
         $this->dropForeignKey('fk-simkatmawa_mahasiswa-simkatmawa_mbkm_id', '{{%simkatmawa_mahasiswa}}');
+        $this->dropForeignKey('fk-simkatmawa_mahasiswa-simkatmawa_belmawa_id', '{{%simkatmawa_mahasiswa}}');
 
         // Drop foreign key for 'simkatmawa_non_lomba' table
         $this->dropForeignKey('fk-simkatmawa_non_lomba-simkatmawa_kegiatan_id', '{{%simkatmawa_non_lomba}}');
@@ -149,7 +178,12 @@ class m230802_023504_simkatmawa extends Migration
         $this->dropForeignKey('fk-simkatmawa_mandiri-simkatmawa_rekognisi_id', '{{%simkatmawa_mandiri}}');
         $this->dropForeignKey('fk-simkatmawa_mandiri-user_id', '{{%simkatmawa_mandiri}}');
 
-        // $this->dropTable('{{%kategori_belmawa}}');
+        // Drop foreign key for 'simkatmawa_belmawa' table
+        $this->dropForeignKey('fk-simkatmawa_belmawa-simkatmawa_belmawa_kategori_id', '{{%simkatmawa_belmawa}}');
+        $this->dropForeignKey('fk-simkatmawa_belmawa-user_id', '{{%simkatmawa_belmawa}}');
+
+        $this->dropTable('{{%simkatmawa_belmawa_kategori}}');
+        $this->dropTable('{{%simkatmawa_belmawa}}');
         $this->dropTable('{{%simkatmawa_rekognisi}}');
         $this->dropTable('{{%simkatmawa_mandiri}}');
         $this->dropTable('{{%simkatmawa_kegiatan}}');

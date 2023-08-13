@@ -73,7 +73,7 @@ class MenuHelper
 				],
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Kegiatan Belmawa',
-					'url' => '#',
+					'url' =>  ['simkatmawa-belmawa/index'],
 				],
 				[
 					'label' => '<i class="menu-icon fa fa-cog"></i>Master <b class="arrow fa fa-angle-down"></b>',
@@ -83,8 +83,9 @@ class MenuHelper
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori kegiatan pembinaan mental kebangsaan'), 'url' => ['simkatmawa-kegiatan/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori rekognisi'), 'url' => ['simkatmawa-rekognisi/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Kegiatan Pembinaan Mental Kebangsaan'), 'url' => ['simkatmawa-kegiatan/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Rekognisi'), 'url' => ['simkatmawa-rekognisi/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Kegiatan Belmawa'), 'url' => ['simkatmawa-belmawa-kategori/index']],
 
 					],
 				],
