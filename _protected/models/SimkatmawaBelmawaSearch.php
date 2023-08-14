@@ -18,7 +18,7 @@ class SimkatmawaBelmawaSearch extends SimkatmawaBelmawa
     {
         return [
             [['id', 'user_id', 'simkatmawa_belmawa_kategori_id'], 'integer'],
-            [['jenis_simkatmawa', 'nama_kegiatan', 'peringkat', 'keterangan', 'tahun', 'url_kegiatan', 'laporan_path', 'created_at', 'updated_at'], 'safe'],
+            [['jenis_simkatmawa', 'nama_kegiatan', 'peringkat', 'keterangan', 'tanggal_mulai', 'tanggal_selesai', 'url_kegiatan', 'laporan_path', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -61,6 +61,8 @@ class SimkatmawaBelmawaSearch extends SimkatmawaBelmawa
             'id' => $this->id,
             'user_id' => $this->user_id,
             'simkatmawa_belmawa_kategori_id' => $this->simkatmawa_belmawa_kategori_id,
+            'tanggal_mulai' => $this->tanggal_mulai,
+            'tanggal_selesai' => $this->tanggal_selesai,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
@@ -69,7 +71,6 @@ class SimkatmawaBelmawaSearch extends SimkatmawaBelmawa
             ->andFilterWhere(['like', 'nama_kegiatan', $this->nama_kegiatan])
             ->andFilterWhere(['like', 'peringkat', $this->peringkat])
             ->andFilterWhere(['like', 'keterangan', $this->keterangan])
-            ->andFilterWhere(['like', 'tahun', $this->tahun])
             ->andFilterWhere(['like', 'url_kegiatan', $this->url_kegiatan])
             ->andFilterWhere(['like', 'laporan_path', $this->laporan_path]);
 

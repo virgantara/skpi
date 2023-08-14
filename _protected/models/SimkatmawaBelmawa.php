@@ -14,7 +14,8 @@ use Yii;
  * @property string $nama_kegiatan
  * @property string|null $peringkat
  * @property string|null $keterangan
- * @property string|null $tahun
+ * @property string|null $tanggal_mulai
+ * @property string|null $tanggal_selesai
  * @property string|null $url_kegiatan
  * @property string|null $laporan_path
  * @property string|null $created_at
@@ -42,12 +43,11 @@ class SimkatmawaBelmawa extends \yii\db\ActiveRecord
         return [
             [['user_id', 'simkatmawa_belmawa_kategori_id'], 'integer'],
             [['nama_kegiatan'], 'required'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['tanggal_mulai', 'tanggal_selesai', 'created_at', 'updated_at'], 'safe'],
             [['jenis_simkatmawa'], 'string', 'max' => 20],
             [['nama_kegiatan', 'url_kegiatan', 'laporan_path'], 'string', 'max' => 255],
             [['peringkat'], 'string', 'max' => 150],
             [['keterangan'], 'string', 'max' => 500],
-            [['tahun'], 'string', 'max' => 4],
             [['simkatmawa_belmawa_kategori_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimkatmawaBelmawaKategori::class, 'targetAttribute' => ['simkatmawa_belmawa_kategori_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
@@ -61,12 +61,13 @@ class SimkatmawaBelmawa extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'simkatmawa_belmawa_kategori_id' => 'Simkatmawa Belmawa Kategori ID',
+            'simkatmawa_belmawa_kategori_id' => 'Simkatmawa Belmawa Kategori',
             'jenis_simkatmawa' => 'Jenis Simkatmawa',
             'nama_kegiatan' => 'Nama Kegiatan',
             'peringkat' => 'Peringkat',
             'keterangan' => 'Keterangan',
-            'tahun' => 'Tahun',
+            'tanggal_mulai' => 'Tanggal Mulai',
+            'tanggal_selesai' => 'Tanggal Selesai',
             'url_kegiatan' => 'Url Kegiatan',
             'laporan_path' => 'Laporan Path',
             'created_at' => 'Created At',

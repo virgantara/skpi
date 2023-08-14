@@ -29,7 +29,9 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'keterangan') ?>
 
-    <?php // echo $form->field($model, 'tahun') ?>
+    <?php // echo $form->field($model, 'tanggal_mulai') ?>
+
+    <?php // echo $form->field($model, 'tanggal_selesai') ?>
 
     <?php // echo $form->field($model, 'url_kegiatan') ?>
 
