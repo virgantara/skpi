@@ -86,6 +86,11 @@ class User extends UserIdentity
         return $this->hasOne(SimakKampus::className(), ['id' => 'kampus']);
     }
 
+    public function getProdi()
+    {
+        return $this->hasOne(UserProdi::className(), ['id' => 'user_id']);
+    }
+
     /**
      * Set password rule based on our setting value (Force Strong Password).
      *

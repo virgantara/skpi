@@ -17,15 +17,17 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'nim') ?>
+    <?= $form->field($model, 'user_id') ?>
+
+    <?= $form->field($model, 'simkatmawa_rekognisi_id') ?>
+
+    <?= $form->field($model, 'jenis_simkatmawa') ?>
 
     <?= $form->field($model, 'nama_kegiatan') ?>
 
-    <?= $form->field($model, 'penyelenggara') ?>
+    <?php // echo $form->field($model, 'penyelenggara') ?>
 
-    <?= $form->field($model, 'tempat_pelaksanaan') ?>
-
-    <?php // echo $form->field($model, 'simkatmawa_rekognisi_id') ?>
+    <?php // echo $form->field($model, 'tempat_pelaksanaan') ?>
 
     <?php // echo $form->field($model, 'level') ?>
 

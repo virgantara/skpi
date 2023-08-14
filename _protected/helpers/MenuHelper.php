@@ -36,14 +36,15 @@ class MenuHelper
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pertukaran Pelajar'), 'url' => ['mbkm/pertukaran-pelajar']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Magang/Praktik Kerja'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Mengajar disekolah'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Penelitian/Riset'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Kemanusiaan'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Desa'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Wirausaha/Proyek Independen'), 'url' => ['simak-magang/index']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pengabdian Mahasiswa Kepada Masyarakat'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pertukaran Pelajar'), 'url' => ['simkatmawa-mbkm/pertukaran-pelajar']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Magang / Praktik Kerja'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Mengajar di Sekolah'), 'url' => ['simkatmawa-mbkm/mengajar-di-sekolah']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Penelitian / Riset'), 'url' => ['simkatmawa-mbkm/penelitian']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Kemanusiaan'), 'url' => ['simkatmawa-mbkm/proyek-kemanusiaan']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Proyek Desa'), 'url' => ['simkatmawa-mbkm/proyek-desa']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Wirausaha'), 'url' => ['simkatmawa-mbkm/wirausaha']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Studi / Proyek Independen'), 'url' => ['simkatmawa-mbkm/studi']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Pengabdian Mahasiswa Kepada Masyarakat'), 'url' => ['simkatmawa-mbkm/pengabdian-masyarakat']],
 
 					],
 				],
@@ -59,20 +60,20 @@ class MenuHelper
 					],
 				],
 				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i>Mandiri <b class="arrow fa fa-angle-down"></b>',
+					'label' => '<i class="menu-icon fa fa-caret-right {url}"></i>Mandiri  <b class="arrow fa fa-angle-down"></b>',
+					'url' => ['simkatmawa-mandiri/index'],
 					'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-					'url' => ['#'],
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Rekognisi'), 'url' => ['simkatmawa-mandiri/rekognisi']],
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Kegiatan Mandiri'), 'url' => ['simak-magang/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i>Kegiatan Mandiri'), 'url' => ['simkatmawa-mandiri/kegiatan-mandiri']],
 
 					],
 				],
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Kegiatan Belmawa',
-					'url' => '#',
+					'url' =>  ['simkatmawa-belmawa/index'],
 				],
 				[
 					'label' => '<i class="menu-icon fa fa-cog"></i>Master <b class="arrow fa fa-angle-down"></b>',
@@ -82,7 +83,9 @@ class MenuHelper
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
 
-						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori kegiatan pembinaan mental kebangsaan'), 'url' => ['simkatmawa-kegiatan/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Kegiatan Pembinaan Mental Kebangsaan'), 'url' => ['simkatmawa-kegiatan/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Rekognisi'), 'url' => ['simkatmawa-rekognisi/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Kegiatan Belmawa'), 'url' => ['simkatmawa-belmawa-kategori/index']],
 
 					],
 				],
