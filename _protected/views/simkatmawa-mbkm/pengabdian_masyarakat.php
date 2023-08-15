@@ -19,12 +19,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('<i class="fa fa-plus"></i> Input Kegiatan', ['create-pengabdian-masyarakat'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); 
+    <?php
+    if (!Yii::$app->user->isGuest) :
     ?>
+        <p>
+            <?= Html::a('<i class="fa fa-plus"></i> Input Kegiatan', ['create-pengabdian-masyarakat'], ['class' => 'btn btn-success']) ?>
+        </p>
+    <?php
+    endif;
+    ?>
+    
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

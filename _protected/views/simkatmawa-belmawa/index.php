@@ -17,9 +17,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('<i class="fa fa-plus"></i> Input Data', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <?php
+    if (!Yii::$app->user->isGuest) :
+    ?>
+        <p>
+            <?= Html::a('<i class="fa fa-plus"></i> Input Kegiatan', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+    <?php
+    endif;
+    ?>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); 
     ?>
@@ -77,7 +83,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]);
                     },
                     'delete' => function ($url, $model) {
-                        return Html::a('<i class="fa fa-trash"></i>', ['/simkatmawa-mbkm/delete', 'id' => $model->id, 'jenisSimkatmawa' => $model->jenis_simkatmawa], [
+                        return Html::a('<i class="fa fa-trash"></i>', ['/simkatmawa-belmawa/delete', 'id' => $model->id, 'jenisSimkatmawa' => $model->jenis_simkatmawa], [
                             'title' => Yii::t('app', 'Hapus Kegiatan'),
                             'data-pjax' => 0,
                             'data' => [
