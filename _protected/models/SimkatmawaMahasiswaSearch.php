@@ -17,8 +17,8 @@ class SimkatmawaMahasiswaSearch extends SimkatmawaMahasiswa
     public function rules()
     {
         return [
-            [['id', 'simkatmawa_mandiri_id', 'simkatmawa_mbkm_id'], 'integer'],
-            [['nim'], 'safe'],
+            [['id', 'simkatmawa_mbkm_id', 'simkatmawa_mandiri_id', 'simkatmawa_belmawa_id', 'simkatmawa_non_lomba_id'], 'integer'],
+            [['nim', 'nama', 'prodi', 'kampus'], 'safe'],
         ];
     }
 
@@ -59,11 +59,16 @@ class SimkatmawaMahasiswaSearch extends SimkatmawaMahasiswa
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'simkatmawa_mandiri_id' => $this->simkatmawa_mandiri_id,
             'simkatmawa_mbkm_id' => $this->simkatmawa_mbkm_id,
+            'simkatmawa_mandiri_id' => $this->simkatmawa_mandiri_id,
+            'simkatmawa_belmawa_id' => $this->simkatmawa_belmawa_id,
+            'simkatmawa_non_lomba_id' => $this->simkatmawa_non_lomba_id,
         ]);
 
-        $query->andFilterWhere(['like', 'nim', $this->nim]);
+        $query->andFilterWhere(['like', 'nim', $this->nim])
+            ->andFilterWhere(['like', 'nama', $this->nama])
+            ->andFilterWhere(['like', 'prodi', $this->prodi])
+            ->andFilterWhere(['like', 'kampus', $this->kampus]);
 
         return $dataProvider;
     }

@@ -54,7 +54,7 @@ $model->tanggal_akhir = !empty($_POST['IzinMahasiswa']['tanggal_akhir']) ? $_POS
         'readonly' => true,
         'pluginOptions' => [
             'autoclose'=>true,
-            'format' => 'dd-mm-yyyy'
+            'format' => 'yyyy-mm-dd'
         ]
     ]) ?>
 
@@ -71,7 +71,7 @@ $model->tanggal_akhir = !empty($_POST['IzinMahasiswa']['tanggal_akhir']) ? $_POS
         'readonly' => true,
         'pluginOptions' => [
             'autoclose'=>true,
-            'format' => 'dd-mm-yyyy'
+            'format' => 'yyyy-mm-dd'
         ]
     ]) ?>
 </div>

@@ -32,7 +32,7 @@ $model->tanggal_akhir = !empty($_GET['RequestOrder']['tanggal_akhir']) ? $_GET['
             'options' => ['placeholder' => 'Pilih tanggal awal ...'],
             'dateFormat' => 'php:d-m-Y',
             // 'pluginOptions' => [
-            //     'format' => 'dd-mm-yyyy',
+            //     'format' => 'yyyy-mm-dd',
             //     'todayHighlight' => true
             // ]
         ]
@@ -46,7 +46,7 @@ $model->tanggal_akhir = !empty($_GET['RequestOrder']['tanggal_akhir']) ? $_GET['
             'dateFormat' => 'php:d-m-Y',
             'options' => ['placeholder' => 'Pilih tanggal akhir ...'],
             // 'pluginOptions' => [
-            //     'format' => 'dd-mm-yyyy',
+            //     'format' => 'yyyy-mm-dd',
             //     'todayHighlight' => true
             // ]
         ]

@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'value' => date('d-M-Y', strtotime('0 days')),
             'options' => ['placeholder' => 'Pilih tanggal awal ...'],
             'pluginOptions' => [
-                'format' => 'dd-mm-yyyy',
+                'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true
             ]
         ]
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'value' => date('d-M-Y', strtotime('0 days')),
             'options' => ['placeholder' => 'Pilih tanggal akhir ...'],
             'pluginOptions' => [
-                'format' => 'dd-mm-yyyy',
+                'format' => 'yyyy-mm-dd',
                 'todayHighlight' => true
             ]
         ]

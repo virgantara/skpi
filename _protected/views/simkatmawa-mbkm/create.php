@@ -19,43 +19,51 @@ $this->params['breadcrumbs'][] = $this->title;
         case 'pertukaran-pelajar':
             echo $this->render('pertukaran_pelajar_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
 
         case 'mengajar-di-sekolah':
             echo $this->render('mengajar_di_sekolah_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
 
         case 'penelitian':
             echo $this->render('penelitian_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
         case 'proyek-kemanusiaan':
             echo $this->render('proyek_kemanusiaan_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
         case 'proyek-desa':
             echo $this->render('proyek_desa_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
         case 'wirausaha':
             echo $this->render('wirausaha_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
         case 'studi':
             echo $this->render('studi_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
         case 'pengabdian-masyarakat':
             echo $this->render('pengabdian_masyarakat_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
 

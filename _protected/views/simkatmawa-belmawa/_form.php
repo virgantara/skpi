@@ -33,7 +33,7 @@ use yii\widgets\ActiveForm;
         'options' => ['placeholder' => 'Input tanggal mulai ...', 'autocomplete' => 'off'],
         'pluginOptions' => [
             'autoclose' => true,
-            'format' => 'dd-mm-yyyy'
+            'format' => 'yyyy-mm-dd'
         ]
     ]);
     ?>
@@ -42,7 +42,7 @@ use yii\widgets\ActiveForm;
         'options' => ['placeholder' => 'Input tanggal selesai ...', 'autocomplete' => 'off'],
         'pluginOptions' => [
             'autoclose' => true,
-            'format' => 'dd-mm-yyyy'
+            'format' => 'yyyy-mm-dd'
         ]
     ]);
     ?>

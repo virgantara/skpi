@@ -85,14 +85,52 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     return Html::a('<i class="fa fa-link"></i>', $model->url_kegiatan, ['target' => '_blank']);
                 }
-            ],
-            [
-                'class' => ActionColumn::className(),
+            ], [
+                'class' => 'yii\grid\ActionColumn',
                 'contentOptions' => ['class' => 'text-center'],
-                'visible' => !Yii::$app->user->isGuest,
-                'urlCreator' => function ($action, SimkatmawaNonLomba $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                }
+                'template' => '{view} {update} {delete}',
+                'buttons' => [
+
+                    'mhs' => function ($url, $model) {
+                        return Html::a('<i class="fa fa-list"></i>', ['/simkatmawa-non-lomba/detail-mahasiswa', 'id' => $model->id], [
+                            'title' => Yii::t('app', 'Detail Mahasiswa'),
+                            'data-pjax' => 0,
+                        ]);
+                    },
+                    'view' => function ($url, $model) {
+                        return Html::a('<i class="fa fa-list"></i>', $url, [
+                            'title' => Yii::t('app', 'Detail Data'),
+                            'data-pjax' => 0,
+                        ]);
+                    },
+                    'update' => function ($url, $model) {
+                        return Html::a('<i class="fa fa-pencil"></i>', $url, [
+                            'title' => Yii::t('app', 'Update Kegiatan'),
+                            'data-pjax' => 0,
+                        ]);
+                    },
+                    'delete' => function ($url, $model) {
+                        return Html::a('<i class="fa fa-trash"></i>', ['/simkatmawa-non-lomba/delete', 'id' => $model->id], [
+                            'title' => Yii::t('app', 'Hapus Kegiatan'),
+                            'data-pjax' => 0,
+                            'data' => [
+                                'confirm' => 'Are you sure you want to delete this item?',
+                                'method' => 'post',
+                            ],
+                        ]);
+                    },
+
+                ],
+                'visibleButtons' => [
+
+                    'update' => function ($data) {
+                        return !Yii::$app->user->isGuest;
+                    },
+
+                    'delete' => function ($data) {
+                        return !Yii::$app->user->isGuest;
+                    }
+                ]
             ],
         ],
     ]); ?>

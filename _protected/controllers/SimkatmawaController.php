@@ -61,7 +61,7 @@ class SimkatmawaController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'belmawa');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['index']);
             } else {

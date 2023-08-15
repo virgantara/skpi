@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\SimkatmawaKegiatan;
+use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaNonLomba;
 use app\models\SimkatmawaNonLombaSearch;
 use DateTime;
@@ -100,99 +101,27 @@ class SimkatmawaNonLombaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
+
     public function actionCreate()
     {
+        $model = new SimkatmawaNonLomba();
 
-        $model = new SimkatmawaNonLomba;
-        $connection = \Yii::$app->db;
-        $transaction = $connection->beginTransaction();
-        $s3config = Yii::$app->params['s3'];
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost);
 
-        $s3new = new \Aws\S3\S3Client($s3config);
-        $errors = '';
-
-        try {
-
-            $dataPost   = $_POST;
-            if (Yii::$app->request->post()) {
-
-                $update = false;
-                if (isset($dataPost['SimkatmawaNonLomba']['id'])) {
-                    $model = $this->findModel($dataPost['SimkatmawaNonLomba']['id']);
-                    $update = true;
-                } else {
-                    $model = new SimkatmawaNonLomba;
-                }
-
-                $model->attributes = $dataPost['SimkatmawaNonLomba'];
-                $model->user_id = Yii::$app->user->identity->id;
-
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaNonLomba']['tanggal_mulai']);
-                $formattedDateMulai = $dateTime->format('Y-m-d');
-                $model->tanggal_mulai = $formattedDateMulai;
-
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaNonLomba']['tanggal_selesai']);
-                $formattedDateSelesai = $dateTime->format('Y-m-d');
-                $model->tanggal_selesai = $formattedDateSelesai;
-
-                $model->laporan_path = UploadedFile::getInstance($model, 'laporan_path');
-                $model->foto_kegiatan_path = UploadedFile::getInstance($model, 'foto_kegiatan_path');
-
-                $jenisKegiatan = SimkatmawaKegiatan::findOne($model->simkatmawa_kegiatan_id);
-
-                if ($model->laporan_path && $model->foto_kegiatan_path) {
-                    $curdate    = date('d-m-y');
-
-                    $file_name1  = $model->nama_kegiatan . '-' . $curdate;
-                    $s3path1     = $model->laporan_path->tempName;
-                    $s3type1     = $model->laporan_path->type;
-                    $key1        = 'SimkatmawaNonLomba' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name1 . '.pdf';
-
-                    $insert = $s3new->putObject([
-                        'Bucket'        => 'sikap',
-                        'Key'           => $key1,
-                        'Body'          => 'Body',
-                        'SourceFile'    => $s3path1,
-                        'ContenType'    => $s3type1,
-                    ]);
-
-                    $file_name2  = $model->nama_kegiatan . '-' . $curdate;
-                    $s3path2     = $model->foto_kegiatan_path->tempName;
-                    $s3type2     = $model->foto_kegiatan_path->type;
-                    $key2        = 'SimkatmawaNonLomba' . '/' . $jenisKegiatan->nama . '/' . $model->nama_kegiatan . '/' . 'foto_kegiatan-' . $file_name2 . '.pdf';
-
-                    $insert = $s3new->putObject([
-                        'Bucket'        => 'sikap',
-                        'Key'           => $key2,
-                        'Body'          => 'Body',
-                        'SourceFile'    => $s3path2,
-                        'ContenType'    => $s3type2,
-                    ]);
-
-                    $plainUrl1 = $s3new->getObjectUrl('sikap', $key1);
-                    $plainUrl2 = $s3new->getObjectUrl('sikap', $key2);
-                    $model->laporan_path = $plainUrl1;
-                    $model->foto_kegiatan_path = $plainUrl2;
-
-                    if ($model->save()) {
-                        $transaction->commit();
-                        Yii::$app->session->setFlash('success', "Data tersimpan");
-                        return $this->redirect(['pembinaan-mental-kebangsaan']);
-                    }
-                }
+            if (isset($insert->id)) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['pembinaan-mental-kebangsaan']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['pembinaan-mental-kebangsaan']);
             }
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-            $errors .= $e->getMessage();
-            Yii::$app->session->setFlash('danger', $errors);
-        } catch (\Throwable $e) {
-            $transaction->rollBack();
-            $errors .= $e->getMessage();
-            Yii::$app->session->setFlash('danger', $errors);
         }
 
         return $this->render('create', [
             'model' => $model,
+            'form' => "studi"
         ]);
     }
 
@@ -223,10 +152,12 @@ class SimkatmawaNonLombaController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
+
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        if ($this->findModel($id)->delete() && SimkatmawaMahasiswa::deleteAll(['simkatmawa_non_lomba_id' => $id])) {
+        }
+        Yii::$app->session->setFlash('success', "Data Berhasil Dihapus");
         return $this->redirect(['pembinaan-mental-kebangsaan']);
     }
 
@@ -244,5 +175,114 @@ class SimkatmawaNonLombaController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findMahasiswa($id)
+    {
+        if (($model = SimkatmawaMahasiswa::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function insertSimkatmawa($dataPost)
+    {
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        $s3config = Yii::$app->params['s3'];
+
+        $s3new = new \Aws\S3\S3Client($s3config);
+        $errors = '';
+
+        try {
+
+            $dataPost   = $_POST;
+            if (Yii::$app->request->post()) {
+
+                if (isset($dataPost['SimkatmawaNonLomba']['id'])) $model = $this->findModel($dataPost['SimkatmawaNonLomba']['id']);
+                else $model = new SimkatmawaNonLomba;
+
+                $model->attributes = $dataPost['SimkatmawaNonLomba'];
+                $model->user_id = Yii::$app->user->identity->id;
+
+                $laporanPath = UploadedFile::getInstance($model, 'laporan_path');
+                $fotoKegiatanPath = UploadedFile::getInstance($model, 'foto_kegiatan_path');
+
+                $jenisKegiatan = SimkatmawaKegiatan::findOne($model->simkatmawa_kegiatan_id)->nama;
+
+                $curdate    = date('d-m-y');
+
+                
+                if (isset($laporanPath)) {
+                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $s3path     = $laporanPath->tempName;
+                    $s3type     = $laporanPath->type;
+                    $key        = 'SimkatmawaNonLomba' . '/' . $jenisKegiatan . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
+                    $insert = $s3new->putObject([
+                        'Bucket'        => 'sikap',
+                        'Key'           => $key,
+                        'Body'          => 'Body',
+                        'SourceFile'    => $s3path,
+                        'ContenType'    => $s3type,
+                    ]);
+                    $plainUrl = $s3new->getObjectUrl('sikap', $key);
+                    $model->laporan_path = $plainUrl;
+                }
+
+                if (isset($fotoKegiatanPath)) {
+                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $s3path     = $fotoKegiatanPath->tempName;
+                    $s3type     = $fotoKegiatanPath->type;
+                    $key        = 'SimkatmawaNonLomba' . '/' . $jenisKegiatan . '/' . $model->nama_kegiatan . '/' . 'foto_kegiatan-' . $file_name . '.pdf';
+                    $insert = $s3new->putObject([
+                        'Bucket'        => 'sikap',
+                        'Key'           => $key,
+                        'Body'          => 'Body',
+                        'SourceFile'    => $s3path,
+                        'ContenType'    => $s3type,
+                    ]);
+                    $plainUrl = $s3new->getObjectUrl('sikap', $key);
+                    $model->foto_kegiatan_path = $plainUrl;
+                }
+                
+                if ($model->save()) {
+
+                    if (!empty($dataPost['hint'][0])) {
+
+                        foreach ($dataPost['hint'] as $mhs) {
+                            $data = explode(' - ', $mhs);
+
+                            if (strlen($mhs) > 12) {
+
+                                $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_non_lomba_id' => $model->id, 'nim' => $data[0]]);
+
+                                if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
+                                else $mahasiswa = new SimkatmawaMahasiswa();
+
+                                $mahasiswa->simkatmawa_non_lomba_id = $model->id;
+                                $mahasiswa->nim = $data[0];
+                                $mahasiswa->nama = $data[1];
+                                $mahasiswa->prodi = $data[2];
+                                $mahasiswa->kampus = $data[3];
+                                $mahasiswa->save();
+                            }
+                        }
+                    }
+                    $transaction->commit();
+                    return $model;
+                }
+            }
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            $errors .= $e->getMessage();
+            return $errors;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            $errors .= $e->getMessage();
+            return $errors;
+        }
+
+        die();
     }
 }

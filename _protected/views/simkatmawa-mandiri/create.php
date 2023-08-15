@@ -19,12 +19,14 @@ $this->params['breadcrumbs'][] = $this->title;
         case 'rekognisi':
             echo $this->render('rekognisi_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
 
         case 'kegiatan-mandiri':
             echo $this->render('kegiatan_mandiri_form', [
                 'model' => $model,
+                'function' => 'create'
             ]);
             break;
 

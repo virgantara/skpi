@@ -46,7 +46,7 @@ use yii\web\JsExpression;
     'options' => ['placeholder' => 'Input tanggal pulang ...'],
     'pluginOptions' => [
         'autoclose' => true,
-        'format' => 'dd-mm-yyyy'
+        'format' => 'yyyy-mm-dd'
     ]
 ])->label(false);
                  ?>

@@ -77,7 +77,7 @@ class SimkatmawaBelmawaController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'belmawa');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['index']);
             } else {
@@ -163,6 +163,14 @@ class SimkatmawaBelmawaController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+    protected function findMahasiswa($id)
+    {
+        if (($model = SimkatmawaMahasiswa::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
 
     protected function insertSimkatmawa($dataPost, $jenisSimkatmawa)
     {
@@ -222,16 +230,23 @@ class SimkatmawaBelmawaController extends Controller
                     if (!empty($dataPost['hint'][0])) {
 
                         foreach ($dataPost['hint'] as $mhs) {
-                            $mahasiswa = new SimkatmawaMahasiswa();
+                            $data = explode(' - ', $mhs);
 
-                            $pattern = '/^\d+/';
-                            if (preg_match($pattern, $mhs, $matches)) {
-                                $nim = $matches[0];
-
-                                $mahasiswa->nim = $nim;
+                            if (strlen($mhs) > 12) {
+                                
+                                $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_belmawa_id' => $model->id, 'nim' => $data[0]]);
+                                
+                                if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
+                                else $mahasiswa = new SimkatmawaMahasiswa();
+    
                                 $mahasiswa->simkatmawa_belmawa_id = $model->id;
+                                $mahasiswa->nim = $data[0];
+                                $mahasiswa->nama = $data[1];
+                                $mahasiswa->prodi = $data[2];
+                                $mahasiswa->kampus = $data[3];
                                 $mahasiswa->save();
                             }
+
                         }
                     }
                     $transaction->commit();

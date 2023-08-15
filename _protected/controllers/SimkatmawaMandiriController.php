@@ -107,7 +107,7 @@ class SimkatmawaMandiriController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'rekognisi');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['rekognisi']);
             } else {
@@ -131,7 +131,7 @@ class SimkatmawaMandiriController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'kegiatan-mandiri');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['kegiatan-mandiri']);
             } else {
@@ -182,6 +182,7 @@ class SimkatmawaMandiriController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'form' => $model->jenis_simkatmawa
         ]);
     }
 
@@ -215,6 +216,15 @@ class SimkatmawaMandiriController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+    
+    protected function findMahasiswa($id)
+    {
+        if (($model = SimkatmawaMahasiswa::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
 
     protected function insertSimkatmawa($dataPost, $jenisSimkatmawa)
     {
@@ -239,14 +249,6 @@ class SimkatmawaMandiriController extends Controller
                 $model->attributes = $dataPost['SimkatmawaMandiri'];
                 $model->user_id = Yii::$app->user->identity->id;
                 $model->jenis_simkatmawa = $jenisSimkatmawa;
-
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaMandiri']['tanggal_mulai']);
-                $formattedDateMulai = $dateTime->format('Y-m-d');
-                $model->tanggal_mulai = $formattedDateMulai;
-
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaMandiri']['tanggal_selesai']);
-                $formattedDateSelesai = $dateTime->format('Y-m-d');
-                $model->tanggal_selesai = $formattedDateSelesai;
 
                 $fotoKaryaPath = UploadedFile::getInstance($model, 'foto_karya_path');
                 $fotoPenyerahanPath = UploadedFile::getInstance($model, 'foto_penyerahan_path');
@@ -359,14 +361,20 @@ class SimkatmawaMandiriController extends Controller
                     if (!empty($dataPost['hint'][0])) {
 
                         foreach ($dataPost['hint'] as $mhs) {
-                            $mahasiswa = new SimkatmawaMahasiswa();
+                            $data = explode(' - ', $mhs);
 
-                            $pattern = '/^\d+/';
-                            if (preg_match($pattern, $mhs, $matches)) {
-                                $nim = $matches[0];
+                            if (strlen($mhs) > 12) {
 
-                                $mahasiswa->nim = $nim;
+                                $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_mandiri_id' => $model->id, 'nim' => $data[0]]);
+
+                                if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
+                                else $mahasiswa = new SimkatmawaMahasiswa();
+
                                 $mahasiswa->simkatmawa_mandiri_id = $model->id;
+                                $mahasiswa->nim = $data[0];
+                                $mahasiswa->nama = $data[1];
+                                $mahasiswa->prodi = $data[2];
+                                $mahasiswa->kampus = $data[3];
                                 $mahasiswa->save();
                             }
                         }
