@@ -5,6 +5,9 @@ namespace app\controllers;
 use app\models\SimkatmawaBelmawa;
 use app\models\SimkatmawaBelmawaSearch;
 use app\models\SimkatmawaMahasiswa;
+use app\models\SimkatmawaMandiri;
+use app\models\SimkatmawaMbkm;
+use app\models\SimkatmawaNonLomba;
 use DateTime;
 use Yii;
 use yii\web\Controller;
@@ -35,90 +38,135 @@ class SimkatmawaController extends Controller
         );
     }
 
-    public function actionIndex()
+    public function actionCountSimkatmawaByJenis()
     {
-        $searchModel = new SimkatmawaBelmawaSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataPost = $_POST;
+        $tahun = $dataPost['tahun'];
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+        $simkatmawaNonLomba = SimkatmawaNonLomba::find();
+        $simkatmawaBelmawa = SimkatmawaBelmawa::find();
 
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+        if (!empty($tahun)) {
+            $tanggalMulai = $tahun . '-01-01';
+            $tanggalSelesai = $tahun . '-12-31';
 
-    public function actionCreate()
-    {
-        $model = new SimkatmawaBelmawa();
-
-        $dataPost   = $_POST;
-        if (!empty($dataPost)) {
-            $insert = $this->insertSimkatmawa($dataPost, 'belmawa');
-
-            if (isset($insert->id)) {
-                Yii::$app->session->setFlash('success', "Data tersimpan");
-                return $this->redirect(['index']);
-            } else {
-                Yii::$app->session->setFlash('danger', $insert);
-                return $this->redirect(['index']);
-            }
+            $simkatmawaNonLomba->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
+            $simkatmawaBelmawa->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        $countPertukaranPelajar = $this->simkatmawaMbkm('pertukaran-pelajar', $tahun)->count();
+        $countMengajarDiSekolah = $this->simkatmawaMbkm('mengajar-di-sekolah', $tahun)->count();
+        $countPenelitian = $this->simkatmawaMbkm('penelitian', $tahun)->count();
+        $countProyekKemanusiaan = $this->simkatmawaMbkm('proyek-kemanusiaan', $tahun)->count();
+        $countProyekDesa = $this->simkatmawaMbkm('proyek-desa', $tahun)->count();
+        $countWirausaha = $this->simkatmawaMbkm('wirausaha', $tahun)->count();
+        $countStudi = $this->simkatmawaMbkm('studi', $tahun)->count();
+        $countPengabdianMasyarakat = $this->simkatmawaMbkm('pengabdian-masyarakat', $tahun)->count();
+
+        $countPembinaanMentalKebangsaan = $simkatmawaNonLomba->count();
+
+        $countRekognisi = $this->simkatmawaMandiri('rekognisi', $tahun)->count();
+        $countKegiatanMandiri = $this->simkatmawaMandiri('kegiatan-mandiri', $tahun)->count();
+
+        $countBelmawa = $simkatmawaBelmawa->count();
+
+        $response = [
+            [
+                'tingkat' => 'Pertukaran Pelajar',
+                'total' => 1
+            ],
+            [
+                'tingkat' => 'Mengajar di Sekolah',
+                'total' => 2
+            ],
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
 
-    public function actionUpdate($id)
+    public function actionGetData()
     {
-        $model = $this->findModel($id);
+        $dataPost = $_POST;
+        $tahun = $dataPost['tahun'];
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $simkatmawaNonLomba = SimkatmawaNonLomba::find();
+        $simkatmawaBelmawa = SimkatmawaBelmawa::find();
+
+        if (!empty($tahun)) {
+            $tanggalMulai = $tahun . '-01-01';
+            $tanggalSelesai = $tahun . '-12-31';
+
+            $simkatmawaNonLomba->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
+            $simkatmawaBelmawa->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $countPertukaranPelajar = $this->simkatmawaMbkm('pertukaran-pelajar', $tahun)->count();
+        $countMengajarDiSekolah = $this->simkatmawaMbkm('mengajar-di-sekolah', $tahun)->count();
+        $countPenelitian = $this->simkatmawaMbkm('penelitian', $tahun)->count();
+        $countProyekKemanusiaan = $this->simkatmawaMbkm('proyek-kemanusiaan', $tahun)->count();
+        $countProyekDesa = $this->simkatmawaMbkm('proyek-desa', $tahun)->count();
+        $countWirausaha = $this->simkatmawaMbkm('wirausaha', $tahun)->count();
+        $countStudi = $this->simkatmawaMbkm('studi', $tahun)->count();
+        $countPengabdianMasyarakat = $this->simkatmawaMbkm('pengabdian-masyarakat', $tahun)->count();
+
+        $countPembinaanMentalKebangsaan = $simkatmawaNonLomba->count();
+
+        $countRekognisi = $this->simkatmawaMandiri('rekognisi', $tahun)->count();
+        $countKegiatanMandiri = $this->simkatmawaMandiri('kegiatan-mandiri', $tahun)->count();
+
+        $countBelmawa = $simkatmawaBelmawa->count();
+
+        $response = array(
+            'countPertukaranPelajar' => $countPertukaranPelajar,
+            'countMengajarDiSekolah' => $countMengajarDiSekolah,
+            'countPenelitian' => $countPenelitian,
+            'countProyekKemanusiaan' => $countProyekKemanusiaan,
+            'countProyekDesa' => $countProyekDesa,
+            'countWirausaha' => $countWirausaha,
+            'countPengabdianMasyarakat' => $countPengabdianMasyarakat,
+            'countStudi' => $countStudi,
+            'countPembinaanMentalKebangsaan' => $countPembinaanMentalKebangsaan,
+            'countRekognisi' => $countRekognisi,
+            'countKegiatanMandiri' => $countKegiatanMandiri,
+            'countBelmawa' => $countBelmawa,
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }
 
-    /**
-     * Deletes an existing SimkatmawaBelmawa model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
+    protected function simkatmawaMbkm($jenisSimkatmawa, $tahun)
     {
-        if ($this->findModel($id)->delete() && SimkatmawaMahasiswa::deleteAll(['simkatmawa_belmawa_id' => $id])) {
-            Yii::$app->session->setFlash('success', "Data Berhasil Dihapus");
-            return $this->redirect(['index']);
-        } else {
-            return $this->redirect(['index']);
+
+        $model = SimkatmawaMbkm::find()->where(['jenis_simkatmawa' => $jenisSimkatmawa]);
+        if (!empty($tahun)) {
+            $tanggalMulai = $tahun . '-01-01';
+            $tanggalSelesai = $tahun . '-12-31';
+            $model->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
         }
-    }
 
-    /**
-     * Finds the SimkatmawaBelmawa model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return SimkatmawaBelmawa the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = SimkatmawaBelmawa::findOne(['id' => $id])) !== null) {
+        if ($model !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+    protected function simkatmawaMandiri($jenisSimkatmawa, $tahun)
+    {
+
+        $model = SimkatmawaMandiri::find()->where(['jenis_simkatmawa' => $jenisSimkatmawa]);
+        if (!empty($tahun)) {
+            $tanggalMulai = $tahun . '-01-01';
+            $tanggalSelesai = $tahun . '-12-31';
+            $model->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
+        }
+
+        if ($model !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
 }

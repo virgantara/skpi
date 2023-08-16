@@ -13,7 +13,7 @@ use yii\helpers\Html;
             <table id="tabel-mahasiswa" class="table table-bordered table-hovered table-striped">
                 <?php
                 if ($function == 'update') :
-                    $mahasiswa = SimkatmawaMahasiswa::findAll(['simkatmawa_mandiri_id' => $simkatmawa_id]);
+                    $mahasiswa = SimkatmawaMahasiswa::findAll(['simkatmawa_belmawa_id' => $simkatmawa_id]);
 
                     foreach ($mahasiswa as $mhs) :
                 ?>

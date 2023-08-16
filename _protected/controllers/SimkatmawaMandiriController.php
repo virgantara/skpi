@@ -216,7 +216,7 @@ class SimkatmawaMandiriController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-    
+
     protected function findMahasiswa($id)
     {
         if (($model = SimkatmawaMahasiswa::findOne(['id' => $id])) !== null) {
@@ -257,9 +257,10 @@ class SimkatmawaMandiriController extends Controller
                 $sertifikatPath = UploadedFile::getInstance($model, 'sertifikat_path');
                 $suratTugasPath = UploadedFile::getInstance($model, 'surat_tugas_path');
 
+                
                 $curdate    = date('d-m-y');
                 $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
-
+                
                 if (isset($fotoKaryaPath)) {
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $fotoKaryaPath->tempName;
@@ -275,7 +276,7 @@ class SimkatmawaMandiriController extends Controller
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->foto_karya_path = $plainUrl;
                 }
-
+                
                 if (isset($fotoPenyerahanPath)) {
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $fotoPenyerahanPath->tempName;
@@ -291,7 +292,7 @@ class SimkatmawaMandiriController extends Controller
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->foto_penyerahan_path = $plainUrl;
                 }
-
+                
                 if (isset($laporanPath)) {
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
@@ -355,21 +356,21 @@ class SimkatmawaMandiriController extends Controller
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->surat_tugas_path = $plainUrl;
                 }
-
+                
                 if ($model->save()) {
 
                     if (!empty($dataPost['hint'][0])) {
 
                         foreach ($dataPost['hint'] as $mhs) {
                             $data = explode(' - ', $mhs);
-
+                            
                             if (strlen($mhs) > 12) {
 
                                 $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_mandiri_id' => $model->id, 'nim' => $data[0]]);
-
+                                
                                 if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
                                 else $mahasiswa = new SimkatmawaMahasiswa();
-
+                                
                                 $mahasiswa->simkatmawa_mandiri_id = $model->id;
                                 $mahasiswa->nim = $data[0];
                                 $mahasiswa->nama = $data[1];

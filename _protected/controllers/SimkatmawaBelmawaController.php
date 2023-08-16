@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\SimkatmawaBelmawa;
+use app\models\SimkatmawaBelmawaKategori;
 use app\models\SimkatmawaBelmawaSearch;
 use app\models\SimkatmawaMahasiswa;
 use DateTime;
@@ -121,8 +122,19 @@ class SimkatmawaBelmawaController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $dataPost['SimkatmawaBelmawa']['id'] = $id;
+            echo '<pre>';print_r($dataPost);die;
+            $insert = $this->insertSimkatmawa($dataPost, $model->jenis_simkatmawa, false);
+
+            if (isset($insert->id)) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['index']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['index']);
+            }
         }
 
         return $this->render('update', [
@@ -183,7 +195,6 @@ class SimkatmawaBelmawaController extends Controller
 
         try {
 
-            $dataPost   = $_POST;
             if (Yii::$app->request->post()) {
 
                 if (isset($dataPost['SimkatmawaBelmawa']['id'])) {
@@ -194,15 +205,7 @@ class SimkatmawaBelmawaController extends Controller
 
                 $model->attributes = $dataPost['SimkatmawaBelmawa'];
                 $model->user_id = Yii::$app->user->identity->id;
-                $model->jenis_simkatmawa = $jenisSimkatmawa;
-
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaBelmawa']['tanggal_mulai']);
-                $formattedDateMulai = $dateTime->format('Y-m-d');
-                $model->tanggal_mulai = $formattedDateMulai;
-
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaBelmawa']['tanggal_selesai']);
-                $formattedDateSelesai = $dateTime->format('Y-m-d');
-                $model->tanggal_selesai = $formattedDateSelesai;
+                $simkatmawaKategori = SimkatmawaBelmawaKategori::findOne($model->simkatmawa_belmawa_kategori_id);
 
                 $laporanPath = UploadedFile::getInstance($model, 'laporan_path');
 
@@ -213,7 +216,7 @@ class SimkatmawaBelmawaController extends Controller
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
                     $s3type     = $laporanPath->type;
-                    $key        = 'SimkatmawaBelmawa' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
+                    $key        = 'SimkatmawaBelmawa' . '/' . $simkatmawaKategori->nama . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
                     $insert = $s3new->putObject([
                         'Bucket'        => 'sikap',
                         'Key'           => $key,
@@ -249,6 +252,7 @@ class SimkatmawaBelmawaController extends Controller
 
                         }
                     }
+                    
                     $transaction->commit();
                     return $model;
                 }

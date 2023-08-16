@@ -113,6 +113,7 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                                                     'label' => 'Sertifikat',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
+                                                        // echo '<pre>';print_r($model);die;
                                                         if (empty($model->sertifikat_path)) {
                                                             return '-';
                                                         }
@@ -124,7 +125,7 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                                                     'label' => 'Surat Tugas',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
-                                                        if (empty($model->sk_penerimaan_path)) {
+                                                        if (empty($model->surat_tugas_path)) {
                                                             return '-';
                                                         }
                                                         return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank', 'data-pjax' => 0]);

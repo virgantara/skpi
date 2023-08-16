@@ -134,6 +134,17 @@ class MyHelper
 		];
 	}
 
+	public static function getYears()
+	{
+		$currentDate = date('Y-m-d');
+		$oneYearAhead = date('Y', strtotime('+1 year', strtotime($currentDate)));
+		$fourYearsAgo = date('Y', strtotime('-3 years', strtotime($currentDate)));
+
+		$years = array_reverse(range($fourYearsAgo, $oneYearAhead));
+
+		return array_combine($years, $years);
+	}
+
 	public static function getTingkatEvent()
 	{
 		return ['Prodi' => 'Prodi', 'Fakultas' => 'Fakultas', 'Universitas' => 'Universitas', 'Lokal' => 'Lokal', 'Provinsi' => 'Provinsi', 'Nasional' => 'Nasional', 'Internasional' => 'Internasional'];
