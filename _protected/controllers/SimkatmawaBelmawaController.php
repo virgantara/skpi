@@ -120,9 +120,6 @@ class SimkatmawaBelmawaController extends Controller
         $dataPost   = $_POST;
         if (!empty($dataPost)) {
             $dataPost['SimkatmawaBelmawa']['id'] = $id;
-            echo '<pre>';
-            print_r($dataPost);
-            die;
             $insert = $this->insertSimkatmawa($dataPost, $model->jenis_simkatmawa, false);
 
             if (isset($insert->id)) {
