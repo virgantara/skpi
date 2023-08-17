@@ -6,6 +6,7 @@ use app\models\SimkatmawaKegiatan;
 use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaNonLomba;
 use app\models\SimkatmawaNonLombaSearch;
+use app\models\UserProdi;
 use DateTime;
 use Yii;
 use yii\debug\panels\DumpPanel;
@@ -205,6 +206,8 @@ class SimkatmawaNonLombaController extends Controller
 
                 $model->attributes = $dataPost['SimkatmawaNonLomba'];
                 $model->user_id = Yii::$app->user->identity->id;
+                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                $model->prodi_id = $userProdi->prodi_id ?? null;
 
                 $laporanPath = UploadedFile::getInstance($model, 'laporan_path');
                 $fotoKegiatanPath = UploadedFile::getInstance($model, 'foto_kegiatan_path');

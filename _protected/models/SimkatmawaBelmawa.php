@@ -20,7 +20,9 @@ use Yii;
  * @property string|null $laporan_path
  * @property string|null $created_at
  * @property string|null $updated_at
+ * @property int|null $prodi_id
  *
+ * @property SimakMasterprogramstudi $prodi
  * @property SimkatmawaBelmawaKategori $simkatmawaBelmawaKategori
  * @property SimkatmawaMahasiswa[] $simkatmawaMahasiswas
  * @property User $user
@@ -41,7 +43,7 @@ class SimkatmawaBelmawa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'simkatmawa_belmawa_kategori_id'], 'integer'],
+            [['user_id', 'simkatmawa_belmawa_kategori_id', 'prodi_id'], 'integer'],
             [['nama_kegiatan'], 'required'],
             [['tanggal_mulai', 'tanggal_selesai', 'created_at', 'updated_at'], 'safe'],
             [['jenis_simkatmawa'], 'string', 'max' => 20],
@@ -50,6 +52,8 @@ class SimkatmawaBelmawa extends \yii\db\ActiveRecord
             [['keterangan'], 'string', 'max' => 500],
             [['simkatmawa_belmawa_kategori_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimkatmawaBelmawaKategori::class, 'targetAttribute' => ['simkatmawa_belmawa_kategori_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['prodi_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterprogramstudi::class, 'targetAttribute' => ['prodi_id' => 'id']],
+            [['laporan_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf', 'maxSize' => 1024 * 1024 * 5],
         ];
     }
 
@@ -59,20 +63,31 @@ class SimkatmawaBelmawa extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'user_id' => 'User ID',
-            'simkatmawa_belmawa_kategori_id' => 'Simkatmawa Belmawa Kategori',
-            'jenis_simkatmawa' => 'Jenis Simkatmawa',
-            'nama_kegiatan' => 'Nama Kegiatan',
-            'peringkat' => 'Peringkat',
-            'keterangan' => 'Keterangan',
-            'tanggal_mulai' => 'Tanggal Mulai',
-            'tanggal_selesai' => 'Tanggal Selesai',
-            'url_kegiatan' => 'Url Kegiatan',
-            'laporan_path' => 'Laporan Path',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'id' => Yii::t('app', 'ID'),
+            'user_id' => Yii::t('app', 'User ID'),
+            'simkatmawa_belmawa_kategori_id' => Yii::t('app', 'Simkatmawa Belmawa Kategori ID'),
+            'jenis_simkatmawa' => Yii::t('app', 'Jenis Simkatmawa'),
+            'nama_kegiatan' => Yii::t('app', 'Nama Kegiatan'),
+            'peringkat' => Yii::t('app', 'Peringkat'),
+            'keterangan' => Yii::t('app', 'Keterangan'),
+            'tanggal_mulai' => Yii::t('app', 'Tanggal Mulai'),
+            'tanggal_selesai' => Yii::t('app', 'Tanggal Selesai'),
+            'url_kegiatan' => Yii::t('app', 'Url Kegiatan'),
+            'laporan_path' => Yii::t('app', 'Laporan Path'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'prodi_id' => Yii::t('app', 'Prodi ID'),
         ];
+    }
+
+    /**
+     * Gets query for [[Prodi]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProdi()
+    {
+        return $this->hasOne(SimakMasterprogramstudi::class, ['id' => 'prodi_id']);
     }
 
     /**

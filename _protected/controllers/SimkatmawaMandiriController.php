@@ -6,6 +6,7 @@ use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaMandiri;
 use app\models\SimkatmawaMandiriSearch;
 use app\models\SimkatmawaRekognisi;
+use app\models\UserProdi;
 use DateTime;
 use Yii;
 use yii\web\Controller;
@@ -248,6 +249,8 @@ class SimkatmawaMandiriController extends Controller
 
                 $model->attributes = $dataPost['SimkatmawaMandiri'];
                 $model->user_id = Yii::$app->user->identity->id;
+                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                $model->prodi_id = $userProdi->prodi_id ?? null;
                 $model->jenis_simkatmawa = $jenisSimkatmawa;
 
                 $fotoKaryaPath = UploadedFile::getInstance($model, 'foto_karya_path');

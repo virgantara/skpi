@@ -40,44 +40,94 @@ class SimkatmawaController extends Controller
 
     public function actionCountSimkatmawaByJenis()
     {
-        $dataPost = $_POST;
-        $tahun = $dataPost['tahun'];
+        $tahun = null;
+        $prodi = null;
+
+        if ($_POST) {
+            $dataPost = $_POST['dataPost'];
+            $tahun = $dataPost['tahun'];
+            $prodi = $dataPost['prodi'];
+        }
 
         $simkatmawaNonLomba = SimkatmawaNonLomba::find();
         $simkatmawaBelmawa = SimkatmawaBelmawa::find();
 
-        if (!empty($tahun)) {
+        if ($tahun != null) {
             $tanggalMulai = $tahun . '-01-01';
             $tanggalSelesai = $tahun . '-12-31';
 
             $simkatmawaNonLomba->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
             $simkatmawaBelmawa->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
         }
+        if (!empty($prodi)) {
+            $simkatmawaNonLomba->andWhere(['prodi_id' => $prodi]);
+            $simkatmawaBelmawa->andWhere(['prodi_id' => $prodi]);
+        }
 
-        $countPertukaranPelajar = $this->simkatmawaMbkm('pertukaran-pelajar', $tahun)->count();
-        $countMengajarDiSekolah = $this->simkatmawaMbkm('mengajar-di-sekolah', $tahun)->count();
-        $countPenelitian = $this->simkatmawaMbkm('penelitian', $tahun)->count();
-        $countProyekKemanusiaan = $this->simkatmawaMbkm('proyek-kemanusiaan', $tahun)->count();
-        $countProyekDesa = $this->simkatmawaMbkm('proyek-desa', $tahun)->count();
-        $countWirausaha = $this->simkatmawaMbkm('wirausaha', $tahun)->count();
-        $countStudi = $this->simkatmawaMbkm('studi', $tahun)->count();
-        $countPengabdianMasyarakat = $this->simkatmawaMbkm('pengabdian-masyarakat', $tahun)->count();
+        $countPertukaranPelajar = $this->simkatmawaMbkm('pertukaran-pelajar', $tahun, $prodi)->count();
+        $countMengajarDiSekolah = $this->simkatmawaMbkm('mengajar-di-sekolah', $tahun, $prodi)->count();
+        $countPenelitian = $this->simkatmawaMbkm('penelitian', $tahun, $prodi)->count();
+        $countProyekKemanusiaan = $this->simkatmawaMbkm('proyek-kemanusiaan', $tahun, $prodi)->count();
+        $countProyekDesa = $this->simkatmawaMbkm('proyek-desa', $tahun, $prodi)->count();
+        $countWirausaha = $this->simkatmawaMbkm('wirausaha', $tahun, $prodi)->count();
+        $countStudi = $this->simkatmawaMbkm('studi', $tahun, $prodi)->count();
+        $countPengabdianMasyarakat = $this->simkatmawaMbkm('pengabdian-masyarakat', $tahun, $prodi)->count();
 
         $countPembinaanMentalKebangsaan = $simkatmawaNonLomba->count();
 
-        $countRekognisi = $this->simkatmawaMandiri('rekognisi', $tahun)->count();
-        $countKegiatanMandiri = $this->simkatmawaMandiri('kegiatan-mandiri', $tahun)->count();
+        $countRekognisi = $this->simkatmawaMandiri('rekognisi', $tahun, $prodi)->count();
+        $countKegiatanMandiri = $this->simkatmawaMandiri('kegiatan-mandiri', $tahun, $prodi)->count();
 
         $countBelmawa = $simkatmawaBelmawa->count();
 
         $response = [
             [
-                'tingkat' => 'Pertukaran Pelajar',
-                'total' => 1
+                'mbkm' => 'Pertukaran Pelajar',
+                'total' => (int)$countPertukaranPelajar
             ],
             [
-                'tingkat' => 'Mengajar di Sekolah',
-                'total' => 2
+                'mbkm' => 'Mengajar di Sekolah',
+                'total' => (int)$countMengajarDiSekolah
+            ],
+            [
+                'mbkm' => 'Penelitian / Riset',
+                'total' => (int)$countPenelitian
+            ],
+            [
+                'mbkm' => 'Proyek Kemanusiaan',
+                'total' => (int)$countProyekKemanusiaan
+            ],
+            [
+                'mbkm' => 'Proyek Desa',
+                'total' => (int)$countProyekDesa
+            ],
+            [
+                'mbkm' => 'Wirausaha',
+                'total' => (int)$countWirausaha
+            ],
+            [
+                'mbkm' => 'Studi / Proyek Independen',
+                'total' => (int)$countStudi
+            ],
+            [
+                'mbkm' => 'Pengabdian Mahasiswa kepada Masyarakat',
+                'total' => (int)$countPengabdianMasyarakat
+            ],
+            [
+                'mbkm' => 'Pembinaan Mental Kebangsaan',
+                'total' => (int)$countPembinaanMentalKebangsaan
+            ],
+            [
+                'mbkm' => 'Rekognisi',
+                'total' => (int)$countRekognisi
+            ],
+            [
+                'mbkm' => 'Kegiatan Mandiri',
+                'total' => (int)$countKegiatanMandiri
+            ],
+            [
+                'mbkm' => 'Belmawa',
+                'total' => (int)$countBelmawa
             ],
         ];
 
@@ -87,8 +137,13 @@ class SimkatmawaController extends Controller
 
     public function actionGetData()
     {
-        $dataPost = $_POST;
-        $tahun = $dataPost['tahun'];
+        $tahun = null;
+        $prodi = null;
+        if ($_POST) {
+            $dataPost = $_POST['dataPost'];
+            $tahun = $dataPost['tahun'];
+            $prodi = $dataPost['prodi'];
+        }
 
         $simkatmawaNonLomba = SimkatmawaNonLomba::find();
         $simkatmawaBelmawa = SimkatmawaBelmawa::find();
@@ -100,20 +155,24 @@ class SimkatmawaController extends Controller
             $simkatmawaNonLomba->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
             $simkatmawaBelmawa->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
         }
+        if (!empty($prodi)) {
+            $simkatmawaNonLomba->andWhere(['prodi_id' => $prodi]);
+            $simkatmawaBelmawa->andWhere(['prodi_id' => $prodi]);
+        }
 
-        $countPertukaranPelajar = $this->simkatmawaMbkm('pertukaran-pelajar', $tahun)->count();
-        $countMengajarDiSekolah = $this->simkatmawaMbkm('mengajar-di-sekolah', $tahun)->count();
-        $countPenelitian = $this->simkatmawaMbkm('penelitian', $tahun)->count();
-        $countProyekKemanusiaan = $this->simkatmawaMbkm('proyek-kemanusiaan', $tahun)->count();
-        $countProyekDesa = $this->simkatmawaMbkm('proyek-desa', $tahun)->count();
-        $countWirausaha = $this->simkatmawaMbkm('wirausaha', $tahun)->count();
-        $countStudi = $this->simkatmawaMbkm('studi', $tahun)->count();
-        $countPengabdianMasyarakat = $this->simkatmawaMbkm('pengabdian-masyarakat', $tahun)->count();
+        $countPertukaranPelajar = $this->simkatmawaMbkm('pertukaran-pelajar', $tahun, $prodi)->count();
+        $countMengajarDiSekolah = $this->simkatmawaMbkm('mengajar-di-sekolah', $tahun, $prodi)->count();
+        $countPenelitian = $this->simkatmawaMbkm('penelitian', $tahun, $prodi)->count();
+        $countProyekKemanusiaan = $this->simkatmawaMbkm('proyek-kemanusiaan', $tahun, $prodi)->count();
+        $countProyekDesa = $this->simkatmawaMbkm('proyek-desa', $tahun, $prodi)->count();
+        $countWirausaha = $this->simkatmawaMbkm('wirausaha', $tahun, $prodi)->count();
+        $countStudi = $this->simkatmawaMbkm('studi', $tahun, $prodi)->count();
+        $countPengabdianMasyarakat = $this->simkatmawaMbkm('pengabdian-masyarakat', $tahun, $prodi)->count();
 
         $countPembinaanMentalKebangsaan = $simkatmawaNonLomba->count();
 
-        $countRekognisi = $this->simkatmawaMandiri('rekognisi', $tahun)->count();
-        $countKegiatanMandiri = $this->simkatmawaMandiri('kegiatan-mandiri', $tahun)->count();
+        $countRekognisi = $this->simkatmawaMandiri('rekognisi', $tahun, $prodi)->count();
+        $countKegiatanMandiri = $this->simkatmawaMandiri('kegiatan-mandiri', $tahun, $prodi)->count();
 
         $countBelmawa = $simkatmawaBelmawa->count();
 
@@ -136,7 +195,7 @@ class SimkatmawaController extends Controller
         echo json_encode($response);
     }
 
-    protected function simkatmawaMbkm($jenisSimkatmawa, $tahun)
+    protected function simkatmawaMbkm($jenisSimkatmawa, $tahun, $prodi)
     {
 
         $model = SimkatmawaMbkm::find()->where(['jenis_simkatmawa' => $jenisSimkatmawa]);
@@ -144,6 +203,9 @@ class SimkatmawaController extends Controller
             $tanggalMulai = $tahun . '-01-01';
             $tanggalSelesai = $tahun . '-12-31';
             $model->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
+        }
+        if (!empty($prodi)) {
+            $model->andWhere(['prodi_id' => $prodi]);
         }
 
         if ($model !== null) {
@@ -153,7 +215,7 @@ class SimkatmawaController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    protected function simkatmawaMandiri($jenisSimkatmawa, $tahun)
+    protected function simkatmawaMandiri($jenisSimkatmawa, $tahun, $prodi)
     {
 
         $model = SimkatmawaMandiri::find()->where(['jenis_simkatmawa' => $jenisSimkatmawa]);
@@ -161,6 +223,9 @@ class SimkatmawaController extends Controller
             $tanggalMulai = $tahun . '-01-01';
             $tanggalSelesai = $tahun . '-12-31';
             $model->andWhere(['between', 'tanggal_mulai', $tanggalMulai, $tanggalSelesai]);
+        }
+        if (!empty($prodi)) {
+            $model->andWhere(['prodi_id' => $prodi]);
         }
 
         if ($model !== null) {

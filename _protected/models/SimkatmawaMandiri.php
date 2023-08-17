@@ -27,7 +27,10 @@ use Yii;
  * @property string|null $laporan_path
  * @property string|null $created_at
  * @property string|null $updated_at
+ * @property int|null $prodi_id
  *
+ * @property SimakMasterprogramstudi $prodi
+ * @property SimkatmawaMahasiswa[] $simkatmawaMahasiswas
  * @property SimkatmawaRekognisi $simkatmawaRekognisi
  * @property User $user
  */
@@ -47,13 +50,14 @@ class SimkatmawaMandiri extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'simkatmawa_rekognisi_id', 'level', 'apresiasi'], 'integer'],
+            [['user_id', 'simkatmawa_rekognisi_id', 'level', 'apresiasi', 'prodi_id'], 'integer'],
             [['nama_kegiatan'], 'required'],
             [['tanggal_mulai', 'tanggal_selesai', 'created_at', 'updated_at'], 'safe'],
             [['jenis_simkatmawa'], 'string', 'max' => 20],
             [['nama_kegiatan', 'penyelenggara', 'tempat_pelaksanaan', 'url_kegiatan', 'sertifikat_path', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path', 'surat_tugas_path', 'laporan_path'], 'string', 'max' => 255],
             [['simkatmawa_rekognisi_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimkatmawaRekognisi::class, 'targetAttribute' => ['simkatmawa_rekognisi_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['prodi_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterprogramstudi::class, 'targetAttribute' => ['prodi_id' => 'id']],
             [['sertifikat_path', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path', 'surat_tugas_path', 'laporan_path'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf', 'maxSize' => 1024 * 1024 * 5],
         ];
     }
@@ -64,9 +68,9 @@ class SimkatmawaMandiri extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'user_id' => Yii::t('app', 'User'),
-            'simkatmawa_rekognisi_id' => Yii::t('app', 'Simkatmawa Rekognisi'),
+            'id' => Yii::t('app', 'ID'),
+            'user_id' => Yii::t('app', 'User ID'),
+            'simkatmawa_rekognisi_id' => Yii::t('app', 'Simkatmawa Rekognisi ID'),
             'jenis_simkatmawa' => Yii::t('app', 'Jenis Simkatmawa'),
             'nama_kegiatan' => Yii::t('app', 'Nama Kegiatan'),
             'penyelenggara' => Yii::t('app', 'Penyelenggara'),
@@ -84,7 +88,28 @@ class SimkatmawaMandiri extends \yii\db\ActiveRecord
             'laporan_path' => Yii::t('app', 'Laporan Path'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
+            'prodi_id' => Yii::t('app', 'Prodi ID'),
         ];
+    }
+
+    /**
+     * Gets query for [[Prodi]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProdi()
+    {
+        return $this->hasOne(SimakMasterprogramstudi::class, ['id' => 'prodi_id']);
+    }
+
+    /**
+     * Gets query for [[SimkatmawaMahasiswas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSimkatmawaMahasiswas()
+    {
+        return $this->hasMany(SimkatmawaMahasiswa::class, ['simkatmawa_mandiri_id' => 'id']);
     }
 
     /**

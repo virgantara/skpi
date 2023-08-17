@@ -7,6 +7,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use app\assets\HighchartAsset;
 use app\helpers\MyHelper;
+use app\models\SimakMasterprogramstudi;
 use app\models\SimakTahunakademik;
 use kartik\select2\Select2;
 use richardfan\widget\JSRegister;
@@ -99,7 +100,7 @@ $listAsrama = $query->all();
   </ul>
 
   <div class="tab-content">
-    <div id="akpam" class="tab-pane">
+    <div id="akpam" class="tab-pane active">
       <div class="row">
         <div class="col-md-4">
           <div class="widget-box transparent">
@@ -426,7 +427,7 @@ $listAsrama = $query->all();
     </div>
 
 
-    <div id="simkatmawa" class="tab-pane active">
+    <div id="simkatmawa" class="tab-pane">
 
       <div class="row">
         <div class="col-md-3">
@@ -436,6 +437,20 @@ $listAsrama = $query->all();
             'options' => [
               'id' => 'tahun_simkatmawa_id',
               'prompt' => '- Pilih Tahun -',
+              'multiple' => false,
+              'allowClear' => true,
+            ],
+          ]); ?>
+        </div>
+        <div class="col-md-3">
+          <?= Select2::widget([
+            'name' => 'prodi_simkatmawa',
+            'data' => ArrayHelper::map(SimakMasterprogramstudi::find()->all(), 'id', 'nama_prodi'),
+            'options' => [
+              'id' => 'prodi_simkatmawa_id',
+              'prompt' => '- Pilih Prodi -',
+              'multiple' => false,
+              'allowClear' => true,
             ],
           ]); ?>
         </div>
@@ -1931,13 +1946,16 @@ if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role != 'ases
     });
   }
 
-  function getDataSimkatmawa(tahun) {
-    var tahun = tahun ?? null
+  function getDataSimkatmawa(tahun, prodi) {
+    var obj = new Object
+    obj.tahun = tahun
+    obj.prodi = prodi
+
     $.ajax({
       url: '/simkatmawa/get-data',
       type: 'POST',
       data: {
-        tahun: tahun
+        dataPost: obj
       },
       dataType: 'json',
       success: function(response) {
@@ -1960,9 +1978,10 @@ if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role != 'ases
 
   getDataSimkatmawa()
 
-  function countSimkatmawaByJenis(periode) {
+  function countSimkatmawaByJenis(tahun, prodi) {
     var obj = new Object
-    obj.periode = periode
+    obj.tahun = tahun
+    obj.prodi = prodi
 
     $.ajax({
       type: "POST",
@@ -1986,10 +2005,10 @@ if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role != 'ases
         var kategori = []
         var chartData = []
         $.each(hasil, function(i, obj) {
-          kategori.push(obj.tingkat)
+          kategori.push(obj.mbkm)
           var tmp = {
             y: obj.total,
-            name: obj.tingkat
+            name: obj.mbkm
           }
           chartData.push(tmp)
         })
@@ -2002,7 +2021,7 @@ if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role != 'ases
             type: "pie"
           },
           title: {
-            text: "Perbandingan Jumlah Tingkat Kegiatan"
+            text: "Perbandingan Jumlah SIMKATMAWA"
           },
 
           xAxis: {
@@ -2073,11 +2092,11 @@ if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role != 'ases
   }
 
   countSimkatmawaByJenis()
-  
-  
-  $("#tahun_simkatmawa_id").change(function() {
-    getDataSimkatmawa($(this).val())
-    countSimkatmawaByJenis($(this).val())
+
+
+  $("#tahun_simkatmawa_id, #prodi_simkatmawa_id").change(function() {
+    getDataSimkatmawa($('#tahun_simkatmawa_id').val(), $('#prodi_simkatmawa_id').val())
+    countSimkatmawaByJenis($('#tahun_simkatmawa_id').val(), $('#prodi_simkatmawa_id').val())
   });
 
 

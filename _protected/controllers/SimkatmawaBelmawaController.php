@@ -6,6 +6,7 @@ use app\models\SimkatmawaBelmawa;
 use app\models\SimkatmawaBelmawaKategori;
 use app\models\SimkatmawaBelmawaSearch;
 use app\models\SimkatmawaMahasiswa;
+use app\models\UserProdi;
 use DateTime;
 use Yii;
 use yii\web\Controller;
@@ -205,6 +206,8 @@ class SimkatmawaBelmawaController extends Controller
 
                 $model->attributes = $dataPost['SimkatmawaBelmawa'];
                 $model->user_id = Yii::$app->user->identity->id;
+                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                $model->prodi_id = $userProdi->prodi_id ?? null;
                 $simkatmawaKategori = SimkatmawaBelmawaKategori::findOne($model->simkatmawa_belmawa_kategori_id);
 
                 $laporanPath = UploadedFile::getInstance($model, 'laporan_path');

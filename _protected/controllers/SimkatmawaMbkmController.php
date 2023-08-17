@@ -5,6 +5,8 @@ namespace app\controllers;
 use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaMbkm;
 use app\models\SimkatmawaMbkmSearch;
+use app\models\User;
+use app\models\UserProdi;
 use DateTime;
 use Yii;
 use yii\web\Controller;
@@ -473,6 +475,8 @@ class SimkatmawaMbkmController extends Controller
 
                 $model->attributes = $dataPost['SimkatmawaMbkm'];
                 $model->user_id = Yii::$app->user->identity->id;
+                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                $model->prodi_id = $userProdi->prodi_id ?? null;
                 $model->jenis_simkatmawa = $jenisSimkatmawa;
 
                 $skPenerimaanPath = UploadedFile::getInstance($model, 'sk_penerimaan_path');
