@@ -9,6 +9,7 @@ use app\models\SimkatmawaRekognisi;
 use app\models\UserProdi;
 use DateTime;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -27,6 +28,22 @@ class SimkatmawaMandiriController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'denyCallback' => function ($rule, $action) {
+                        throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                    },
+                    'only' => ['create-rekognisi', 'create-kegiatan-mandiri', 'update', 'delete'],
+                    'rules' => [
+
+                        [
+                            'actions' => ['create', 'update', 'delete'],
+                            'allow' => true,
+                            'roles' => ['operatorUnit', 'theCreator'],
+                        ],
+
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -36,12 +53,6 @@ class SimkatmawaMandiriController extends Controller
             ]
         );
     }
-
-    /**
-     * Lists all SimkatmawaMandiri models.
-     *
-     * @return string
-     */
 
     public function actionIndex()
     {
@@ -72,12 +83,6 @@ class SimkatmawaMandiriController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single SimkatmawaMandiri model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         $model = $this->findModel($id);
@@ -95,11 +100,6 @@ class SimkatmawaMandiriController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new SimkatmawaMandiri model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreateRekognisi()
     {
         $model = new SimkatmawaMandiri();
@@ -122,7 +122,6 @@ class SimkatmawaMandiriController extends Controller
             'form' => "rekognisi"
         ]);
     }
-
 
     public function actionCreateKegiatanMandiri()
     {
@@ -166,13 +165,6 @@ class SimkatmawaMandiriController extends Controller
         exit;
     }
 
-    /**
-     * Updates an existing SimkatmawaMandiri model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -187,13 +179,6 @@ class SimkatmawaMandiriController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing SimkatmawaMandiri model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id, $jenisSimkatmawa)
     {
         if ($this->findModel($id)->delete() && SimkatmawaMahasiswa::deleteAll(['simkatmawa_mandiri_id' => $id])) {
@@ -202,13 +187,6 @@ class SimkatmawaMandiriController extends Controller
         return $this->redirect([$jenisSimkatmawa]);
     }
 
-    /**
-     * Finds the SimkatmawaMandiri model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return SimkatmawaMandiri the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = SimkatmawaMandiri::findOne(['id' => $id])) !== null) {
@@ -260,10 +238,10 @@ class SimkatmawaMandiriController extends Controller
                 $sertifikatPath = UploadedFile::getInstance($model, 'sertifikat_path');
                 $suratTugasPath = UploadedFile::getInstance($model, 'surat_tugas_path');
 
-                
+
                 $curdate    = date('d-m-y');
                 $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
-                
+
                 if (isset($fotoKaryaPath)) {
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $fotoKaryaPath->tempName;
@@ -279,7 +257,7 @@ class SimkatmawaMandiriController extends Controller
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->foto_karya_path = $plainUrl;
                 }
-                
+
                 if (isset($fotoPenyerahanPath)) {
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $fotoPenyerahanPath->tempName;
@@ -295,7 +273,7 @@ class SimkatmawaMandiriController extends Controller
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->foto_penyerahan_path = $plainUrl;
                 }
-                
+
                 if (isset($laporanPath)) {
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
@@ -359,21 +337,21 @@ class SimkatmawaMandiriController extends Controller
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->surat_tugas_path = $plainUrl;
                 }
-                
+
                 if ($model->save()) {
 
                     if (!empty($dataPost['hint'][0])) {
 
                         foreach ($dataPost['hint'] as $mhs) {
                             $data = explode(' - ', $mhs);
-                            
+
                             if (strlen($mhs) > 12) {
 
                                 $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_mandiri_id' => $model->id, 'nim' => $data[0]]);
-                                
+
                                 if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
                                 else $mahasiswa = new SimkatmawaMahasiswa();
-                                
+
                                 $mahasiswa->simkatmawa_mandiri_id = $model->id;
                                 $mahasiswa->nim = $data[0];
                                 $mahasiswa->nama = $data[1];

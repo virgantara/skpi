@@ -10,6 +10,7 @@ use app\models\UserProdi;
 use DateTime;
 use Yii;
 use yii\debug\panels\DumpPanel;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -28,6 +29,22 @@ class SimkatmawaNonLombaController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'denyCallback' => function ($rule, $action) {
+                        throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                    },
+                    'only' => ['create', 'update', 'delete'],
+                    'rules' => [
+
+                        [
+                            'actions' => ['create', 'update', 'delete'],
+                            'allow' => true,
+                            'roles' => ['operatorUnit', 'theCreator'],
+                        ],
+
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -38,11 +55,6 @@ class SimkatmawaNonLombaController extends Controller
         );
     }
 
-    /**
-     * Lists all SimkatmawaNonLomba models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $searchModel = new SimkatmawaNonLombaSearch();
@@ -84,12 +96,6 @@ class SimkatmawaNonLombaController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single SimkatmawaNonLomba model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         return $this->render('view', [
@@ -97,11 +103,6 @@ class SimkatmawaNonLombaController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new SimkatmawaNonLomba model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
 
     public function actionCreate()
     {
@@ -126,13 +127,6 @@ class SimkatmawaNonLombaController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing SimkatmawaNonLomba model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -146,14 +140,6 @@ class SimkatmawaNonLombaController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing SimkatmawaNonLomba model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-
     public function actionDelete($id)
     {
         if ($this->findModel($id)->delete() && SimkatmawaMahasiswa::deleteAll(['simkatmawa_non_lomba_id' => $id])) {
@@ -162,13 +148,6 @@ class SimkatmawaNonLombaController extends Controller
         return $this->redirect(['pembinaan-mental-kebangsaan']);
     }
 
-    /**
-     * Finds the SimkatmawaNonLomba model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return SimkatmawaNonLomba the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = SimkatmawaNonLomba::findOne(['id' => $id])) !== null) {
@@ -216,7 +195,7 @@ class SimkatmawaNonLombaController extends Controller
 
                 $curdate    = date('d-m-y');
 
-                
+
                 if (isset($laporanPath)) {
                     $file_name  = $model->nama_kegiatan . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
@@ -248,7 +227,7 @@ class SimkatmawaNonLombaController extends Controller
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->foto_kegiatan_path = $plainUrl;
                 }
-                
+
                 if ($model->save()) {
 
                     if (!empty($dataPost['hint'][0])) {

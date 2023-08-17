@@ -100,7 +100,7 @@ $listAsrama = $query->all();
   </ul>
 
   <div class="tab-content">
-    <div id="akpam" class="tab-pane active">
+    <div id="akpam" class="tab-pane">
       <div class="row">
         <div class="col-md-4">
           <div class="widget-box transparent">
@@ -180,7 +180,7 @@ $listAsrama = $query->all();
 
     </div>
 
-    <div id="event" class="tab-pane">
+    <div id="event" class="tab-pane active">
 
 
       <div class="row">
@@ -453,6 +453,9 @@ $listAsrama = $query->all();
               'allowClear' => true,
             ],
           ]); ?>
+        </div>
+        <div class="col-md-3">
+          <?= Html::a('<i class="fa fa-undo"></i> Clear', '#', ['class' => 'btn btn-sm btn-primary btn-clear']) ?>
         </div>
       </div>
 
@@ -2093,6 +2096,12 @@ if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role != 'ases
 
   countSimkatmawaByJenis()
 
+  $('.btn-clear').click(function(event) {
+    event.preventDefault();
+
+    $('#tahun_simkatmawa_id').val(null).trigger('change');
+    $('#prodi_simkatmawa_id').val(null).trigger('change');
+  });
 
   $("#tahun_simkatmawa_id, #prodi_simkatmawa_id").change(function() {
     getDataSimkatmawa($('#tahun_simkatmawa_id').val(), $('#prodi_simkatmawa_id').val())

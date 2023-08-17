@@ -44,8 +44,10 @@ class SimkatmawaNonLombaSearch extends SimkatmawaNonLomba
         $query = SimkatmawaNonLomba::find();
 
         // add conditions that should always apply here
+        $query->orderBy(['id' => SORT_DESC]);
         if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == "operatorUnit") {
-            $query->andWhere(['user_id' => Yii::$app->user->identity->id]);
+            $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+            $query->andWhere(['prodi_id' => $userProdi->prodi_id ?? null]);
         }
 
         $dataProvider = new ActiveDataProvider([
