@@ -62,7 +62,7 @@ $config = [
             'thousandSeparator' => '.',
             'decimalSeparator' => ',',
             'currencyCode' => '',
-            'dateFormat' => 'dd-MM-yyyy',
+            'dateFormat' => 'yyyy-mm-dd',
             'datetimeFormat' => 'dd/MM/yyyy H:i:s'
         ],
         'request' => [

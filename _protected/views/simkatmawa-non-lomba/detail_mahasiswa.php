@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
 /** @var app\models\SimkatmawaMandiri $model */
 
 \yii\web\YiiAsset::register($this);
-$dataMahasiswa = SimkatmawaMahasiswa::findAll(['simkatmawa_belmawa_id' => $model->id]);
+$dataMahasiswa = SimkatmawaMahasiswa::findAll(['simkatmawa_non_lomba_id' => $model->id]);
 ?>
 <table class="table table-striped table-bordered">
     <thead>

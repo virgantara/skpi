@@ -43,7 +43,7 @@ use yii\widgets\ActiveForm;
                             'options' => ['placeholder' => 'Input tanggal mulai ...', 'autocomplete' => 'off'],
                             'pluginOptions' => [
                                 'autoclose' => true,
-                                'format' => 'dd-mm-yyyy'
+                                'format' => 'yyyy-mm-dd'
                             ]
                         ]);
                         ?>
@@ -52,7 +52,7 @@ use yii\widgets\ActiveForm;
                             'options' => ['placeholder' => 'Input tanggal selesai ...', 'autocomplete' => 'off'],
                             'pluginOptions' => [
                                 'autoclose' => true,
-                                'format' => 'dd-mm-yyyy'
+                                'format' => 'yyyy-mm-dd'
                             ]
                         ]);
                         ?>
@@ -63,6 +63,13 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'foto_kegiatan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
                         <small>File: pdf Max size: 5 MB</small>
+
+                        <?php
+                        echo $this->render('_mahasiswa.php', [
+                            'function' => $function,
+                            'simkatmawa_id' => $model->id ?? null
+                        ]);
+                        ?>
 
                         <div class="form-group">
                             <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

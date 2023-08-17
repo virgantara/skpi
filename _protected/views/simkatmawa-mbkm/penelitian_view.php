@@ -48,16 +48,22 @@ $this->params['breadcrumbs'][] = $this->title;
                             <div class="widget-main padding-24">
                                 <div class="row">
 
-                                    <p>
-                                        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                                        <?= Html::a('Delete', ['delete', 'id' => $model->id, 'jenisSimkatmawa' => $model->jenis_simkatmawa], [
-                                            'class' => 'btn btn-danger',
-                                            'data' => [
-                                                'confirm' => 'Are you sure you want to delete this item?',
-                                                'method' => 'post',
-                                            ],
-                                        ]) ?>
-                                    </p>
+                                    <?php
+                                    if (!Yii::$app->user->isGuest) :
+                                    ?>
+                                        <p>
+                                            <?= Html::a('<i class="fa fa-pencil"></i> Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                                            <?= Html::a('<i class="fa fa-trash"></i> Delete', ['delete', 'id' => $model->id, 'jenisSimkatmawa' => $model->jenis_simkatmawa], [
+                                                'class' => 'btn btn-danger',
+                                                'data' => [
+                                                    'confirm' => 'Are you sure you want to delete this item?',
+                                                    'method' => 'post',
+                                                ],
+                                            ]) ?>
+                                        </p>
+                                    <?php
+                                    endif;
+                                    ?>
                                 </div>
 
                                 <div class="space"></div>

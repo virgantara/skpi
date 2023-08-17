@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\SimkatmawaMbkm;
+use Yii;
 
 /**
  * SimkatmawaMbkmSearch represents the model behind the search form of `app\models\SimkatmawaMbkm`.
@@ -17,7 +18,7 @@ class SimkatmawaMbkmSearch extends SimkatmawaMbkm
     public function rules()
     {
         return [
-            [['id', 'user_id', 'level', 'status_sks', 'hasil_jenis', 'rekognisi_id', 'kategori_pembinaan_id', 'kategori_belmawa_id'], 'integer'],
+            [['id', 'user_id', 'level', 'status_sks', 'hasil_jenis', 'rekognisi_id', 'kategori_pembinaan_id', 'kategori_belmawa_id', 'prodi_id'], 'integer'],
             [['jenis_simkatmawa', 'nama_program', 'tempat_pelaksanaan', 'tanggal_mulai', 'tanggal_selesai', 'penyelenggara', 'judul_penelitian', 'sk_penerimaan_path', 'surat_tugas_path', 'rekomendasi_path', 'khs_pt_path', 'sertifikat_path', 'laporan_path', 'hasil_path', 'url_berita', 'foto_penyerahan_path', 'foto_kegiatan_path', 'foto_karya_path', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -46,6 +47,12 @@ class SimkatmawaMbkmSearch extends SimkatmawaMbkm
         if ($jenisSimkatmawa != null) {
             $query->andWhere(['jenis_simkatmawa' => $jenisSimkatmawa]);
         }
+        $query->orderBy(['id' => SORT_DESC]);
+
+        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == "operatorUnit") {
+            $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+            $query->andWhere(['prodi_id' => $userProdi->prodi_id ?? null]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -73,6 +80,7 @@ class SimkatmawaMbkmSearch extends SimkatmawaMbkm
             'kategori_belmawa_id' => $this->kategori_belmawa_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'prodi_id' => $this->prodi_id,
         ]);
 
         $query->andFilterWhere(['like', 'jenis_simkatmawa', $this->jenis_simkatmawa])

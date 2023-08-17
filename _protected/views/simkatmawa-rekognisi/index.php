@@ -21,23 +21,28 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Simkatmawa Rekognisi', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); 
+    ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'headerOptions' => ['class' => 'text-center'],
+                'contentOptions' => ['class' => 'text-center'],
+            ],
 
-            'id',
+            // 'id',
             'nama',
-            'created_at',
-            'updated_at',
+            // 'created_at',
+            // 'updated_at',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, SimkatmawaRekognisi $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
         ],
     ]); ?>

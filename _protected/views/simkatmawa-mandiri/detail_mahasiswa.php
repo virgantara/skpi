@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
 /** @var app\models\SimkatmawaMandiri $model */
 
 \yii\web\YiiAsset::register($this);
-$dataMahasiswa = SimkatmawaMahasiswa::findAll(['simkatmawa_mbkm_id' => $model->id]);
+$dataMahasiswa = SimkatmawaMahasiswa::findAll(['simkatmawa_mandiri_id' => $model->id]);
 ?>
 <table class="table table-striped table-bordered">
     <thead>
@@ -16,6 +16,8 @@ $dataMahasiswa = SimkatmawaMahasiswa::findAll(['simkatmawa_mbkm_id' => $model->i
             <th class="center">#</th>
             <th>NIM</th>
             <th>Nama Mahasiswa</th>
+            <th>Prodi</th>
+            <th>Kampus</th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +28,8 @@ $dataMahasiswa = SimkatmawaMahasiswa::findAll(['simkatmawa_mbkm_id' => $model->i
                 <td class="center"><?= $no ?></td>
                 <td><?= $mhs->nim ?></td>
                 <td><?= $mhs->nim0->nama_mahasiswa ?></td>
+                <td><?= $mhs->prodi ?></td>
+                <td><?= $mhs->kampus ?></td>
             </tr>
         <?php
             $no++;

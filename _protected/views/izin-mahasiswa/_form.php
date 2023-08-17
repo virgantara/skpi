@@ -133,7 +133,7 @@ use yii\web\JsExpression;
                                 'options' => ['placeholder' => 'Input tanggal berangkat ...', 'autocomplete' => 'off'],
                                 'pluginOptions' => [
                                     'autoclose' => true,
-                                    'format' => 'dd-mm-yyyy'
+                                    'format' => 'yyyy-mm-dd'
                                 ]
                             ])->label(false);
                             ?>
@@ -148,7 +148,7 @@ use yii\web\JsExpression;
                                 'options' => ['placeholder' => 'Input tanggal pulang ...', 'autocomplete' => 'off'],
                                 'pluginOptions' => [
                                     'autoclose' => true,
-                                    'format' => 'dd-mm-yyyy'
+                                    'format' => 'yyyy-mm-dd'
                                 ]
                             ])->label(false);
                             ?>

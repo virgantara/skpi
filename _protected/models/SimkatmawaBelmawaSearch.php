@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\SimkatmawaBelmawa;
+use Yii;
 
 /**
  * SimkatmawaBelmawaSearch represents the model behind the search form of `app\models\SimkatmawaBelmawa`.
@@ -17,7 +18,7 @@ class SimkatmawaBelmawaSearch extends SimkatmawaBelmawa
     public function rules()
     {
         return [
-            [['id', 'user_id', 'simkatmawa_belmawa_kategori_id'], 'integer'],
+            [['id', 'user_id', 'simkatmawa_belmawa_kategori_id', 'prodi_id'], 'integer'],
             [['jenis_simkatmawa', 'nama_kegiatan', 'peringkat', 'keterangan', 'tanggal_mulai', 'tanggal_selesai', 'url_kegiatan', 'laporan_path', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -43,6 +44,11 @@ class SimkatmawaBelmawaSearch extends SimkatmawaBelmawa
         $query = SimkatmawaBelmawa::find();
 
         // add conditions that should always apply here
+        $query->orderBy(['id' => SORT_DESC]);
+        if (!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role == "operatorUnit") {
+            $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+            $query->andWhere(['prodi_id' => $userProdi->prodi_id ?? null]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -65,6 +71,7 @@ class SimkatmawaBelmawaSearch extends SimkatmawaBelmawa
             'tanggal_selesai' => $this->tanggal_selesai,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'prodi_id' => $this->prodi_id,
         ]);
 
         $query->andFilterWhere(['like', 'jenis_simkatmawa', $this->jenis_simkatmawa])

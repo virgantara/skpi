@@ -52,16 +52,22 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                             <div class="widget-main padding-24">
                                 <div class="row">
 
-                                    <p>
-                                        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                                        <?= Html::a('Delete', ['delete', 'id' => $model->id, 'jenisSimkatmawa' => $model->jenis_simkatmawa], [
-                                            'class' => 'btn btn-danger',
-                                            'data' => [
-                                                'confirm' => 'Are you sure you want to delete this item?',
-                                                'method' => 'post',
-                                            ],
-                                        ]) ?>
-                                    </p>
+                                    <?php
+                                    if (!Yii::$app->user->isGuest) :
+                                    ?>
+                                        <p>
+                                            <?= Html::a('<i class="fa fa-pencil"></i> Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                                            <?= Html::a('<i class="fa fa-trash"></i> Delete', ['delete', 'id' => $model->id, 'jenisSimkatmawa' => $model->jenis_simkatmawa], [
+                                                'class' => 'btn btn-danger',
+                                                'data' => [
+                                                    'confirm' => 'Are you sure you want to delete this item?',
+                                                    'method' => 'post',
+                                                ],
+                                            ]) ?>
+                                        </p>
+                                    <?php
+                                    endif;
+                                    ?>
                                 </div>
 
                                 <div class="space"></div>
@@ -107,6 +113,7 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                                                     'label' => 'Sertifikat',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
+                                                        // echo '<pre>';print_r($model);die;
                                                         if (empty($model->sertifikat_path)) {
                                                             return '-';
                                                         }
@@ -118,7 +125,7 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                                                     'label' => 'Surat Tugas',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
-                                                        if (empty($model->sk_penerimaan_path)) {
+                                                        if (empty($model->surat_tugas_path)) {
                                                             return '-';
                                                         }
                                                         return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank', 'data-pjax' => 0]);

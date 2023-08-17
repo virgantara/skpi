@@ -5,8 +5,11 @@ namespace app\controllers;
 use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaMbkm;
 use app\models\SimkatmawaMbkmSearch;
+use app\models\User;
+use app\models\UserProdi;
 use DateTime;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -25,6 +28,22 @@ class SimkatmawaMbkmController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'denyCallback' => function ($rule, $action) {
+                        throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                    },
+                    'only' => ['create-pertukaran-pelajar', 'create-mengajar-di-sekolah', 'create-penelitian', 'create-proyek-kemanusiaan', 'create-proyek-desa', 'create-wirausaha', 'create-studi', 'create-pengabdian-masyarakat', 'update', 'delete'],
+                    'rules' => [
+
+                        [
+                            'actions' => ['create-pertukaran-pelajar', 'create-mengajar-di-sekolah', 'create-penelitian', 'create-proyek-kemanusiaan', 'create-proyek-desa', 'create-wirausaha', 'create-studi', 'create-pengabdian-masyarakat', 'update', 'delete'],
+                            'allow' => true,
+                            'roles' => ['operatorUnit', 'theCreator'],
+                        ],
+
+                    ],
+                ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -35,11 +54,6 @@ class SimkatmawaMbkmController extends Controller
         );
     }
 
-    /**
-     * Lists all SimkatmawaMbkm models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $searchModel = new SimkatmawaMbkmSearch();
@@ -139,12 +153,6 @@ class SimkatmawaMbkmController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single SimkatmawaMbkm model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         $model = $this->findModel($id);
@@ -154,11 +162,6 @@ class SimkatmawaMbkmController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new SimkatmawaMbkm model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $model = new SimkatmawaMbkm();
@@ -184,7 +187,7 @@ class SimkatmawaMbkmController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'pertukaran-pelajar');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['pertukaran-pelajar']);
             } else {
@@ -207,7 +210,7 @@ class SimkatmawaMbkmController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'mengajar-di-sekolah');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['mengajar-di-sekolah']);
             } else {
@@ -230,7 +233,7 @@ class SimkatmawaMbkmController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'penelitian');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['penelitian']);
             } else {
@@ -253,7 +256,7 @@ class SimkatmawaMbkmController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'proyek-kemanusiaan');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['proyek-kemanusiaan']);
             } else {
@@ -276,7 +279,7 @@ class SimkatmawaMbkmController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'proyek-desa');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['proyek-desa']);
             } else {
@@ -299,7 +302,7 @@ class SimkatmawaMbkmController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'wirausaha');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['wirausaha']);
             } else {
@@ -322,7 +325,7 @@ class SimkatmawaMbkmController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'studi');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['studi']);
             } else {
@@ -345,7 +348,7 @@ class SimkatmawaMbkmController extends Controller
         if (!empty($dataPost)) {
             $insert = $this->insertSimkatmawa($dataPost, 'pengabdian-masyarakat');
 
-            if ($insert->id) {
+            if (isset($insert->id)) {
                 Yii::$app->session->setFlash('success', "Data tersimpan");
                 return $this->redirect(['pengabdian-masyarakat']);
             } else {
@@ -359,26 +362,30 @@ class SimkatmawaMbkmController extends Controller
             'form' => "pengabdian-masyarakat"
         ]);
     }
-    /**
-     * Updates an existing SimkatmawaMbkm model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $dataPost['SimkatmawaMbkm']['id'] = $id;
+            $insert = $this->insertSimkatmawa($dataPost, $model->jenis_simkatmawa, false);
+
+            if (isset($insert->id)) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect([$model->jenis_simkatmawa]);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect([$model->jenis_simkatmawa]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'form' => $model->jenis_simkatmawa,
         ]);
     }
-
 
     public function actionDownload($id, $file)
     {
@@ -399,14 +406,6 @@ class SimkatmawaMbkmController extends Controller
         exit;
     }
 
-    /**
-     * Deletes an existing SimkatmawaMbkm model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-
     public function actionDelete($id, $jenisSimkatmawa)
     {
         if ($this->findModel($id)->delete() && SimkatmawaMahasiswa::deleteAll(['simkatmawa_mbkm_id' => $id])) {
@@ -415,13 +414,6 @@ class SimkatmawaMbkmController extends Controller
         return $this->redirect([$jenisSimkatmawa]);
     }
 
-    /**
-     * Finds the SimkatmawaMbkm model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return SimkatmawaMbkm the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = SimkatmawaMbkm::findOne(['id' => $id])) !== null) {
@@ -431,8 +423,16 @@ class SimkatmawaMbkmController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+    protected function findMahasiswa($id)
+    {
+        if (($model = SimkatmawaMahasiswa::findOne(['id' => $id])) !== null) {
+            return $model;
+        }
 
-    protected function insertSimkatmawa($dataPost, $jenisSimkatmawa)
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function insertSimkatmawa($dataPost, $jenisSimkatmawa, $isCreate = true)
     {
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
@@ -443,7 +443,6 @@ class SimkatmawaMbkmController extends Controller
 
         try {
 
-            $dataPost   = $_POST;
             if (Yii::$app->request->post()) {
 
                 if (isset($dataPost['SimkatmawaMbkm']['id'])) {
@@ -454,15 +453,9 @@ class SimkatmawaMbkmController extends Controller
 
                 $model->attributes = $dataPost['SimkatmawaMbkm'];
                 $model->user_id = Yii::$app->user->identity->id;
+                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                $model->prodi_id = $userProdi->prodi_id ?? null;
                 $model->jenis_simkatmawa = $jenisSimkatmawa;
-
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaMbkm']['tanggal_mulai']);
-                $formattedDateMulai = $dateTime->format('Y-m-d');
-                $model->tanggal_mulai = $formattedDateMulai;
-
-                $dateTime = DateTime::createFromFormat('d-m-Y', $dataPost['SimkatmawaMbkm']['tanggal_selesai']);
-                $formattedDateSelesai = $dateTime->format('Y-m-d');
-                $model->tanggal_selesai = $formattedDateSelesai;
 
                 $skPenerimaanPath = UploadedFile::getInstance($model, 'sk_penerimaan_path');
                 $suratTugasPath = UploadedFile::getInstance($model, 'surat_tugas_path');
@@ -474,7 +467,6 @@ class SimkatmawaMbkmController extends Controller
 
                 $curdate    = date('d-m-y');
                 $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
-
 
                 if (isset($skPenerimaanPath)) {
 
@@ -595,14 +587,20 @@ class SimkatmawaMbkmController extends Controller
                     if (!empty($dataPost['hint'][0])) {
 
                         foreach ($dataPost['hint'] as $mhs) {
-                            $mahasiswa = new SimkatmawaMahasiswa();
+                            $data = explode(' - ', $mhs);
 
-                            $pattern = '/^\d+/';
-                            if (preg_match($pattern, $mhs, $matches)) {
-                                $nim = $matches[0];
+                            if (strlen($mhs) > 12) {
 
-                                $mahasiswa->nim = $nim;
+                                $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_mbkm_id' => $model->id, 'nim' => $data[0]]);
+
+                                if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
+                                else $mahasiswa = new SimkatmawaMahasiswa();
+
                                 $mahasiswa->simkatmawa_mbkm_id = $model->id;
+                                $mahasiswa->nim = $data[0];
+                                $mahasiswa->nama = $data[1];
+                                $mahasiswa->prodi = $data[2];
+                                $mahasiswa->kampus = $data[3];
                                 $mahasiswa->save();
                             }
                         }

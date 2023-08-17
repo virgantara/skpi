@@ -49,7 +49,7 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
         'readonly' => true,
         'pluginOptions' => [
             'autoclose'=>true,
-            'format' => 'dd-mm-yyyy'
+            'format' => 'yyyy-mm-dd'
         ]
     ]) ?>
 
@@ -66,7 +66,7 @@ $model->tanggal_akhir = !empty($_POST['RiwayatPelanggaran']['tanggal_akhir']) ? 
         'readonly' => true,
         'pluginOptions' => [
             'autoclose'=>true,
-            'format' => 'dd-mm-yyyy'
+            'format' => 'yyyy-mm-dd'
         ]
     ]) ?>
 </div>
