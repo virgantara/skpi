@@ -37,7 +37,7 @@ class SimkatmawaMandiriController extends Controller
                     'rules' => [
 
                         [
-                            'actions' => ['create', 'update', 'delete'],
+                            'actions' => ['create-rekognisi', 'create-kegiatan-mandiri', 'update', 'delete'],
                             'allow' => true,
                             'roles' => ['operatorUnit', 'theCreator'],
                         ],
