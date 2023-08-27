@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\MyHelper;
 use app\models\SimkatmawaBelmawa;
 use app\models\SimkatmawaBelmawaKategori;
 use app\models\SimkatmawaBelmawaSearch;
@@ -195,7 +196,7 @@ class SimkatmawaBelmawaController extends Controller
                 $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
 
                 if (isset($laporanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($laporanPath->name, PATHINFO_FILENAME)) .  '-' . MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
                     $s3type     = $laporanPath->type;
                     $key        = 'SimkatmawaBelmawa' . '/' . $simkatmawaKategori->nama . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
@@ -213,25 +214,34 @@ class SimkatmawaBelmawaController extends Controller
                 if ($model->save()) {
 
                     if (!empty($dataPost['hint'][0])) {
+                        $dataMhs = [];
+                        SimkatmawaMahasiswa::deleteAll(['simkatmawa_belmawa_id' => $model->id]);
 
                         foreach ($dataPost['hint'] as $mhs) {
                             $data = explode(' - ', $mhs);
 
                             if (strlen($mhs) > 12) {
 
-                                $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_belmawa_id' => $model->id, 'nim' => $data[0]]);
 
-                                if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
-                                else $mahasiswa = new SimkatmawaMahasiswa();
-
-                                $mahasiswa->simkatmawa_belmawa_id = $model->id;
-                                $mahasiswa->nim = $data[0];
-                                $mahasiswa->nama = $data[1];
-                                $mahasiswa->prodi = $data[2];
-                                $mahasiswa->kampus = $data[3];
-                                $mahasiswa->save();
+                                $dataMhs[] = [
+                                    'simkatmawa_belmawa_id' => $model->id,
+                                    'nim' => $data[0],
+                                    'nama' => $data[1],
+                                    'prodi' => $data[2],
+                                    'kampus' => $data[3],
+                                ];
                             }
                         }
+
+                        $batchMhs = Yii::$app->db->createCommand()->batchInsert('{{%simkatmawa_mahasiswa}}', [
+                            'simkatmawa_belmawa_id',
+                            'nim',
+                            'nama',
+                            'prodi',
+                            'kampus',
+                        ], $dataMhs);
+
+                        $batchMhs->execute();
                     }
 
                     $transaction->commit();

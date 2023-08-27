@@ -53,25 +53,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'sertifikat_path',
-                'label' => 'Sertifikat/Piala/Medali',
+                'label' => 'Sertifikat',
                 'format' => 'raw',
                 'hAlign' => 'center',
                 'value' => function ($model) {
                     if (empty($model->sertifikat_path)) {
                         return '-';
                     }
-                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank', 'data-pjax' => 0]);
-                }
-            ],
-            [
-                'attribute' => 'url_kegiatan',
-                'format' => 'raw',
-                'hAlign' => 'center',
-                'value' => function ($model) {
-                    if (empty($model->url_kegiatan)) {
-                        return '-';
-                    }
-                    return Html::a('<i class="fa fa-link"></i>', $model->url_kegiatan, ['target' => '_blank']);
+                    return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank', 'data-pjax' => 0]);
                 }
             ],
             [
@@ -83,7 +72,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (empty($model->foto_kegiatan_path)) {
                         return '-';
                     }
-                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                    return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                }
+            ],
+            [
+                'attribute' => 'url_kegiatan',
+                'format' => 'raw',
+                'hAlign' => 'center',
+                'value' => function ($model) {
+                    if (empty($model->url_kegiatan)) {
+                        return '-';
+                    }
+                    return Html::a('Link <i class="fa fa-link"></i>', MyHelper::setHttpUrl($model->url_kegiatan), ['target' => '_blank']);
                 }
             ],
             [
@@ -95,7 +95,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (empty($model->surat_tugas_path)) {
                         return '-';
                     }
-                    return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                    return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                }
+            ],
+            [
+                'attribute' => 'laporan_path',
+                'label' => 'Laporan Pelaksanaan Kegiatan',
+                'format' => 'raw',
+                'hAlign' => 'center',
+                'value' => function ($model) {
+                    if (empty($model->laporan_path)) {
+                        return '-';
+                    }
+                    return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
                 }
             ],
             [

@@ -57,6 +57,16 @@ class MyHelper
 		];
 	}
 
+	public static function setHttpUrl($urlLengkap)
+	{
+		$url = substr($urlLengkap, 0, 4);
+		if ($url == 'http') {
+			return $urlLengkap;
+		}else {
+			return 'http://' . $urlLengkap;
+		}
+	}
+
 	public static function listSimkatmawaMbkm()
 	{
 		return [

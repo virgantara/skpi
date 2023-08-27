@@ -38,11 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <span class="blue"><?= $model->tanggal_mulai ?> / <?= $model->tanggal_selesai ?></span>
                             </div>
 
-                            <div class="widget-toolbar hidden-480">
-                                <a href="#">
-                                    <i class="ace-icon fa fa-print"></i>
-                                </a>
-                            </div>
+                             
                         </div>
 
                         <div class="widget-body">
@@ -110,7 +106,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         if (empty($model->url_kegiatan)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-link"></i>', $model->url_kegiatan, ['target' => '_blank']);
+                                                        return Html::a('Link <i class="fa fa-link"></i>', MyHelper::setHttpUrl($model->url_kegiatan), ['target' => '_blank']);
                                                     }
                                                 ],
                                                 [
@@ -121,18 +117,18 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         if (empty($model->foto_kegiatan_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                                 [
                                                     'attribute' => 'laporan_path',
-                                                    'label' => 'Laporan',
+                                                    'label' => 'Laporan Akademik Pelaksanaan Kegiatan',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
                                                         if (empty($model->laporan_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                             ],

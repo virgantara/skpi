@@ -38,11 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <span class="blue"><?= $model->tanggal_mulai ?> / <?= $model->tanggal_selesai ?></span>
                             </div>
 
-                            <div class="widget-toolbar hidden-480">
-                                <a href="#">
-                                    <i class="ace-icon fa fa-print"></i>
-                                </a>
-                            </div>
+                             
                         </div>
 
                         <div class="widget-body">

@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\MyHelper;
 use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaMbkm;
 use app\models\SimkatmawaMbkmSearch;
@@ -451,10 +452,18 @@ class SimkatmawaMbkmController extends Controller
                     $model = new SimkatmawaMbkm;
                 }
 
-                $model->attributes = $dataPost['SimkatmawaMbkm'];
+                $attributesToExclude = ['sk_penerimaan_path', 'surat_tugas_path', 'rekomendasi_path', 'khs_pt_path', 'sertifikat_path', 'laporan_path', 'hasil_path'];
+                foreach ($dataPost['SimkatmawaMbkm'] as $attribute => $value) {
+                    if (!in_array($attribute, $attributesToExclude)) {
+                        $model->$attribute = $value;
+                    }
+                }
+
                 $model->user_id = Yii::$app->user->identity->id;
+                // if (!Yii::$app->user->can('theCreator')) {
                 $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
                 $model->prodi_id = $userProdi->prodi_id ?? null;
+                // }
                 $model->jenis_simkatmawa = $jenisSimkatmawa;
 
                 $skPenerimaanPath = UploadedFile::getInstance($model, 'sk_penerimaan_path');
@@ -469,9 +478,7 @@ class SimkatmawaMbkmController extends Controller
                 $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
 
                 if (isset($skPenerimaanPath)) {
-
-
-                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($skPenerimaanPath->name, PATHINFO_FILENAME)) . '-' . MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $skPenerimaanPath->tempName;
                     $s3type     = $skPenerimaanPath->type;
                     $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'sk_penerimaan-' . $file_name . '.pdf';
@@ -487,7 +494,7 @@ class SimkatmawaMbkmController extends Controller
                 }
 
                 if (isset($suratTugasPath)) {
-                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($suratTugasPath->name, PATHINFO_FILENAME)) . '-' . MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $suratTugasPath->tempName;
                     $s3type     = $suratTugasPath->type;
                     $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'surat_tugas-' . $file_name . '.pdf';
@@ -503,7 +510,7 @@ class SimkatmawaMbkmController extends Controller
                 }
 
                 if (isset($rekomendasiPath)) {
-                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($rekomendasiPath->name, PATHINFO_FILENAME)) . '-' . MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $rekomendasiPath->tempName;
                     $s3type     = $rekomendasiPath->type;
                     $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'rekomendasi-' . $file_name . '.pdf';
@@ -519,7 +526,7 @@ class SimkatmawaMbkmController extends Controller
                 }
 
                 if (isset($khsPtPath)) {
-                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($khsPtPath->name, PATHINFO_FILENAME)) . '-' . MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $khsPtPath->tempName;
                     $s3type     = $khsPtPath->type;
                     $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'khs_pt-' . $file_name . '.pdf';
@@ -535,7 +542,7 @@ class SimkatmawaMbkmController extends Controller
                 }
 
                 if (isset($sertifikatPath)) {
-                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($sertifikatPath->name, PATHINFO_FILENAME)) . '-' . MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $sertifikatPath->tempName;
                     $s3type     = $sertifikatPath->type;
                     $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'sertifikat-' . $file_name . '.pdf';
@@ -551,7 +558,7 @@ class SimkatmawaMbkmController extends Controller
                 }
 
                 if (isset($laporanPath)) {
-                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($laporanPath->name, PATHINFO_FILENAME)) . '-' . MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
                     $s3type     = $laporanPath->type;
                     $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'laporan-' . $file_name . '.pdf';
@@ -567,7 +574,7 @@ class SimkatmawaMbkmController extends Controller
                 }
 
                 if (isset($hasilPath)) {
-                    $file_name  = $model->nama_program . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($hasilPath->name, PATHINFO_FILENAME)) . '-' . MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $hasilPath->tempName;
                     $s3type     = $hasilPath->type;
                     $key        = 'SimkatmawaMbkm' . '/' . $labelPath . '/' . $model->nama_program . '/' . 'hasil-' . $file_name . '.pdf';
@@ -585,25 +592,34 @@ class SimkatmawaMbkmController extends Controller
                 if ($model->save()) {
 
                     if (!empty($dataPost['hint'][0])) {
+                        $dataMhs = [];
+                        SimkatmawaMahasiswa::deleteAll(['simkatmawa_mbkm_id' => $model->id]);
 
                         foreach ($dataPost['hint'] as $mhs) {
                             $data = explode(' - ', $mhs);
 
                             if (strlen($mhs) > 12) {
 
-                                $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_mbkm_id' => $model->id, 'nim' => $data[0]]);
 
-                                if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
-                                else $mahasiswa = new SimkatmawaMahasiswa();
-
-                                $mahasiswa->simkatmawa_mbkm_id = $model->id;
-                                $mahasiswa->nim = $data[0];
-                                $mahasiswa->nama = $data[1];
-                                $mahasiswa->prodi = $data[2];
-                                $mahasiswa->kampus = $data[3];
-                                $mahasiswa->save();
+                                $dataMhs[] = [
+                                    'simkatmawa_mbkm_id' => $model->id,
+                                    'nim' => $data[0],
+                                    'nama' => $data[1],
+                                    'prodi' => $data[2],
+                                    'kampus' => $data[3],
+                                ];
                             }
                         }
+
+                        $batchMhs = Yii::$app->db->createCommand()->batchInsert('{{%simkatmawa_mahasiswa}}', [
+                            'simkatmawa_mbkm_id',
+                            'nim',
+                            'nama',
+                            'prodi',
+                            'kampus',
+                        ], $dataMhs);
+
+                        $batchMhs->execute();
                     }
                     $transaction->commit();
                     return $model;
