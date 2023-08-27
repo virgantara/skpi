@@ -47,7 +47,23 @@ use yii\widgets\ActiveForm;
                         ]);
                         ?>
 
-                        <?= $form->field($model, 'sk_penerimaan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Keputusan / Surat Keterangan telah mengikuti Program Kemanusiaan') ?>
+                        <ul>
+                            <li>
+                                <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
+                            </li>
+                            <li>
+                                <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
+                            </li>
+                        </ul>
+
+                        <?= $form->field($model, 'sk_penerimaan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Laporan Akademik Pelaksanakan Kegiatan') ?>
+                        <?php if ($model->sk_penerimaan_path) :
+                            $file_name = urldecode(basename(parse_url($model->sk_penerimaan_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Laporan Akademik Pelaksanakan Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'sk_penerimaan_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Tugas / Surat Izin dari PT Asal') ?>
