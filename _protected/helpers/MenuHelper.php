@@ -86,6 +86,8 @@ class MenuHelper
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Kegiatan Pembinaan Mental Kebangsaan'), 'url' => ['simkatmawa-kegiatan/index']],
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Rekognisi'), 'url' => ['simkatmawa-rekognisi/index']],
 						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Kategori Kegiatan Belmawa'), 'url' => ['simkatmawa-belmawa-kategori/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Level'), 'url' => ['simkatmawa-level/index']],
+						['label' => ('<i class="menu-icon fa fa-caret-right"></i> Apresiasi'), 'url' => ['simkatmawa-apresiasi/index']],
 
 					],
 				],

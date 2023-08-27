@@ -37,11 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <span class="blue"><?= $model->tanggal_mulai ?> / <?= $model->tanggal_selesai ?></span>
                             </div>
 
-                            <div class="widget-toolbar hidden-480">
-                                <a href="#">
-                                    <i class="ace-icon fa fa-print"></i>
-                                </a>
-                            </div>
+                             
                         </div>
 
                         <div class="widget-body">
@@ -116,7 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         if (empty($model->sk_penerimaan_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sk_penerimaan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sk_penerimaan_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                                 [
@@ -127,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         if (empty($model->surat_tugas_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                                 [
@@ -138,7 +134,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         if (empty($model->rekomendasi_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'rekomendasi_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'rekomendasi_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                                 [
@@ -149,7 +145,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         if (empty($model->khs_pt_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'khs_pt_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'khs_pt_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                                 [
@@ -160,7 +156,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         if (empty($model->sertifikat_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                                 [
@@ -171,7 +167,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                         if (empty($model->laporan_path)) {
                                                             return '-';
                                                         }
-                                                        return Html::a('<i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank', 'data-pjax' => 0]);
                                                     }
                                                 ],
                                             ],

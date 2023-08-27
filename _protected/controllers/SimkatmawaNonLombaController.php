@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\MyHelper;
 use app\models\SimkatmawaKegiatan;
 use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaNonLomba;
@@ -183,7 +184,13 @@ class SimkatmawaNonLombaController extends Controller
                 if (isset($dataPost['SimkatmawaNonLomba']['id'])) $model = $this->findModel($dataPost['SimkatmawaNonLomba']['id']);
                 else $model = new SimkatmawaNonLomba;
 
-                $model->attributes = $dataPost['SimkatmawaNonLomba'];
+                $attributesToExclude = ['laporan_path', 'foto_kegiatan_path'];
+                foreach ($dataPost['SimkatmawaNonLomba'] as $attribute => $value) {
+                    if (!in_array($attribute, $attributesToExclude)) {
+                        $model->$attribute = $value;
+                    }
+                }
+                
                 $model->user_id = Yii::$app->user->identity->id;
                 $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
                 $model->prodi_id = $userProdi->prodi_id ?? null;
@@ -195,9 +202,8 @@ class SimkatmawaNonLombaController extends Controller
 
                 $curdate    = date('d-m-y');
 
-
                 if (isset($laporanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($laporanPath->name, PATHINFO_FILENAME)) .  '-' .MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
                     $s3type     = $laporanPath->type;
                     $key        = 'SimkatmawaNonLomba' . '/' . $jenisKegiatan . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
@@ -213,7 +219,7 @@ class SimkatmawaNonLombaController extends Controller
                 }
 
                 if (isset($fotoKegiatanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($fotoKegiatanPath->name, PATHINFO_FILENAME)) .  '-' .MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $fotoKegiatanPath->tempName;
                     $s3type     = $fotoKegiatanPath->type;
                     $key        = 'SimkatmawaNonLomba' . '/' . $jenisKegiatan . '/' . $model->nama_kegiatan . '/' . 'foto_kegiatan-' . $file_name . '.pdf';
@@ -229,27 +235,36 @@ class SimkatmawaNonLombaController extends Controller
                 }
 
                 if ($model->save()) {
-
+                    
                     if (!empty($dataPost['hint'][0])) {
+                        $dataMhs = [];
+                        SimkatmawaMahasiswa::deleteAll(['simkatmawa_non_lomba_id' => $model->id]);
 
                         foreach ($dataPost['hint'] as $mhs) {
                             $data = explode(' - ', $mhs);
 
                             if (strlen($mhs) > 12) {
 
-                                $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_non_lomba_id' => $model->id, 'nim' => $data[0]]);
 
-                                if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
-                                else $mahasiswa = new SimkatmawaMahasiswa();
-
-                                $mahasiswa->simkatmawa_non_lomba_id = $model->id;
-                                $mahasiswa->nim = $data[0];
-                                $mahasiswa->nama = $data[1];
-                                $mahasiswa->prodi = $data[2];
-                                $mahasiswa->kampus = $data[3];
-                                $mahasiswa->save();
+                                $dataMhs[] = [
+                                    'simkatmawa_non_lomba_id' => $model->id,
+                                    'nim' => $data[0],
+                                    'nama' => $data[1],
+                                    'prodi' => $data[2],
+                                    'kampus' => $data[3],
+                                ];
                             }
                         }
+
+                        $batchMhs = Yii::$app->db->createCommand()->batchInsert('{{%simkatmawa_mahasiswa}}', [
+                            'simkatmawa_non_lomba_id',
+                            'nim',
+                            'nama',
+                            'prodi',
+                            'kampus',
+                        ], $dataMhs);
+
+                        $batchMhs->execute();
                     }
                     $transaction->commit();
                     return $model;

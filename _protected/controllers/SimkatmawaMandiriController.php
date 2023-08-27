@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\helpers\MyHelper;
 use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaMandiri;
 use app\models\SimkatmawaMandiriSearch;
@@ -169,8 +170,18 @@ class SimkatmawaMandiriController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $dataPost['SimkatmawaMandiri']['id'] = $id;
+            $insert = $this->insertSimkatmawa($dataPost, $model->jenis_simkatmawa, false);
+
+            if (isset($insert->id)) {
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect([$model->jenis_simkatmawa]);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect([$model->jenis_simkatmawa]);
+            }
         }
 
         return $this->render('update', [
@@ -225,7 +236,13 @@ class SimkatmawaMandiriController extends Controller
                     $model = new SimkatmawaMandiri;
                 }
 
-                $model->attributes = $dataPost['SimkatmawaMandiri'];
+                $attributesToExclude = ['foto_karya_path', 'foto_penyerahan_path', 'laporan_path', 'foto_kegiatan_path', 'sertifikat_path', 'surat_tugas_path'];
+                foreach ($dataPost['SimkatmawaMandiri'] as $attribute => $value) {
+                    if (!in_array($attribute, $attributesToExclude)) {
+                        $model->$attribute = $value;
+                    }
+                }
+
                 $model->user_id = Yii::$app->user->identity->id;
                 $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
                 $model->prodi_id = $userProdi->prodi_id ?? null;
@@ -238,12 +255,11 @@ class SimkatmawaMandiriController extends Controller
                 $sertifikatPath = UploadedFile::getInstance($model, 'sertifikat_path');
                 $suratTugasPath = UploadedFile::getInstance($model, 'surat_tugas_path');
 
-
                 $curdate    = date('d-m-y');
                 $labelPath = ucwords(str_replace('-', ' ', $jenisSimkatmawa));
 
                 if (isset($fotoKaryaPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($fotoKaryaPath->name, PATHINFO_FILENAME)) .  '-' .MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $fotoKaryaPath->tempName;
                     $s3type     = $fotoKaryaPath->type;
                     $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'foto_karya-' . $file_name . '.pdf';
@@ -259,7 +275,7 @@ class SimkatmawaMandiriController extends Controller
                 }
 
                 if (isset($fotoPenyerahanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($fotoPenyerahanPath->name, PATHINFO_FILENAME)) .  '-' .MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $fotoPenyerahanPath->tempName;
                     $s3type     = $fotoPenyerahanPath->type;
                     $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'foto_penyerahan-' . $file_name . '.pdf';
@@ -275,7 +291,7 @@ class SimkatmawaMandiriController extends Controller
                 }
 
                 if (isset($laporanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($laporanPath->name, PATHINFO_FILENAME)) .  '-' .MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $laporanPath->tempName;
                     $s3type     = $laporanPath->type;
                     $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'laporan-' . $file_name . '.pdf';
@@ -291,7 +307,7 @@ class SimkatmawaMandiriController extends Controller
                 }
 
                 if (isset($fotoKegiatanPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($fotoKegiatanPath->name, PATHINFO_FILENAME)) .  '-' .MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $fotoKegiatanPath->tempName;
                     $s3type     = $fotoKegiatanPath->type;
                     $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'foto_kegiatan-' . $file_name . '.pdf';
@@ -305,9 +321,9 @@ class SimkatmawaMandiriController extends Controller
                     $plainUrl = $s3new->getObjectUrl('sikap', $key);
                     $model->foto_kegiatan_path = $plainUrl;
                 }
-
+                
                 if (isset($sertifikatPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($sertifikatPath->name, PATHINFO_FILENAME)) .  '-' .MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $sertifikatPath->tempName;
                     $s3type     = $sertifikatPath->type;
                     $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'sertifikat-' . $file_name . '.pdf';
@@ -323,7 +339,7 @@ class SimkatmawaMandiriController extends Controller
                 }
 
                 if (isset($suratTugasPath)) {
-                    $file_name  = $model->nama_kegiatan . '-' . $curdate;
+                    $file_name  = str_replace('-', ' ', pathinfo($suratTugasPath->name, PATHINFO_FILENAME)) .  '-' .MyHelper::getRandomString(3, 3)  . '-' . $curdate;
                     $s3path     = $suratTugasPath->tempName;
                     $s3type     = $suratTugasPath->type;
                     $key        = 'SimkatmawaMandiri' . '/' . $labelPath . '/' . $model->nama_kegiatan . '/' . 'surat_tugas-' . $file_name . '.pdf';
@@ -341,25 +357,34 @@ class SimkatmawaMandiriController extends Controller
                 if ($model->save()) {
 
                     if (!empty($dataPost['hint'][0])) {
+                        $dataMhs = [];
+                        SimkatmawaMahasiswa::deleteAll(['simkatmawa_mandiri_id' => $model->id]);
 
                         foreach ($dataPost['hint'] as $mhs) {
                             $data = explode(' - ', $mhs);
 
                             if (strlen($mhs) > 12) {
 
-                                $mahasiswa = SimkatmawaMahasiswa::findOne(['simkatmawa_mandiri_id' => $model->id, 'nim' => $data[0]]);
 
-                                if (isset($mahasiswa))  $this->findMahasiswa($mahasiswa->id);
-                                else $mahasiswa = new SimkatmawaMahasiswa();
-
-                                $mahasiswa->simkatmawa_mandiri_id = $model->id;
-                                $mahasiswa->nim = $data[0];
-                                $mahasiswa->nama = $data[1];
-                                $mahasiswa->prodi = $data[2];
-                                $mahasiswa->kampus = $data[3];
-                                $mahasiswa->save();
+                                $dataMhs[] = [
+                                    'simkatmawa_mandiri_id' => $model->id,
+                                    'nim' => $data[0],
+                                    'nama' => $data[1],
+                                    'prodi' => $data[2],
+                                    'kampus' => $data[3],
+                                ];
                             }
                         }
+
+                        $batchMhs = Yii::$app->db->createCommand()->batchInsert('{{%simkatmawa_mahasiswa}}', [
+                            'simkatmawa_mandiri_id',
+                            'nim',
+                            'nama',
+                            'prodi',
+                            'kampus',
+                        ], $dataMhs);
+
+                        $batchMhs->execute();
                     }
                     $transaction->commit();
                     return $model;

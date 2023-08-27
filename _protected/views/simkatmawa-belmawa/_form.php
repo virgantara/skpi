@@ -18,6 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
 
     <?= $form->field($model, 'simkatmawa_belmawa_kategori_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(SimkatmawaBelmawaKategori::find()->all(), 'id', 'nama'),
@@ -49,15 +50,33 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'peringkat')->textInput(['maxlength' => true, 'placeholder' => 'Masukkan peringkat']) ?>
 
-    <?= $form->field($model, 'keterangan')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'keterangan')->textarea(['rows' => 4]) ?>
 
-    <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+    <?php if ($function == 'update') : ?>
+        <ul>
+            <li>
+                <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
+            </li>
+            <li>
+                <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
+            </li>
+        </ul>
+    <?php endif; ?>
+
+    <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Laporan Akademik Pelaksanaan Kegiatan') ?>
+    <?php if ($model->laporan_path) :
+        $file_name = urldecode(basename(parse_url($model->laporan_path, PHP_URL_PATH)));
+        $array = explode("-", $file_name);
+        $file_name = $array[1] . '.pdf';
+    ?>
+        <p style="color: red;">Current File (Laporan Akademik Pelaksanaan Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank']) ?></p>
+    <?php endif; ?>
     <small>File: pdf Max size: 5 MB</small>
 
     <?php
     echo $this->render('_mahasiswa.php', [
         'function' => $function,
-        'simkatmawa_id' => $model->id ?? null
+        'simkatmawa_id' => $model->id ?? ''
     ]);
     ?>
 

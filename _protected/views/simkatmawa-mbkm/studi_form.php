@@ -49,19 +49,51 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'judul_penelitian')->textInput(['maxlength' => true, 'placeholder' => "Masukkan judul proyek"])->label('Judul Proyek') ?>
 
+                        <?php if($function == 'update') :?>
+<ul>
+                            <li>
+                                <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
+                            </li>
+                            <li>
+                                <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
+                            </li>
+                        </ul>
+<?php endif; ?>
+
                         <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Tugas / Surat Keputusan') ?>
+                        <?php if ($model->surat_tugas_path) :
+                            $file_name = urldecode(basename(parse_url($model->surat_tugas_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Surat Tugas / Surat Keputusan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Laporan Akademik Pelaksanakan Kegiatan') ?>
+                        <?php if ($model->laporan_path) :
+                            $file_name = urldecode(basename(parse_url($model->laporan_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Laporan Akademik Pelaksanakan Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
                         
                         <?= $form->field($model, 'hasil_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Hasil Studi / Proyek Independen') ?>
+                        <?php if ($model->hasil_path) :
+                            $file_name = urldecode(basename(parse_url($model->hasil_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Hasil Studi / Proyek Independen): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'hasil_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <?php
                         echo $this->render('_mahasiswa.php', [
                             'function' => $function,
-                            'simkatmawa_id' => $model->id ?? null
+                            'simkatmawa_id' => $model->id ?? ''
                         ]);
                         ?>
 

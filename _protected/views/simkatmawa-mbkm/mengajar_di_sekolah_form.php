@@ -42,7 +42,8 @@ use yii\widgets\ActiveForm;
                         ]); ?>
 
 
-                        <ul>
+                        <?php if($function == 'update') :?>
+<ul>
                             <li>
                                 <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
                             </li>
@@ -50,6 +51,7 @@ use yii\widgets\ActiveForm;
                                 <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
                             </li>
                         </ul>
+<?php endif; ?>
 
                         <?= $form->field($model, 'sk_penerimaan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('SK Mengajar dari Sekolah Penerima') ?>
                         <?php if ($model->sk_penerimaan_path) :
@@ -94,7 +96,7 @@ use yii\widgets\ActiveForm;
                         <?php
                         echo $this->render('_mahasiswa.php', [
                             'function' => $function,
-                            'simkatmawa_id' => $model->id ?? null
+                            'simkatmawa_id' => $model->id ?? ''
                         ]);
                         ?>
 

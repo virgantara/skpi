@@ -1,6 +1,8 @@
 <?php
 
 use app\helpers\MyHelper;
+use app\models\SimkatmawaApresiasi;
+use app\models\SimkatmawaLevel;
 use app\models\SimkatmawaRekognisi;
 use kartik\date\DatePicker;
 use kartik\select2\Select2;
@@ -20,13 +22,14 @@ use yii\widgets\ActiveForm;
 
             <div class="widget-box widget-color-blue2">
                 <div class="widget-header">
-                    <h4 class="widget-title lighter smaller">Rekognisi</h4>
+                    <h4 class="widget-title lighter smaller">Kegiatan Mandiri</h4>
                 </div>
                 <div class="widget-body">
                     <div class="widget-main">
 
                         <?php $form = ActiveForm::begin(); ?>
 
+                        <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
                         <?= $form->field($model, 'nama_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama kegiatan"]) ?>
 
                         <?= $form->field($model, 'penyelenggara')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama penyelenggara"]) ?>
@@ -51,43 +54,91 @@ use yii\widgets\ActiveForm;
                         ]);
                         ?>
 
-                        <?= $form->field($model, 'level')->widget(Select2::classname(), [
-                            'data' => MyHelper::listSimkatmawaLevel()[0],
+                        <?= $form->field($model, 'level_id')->widget(Select2::classname(), [
+                            'data' => ArrayHelper::map(SimkatmawaLevel::find()->orderBy(['urutan' => SORT_ASC])->all(), 'id', 'nama'),
                             'options' => ['placeholder' => Yii::t('app', '- Pilih Level -')],
                             'pluginOptions' => [
                                 'allowClear' => true,
                             ],
-                        ]) ?>
+                        ])->label('Level') ?>
 
-                        <?= $form->field($model, 'apresiasi')->widget(Select2::classname(), [
-                            'data' => MyHelper::listSimkatmawaApresiasi(),
+                        <?= $form->field($model, 'apresiasi_id')->widget(Select2::classname(), [
+                            'data' => ArrayHelper::map(SimkatmawaApresiasi::find()->orderBy(['urutan' => SORT_ASC])->all(), 'id', 'nama'),
                             'options' => ['placeholder' => Yii::t('app', '- Pilih Apresiasi -')],
                             'pluginOptions' => [
                                 'allowClear' => true,
                             ],
-                        ]) ?>
+                        ])->label('Apresiasi') ?>
+
+                        <?php if ($function == 'update') : ?>
+                            <ul>
+                                <li>
+                                    <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
+                                </li>
+                                <li>
+                                    <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
+                                </li>
+                            </ul>
+                        <?php endif; ?>
 
                         <?= $form->field($model, 'sertifikat_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Sertifikat Apresiasi') ?>
+                        <?php if ($model->sertifikat_path) :
+                            $file_name = urldecode(basename(parse_url($model->sertifikat_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Sertifikat Apresiasi): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
-                        <?= $form->field($model, 'foto_kegiatan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Dokumentasi Piala/Medali') ?>
+                        <?= $form->field($model, 'foto_kegiatan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Foto Kegiatan') ?>
+                        <?php if ($model->foto_kegiatan_path) :
+                            $file_name = urldecode(basename(parse_url($model->foto_kegiatan_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Foto Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <?= $form->field($model, 'url_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan url kegiatan"]) ?>
 
-                        <?= $form->field($model, 'foto_penyerahan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'keterangan')->textarea(['rows' => 4]) ?>
+
+                        <?= $form->field($model, 'foto_penyerahan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Foto Penyerahan Sertifikat') ?>
+                        <?php if ($model->foto_penyerahan_path) :
+                            $file_name = urldecode(basename(parse_url($model->foto_penyerahan_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Foto Penyerahan Sertifikat): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'foto_penyerahan_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
-                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Tugas') ?>
+                        <?php if ($model->surat_tugas_path) :
+                            $file_name = urldecode(basename(parse_url($model->surat_tugas_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Surat Tugas): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
-                        <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Laporan Akademik Pelaksanaan Kegiatan') ?>
+                        <?php if ($model->laporan_path) :
+                            $file_name = urldecode(basename(parse_url($model->laporan_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Laporan Akademik Pelaksanaan Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <?php
                         echo $this->render('_mahasiswa.php', [
                             'function' => $function,
-                            'simkatmawa_id' => $model->id ?? null
+                            'simkatmawa_id' => $model->id ?? ''
                         ]);
                         ?>
 

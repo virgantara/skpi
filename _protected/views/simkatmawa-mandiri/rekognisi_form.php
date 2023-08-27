@@ -26,6 +26,7 @@ use yii\widgets\ActiveForm;
 
                         <?php $form = ActiveForm::begin(); ?>
 
+                        <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
                         <?= $form->field($model, 'nama_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama kegiatan"]) ?>
 
                         <?= $form->field($model, 'simkatmawa_rekognisi_id')->widget(Select2::classname(), [
@@ -54,28 +55,67 @@ use yii\widgets\ActiveForm;
                         ]);
                         ?>
 
-                        <?= $form->field($model, 'sertifikat_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?php if($function == 'update') :?>
+<ul>
+                            <li>
+                                <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
+                            </li>
+                            <li>
+                                <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
+                            </li>
+                        </ul>
+<?php endif; ?>
+
+                        <?= $form->field($model, 'sertifikat_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Sertifikat') ?>
+                        <?php if ($model->sertifikat_path) :
+                            $file_name = urldecode(basename(parse_url($model->sertifikat_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Sertifikat): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'sertifikat_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <?= $form->field($model, 'url_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan url kegiatan"]) ?>
 
-                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Sertifikat') ?>
+                        <?php if ($model->surat_tugas_path) :
+                            $file_name = urldecode(basename(parse_url($model->surat_tugas_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Sertifikat): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <?= $form->field($model, 'penyelenggara')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama penyelenggara"]) ?>
 
                         <?= $form->field($model, 'tempat_pelaksanaan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan tempat kegiatan"]) ?>
 
-                        <?= $form->field($model, 'foto_kegiatan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'foto_kegiatan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Foto Kegiatan') ?>
+                        <?php if ($model->foto_kegiatan_path) :
+                            $file_name = urldecode(basename(parse_url($model->foto_kegiatan_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Foto Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
-                        <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control']) ?>
+                        <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Laporan Akademik Kegiatan') ?>
+                        <?php if ($model->laporan_path) :
+                            $file_name = urldecode(basename(parse_url($model->laporan_path, PHP_URL_PATH)));
+                            $array = explode("-", $file_name);
+                            $file_name = $array[1] . '.pdf';
+                        ?>
+                            <p style="color: red;">Current File (Laporan Akademik Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank']) ?></p>
+                        <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
                         <?php
                         echo $this->render('_mahasiswa.php', [
                             'function' => $function,
-                            'simkatmawa_id' => $model->id ?? null
+                            'simkatmawa_id' => $model->id ?? ''
                         ]);
                         ?>
 
