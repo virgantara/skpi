@@ -1,6 +1,7 @@
 <?php
 
 use app\helpers\MyHelper;
+use app\models\SimakMasterprogramstudi;
 use app\models\SimkatmawaBelmawaKategori;
 use kartik\date\DatePicker;
 use kartik\select2\Select2;
@@ -72,6 +73,18 @@ use yii\widgets\ActiveForm;
         <p style="color: red;">Current File (Laporan Akademik Pelaksanaan Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank']) ?></p>
     <?php endif; ?>
     <small>File: pdf Max size: 5 MB</small>
+
+    <?php if (Yii::$app->user->can('admin')) : ?>
+
+        <?= $form->field($model, 'prodi_id')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(SimakMasterprogramstudi::find()->all(), 'id', 'nama_prodi'),
+            'options' => ['placeholder' => Yii::t('app', '- Pilih Program Studi -')],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ])->label('Program Studi') ?>
+
+    <?php endif; ?>
 
     <?php
     echo $this->render('_mahasiswa.php', [

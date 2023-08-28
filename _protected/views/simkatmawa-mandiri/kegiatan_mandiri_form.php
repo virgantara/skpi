@@ -1,6 +1,7 @@
 <?php
 
 use app\helpers\MyHelper;
+use app\models\SimakMasterprogramstudi;
 use app\models\SimkatmawaApresiasi;
 use app\models\SimkatmawaLevel;
 use app\models\SimkatmawaRekognisi;
@@ -135,6 +136,18 @@ use yii\widgets\ActiveForm;
                         <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
+                        <?php if (Yii::$app->user->can('admin')) : ?>
+
+                            <?= $form->field($model, 'prodi_id')->widget(Select2::classname(), [
+                                'data' => ArrayHelper::map(SimakMasterprogramstudi::find()->all(), 'id', 'nama_prodi'),
+                                'options' => ['placeholder' => Yii::t('app', '- Pilih Program Studi -')],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                ],
+                            ])->label('Program Studi') ?>
+
+                        <?php endif; ?>
+                        
                         <?php
                         echo $this->render('_mahasiswa.php', [
                             'function' => $function,

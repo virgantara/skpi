@@ -185,9 +185,22 @@ class SimkatmawaBelmawaController extends Controller
                 }
 
                 $model->attributes = $dataPost['SimkatmawaBelmawa'];
+
+                $attributesToExclude = ['laporan_path'];
+                
+                foreach ($dataPost['SimkatmawaBelmawa'] as $attribute => $value) {
+                    if (!in_array($attribute, $attributesToExclude)) {
+                        $model->$attribute = $value;
+                    }
+                }
+
                 $model->user_id = Yii::$app->user->identity->id;
-                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
-                $model->prodi_id = $userProdi->prodi_id ?? null;
+
+                if (!Yii::$app->user->can('admin')) {
+                    $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                    $model->prodi_id = $userProdi->prodi_id ?? null;
+                }
+
                 $simkatmawaKategori = SimkatmawaBelmawaKategori::findOne($model->simkatmawa_belmawa_kategori_id);
 
                 $laporanPath = UploadedFile::getInstance($model, 'laporan_path');

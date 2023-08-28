@@ -34,7 +34,7 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
 
                             <div class="widget-toolbar no-border invoice-info">
                                 <span class="invoice-info-label">Program Studi: </span>
-                                <span class="blue"><?= $model->user->prodi->prodi->nama_prodi ?? "-" ?></span>
+                                <span class="blue"><?= $model->prodi->nama_prodi ?? "-" ?></span>
 
                                 <br />
                                 <span class="invoice-info-label">Tanggal:</span>
