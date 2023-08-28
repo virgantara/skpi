@@ -78,7 +78,7 @@ class MenuHelper
 				[
 					'label' => '<i class="menu-icon fa fa-cog"></i>Master <b class="arrow fa fa-angle-down"></b>',
 					'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-					'visible' => Yii::$app->user->can('theCreator'),
+					'visible' => Yii::$app->user->can('admin'),
 					'url' => ['#'],
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [

@@ -40,7 +40,7 @@ class SimkatmawaBelmawaController extends Controller
                         [
                             'actions' => ['create', 'update', 'delete'],
                             'allow' => true,
-                            'roles' => ['operatorUnit', 'theCreator'],
+                            'roles' => ['operatorUnit', 'admin'],
                         ],
 
                     ],
@@ -187,7 +187,7 @@ class SimkatmawaBelmawaController extends Controller
                 $model->attributes = $dataPost['SimkatmawaBelmawa'];
 
                 $attributesToExclude = ['laporan_path'];
-                
+
                 foreach ($dataPost['SimkatmawaBelmawa'] as $attribute => $value) {
                     if (!in_array($attribute, $attributesToExclude)) {
                         $model->$attribute = $value;

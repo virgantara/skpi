@@ -40,7 +40,7 @@ class SimkatmawaMbkmController extends Controller
                         [
                             'actions' => ['create-pertukaran-pelajar', 'create-mengajar-di-sekolah', 'create-penelitian', 'create-proyek-kemanusiaan', 'create-proyek-desa', 'create-wirausaha', 'create-studi', 'create-pengabdian-masyarakat', 'update', 'delete'],
                             'allow' => true,
-                            'roles' => ['operatorUnit', 'theCreator'],
+                            'roles' => ['operatorUnit', 'admin'],
                         ],
 
                     ],
