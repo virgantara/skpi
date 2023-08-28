@@ -2,6 +2,7 @@
 
 use app\helpers\MyHelper;
 use app\models\SimakMasterprogramstudi;
+use app\models\SimkatmawaLevel;
 use kartik\date\DatePicker;
 use kartik\select2\Select2;
 use richardfan\widget\JSRegister;
@@ -53,7 +54,7 @@ use yii\widgets\ActiveForm;
                         ?>
 
                         <?= $form->field($model, 'level')->radioList(
-                            MyHelper::listSimkatmawaLevel()[1],
+                            ArrayHelper::map(SimkatmawaLevel::find()->orderBy(['urutan' => SORT_ASC])->all(), 'id', 'nama'),
                             [
                                 'class' => 'radio-list', // You can add custom classes here
                             ]

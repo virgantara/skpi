@@ -446,7 +446,7 @@ class SimkatmawaMbkmController extends Controller
 
             if (Yii::$app->request->post()) {
 
-                if (isset($dataPost['SimkatmawaMbkm']['id'])) {
+                if (!empty($dataPost['SimkatmawaMbkm']['id'])) {
                     $model = $this->findModel($dataPost['SimkatmawaMbkm']['id']);
                 } else {
                     $model = new SimkatmawaMbkm;

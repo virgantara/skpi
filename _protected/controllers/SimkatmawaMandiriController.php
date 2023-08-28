@@ -227,15 +227,14 @@ class SimkatmawaMandiriController extends Controller
 
         try {
 
-            $dataPost   = $_POST;
             if (Yii::$app->request->post()) {
-
-                if (isset($dataPost['SimkatmawaMandiri']['id'])) {
+                
+                if (!empty($dataPost['SimkatmawaMandiri']['id'])) {
                     $model = $this->findModel($dataPost['SimkatmawaMandiri']['id']);
                 } else {
                     $model = new SimkatmawaMandiri;
                 }
-
+                
                 $attributesToExclude = ['foto_karya_path', 'foto_penyerahan_path', 'laporan_path', 'foto_kegiatan_path', 'sertifikat_path', 'surat_tugas_path'];
                 foreach ($dataPost['SimkatmawaMandiri'] as $attribute => $value) {
                     if (!in_array($attribute, $attributesToExclude)) {

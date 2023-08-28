@@ -87,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 [
                                                     'attribute' => 'level',
                                                     'value' => function ($model) {
-                                                        return MyHelper::listSimkatmawaLevel()[1][$model->level];
+                                                        return $model->level0->nama ?? '-';
                                                     }
                                                 ],
                                                 [
