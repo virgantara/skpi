@@ -1,5 +1,6 @@
 <?php
 
+use app\models\SimakMasterprogramstudi;
 use app\models\SimkatmawaKegiatan;
 use kartik\date\DatePicker;
 use kartik\file\FileInput;
@@ -57,17 +58,17 @@ use yii\widgets\ActiveForm;
                         ]);
                         ?>
 
-                        <?php if($function == 'update') :?>
-<ul>
-                            <li>
-                                <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
-                            </li>
-                            <li>
-                                <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
-                            </li>
-                        </ul>
-<?php endif; ?>
-                        
+                        <?php if ($function == 'update') : ?>
+                            <ul>
+                                <li>
+                                    <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
+                                </li>
+                                <li>
+                                    <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
+                                </li>
+                            </ul>
+                        <?php endif; ?>
+
                         <?= $form->field($model, 'laporan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Laporan Akademik Pelaksanaan Kegiatan') ?>
                         <?php if ($model->laporan_path) :
                             $file_name = urldecode(basename(parse_url($model->laporan_path, PHP_URL_PATH)));
@@ -89,6 +90,18 @@ use yii\widgets\ActiveForm;
                             <p style="color: red;">Current File (Foto Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'foto_kegiatan_path'], ['target' => '_blank']) ?></p>
                         <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
+
+                        <?php if (Yii::$app->user->can('admin')) : ?>
+
+                            <?= $form->field($model, 'prodi_id')->widget(Select2::classname(), [
+                                'data' => ArrayHelper::map(SimakMasterprogramstudi::find()->all(), 'id', 'nama_prodi'),
+                                'options' => ['placeholder' => Yii::t('app', '- Pilih Program Studi -')],
+                                'pluginOptions' => [
+                                    'allowClear' => true,
+                                ],
+                            ])->label('Program Studi') ?>
+
+                        <?php endif; ?>
 
                         <?php
                         echo $this->render('_mahasiswa.php', [

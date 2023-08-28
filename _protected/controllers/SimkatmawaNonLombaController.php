@@ -41,7 +41,7 @@ class SimkatmawaNonLombaController extends Controller
                         [
                             'actions' => ['create', 'update', 'delete'],
                             'allow' => true,
-                            'roles' => ['operatorUnit', 'theCreator'],
+                            'roles' => ['operatorUnit', 'admin'],
                         ],
 
                     ],
@@ -192,8 +192,11 @@ class SimkatmawaNonLombaController extends Controller
                 }
                 
                 $model->user_id = Yii::$app->user->identity->id;
-                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
-                $model->prodi_id = $userProdi->prodi_id ?? null;
+
+                if (!Yii::$app->user->can('admin')) {
+                    $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                    $model->prodi_id = $userProdi->prodi_id ?? null;
+                }
 
                 $laporanPath = UploadedFile::getInstance($model, 'laporan_path');
                 $fotoKegiatanPath = UploadedFile::getInstance($model, 'foto_kegiatan_path');

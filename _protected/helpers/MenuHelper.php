@@ -78,7 +78,7 @@ class MenuHelper
 				[
 					'label' => '<i class="menu-icon fa fa-cog"></i>Master <b class="arrow fa fa-angle-down"></b>',
 					'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-					'visible' => Yii::$app->user->can('theCreator'),
+					'visible' => Yii::$app->user->can('admin'),
 					'url' => ['#'],
 					'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 					'items' => [
@@ -253,7 +253,7 @@ class MenuHelper
 			$menuItems[] = [
 				'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Kegiatan </span><i class="caret"></i>',
 				'url' => '#',
-				'visible' => Yii::$app->user->can('theCreator'),
+				'visible' => Yii::$app->user->can('admin'),
 				'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 				'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 				'items' => [
@@ -261,7 +261,7 @@ class MenuHelper
 					[
 						'label' => '<i class="menu-icon fa fa-caret-right"></i> Manage',
 						'url' => ['simak-kegiatan/index'],
-						'visible' => Yii::$app->user->can('theCreator'),
+						'visible' => Yii::$app->user->can('admin'),
 					],
 
 				]
@@ -707,18 +707,18 @@ class MenuHelper
 			'url' => '#',
 			'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 			'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-			'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('asesor'),
+			'visible' => Yii::$app->user->can('theCreator'),
 			'items' => [
 
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Auth Item',
 					'url' => ['/auth-item/index'],
-					'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('asesor'),
+					'visible' => Yii::$app->user->can('theCreator'),
 				],
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Auth Item Child',
 					'url' => ['/auth-item-child/index'],
-					'visible' => Yii::$app->user->can('operatorCabang'),
+					'visible' => Yii::$app->user->can('theCreator'),
 
 				],
 			]

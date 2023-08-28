@@ -40,7 +40,7 @@ class SimkatmawaMbkmController extends Controller
                         [
                             'actions' => ['create-pertukaran-pelajar', 'create-mengajar-di-sekolah', 'create-penelitian', 'create-proyek-kemanusiaan', 'create-proyek-desa', 'create-wirausaha', 'create-studi', 'create-pengabdian-masyarakat', 'update', 'delete'],
                             'allow' => true,
-                            'roles' => ['operatorUnit', 'theCreator'],
+                            'roles' => ['operatorUnit', 'admin'],
                         ],
 
                     ],
@@ -460,10 +460,12 @@ class SimkatmawaMbkmController extends Controller
                 }
 
                 $model->user_id = Yii::$app->user->identity->id;
-                // if (!Yii::$app->user->can('theCreator')) {
-                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
-                $model->prodi_id = $userProdi->prodi_id ?? null;
-                // }
+
+                if (!Yii::$app->user->can('admin')) {
+                    $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                    $model->prodi_id = $userProdi->prodi_id ?? null;
+                }
+                
                 $model->jenis_simkatmawa = $jenisSimkatmawa;
 
                 $skPenerimaanPath = UploadedFile::getInstance($model, 'sk_penerimaan_path');

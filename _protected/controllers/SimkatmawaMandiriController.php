@@ -40,7 +40,7 @@ class SimkatmawaMandiriController extends Controller
                         [
                             'actions' => ['create-rekognisi', 'create-kegiatan-mandiri', 'update', 'delete'],
                             'allow' => true,
-                            'roles' => ['operatorUnit', 'theCreator'],
+                            'roles' => ['operatorUnit', 'admin'],
                         ],
 
                     ],
@@ -244,8 +244,12 @@ class SimkatmawaMandiriController extends Controller
                 }
 
                 $model->user_id = Yii::$app->user->identity->id;
-                $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
-                $model->prodi_id = $userProdi->prodi_id ?? null;
+
+                if (!Yii::$app->user->can('admin')) {
+                    $userProdi = UserProdi::findOne(['user_id' => Yii::$app->user->identity->id]);
+                    $model->prodi_id = $userProdi->prodi_id ?? null;
+                }
+
                 $model->jenis_simkatmawa = $jenisSimkatmawa;
 
                 $fotoKaryaPath = UploadedFile::getInstance($model, 'foto_karya_path');
