@@ -38,17 +38,6 @@ class MyHelper
 		];
 	}
 
-	public static function listSimkatmawaApresiasi()
-	{
-		return [
-			0 => 'Juara 1',
-			1 => 'Juara 2',
-			2 => 'Juara 3',
-			3 => 'Harapan',
-			4 => 'Partisipasi / Delegasi / Peserta Kejuaraan',
-		];
-	}
-
 	public static function listHasilPenelitian()
 	{
 		return [
@@ -79,22 +68,6 @@ class MyHelper
 			6 => 'Wirausaha',
 			7 => 'Studi / Proyek Independen',
 			8 => 'Pengabdian Mahasiswa kepada Masyarakat',
-		];
-	}
-
-	public static function listSimkatmawaLevel()
-	{
-		return [
-			0 => [
-				0 => 'Provinsi',
-				1 => 'Wilayah',
-				2 => 'Nasional',
-				3 => 'Internasional',
-			],
-			1 => [
-				2 => 'Nasional',
-				3 => 'Internasional',
-			]
 		];
 	}
 

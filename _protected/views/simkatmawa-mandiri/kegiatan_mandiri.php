@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'level',
                 'label' => 'Kategori Kegiatan',
                 'value' => function ($model) {
-                    return MyHelper::listSimkatmawaLevel()[0][$model->level];
+                    return $model->level0->nama ?? '-';
                 }
             ],
             'nama_kegiatan',

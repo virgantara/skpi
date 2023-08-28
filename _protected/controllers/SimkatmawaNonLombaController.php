@@ -178,10 +178,9 @@ class SimkatmawaNonLombaController extends Controller
 
         try {
 
-            $dataPost   = $_POST;
             if (Yii::$app->request->post()) {
 
-                if (isset($dataPost['SimkatmawaNonLomba']['id'])) $model = $this->findModel($dataPost['SimkatmawaNonLomba']['id']);
+                if (!empty($dataPost['SimkatmawaNonLomba']['id'])) $model = $this->findModel($dataPost['SimkatmawaNonLomba']['id']);
                 else $model = new SimkatmawaNonLomba;
 
                 $attributesToExclude = ['laporan_path', 'foto_kegiatan_path'];
