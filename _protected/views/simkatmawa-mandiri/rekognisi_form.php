@@ -79,13 +79,15 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'url_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan url kegiatan"]) ?>
 
-                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Tugas') ?>
+
+                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Undangan') ?>
+
                         <?php if ($model->surat_tugas_path) :
                             $file_name = urldecode(basename(parse_url($model->surat_tugas_path, PHP_URL_PATH)));
                             $array = explode("-", $file_name);
                             $file_name = $array[1] . '.pdf';
                         ?>
-                            <p style="color: red;">Current File (Surat Tugas): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank']) ?></p>
+                            <p style="color: red;">Current File (Sertifikat): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'surat_tugas_path'], ['target' => '_blank']) ?></p>
                         <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
 
@@ -112,6 +114,7 @@ use yii\widgets\ActiveForm;
                             <p style="color: red;">Current File (Laporan Akademik Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank']) ?></p>
                         <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
+
 
                         <?php if (Yii::$app->user->can('admin')) : ?>
 

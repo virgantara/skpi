@@ -112,7 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'penyelenggara',
-                'label' => 'Nama PT',
+                'label' => 'Nama Penyelenggara',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

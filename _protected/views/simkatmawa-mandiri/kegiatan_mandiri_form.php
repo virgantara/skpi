@@ -104,8 +104,6 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'url_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan url kegiatan"]) ?>
 
-                        <?= $form->field($model, 'keterangan')->textarea(['rows' => 4]) ?>
-
                         <?= $form->field($model, 'foto_penyerahan_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Foto Penyerahan Sertifikat') ?>
                         <?php if ($model->foto_penyerahan_path) :
                             $file_name = urldecode(basename(parse_url($model->foto_penyerahan_path, PHP_URL_PATH)));

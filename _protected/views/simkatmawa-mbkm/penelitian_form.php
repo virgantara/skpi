@@ -27,11 +27,11 @@ use yii\widgets\ActiveForm;
 
                         <?php $form = ActiveForm::begin(); ?>
 
-                        <?= $form->field($model, 'nama_program')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama kegiatan"]) ?>
+                        <?= $form->field($model, 'nama_program')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama kegiatan"])->label('Nama Program / SKIM Penelitian / Riset') ?>
+
+                        <?= $form->field($model, 'judul_penelitian')->textInput(['maxlength' => true, 'placeholder' => "Masukkan judul penelitian"]) ?>
 
                         <?= $form->field($model, 'tempat_pelaksanaan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan tempat kegiatan"]) ?>
-
-                        <?= $form->field($model, 'penyelenggara')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama penyelenggara"]) ?>
 
                         <?= $form->field($model, 'tanggal_mulai')->widget(DatePicker::classname(), [
                             'options' => ['placeholder' => 'Input tanggal mulai ...', 'autocomplete' => 'off'],
@@ -50,8 +50,6 @@ use yii\widgets\ActiveForm;
                             ]
                         ]);
                         ?>
-
-                        <?= $form->field($model, 'judul_penelitian')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama penyelenggara"]) ?>
 
                         <?php if ($function == 'update') : ?>
                             <ul>

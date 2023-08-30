@@ -374,7 +374,7 @@ class SimkatmawaMbkmController extends Controller
             $insert = $this->insertSimkatmawa($dataPost, $model->jenis_simkatmawa, false);
 
             if (isset($insert->id)) {
-                Yii::$app->session->setFlash('success', "Data tersimpan");
+                Yii::$app->session->setFlash('success', "Data berhasil diupdate");
                 return $this->redirect([$model->jenis_simkatmawa]);
             } else {
                 Yii::$app->session->setFlash('danger', $insert);

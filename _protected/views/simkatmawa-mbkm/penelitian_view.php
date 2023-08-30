@@ -75,6 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                     'label' => 'Nama Program / SKIM Penelitian / Riset'
                                                 ],
                                                 'judul_penelitian',
+                                                'tempat_pelaksanaan',
                                                 [
                                                     'attribute' => 'tanggal_mulai',
                                                     'value' => function ($model) {

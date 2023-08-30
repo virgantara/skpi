@@ -33,8 +33,6 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'tempat_pelaksanaan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan tempat kegiatan"]) ?>
 
-                        <?= $form->field($model, 'penyelenggara')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama penyelenggara"]) ?>
-
                         <?= $form->field($model, 'tanggal_mulai')->widget(DatePicker::classname(), [
                             'options' => ['placeholder' => 'Input tanggal mulai ...', 'autocomplete' => 'off'],
                             'pluginOptions' => [

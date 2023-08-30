@@ -109,7 +109,6 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                                                     'label' => 'Sertifikat',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
-                                                        // echo '<pre>';print_r($model);die;
                                                         if (empty($model->sertifikat_path)) {
                                                             return '-';
                                                         }
@@ -118,7 +117,7 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                                                 ],
                                                 [
                                                     'attribute' => 'surat_tugas_path',
-                                                    'label' => 'Surat Tugas',
+                                                    'label' => 'Surat Undangan',
                                                     'format' => 'raw',
                                                     'value' => function ($model) {
                                                         if (empty($model->surat_tugas_path)) {
