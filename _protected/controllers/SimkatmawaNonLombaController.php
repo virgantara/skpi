@@ -132,8 +132,17 @@ class SimkatmawaNonLombaController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $dataPost   = $_POST;
+        if (!empty($dataPost)) {
+            $insert = $this->insertSimkatmawa($dataPost);
+
+            if (isset($insert->id)) {
+                Yii::$app->session->setFlash('success', "Data berhasil diupdate");
+                return $this->redirect(['pembinaan-mental-kebangsaan']);
+            } else {
+                Yii::$app->session->setFlash('danger', $insert);
+                return $this->redirect(['pembinaan-mental-kebangsaan']);
+            }
         }
 
         return $this->render('update', [
@@ -180,8 +189,11 @@ class SimkatmawaNonLombaController extends Controller
 
             if (Yii::$app->request->post()) {
 
-                if (!empty($dataPost['SimkatmawaNonLomba']['id'])) $model = $this->findModel($dataPost['SimkatmawaNonLomba']['id']);
-                else $model = new SimkatmawaNonLomba;
+                if (!empty($dataPost['SimkatmawaNonLomba']['id'])) {
+                    $model = $this->findModel($dataPost['SimkatmawaNonLomba']['id']);
+                } else {
+                    $model = new SimkatmawaNonLomba;
+                }
 
                 $attributesToExclude = ['laporan_path', 'foto_kegiatan_path'];
                 foreach ($dataPost['SimkatmawaNonLomba'] as $attribute => $value) {

@@ -17,17 +17,19 @@ use yii\widgets\ActiveForm;
 <div class="simkatmawa-mbkm-form">
     <div class="row">
         <div class="col-sm-12">
-
+            
             <div class="widget-box widget-color-blue2">
                 <div class="widget-header">
                     <h4 class="widget-title lighter smaller">Studi / Proyek Independen</h4>
                 </div>
                 <div class="widget-body">
                     <div class="widget-main">
-
+                        
                         <?php $form = ActiveForm::begin(); ?>
-
+                        
                         <?= $form->field($model, 'nama_program')->textInput(['maxlength' => true, 'placeholder' => "Masukkan nama kegiatan"])->label('Nama Kegiatan Studi / Proyek Independen') ?>
+                        
+                        <?= $form->field($model, 'judul_penelitian')->textInput(['maxlength' => true, 'placeholder' => "Masukkan judul proyek"])->label('Judul Proyek') ?>
 
                         <?= $form->field($model, 'tempat_pelaksanaan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan tempat kegiatan"]) ?>
 
@@ -49,7 +51,6 @@ use yii\widgets\ActiveForm;
                         ]);
                         ?>
 
-                        <?= $form->field($model, 'judul_penelitian')->textInput(['maxlength' => true, 'placeholder' => "Masukkan judul proyek"])->label('Judul Proyek') ?>
 
                         <?php if ($function == 'update') : ?>
                             <ul>

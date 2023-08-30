@@ -124,7 +124,7 @@ class SimkatmawaBelmawaController extends Controller
             $insert = $this->insertSimkatmawa($dataPost, $model->jenis_simkatmawa, false);
 
             if (isset($insert->id)) {
-                Yii::$app->session->setFlash('success', "Data tersimpan");
+                Yii::$app->session->setFlash('success', "Data berhasil diupdate");
                 return $this->redirect(['index']);
             } else {
                 Yii::$app->session->setFlash('danger', $insert);
@@ -183,8 +183,6 @@ class SimkatmawaBelmawaController extends Controller
                 } else {
                     $model = new SimkatmawaBelmawa;
                 }
-
-                $model->attributes = $dataPost['SimkatmawaBelmawa'];
 
                 $attributesToExclude = ['laporan_path'];
 

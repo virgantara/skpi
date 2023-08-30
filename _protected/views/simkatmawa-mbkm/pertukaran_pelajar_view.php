@@ -1,6 +1,7 @@
 <?php
 
 use app\helpers\MyHelper;
+use app\models\SimkatmawaLevel;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -87,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 [
                                                     'attribute' => 'level',
                                                     'value' => function ($model) {
-                                                        return $model->level0->nama ?? '-';
+                                                        return SimkatmawaLevel::findOne($model->level)->nama ?? '-';
                                                     }
                                                 ],
                                                 [

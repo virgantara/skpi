@@ -102,9 +102,9 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                                                         return MyHelper::converTanggalIndoLengkap($model->tanggal_selesai);
                                                     }
                                                 ],
-                                                [
-                                                    'attribute' => 'keterangan',
-                                                ],
+                                                // [
+                                                //     'attribute' => 'keterangan',
+                                                // ],
                                             ],
                                         ]) ?>
                                     </div>

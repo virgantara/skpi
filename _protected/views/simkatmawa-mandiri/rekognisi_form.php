@@ -56,16 +56,16 @@ use yii\widgets\ActiveForm;
                         ]);
                         ?>
 
-                        <?php if($function == 'update') :?>
-<ul>
-                            <li>
-                                <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
-                            </li>
-                            <li>
-                                <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
-                            </li>
-                        </ul>
-<?php endif; ?>
+                        <?php if ($function == 'update') : ?>
+                            <ul>
+                                <li>
+                                    <p style="color: red;">Jika file tidak ingin di update, maka biarkan kosong!</p>
+                                </li>
+                                <li>
+                                    <p style="color: red;">"Current file" menandakan file tersebut sudah ada</p>
+                                </li>
+                            </ul>
+                        <?php endif; ?>
 
                         <?= $form->field($model, 'sertifikat_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Sertifikat') ?>
                         <?php if ($model->sertifikat_path) :
@@ -79,7 +79,9 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'url_kegiatan')->textInput(['maxlength' => true, 'placeholder' => "Masukkan url kegiatan"]) ?>
 
-                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Sertifikat') ?>
+
+                        <?= $form->field($model, 'surat_tugas_path')->fileInput(['accept' => 'application/pdf', 'class' => 'form-control'])->label('Surat Undangan') ?>
+
                         <?php if ($model->surat_tugas_path) :
                             $file_name = urldecode(basename(parse_url($model->surat_tugas_path, PHP_URL_PATH)));
                             $array = explode("-", $file_name);
@@ -112,7 +114,8 @@ use yii\widgets\ActiveForm;
                             <p style="color: red;">Current File (Laporan Akademik Kegiatan): <?= Html::a($file_name, ['download', 'id' => $model->id, 'file' => 'laporan_path'], ['target' => '_blank']) ?></p>
                         <?php endif; ?>
                         <small>File: pdf Max size: 5 MB</small>
-                        
+
+
                         <?php if (Yii::$app->user->can('admin')) : ?>
 
                             <?= $form->field($model, 'prodi_id')->widget(Select2::classname(), [

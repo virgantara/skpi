@@ -1,5 +1,6 @@
 <?php
 
+use app\models\SimkatmawaLevel;
 use app\models\SimkatmawaMahasiswa;
 use app\models\SimkatmawaMbkm;
 use kartik\grid\GridView;
@@ -55,6 +56,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Tahun Kegiatan',
                 'value' => function ($model) {
                     return date('Y', strtotime($model->tanggal_mulai));
+                }
+            ],
+            [
+                'attribute' => 'level',
+                'value' => function ($model) {
+                    return SimkatmawaLevel::findOne($model->level)->nama ?? '-';
                 }
             ],
             [
