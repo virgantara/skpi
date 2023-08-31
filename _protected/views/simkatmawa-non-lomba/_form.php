@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
 
                         <?php $form = ActiveForm::begin(); ?>
 
-                        <?= $form->field($model, 'id')->hiddenInput()->label('false') ?>
+                        <?= $form->field($model, 'id')->hiddenInput()->label(false) ?>
 
                         <?= $form->field($model, 'nama_kegiatan')->textInput(['maxlength' => true, 'placeholder' => 'Masukkan nama kegiatan']) ?>
 
