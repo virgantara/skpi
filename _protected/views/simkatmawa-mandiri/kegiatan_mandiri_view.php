@@ -157,6 +157,17 @@ $rekognisi = ArrayHelper::map(SimkatmawaRekognisi::find()->all(), 'id', 'nama');
                                                     }
                                                 ],
                                                 [
+                                                    'attribute' => 'foto_penyerahan_path',
+                                                    'label' => 'Foto Penyerahan Sertifikat',
+                                                    'format' => 'raw',
+                                                    'value' => function ($model) {
+                                                        if (empty($model->foto_penyerahan_path)) {
+                                                            return '-';
+                                                        }
+                                                        return Html::a('Unduh <i class="fa fa-download"> </i>', ['download', 'id' => $model->id, 'file' => 'foto_penyerahan_path'], ['target' => '_blank', 'data-pjax' => 0]);
+                                                    }
+                                                ],
+                                                [
                                                     'attribute' => 'laporan_path',
                                                     'label' => 'Laporan',
                                                     'format' => 'raw',
