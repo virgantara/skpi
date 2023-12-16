@@ -139,7 +139,7 @@ class SimakLayananSuratSettingController extends Controller
                     }
 
                     if ($model->file_footer_path) {
-                        $file_name = 'kop_surat_dkp.' . $model->file_footer_path->extension;
+                        $file_name = 'footer_dkp.' . $model->file_footer_path->extension;
                         $s3_path = $model->file_footer_path->tempName;
                         $mime_type = $model->file_footer_path->type;
                         $key = 'dkp/' . $file_name;
