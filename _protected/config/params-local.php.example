@@ -2,14 +2,25 @@
 
 return [
 
-   'api_baseurl' => 'http://localhost:1926',
+    'api_baseurl' => 'http://localhost:1926',
    'client_token' => '',
-   'sso_login' => 'http://local.central.com/site/login',
-   'sso_logout' => 'http://local.central.com/site/sess-logout',
+   'redirectUri' => 'http://local.elitabmas.com/site/auth-drive',
    'jwt_key' => '',
-   'consumer_id' => '',
-    'consumer_secret' => '',
+   'sso_login' => 'http://local.central.com/site/login?callback=http://local.sikap.com',
+   'sso_logout' => 'http://local.central.com/site/sess-logout',
    'invoke_token_uri' => 'http://local.central.com/site/invoke-token',
+   'sister' => [
+        'baseurl' => 'http://sister.unida.gontor.ac.id/ws.php/1.0',
+        'id_pengguna' => '',
+        'username' => '',
+        'password' => '',
+        'lembaga_iptek' => '',
+    ],
+   'feeder' => [
+        'baseurl' => 'http://feeder.unida.gontor.ac.id:3003',
+        'username' => '',
+        'password' => '',
+    ],
    's3' => [
         'version' => 'latest',
         'region'  => 'us-east-1',
@@ -19,5 +30,34 @@ return [
             'key'    => '',
             'secret' => '',
         ],
-    ]
+    ],
+    'google' => [
+          'clientId' => '',
+          'clientSecret' => '',
+          'redirectUri' => 'https://local.sia.com/user/oauth2-callback',
+          'redirectUriGoogle' => 'https://local.sia.com/user/oauth2-callback',
+     ],
+    'classroom' => [
+         'clientId' => '',
+        'clientSecret' => '',
+        'redirectUriJadwal' => 'https://local.sia.com/simak-jadwal/oauth2-callback',
+        'redirectUri' => 'https://local.sia.com/simak-materi/oauth2-callback',
+       'redirectUriTopik' => 'https://local.sia.com/simak-topik/oauth2-callback',
+        'redirectUriTugas' => 'https://local.sia.com/simak-tugas/oauth2-callback',
+       'redirectUriTugasMhs' => 'https://local.sia.com/simak-tugas-mahasiswa/oauth2-callback',
+   ],
+   'gdrive' => [
+        'clientId' => '',
+        'clientSecret' => '',
+        'redirectUri' => 'https://local.sia.com/simak-materi/oauth2-callback',
+
+    ],
+    'mail' => [
+        'class' => 'Swift_SmtpTransport',
+        'host' => 'smtp.gmail.com',
+        'username' => '',
+        'password' => '',
+        'port' => '587',
+        'encryption' => 'tls',                                  
+    ],
 ];

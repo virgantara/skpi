@@ -367,6 +367,7 @@ class SimakLayananSuratController extends Controller
         if ($model->load(Yii::$app->request->post())) {
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction();
+            $errors = '';
             try {
 
                 // Ngirim email jika hanya status ajuan DISETUJUI
@@ -383,13 +384,13 @@ class SimakLayananSuratController extends Controller
                         'konten' => $konten,
                     ]);
 
-                    $user = \app\models\User::findOne([
-                        'nim' => $mhs->nim_mhs,
-                        'access_role' => 'Mahasiswa'
-                    ]);
+                    // $user = \app\models\User::findOne([
+                    //     'nim' => $mhs->nim_mhs,
+                    //     'access_role' => 'Mahasiswa'
+                    // ]);
                     
                     Yii::$app->mailer->compose()
-                    ->setTo($user->email)
+                    ->setTo($mhs->email)
                     ->setFrom([Yii::$app->params['supportEmail'] => 'SIKAP UNIDA Gontor'])
                     ->setSubject('[SIAKAD] '.$list_header[$model->jenis_surat])
                     ->setHtmlBody($emailTemplate)
