@@ -483,6 +483,15 @@ class MenuHelper
 					[
 						'label' => '<hr style="padding:0px;margin:0px">'
 					],
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i>Layanan Surat </b>',
+						'visible' => Yii::$app->user->can('admin'),
+						'url' => ['simak-layanan-surat-setting/update'],
+						
+					],
+					[
+						'label' => '<hr style="padding:0px;margin:0px">'
+					],
 
 					[
 						'label' => '<i class="menu-icon fa fa-caret-right"></i>Kategori Pelanggaran <b class="arrow fa fa-angle-down"></b>',
