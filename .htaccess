@@ -1,6 +1,7 @@
 RewriteEngine on
 
 # hide files and folders
+RedirectMatch 404 /uploads
 RedirectMatch 404 /_protected
 RedirectMatch 404 /\.git
 RedirectMatch 404 /composer\.

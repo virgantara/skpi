@@ -43,7 +43,9 @@
         "kartik-v/yii2-editable": "dev-master",
         "aws/aws-sdk-php": "^3.173",
         "kartik-v/yii2-export": "dev-master",
-        "richardfan1126/yii2-js-register": "*"
+        "richardfan1126/yii2-js-register": "*",
+        "tecnickcom/tcpdf": "^6.3",
+        "geniusts/hijri-dates": "^1.1"
     
     },
     "require-dev": {

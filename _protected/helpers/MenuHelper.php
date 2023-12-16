@@ -95,6 +95,33 @@ class MenuHelper
 		];
 
 		$menuItems[] = [
+			'label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Layanan Surat </span><i class="caret"></i>', 'url' => '#',
+			'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+			'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+			'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('operatorUnit'),
+			'items' => [
+				[
+					'label' => '<i class="menu-icon fa fa-caret-right"></i> Surat Bebas Sanksi',
+					'url' => ['/simak-layanan-surat/index','jenis_surat' => 2],
+					'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('operatorUnit'),
+
+				],
+				[
+					'label' => '<i class="menu-icon fa fa-caret-right"></i> Surat Lulus AKPAM',
+					'url' => ['/simak-layanan-surat/index','jenis_surat' => 3],
+					'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('operatorUnit'),
+
+				],
+				[
+					'label' => '<i class="menu-icon fa fa-caret-right"></i> Surat Bebas Asrama',
+					'url' => ['/simak-layanan-surat/index','jenis_surat' => 4],
+					'visible' => Yii::$app->user->can('operatorCabang') || Yii::$app->user->can('operatorUnit'),
+
+				],
+			]
+		];
+
+		$menuItems[] = [
 			'label' => '<i class="menu-icon fa fa-users"></i><span class="menu-text"> Kompetensi </span>',
 			'url' => ['simak-kegiatan-kompetensi/kartu-kompetensi']
 		];

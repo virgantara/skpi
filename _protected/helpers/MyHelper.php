@@ -8,7 +8,62 @@ use Yii;
  * Css helper class.
  */
 class MyHelper
-{
+{		
+
+	public static function getListHeaderSurat()
+    {
+        return [
+            1 => 'Permohonan Surat Keterangan Aktif',
+            2 => 'Permohonan Surat Keterangan Bebas Sanksi Disiplin',
+            3 => 'Permohonan Surat Keterangan Lulus AKPAM',
+            4 => 'Permohonan Surat Keterangan Bebas Asrama'
+        ];
+    }
+    public static function getListKeperluan()
+    {
+
+        $list_keperluan = [
+            1 => [
+                1 => 'mengurus tunjangan gaji orang tua/to request a statement of parental salary',
+                2 => 'mengurus tunjangan pensiun orang tua/to request a statement of parental pension fund',
+                3 => 'mengurus BPJS/asuransi kesehatan/to propose BPJS/health insurance',
+                4 => 'mengurus beasiswa/for applying for a scholarship',
+                5 => 'mengurus kehilangan KTM/to file a report for missing student ID card',
+                6 => 'melamar pekerjaan/for applying for a job',
+                7 => 'mengurus laporan kehilangan ke kepolisian/to file a report for missing property',
+                8 => 'mengurus visa/to apply for a visa',
+                9 => 'mengikuti lomba/for following a competition',
+                10 => 'mengurus laporan kehilangan KTM ke kepolisian/to file a report for missing student card property',
+                99 => 'lain-lain/etc.'    
+            ],
+            2 => [
+                1 => 'Sidang Skripsi/Undergraduate Thesis Defense',
+                2 => 'Sidang Tesis/Thesis Defense',
+                3 => 'Sidang Disertasi/Dissertation Defense',
+                4 => 'Cuti/Student Leave',
+                5 => 'Beasiswa/Scholarship',
+                6 => 'Transkrip Perkuliahan/Academic Transcript',
+                7 => 'Persyaratan Wisuda/Graduation Requirements',
+                99 => 'lain-lain/etc.'
+            ],
+            3 => [
+                1 => 'Sidang Skripsi/Undergraduate Thesis Defense',
+                2 => 'Sidang Tesis/Thesis Defense',
+                3 => 'Sidang Disertasi/Dissertation Defense',
+                4 => 'Cuti/Student Leave',
+                5 => 'Beasiswa/Scholarship',
+                6 => 'Transkrip Perkuliahan/Academic Transcript',
+                7 => 'Persyaratan Wisuda/Graduation Requirements',
+                99 => 'lain-lain/etc.'
+            ],
+            4 => [
+                7 => 'Persyaratan Wisuda/Graduation Requirements',
+                99 => 'lain-lain/etc.'
+            ]
+        ];
+
+        return $list_keperluan;
+    }
 
 	public static function getTingkatUKM()
 	{
