@@ -254,8 +254,60 @@ class SimakLayananSuratController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $list_akpam = [];
+        $listJenisKegiatan = [];
+        $list_ipks = [];
+        $subakpam = 0;
+        $ipks = 0;
+        if($model->jenis_surat == 3){
+
+
+            $listJenisKegiatan = \app\models\SimakJenisKegiatan::find()->all();
+            $limit_semester = 14;
+                    
+            
+            $list_akpam = $this->getRekapIpks($model->nim);
+            $nim = $model->nim;
+            $subakpam = 0;
+
+            foreach($listJenisKegiatan as $jk) {
+                $sum = 0;
+                for($i=1;$i<=$limit_semester;$i++) {
+                    $formated_akpam = '';
+                    if(!empty($list_akpam[$i][$jk->id][$nim])) {
+                        $akpam = $list_akpam[$i][$jk->id][$nim];
+                        $akpam = $akpam >= $jk->nilai_maximal ? $jk->nilai_maximal : $akpam;
+                        $formated_akpam = round($akpam);
+                        $sum += $akpam;
+                    }
+                    
+                    else
+                    {
+                        $formated_akpam = '-';
+                    }
+                }
+
+                $subakpam += $sum;
+                $avg = $sum / $model->nim0->semester;
+                $ipks = round($avg,2);
+
+                $list_ipks[$jk->id] = $avg;
+            }
+
+            $pembagi = $model->nim0->semester;
+            $subakpam = $subakpam / $pembagi;
+            $ipks = $subakpam / 100;
+            // echo '<pre>';
+            // print_r($subakpam);exit;
+        }
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'list_akpam' => $list_akpam,
+            'listJenisKegiatan' => $listJenisKegiatan,
+            'list_ipks' => $list_ipks,
+            'subakpam' => $subakpam,
+            'ipks' => $ipks
         ]);
     }
 
@@ -351,6 +403,41 @@ class SimakLayananSuratController extends Controller
             'model' => $model,
             'jenis_surat' => $jenis_surat
         ]);
+    }
+
+    private function getRekapIpks($nim)
+    {
+        $results = [];
+        $list_akpam = [];
+        $params = [];
+        // $listJenisKegiatan = \app\models\SimakJenisKegiatan::find()->all();
+        
+        // $results = SimakMastermahasiswa::find();
+
+        $api_baseurl = Yii::$app->params['api_baseurl'];
+        $client = new Client(['baseUrl' => $api_baseurl]);
+        $client_token = Yii::$app->params['client_token'];
+        $headers = ['x-access-token' => $client_token];
+
+        $params = [
+            'nim' => $nim
+        ];
+        $response = $client->get('/report/akpam/get', $params, $headers)->send();
+
+
+        if ($response->isOk) {
+            // print_r($response->data);exit;
+            $temp = $response->data['values'];
+
+            foreach ($temp as $tmp) {
+                foreach ($tmp as $t) {
+
+                    $list_akpam[$t['semester']][$t['id_jenis_kegiatan']][$t['nim']] = $t['akpam'];
+                }
+            }
+        }
+        
+        return $list_akpam;
     }
 
     /**
