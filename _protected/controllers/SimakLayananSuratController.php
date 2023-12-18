@@ -11,7 +11,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\helpers\MyHelper;
 use yii\httpclient\Client;
-
+use app\models\SimakSyaratBebasAsrama;
+use app\models\SimakSyaratBebasAsramaMahasiswa;
+use app\models\SimakSyaratBebasAsramaMahasiswaSearch;
 /**
  * SimakLayananSuratController implements the CRUD actions for SimakLayananSurat model.
  */
@@ -194,17 +196,201 @@ class SimakLayananSuratController extends Controller
                         $imgdata = Yii::$app->basePath.'/../uploads/footer.jpg';
                         $pdf->Image($imgdata, 5, 285, 200);
                     }
+
+                    $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 180, 24, 30, $style, 'N');
                 break;
                 case 3: 
+                $list_akpam = [];
+                    $listJenisKegiatan = [];
+                    $list_ipks = [];
+                    $subakpam = 0;
+                    $ipks = 0;
+                    
+                    $listJenisKegiatan = \app\models\SimakJenisKegiatan::find()->all();
+                    $limit_semester = 14;
+                            
+                    
+                    $list_akpam = $this->getRekapIpks($model->nim);
+                    $nim = $model->nim;
+                    $subakpam = 0;
+
+                    foreach($listJenisKegiatan as $jk) {
+                        $sum = 0;
+                        for($i=1;$i<=$limit_semester;$i++) {
+                            $formated_akpam = '';
+                            if(!empty($list_akpam[$i][$jk->id][$nim])) {
+                                $akpam = $list_akpam[$i][$jk->id][$nim];
+                                $akpam = $akpam >= $jk->nilai_maximal ? $jk->nilai_maximal : $akpam;
+                                $formated_akpam = round($akpam);
+                                $sum += $akpam;
+                            }
+                            
+                            else
+                            {
+                                $formated_akpam = '-';
+                            }
+                        }
+
+                        $subakpam += $sum;
+                        $avg = $sum / $model->nim0->semester;
+                        $ipks = round($avg,2);
+
+                        $list_ipks[$jk->id] = $avg;
+                    }
+
+                    $pembagi = $model->nim0->semester;
+                    $subakpam = $subakpam / $pembagi;
+                    $ipks = $subakpam / 100;
+                       
+
+                    $params = [
+                        'nama_unit' => 'Kepesantrenan',
+                    ];
+
+                    $nama_pejabat = '';
+                    $niy = '';
+                    $response = $client->get('/simpeg/list/unitkerja', $params,$headers)->send();
+                    if ($response->isOk) {
+                        $data = $response->data['values'];
+                        if(count($data) > 0){
+                            $nama_pejabat = $data[0]['nama_pejabat'];
+                            $niy = $data[0]['niy'];
+                        }
+                    }
+                    $pdf->SetMargins(20, 10, 20, true); // set the margins 
+                    echo $this->renderPartial('print_surat_keterangan_akpam', [
+                        'model' => $model,
+                        'mhs' => $mhs,
+                        'thn' => $model->tahun,
+                        // 'jenis' => $jenis,
+                        'kampus' => $mhs->kampus0,
+                        // 'tanggal' => $tanggal,
+                        'fakultas' => $mhs->kodeProdi->kodeFakultas,
+                        'nama_dekan' => $nama_pejabat,
+                        'prodi' => $mhs->kodeProdi,
+                        'niy' => $niy,
+                        'list_akpam' => $list_akpam,
+                        'listJenisKegiatan' => $listJenisKegiatan,
+                        'list_ipks' => $list_ipks,
+                        'subakpam' => $subakpam,
+                        'ipks' => $ipks
+                        // 'listkrs' => $krs_mhs
+                    ]);
+
+                    $data = ob_get_clean();
+                    $pdf->writeHTML($data);
+
+                    $surat_setting = \app\models\SimakLayananSuratSetting::findOne(['kode_fakultas' => 'dkp']);
+                    if(!empty($surat_setting)){
+                        
+                        if(!file_exists(Yii::$app->basePath . '/../uploads/header.jpg')){
+                            $local_header_path = basename(parse_url($surat_setting->file_header_path, PHP_URL_PATH));
+                            $image = file_get_contents($surat_setting->file_header_path);
+                            file_put_contents(Yii::$app->basePath.'/../uploads/header.jpg', $image);
+                            
+                        }
+
+                        if(!file_exists(Yii::$app->basePath . '/../uploads/footer.jpg')){
+                            $local_header_path = basename(parse_url($surat_setting->file_footer_path, PHP_URL_PATH));
+                            $image = file_get_contents($surat_setting->file_footer_path);
+                            file_put_contents(Yii::$app->basePath.'/../uploads/footer.jpg', $image);
+                            
+                        }
+
+                        if(!file_exists(Yii::$app->basePath . '/../uploads/ttd.jpg')){
+                            $local_header_path = basename(parse_url($surat_setting->file_sign_path, PHP_URL_PATH));
+                            $image = file_get_contents($surat_setting->file_sign_path);
+                            file_put_contents(Yii::$app->basePath.'/../uploads/ttd.jpg', $image);
+                            
+                        }
+
+                        $imgdata = Yii::$app->basePath.'/../uploads/header.jpg';
+                        $pdf->Image($imgdata, 5, 5, 200);
+
+                        $imgdata = Yii::$app->basePath.'/../uploads/ttd.jpg';
+                        $pdf->Image($imgdata, 65, 230, 65);
+
+                        $imgdata = Yii::$app->basePath.'/../uploads/footer.jpg';
+                        $pdf->Image($imgdata, 5, 285, 200);
+                    }
+
+                    $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 220, 24, 30, $style, 'N');
                 break;
                 case 4: 
+                $params = [
+                        'nama_unit' => 'Kepesantrenan',
+                    ];
+
+                    $nama_pejabat = '';
+                    $niy = '';
+                    $response = $client->get('/simpeg/list/unitkerja', $params,$headers)->send();
+                    if ($response->isOk) {
+                        $data = $response->data['values'];
+                        if(count($data) > 0){
+                            $nama_pejabat = $data[0]['nama_pejabat'];
+                            $niy = $data[0]['niy'];
+                        }
+                    }
+                    $pdf->SetMargins(20, 10, 20, true); // set the margins 
+                    echo $this->renderPartial('print_surat_bebas_asrama', [
+                        'model' => $model,
+                        'mhs' => $mhs,
+                        'thn' => $model->tahun,
+                        // 'jenis' => $jenis,
+                        'kampus' => $mhs->kampus0,
+                        // 'tanggal' => $tanggal,
+                        'fakultas' => $mhs->kodeProdi->kodeFakultas,
+                        'nama_dekan' => $nama_pejabat,
+                        'prodi' => $mhs->kodeProdi,
+                        'niy' => $niy
+                        // 'listkrs' => $krs_mhs
+                    ]);
+
+                    $data = ob_get_clean();
+                    $pdf->writeHTML($data);
+
+                    $surat_setting = \app\models\SimakLayananSuratSetting::findOne(['kode_fakultas' => 'dkp']);
+                    if(!empty($surat_setting)){
+                        
+                        if(!file_exists(Yii::$app->basePath . '/../uploads/header.jpg')){
+                            $local_header_path = basename(parse_url($surat_setting->file_header_path, PHP_URL_PATH));
+                            $image = file_get_contents($surat_setting->file_header_path);
+                            file_put_contents(Yii::$app->basePath.'/../uploads/header.jpg', $image);
+                            
+                        }
+
+                        if(!file_exists(Yii::$app->basePath . '/../uploads/footer.jpg')){
+                            $local_header_path = basename(parse_url($surat_setting->file_footer_path, PHP_URL_PATH));
+                            $image = file_get_contents($surat_setting->file_footer_path);
+                            file_put_contents(Yii::$app->basePath.'/../uploads/footer.jpg', $image);
+                            
+                        }
+
+                        if(!file_exists(Yii::$app->basePath . '/../uploads/ttd.jpg')){
+                            $local_header_path = basename(parse_url($surat_setting->file_sign_path, PHP_URL_PATH));
+                            $image = file_get_contents($surat_setting->file_sign_path);
+                            file_put_contents(Yii::$app->basePath.'/../uploads/ttd.jpg', $image);
+                            
+                        }
+
+                        $imgdata = Yii::$app->basePath.'/../uploads/header.jpg';
+                        $pdf->Image($imgdata, 5, 5, 200);
+
+                        $imgdata = Yii::$app->basePath.'/../uploads/ttd.jpg';
+                        $pdf->Image($imgdata, 65, 187, 65);
+
+                        $imgdata = Yii::$app->basePath.'/../uploads/footer.jpg';
+                        $pdf->Image($imgdata, 5, 285, 200);
+                    }
+
+                    $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 180, 24, 30, $style, 'N');
                 break;
             }
             
 
             
 
-            $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 180, 24, 30, $style, 'N');
+            
 
             
             ob_end_clean();
@@ -260,9 +446,13 @@ class SimakLayananSuratController extends Controller
         $list_ipks = [];
         $subakpam = 0;
         $ipks = 0;
-        if($model->jenis_surat == 3){
+        $searchModel = null;
+        $dataProvider = null;
 
-
+        $searchModelBerkas = null;
+        $dataProviderBerkas = null;
+        switch($model->jenis_surat){
+            case 3:
             $listJenisKegiatan = \app\models\SimakJenisKegiatan::find()->all();
             $limit_semester = 14;
                     
@@ -298,8 +488,20 @@ class SimakLayananSuratController extends Controller
             $pembagi = $model->nim0->semester;
             $subakpam = $subakpam / $pembagi;
             $ipks = $subakpam / 100;
-            // echo '<pre>';
-            // print_r($subakpam);exit;
+            break;
+
+            case 4:
+            // $list_syarat_bebas = SimakSyaratBebasAsrama::find()->where(['is_aktif' => 'Y'])->all();
+
+            $searchModel = new SimakSyaratBebasAsramaMahasiswaSearch();
+            $searchModel->mhs_id = $model->nim0->id;
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+            $searchModelBerkas = new SimakLayananSuratSearch();
+            $searchModelBerkas->jenis_surat = [2,3];
+            $searchModelBerkas->nim = $model->nim;
+            $dataProviderBerkas = $searchModelBerkas->search(Yii::$app->request->queryParams);
+            break;
         }
         return $this->render('view', [
             'model' => $model,
@@ -307,7 +509,11 @@ class SimakLayananSuratController extends Controller
             'listJenisKegiatan' => $listJenisKegiatan,
             'list_ipks' => $list_ipks,
             'subakpam' => $subakpam,
-            'ipks' => $ipks
+            'ipks' => $ipks,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'searchModelBerkas' => $searchModelBerkas,
+            'dataProviderBerkas' => $dataProviderBerkas,
         ]);
     }
 

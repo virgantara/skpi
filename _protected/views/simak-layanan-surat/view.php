@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use app\helpers\MyHelper;
-
+use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model app\models\SimakLayananSurat */
 $list_header = MyHelper::getListHeaderSurat();
@@ -87,6 +87,10 @@ $list_status_ajuan = [
         </div>
 
     </div>
+    <?php 
+    if($model->jenis_surat == 3){
+     ?>
+    
     <div class="col-md-6 col-lg-6">
         <div class="panel">
             <div class="panel-heading">
@@ -144,8 +148,278 @@ $list_status_ajuan = [
             </div>
         </div>
     </div>
+<?php } ?>
 </div>
 
+
+
 <div class="row">
+<?php 
+ if(!empty($dataProvider)){
+
+ ?>
+    <div class="col-md-6">
+        <div class="x_panel">
+            <div class="x_title">
+                <h3>Daftar berkas yang sudah diupload</h3>
+            </div>
+<div class="x_content">
+
     
+    <?php
+
+   
+
+    $gridColumns = [
+    [
+        'class'=>'kartik\grid\SerialColumn',
+        'contentOptions'=>['class'=>'kartik-sheet-style'],
+        'width'=>'36px',
+        'pageSummary'=>'Total',
+        'pageSummaryOptions' => ['colspan' => 6],
+        'header'=>'',
+        'headerOptions'=>['class'=>'kartik-sheet-style']
+    ],
+
+            [
+                'attribute' => 'syarat_id',
+                'value' => function($data){
+                    return $data->syarat->nama;
+                }
+            ],
+            
+            [
+                'attribute' => 'file_path',
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a('<label class="btn btn-success"><i class="fa fa-download"></i> Download</label>',['simak-syarat-bebas-asrama-mahasiswa/download','id' => $data->id],['data-pjax' => 0,'target'=>'_blank']);
+                }
+            ],
+            'updated_at',
+            //'created_at',
+    [
+        'template' => '{delete}',
+        'class' => 'yii\grid\ActionColumn',
+        'buttons' => [
+            'delete' => function ($url, $model) {
+                return Html::a('<i class="glyphicon glyphicon-trash"></i>', ['/simak-syarat-bebas-asrama-mahasiswa/delete', 'id' => $model->id], [
+                    'title' => Yii::t('app', 'Hapus data'),
+                    'data-pjax' => 0,
+                    'data' => [
+                        'confirm' => 'Are you sure you want to delete this item?',
+                        'method' => 'post',
+                    ],
+                ]);
+            },
+          ],
+          
+    ]
+];?>    
+<?= GridView::widget([
+        'pager' => [
+            'options'=>['class'=>'pagination'],  
+            'activePageCssClass' => 'active paginate_button page-item',
+            'disabledPageCssClass' => 'disabled paginate_button',
+            'prevPageLabel' => 'Previous',   
+            'nextPageLabel' => 'Next',  
+            'firstPageLabel'=>'First',  
+            'lastPageLabel'=>'Last',    
+            'nextPageCssClass'=>'paginate_button next page-item',   
+            'prevPageCssClass'=>'paginate_button previous page-item',  
+            'firstPageCssClass'=>'first paginate_button page-item',    
+            'lastPageCssClass'=>'last paginate_button page-item',   
+            'maxButtonCount'=>10,    
+            'linkOptions' => [
+                'class' => 'page-link'
+            ]
+        ],      
+        'dataProvider' => $dataProvider,
+        // 'filterModel' => $searchModel,
+        'responsiveWrap' => false,
+        'columns' => $gridColumns,
+        'containerOptions' => ['style' => 'overflow: auto'], 
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+        'containerOptions' => ['style'=>'overflow: auto'], 
+        'beforeHeader'=>[
+            [
+                'columns'=>[
+                    ['content'=> $this->title, 'options'=>['colspan'=>14, 'class'=>'text-center warning']], //cuma satu 
+                ], 
+                'options'=>['class'=>'skip-export'] 
+            ]
+        ],
+        'exportConfig' => [
+              GridView::PDF => ['label' => 'Save as PDF'],
+              GridView::EXCEL => ['label' => 'Save as EXCEL'], //untuk menghidupkan button export ke Excell
+              GridView::HTML => ['label' => 'Save as HTML'], //untuk menghidupkan button export ke HTML
+              GridView::CSV => ['label' => 'Save as CSV'], //untuk menghidupkan button export ke CVS
+          ],
+          
+        'toolbar' =>  [
+            '{export}', 
+
+           '{toggleData}' //uncoment untuk menghidupkan button menampilkan semua data..
+        ],
+        'toggleDataContainer' => ['class' => 'btn-group mr-2'],
+    // set export properties
+        'export' => [
+            'fontAwesome' => true
+        ],
+        'pjax' => true,
+        'pjaxSettings' =>[
+            'neverTimeout'=>true,
+            'options'=>[
+                'id'=>'pjax-container',
+            ]
+        ],  
+        'id' => 'my-grid',
+        'bordered' => true,
+        'striped' => true,
+        // 'condensed' => false,
+        // 'responsive' => false,
+        'hover' => true,
+        // 'floatHeader' => true,
+        // 'showPageSummary' => true, //true untuk menjumlahkan nilai di suatu kolom, kebetulan pada contoh tidak ada angka.
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
+        ],
+    ]); ?>
+
+</div>
+        </div>
+    </div>
+    <?php } ?>
+
+    <?php 
+ if(!empty($dataProviderBerkas)){
+
+ ?>
+    <div class="col-md-6">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3>Surat Keterangan AKPAM dan Bebas Sanksi</h3>
+            </div>
+            <div class="panel-body">
+                
+    <?php
+    $gridColumns = [
+    [
+        'class'=>'kartik\grid\SerialColumn',
+        'contentOptions'=>['class'=>'kartik-sheet-style'],
+        'width'=>'36px',
+        'pageSummary'=>'Total',
+        'pageSummaryOptions' => ['colspan' => 6],
+        'header'=>'',
+        'headerOptions'=>['class'=>'kartik-sheet-style']
+    ],
+
+            [
+                'attribute' => 'keperluan',
+                // 'value' => function($data){
+                //     return $data->syarat->nama;
+                // }
+            ],
+            
+            [
+                'attribute' => 'file_path',
+                'format' => 'raw',
+                'value' => function($data){
+                    return Html::a('<label class="btn btn-success"><i class="fa fa-download"></i> Download</label>',['simak-layanan-surat/download','id' => $data->id],['data-pjax' => 0,'target'=>'_blank']);
+                }
+            ],
+            // 'updated_at',
+            //'created_at',
+    // [
+    //     'template' => '{delete}',
+    //     'class' => 'yii\grid\ActionColumn',
+    //     'buttons' => [
+    //         'delete' => function ($url, $model) {
+    //             return Html::a('<i class="glyphicon glyphicon-trash"></i>', ['/simak-syarat-bebas-asrama-mahasiswa/delete', 'id' => $model->id], [
+    //                 'title' => Yii::t('app', 'Hapus data'),
+    //                 'data-pjax' => 0,
+    //                 'data' => [
+    //                     'confirm' => 'Are you sure you want to delete this item?',
+    //                     'method' => 'post',
+    //                 ],
+    //             ]);
+    //         },
+    //       ],
+          
+    // ]
+];?>    
+<?= GridView::widget([
+        'pager' => [
+            'options'=>['class'=>'pagination'],  
+            'activePageCssClass' => 'active paginate_button page-item',
+            'disabledPageCssClass' => 'disabled paginate_button',
+            'prevPageLabel' => 'Previous',   
+            'nextPageLabel' => 'Next',  
+            'firstPageLabel'=>'First',  
+            'lastPageLabel'=>'Last',    
+            'nextPageCssClass'=>'paginate_button next page-item',   
+            'prevPageCssClass'=>'paginate_button previous page-item',  
+            'firstPageCssClass'=>'first paginate_button page-item',    
+            'lastPageCssClass'=>'last paginate_button page-item',   
+            'maxButtonCount'=>10,    
+            'linkOptions' => [
+                'class' => 'page-link'
+            ]
+        ],      
+        'dataProvider' => $dataProviderBerkas,
+        // 'filterModel' => $searchModel,
+        'responsiveWrap' => false,
+        'columns' => $gridColumns,
+        'containerOptions' => ['style' => 'overflow: auto'], 
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+        'containerOptions' => ['style'=>'overflow: auto'], 
+        'beforeHeader'=>[
+            [
+                'columns'=>[
+                    ['content'=> $this->title, 'options'=>['colspan'=>14, 'class'=>'text-center warning']], //cuma satu 
+                ], 
+                'options'=>['class'=>'skip-export'] 
+            ]
+        ],
+        'exportConfig' => [
+              GridView::PDF => ['label' => 'Save as PDF'],
+              GridView::EXCEL => ['label' => 'Save as EXCEL'], //untuk menghidupkan button export ke Excell
+              GridView::HTML => ['label' => 'Save as HTML'], //untuk menghidupkan button export ke HTML
+              GridView::CSV => ['label' => 'Save as CSV'], //untuk menghidupkan button export ke CVS
+          ],
+          
+        'toolbar' =>  [
+            '{export}', 
+
+           '{toggleData}' //uncoment untuk menghidupkan button menampilkan semua data..
+        ],
+        'toggleDataContainer' => ['class' => 'btn-group mr-2'],
+    // set export properties
+        'export' => [
+            'fontAwesome' => true
+        ],
+        'pjax' => true,
+        'pjaxSettings' =>[
+            'neverTimeout'=>true,
+            'options'=>[
+                'id'=>'pjax-container',
+            ]
+        ],  
+        'id' => 'my-grid',
+        'bordered' => true,
+        'striped' => true,
+        // 'condensed' => false,
+        // 'responsive' => false,
+        'hover' => true,
+        // 'floatHeader' => true,
+        // 'showPageSummary' => true, //true untuk menjumlahkan nilai di suatu kolom, kebetulan pada contoh tidak ada angka.
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY
+        ],
+    ]); ?>
+            </div>
+        </div>
+    </div>
+    <?php } ?>
 </div>
