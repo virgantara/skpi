@@ -144,6 +144,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             [['kampus'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampus::className(), 'targetAttribute' => ['kampus' => 'kode_kampus']],
             [['kode_fakultas'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterfakultas::className(), 'targetAttribute' => ['kode_fakultas' => 'kode_fakultas']],
             [['konsulat'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::className(), 'targetAttribute' => ['konsulat' => 'id']],
+            [['koordinator_id'], 'exist', 'skipOnError' => true, 'targetClass' => SimakKampusKoordinator::class, 'targetAttribute' => ['koordinator_id' => 'id']],
         ];
     }
 
@@ -165,6 +166,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             'jenis_kelamin' => 'Jenis Kelamin',
             'tahun_masuk' => 'Tahun Masuk',
             'semester_awal' => 'Semester Awal',
+            'koordinator_id' => 'Koordinator',
             'batas_studi' => 'Batas Studi',
             'asal_propinsi' => 'Asal Propinsi',
             'tgl_masuk' => 'Tgl Masuk',
@@ -231,6 +233,11 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
+    }
+
+    public function getKoordinator()
+    {
+        return $this->hasOne(SimakKampusKoordinator::class, ['id' => 'koordinator_id']);
     }
 
     public function getKonsulat0()

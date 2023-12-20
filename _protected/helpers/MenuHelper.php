@@ -276,7 +276,12 @@ class MenuHelper
 					],
 				]
 			];
-
+			$menuItems[] = [
+						'label' => '<i class="menu-icon fa fa-users"></i>Koordinator ',
+						'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+						'visible' => Yii::$app->user->can('admin'),
+						'url' => ['mahasiswa/koordinator'],
+					];
 			$menuItems[] = [
 				'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Kegiatan </span><i class="caret"></i>',
 				'url' => '#',
@@ -511,6 +516,15 @@ class MenuHelper
 						'label' => '<hr style="padding:0px;margin:0px">'
 					],
 					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i>Koordinator Kampus </b>',
+						'visible' => Yii::$app->user->can('admin'),
+						'url' => ['simak-kampus-koordinator/index'],
+						
+					],
+					[
+						'label' => '<hr style="padding:0px;margin:0px">'
+					],
+					[
 						'label' => '<i class="menu-icon fa fa-caret-right"></i>Layanan Surat </b>',
 						'visible' => Yii::$app->user->can('admin'),
 						'url' => ['simak-layanan-surat-setting/update'],
@@ -657,6 +671,7 @@ class MenuHelper
 							]
 						],
 					],
+					
 					[
 						'label' => '<i class="menu-icon fa fa-caret-right"></i>Dapur <b class="arrow fa fa-angle-down"></b>',
 						'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",

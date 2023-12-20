@@ -32,12 +32,12 @@ class MahasiswaController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni'],
+                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator'],
                 'rules' => [
 
                     [
                         'actions' => [
-                            'update', 'index', 'view', 'konsulat', 'konsulat-wni'
+                            'update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator', 'admin', 'operatorCabang'],
@@ -52,6 +52,77 @@ class MahasiswaController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionUpdateKoordinator()
+    {
+        $dataku = $_POST['dataku'];
+        $nim = $dataku['nimku'];
+        $koordinator_id = $dataku['koordinator_id'];
+        if (!empty($dataku['nimku'])) {
+            if (!empty($dataku['koordinator_id'])) {
+                $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
+
+                $data->koordinator_id = $koordinator_id;
+                $koordinator = \app\models\SimakKampusKoordinator::findOne($koordinator_id);
+                if ($data->save()) {
+                    $results = [
+                        'code' => 200,
+                        'msg' => "Koordinator berhasil diupdate",
+                        'nama' => $koordinator->nama_koordinator
+                    ];
+                } else {
+                    $errors = \app\helpers\MyHelper::logError($data);
+                    $results = [
+                        'code' => 400,
+                        'msg' => $errors,
+                        'nama' => ''
+                    ];
+                }
+
+
+                echo json_encode($results);
+            } else {
+                echo "Koordinator kosong, Isi terlebih dahulu";
+            }
+        } else {
+            echo "Koordinator kosong, Isi terlebih dahulu";
+        }
+        die();
+    }
+
+    public function actionKoordinator()
+    {
+        $model = new SimakMastermahasiswa;
+        $model->setScenario('asrama');
+
+        $results = [];
+        $params = [];
+
+        if (!empty($_GET['btn-search'])) {
+            if (!empty($_GET['SimakMastermahasiswa'])) {
+                $params = $_GET['SimakMastermahasiswa'];
+                $query = SimakMastermahasiswa::find()->where([
+                    'kampus' => $params['kampus'],
+                    'kode_prodi' => !empty($params['kode_prodi']) ? $params['kode_prodi'] : '-',
+
+                    'status_aktivitas' => $params['status_aktivitas']
+                ]);
+
+                if (Yii::$app->user->identity->access_role == 'operatorCabang') {
+                    $query->andWhere(['kampus' => Yii::$app->user->identity->kampus]);
+                }
+
+                $query->orderBy(['semester' => SORT_ASC, 'nama_mahasiswa' => SORT_ASC]);
+                $results = $query->all();
+            }
+        }
+
+        return $this->render('koordinator', [
+            'model' => $model,
+            'results' => $results,
+            'params' => $params,
+        ]);
     }
 
     public function actionAjaxCariMahasiswa()

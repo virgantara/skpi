@@ -41,7 +41,7 @@ class AsramaController extends Controller
         ];
     }
 
-    public function actionListAsrama()
+    public function actionList()
     {
         $kampus_id = $_POST['kampus_id'];
         $results = [];
