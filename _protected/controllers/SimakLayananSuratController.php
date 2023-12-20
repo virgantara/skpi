@@ -323,13 +323,27 @@ class SimakLayananSuratController extends Controller
                         $pdf->Image($imgdata, 5, 5, 200);
 
                         $imgdata = Yii::$app->basePath.'/../uploads/ttd.jpg';
-                        $pdf->Image($imgdata, 65, 230, 65);
+                        if($mhs->kampus0->kode_kampus == 1 && in_array($mhs->kode_jenjang_studi,['C','D']) ){
+                            $pdf->Image($imgdata, 65, 230, 65);
+
+                            $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 210, 20, 16, $style, 'N');
+                        }
+
+                        else{
+                            $pdf->Image($imgdata, 30, 230, 65);
+                            if(!empty($mhs->koordinator)){
+                                $imgdata = $mhs->koordinator->ttd_path;
+                                $pdf->Image($imgdata, 120, 230, 65);
+                            }
+
+                            $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 210, 220, 16, $style, 'N');
+                        }
 
                         $imgdata = Yii::$app->basePath.'/../uploads/footer.jpg';
                         $pdf->Image($imgdata, 5, 285, 200);
                     }
 
-                    $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 220, 24, 30, $style, 'N');
+                    
                 break;
                 case 4: 
                 $params = [
@@ -392,13 +406,27 @@ class SimakLayananSuratController extends Controller
                         $pdf->Image($imgdata, 5, 5, 200);
 
                         $imgdata = Yii::$app->basePath.'/../uploads/ttd.jpg';
-                        $pdf->Image($imgdata, 65, 187, 65);
+                        if($mhs->kampus0->kode_kampus == 1 && in_array($mhs->kode_jenjang_studi,['C','D']) ){
+                            $pdf->Image($imgdata, 65, 216, 65);
+
+                            $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 210, 20, 16, $style, 'N');
+                        }
+
+                        else{
+                            $pdf->Image($imgdata, 30, 216, 65);
+                            if(!empty($mhs->koordinator)){
+                                $imgdata = $mhs->koordinator->ttd_path;
+                                $pdf->Image($imgdata, 120, 216, 65);
+                            }
+
+                            $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 210, 220, 16, $style, 'N');
+                        }
 
                         $imgdata = Yii::$app->basePath.'/../uploads/footer.jpg';
                         $pdf->Image($imgdata, 5, 285, 200);
                     }
 
-                    $pdf->write2DBarcode($mhs->nim_mhs.'/'.$mhs->nama_mahasiswa.'/'.date('d-m-Y',strtotime($model->tanggal_disetujui)).'/'.$mhs->nama_mahasiswa, 'QRCODE,Q', 20, 180, 24, 30, $style, 'N');
+                    
                 break;
             }
             

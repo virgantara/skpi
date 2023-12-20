@@ -130,6 +130,9 @@ $date_hijri = $date_hijri->format('d F o');
       
 </table> 
 <br><br>
+  <?php 
+   if($kampus->kode_kampus == 1 && in_array($mhs->kode_jenjang_studi,['C','D']) ){
+    ?>
    <table border="0" width="100%" style="font-size:12px;;font-family: 'Times'">
          <tr>
     <td width="20%">
@@ -140,7 +143,9 @@ $date_hijri = $date_hijri->format('d F o');
        
     </td>
     <td  width="65%" align="left" valign="top">
-       <table>
+       
+
+        <table border="0">
          <tr>
             
            <td align="left"  width="30%">Dikeluarkan di </td>
@@ -173,9 +178,99 @@ $date_hijri = $date_hijri->format('d F o');
      </td>
          </tr>
        </table>
+        
        
        
     </td>
     
   </tr>
     </table>
+
+    <?php 
+       }
+
+       else{
+
+
+        ?>
+   <table border="0" width="100%" style="font-size:10px;;font-family: 'Times'">
+         <tr>
+    <td width="55%">
+      
+       <table border="0">
+         <tr>
+            
+           <td align="left"  width="100%"></td>
+           
+         </tr>
+         <tr>
+            
+           <td align="left"></td>
+         </tr>
+         <tr>
+            
+           <td align="left" > </td>
+            
+         </tr>
+         <tr>
+           <td colspan="3">Direktur Kepesantrenan,
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <u><strong><?=$nama_dekan;?></strong></u><br>
+       NIY : <?=$niy;?>
+     </td>
+         </tr>
+       </table>
+       
+    </td>
+    <td  width="45%" align="left" valign="top">
+       
+
+        
+        <table border="0">
+         <tr>
+            
+           <td align="left"  width="30%">Dikeluarkan di </td>
+            <td align="center" width="5%">:</td>
+            <td align="left" width="65%">Ponorogo</td>
+         </tr>
+         <tr>
+            
+           <td align="left">Pada Tanggal </td>
+            <td align="center">:</td>
+            <td align="left" ><?php echo strftime('%d %B %Y', strtotime($model->tanggal_disetujui)); ?></td>
+         </tr>
+         <tr>
+            
+           <td align="left" style="border-bottom: 1px solid black;"> </td>
+            <td align="center" style="border-bottom: 1px solid black;">:</td>
+            <td align="left" style="border-bottom: 1px solid black;"><?=$date_hijri; ?></td>
+         </tr>
+         <tr>
+           <td colspan="3">Koordinator Cabang,
+       <br>
+       <br>
+       <br>
+       <br>
+       <br>
+       <br><br>
+       <br>
+       <br>
+       <u><strong><?=(!empty($mhs->koordinator) ? $mhs->koordinator->nama_koordinator : '')?></strong></u><br>
+       NIY : <?=(!empty($mhs->koordinator) ? $mhs->koordinator->niy : '')?>
+     </td>
+         </tr>
+       </table>
+       
+    </td>
+    
+  </tr>
+    </table>
+  <?php } ?>
