@@ -88,36 +88,27 @@ $date_hijri = $date_hijri->format('d F o');
     </table>
 <table border="0" width="100%" style="font-family: 'Times';font-size: 12px;;">
       <tr>
-        <td width="100%" style="text-align: justify;">Mahasiswa di atas benar-benar telah mengikuti kegiatan yang diadakan oleh Direktorat Kepesantrenan dengan nilai kumulatif sebagai berikut:
+        <td width="100%" style="text-align: justify;">Benar-benar telah menyerahkan kembali inventaris asrama berupa :
           <br>
-        <table border="1" width="100%" cellpadding="1" cellspacing="0">
-                <tr>
-                    <td align="center" style="background-color: lightgray;"><b>Jenis Kegiatan</b></td>
-                    <td align="center" style="background-color: lightgray;"><b>Nilai</b></td>
-                </tr>
-                <?php 
-
-                foreach($listJenisKegiatan as $jk)
-                {
-                 ?>
-                <tr>
-                    <td><?=$jk->nama_jenis_kegiatan?></td>
-                    <td align="center"><?=round($list_ipks[$jk->id],2)?></td>
-                </tr>
-                <?php 
-                }
-                 ?>
-                <tr>
-                    <td style="background-color: lightgray;"><b>Total</b></td>
-                    <td align="center" style="background-color: lightgray;"><b><?=round($subakpam,2)?></b></td>
-                </tr>
-                <tr>
-                    <td style="background-color: lightgray;"><b>IPKs</b></td>
-                    <td align="center" style="background-color: lightgray;"><b><?=round($ipks,2)?></b></td>
-                </tr>
+        <table border="0" width="100%" cellpadding="1" cellspacing="0">
+            <tr>
+                <td align="left" ><b>1. KUNCI KAMAR</b></td>
+            </tr>
+            <tr>
+                <td align="left" >*Dikosongkan dari segala jenis barang-barang pribadi, dan kunci diserahkan ke pengurus asrama</td>
+            </tr>
+            <tr>
+                <td align="left" ><b>2. LEMARI</b></td>
+            </tr>
+            <tr>
+                <td align="left" >*Dikosongkan dari segala jenis barang-barang pribadi, dan kunci diserahkan ke pengurus asrama</td>
+            </tr>  
+            <tr>
+                <td align="left" ><b>3. KUNCI LEMARI</b></td>
+            </tr>
             
         </table>
-            <br>Demikian surat ini kami buat agar dapat menjadi maklum adanya dan dapat dipergunakan sebagaimana mestinya.
+            <br>Demikian surat keterangan bebas asrama ini kami buat, agar menjadi maklum adanya dan dapat dipergunakan sebagaimana mestinya.
           
         </td>
       </tr>
@@ -130,7 +121,7 @@ $date_hijri = $date_hijri->format('d F o');
       
 </table> 
 <br><br>
-  <?php 
+<?php 
    if($kampus->kode_kampus == 1 && in_array($mhs->kode_jenjang_studi,['C','D']) ){
     ?>
    <table border="0" width="100%" style="font-size:12px;;font-family: 'Times'">
