@@ -209,7 +209,7 @@ function getListAsrama(kampus_id){
 	$.ajax({
 
 		type : "POST",
-		url : "' . Url::to(['/asrama/list-asrama']) . '",
+		url : "' . Url::to(['/asrama/list']) . '",
 		data : "kampus_id="+kampus_id,
 		success: function(data){
 			var hasil = $.parseJSON(data);
