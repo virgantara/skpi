@@ -624,7 +624,7 @@ class SimakLayananSuratController extends Controller
                 ]);
                 
                 Yii::$app->mailer->compose()
-                ->setTo($user->email)
+                ->setTo(trim($user->email))
                 ->setFrom([Yii::$app->params['supportEmail'] => 'SIAKAD UNIDA Gontor'])
                 ->setSubject('[SIAKAD] '.$list_header[$jenis_surat])
                 ->setHtmlBody($emailTemplate)
@@ -726,7 +726,7 @@ class SimakLayananSuratController extends Controller
                     // ]);
                     
                     Yii::$app->mailer->compose()
-                    ->setTo($mhs->email)
+                    ->setTo(trim($mhs->email))
                     ->setFrom([Yii::$app->params['supportEmail'] => 'SIKAP UNIDA Gontor'])
                     ->setSubject('[SIAKAD] '.$list_header[$model->jenis_surat])
                     ->setHtmlBody($emailTemplate)
