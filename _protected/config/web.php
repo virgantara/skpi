@@ -9,7 +9,7 @@ $params = array_merge(
 
 $config = [
     'id' => 'basic',
-    'name' => 'SIKAP',
+    'name' => 'SKPI',
     'language' => 'en',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'app\components\Aliases'],
@@ -61,7 +61,7 @@ $config = [
             'class' => 'yii\i18n\Formatter',
             'thousandSeparator' => '.',
             'decimalSeparator' => ',',
-            'currencyCode' => '',
+            'currencyCode' => 'IDR',
             'dateFormat' => 'yyyy-mm-dd',
             'datetimeFormat' => 'dd/MM/yyyy H:i:s'
         ],

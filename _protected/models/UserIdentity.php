@@ -32,7 +32,7 @@ class UserIdentity extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return '{{%simak_users}}';
     }
 
     public function getDepartemen()

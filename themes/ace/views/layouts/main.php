@@ -278,7 +278,7 @@ if(!Yii::$app->user->isGuest){
                     <div class="footer-content">
                         <span class="bigger-120">
                             <span class="blue bolder"><?=Yii::$app->params['shortname'];?></span>
-                              2017-<?=date('Y');?>
+                              2024-<?=date('Y');?>
                         </span>
 
                         &nbsp; &nbsp;
