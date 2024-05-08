@@ -45,8 +45,8 @@ class SimakUniv extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'kode' => 'Kode',
-            'header' => 'Header',
-            'header_en' => 'Header English',
+            'header' => 'Kerangka',
+            'header_en' => 'Framework',
             'nama' => 'Konten',
             'urutan' => 'Urutan',
             'nama_en' => 'Content',
