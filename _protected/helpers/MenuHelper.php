@@ -36,7 +36,7 @@ class MenuHelper
 				
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> KKNI',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['simak-univ/index'],
 				],
 
 				[
