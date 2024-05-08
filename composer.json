@@ -12,6 +12,7 @@
     "require": {
         "php": ">=7.4.0",
         "yiisoft/yii2": "*",
+        "bower-asset/jquery": "3.4.*@stable",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-authclient": "*",
         "yiisoft/yii2-swiftmailer": "*",
