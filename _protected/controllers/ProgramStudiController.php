@@ -144,7 +144,7 @@ class ProgramStudiController extends Controller
                 $query->select(['kode_prodi as id','nama_prodi as name']);
                 $query->where(['kode_fakultas'=>$cat_id]);
 
-                if(Yii::$app->user->identity->access_role =='sekretearis'){
+                if(!Yii::$app->user->isGuest && Yii::$app->user->identity->access_role =='sekretearis'){
                     $query->andWhere(['kode_prodi'=>Yii::$app->user->identity->prodi]);                    
                 }
                 

@@ -61,12 +61,12 @@ class MenuHelper
 				
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Capaian Pembelajaran',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['capaian-pembelajaran-lulusan/index'],
 				],
 
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Mahasiswa',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['skpi-permohonan/index'],
 				],
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Program Tambahan',
