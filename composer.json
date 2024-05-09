@@ -45,7 +45,8 @@
         "kartik-v/yii2-export": "dev-master",
         "richardfan1126/yii2-js-register": "*",
         "tecnickcom/tcpdf": "^6.3",
-        "geniusts/hijri-dates": "^1.1"
+        "geniusts/hijri-dates": "^1.1",
+        "yidas/yii2-bower-asset": "2.0.13.1"
     
     },
     "require-dev": {
