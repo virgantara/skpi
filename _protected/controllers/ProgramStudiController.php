@@ -29,16 +29,16 @@ class ProgramStudiController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['create','update','delete','ajax-get'],
+                'only' => ['create','update','delete'],
                 'rules' => [
                     [
-                        'actions' => ['update','ajax-get'],
+                        'actions' => ['update'],
                         'allow' => true,
                         'roles' => ['akpamPusat','admin'],
                     ],
                     [
                         'actions' => [
-                            'update','index','view','ajax-get'
+                            'update','index','view'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator'],
