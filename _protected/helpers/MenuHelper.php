@@ -41,7 +41,7 @@ class MenuHelper
 
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Sistem Pendidikan',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['sistem-pendidikan/index'],
 				],
 
 			]
@@ -56,7 +56,7 @@ class MenuHelper
 
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Program Studi',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['program-studi/index'],
 				],
 				
 				[

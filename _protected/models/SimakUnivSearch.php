@@ -38,10 +38,10 @@ class SimakUnivSearch extends SimakUniv
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $kode='KKNI1')
     {
         $query = SimakUniv::find();
-        $query->andWhere(['kode' => 'KKNI1']);
+        $query->andWhere(['kode' => $kode]);
 
         // add conditions that should always apply here
 

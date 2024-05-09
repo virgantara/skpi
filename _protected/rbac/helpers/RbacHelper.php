@@ -29,10 +29,11 @@ class RbacHelper
 
         // lets see how many users we got so far
         $usersCount = User::find()->count();
-
+        
         // if this is not first user, we do not want to assign any custom roles to him,
         // he has the authenticated role '@' by default, so there is no need to do anything
         if ($usersCount != 1) {
+            
             return true;
         }
 

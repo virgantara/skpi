@@ -52,10 +52,31 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'denyCallback' => function ($rule, $action) {
+                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                },
+                'only' => ['create','update','delete'],
+                'rules' => [
+                    [
+                        'actions' => ['create','update','delete'],
+                        'allow' => true,
+                        'roles' => ['akpamPusat','admin'],
+                    ],
+                    [
+                        'actions' => [
+                            'create','update','delete','index','view'
+                        ],
+                        'allow' => true,
+                        'roles' => ['theCreator'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
