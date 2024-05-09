@@ -13,12 +13,14 @@ use dosamigos\fileupload\FileUpload;
 <div class="evaluasi-diri-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-
-    <?= $form->field($model, 'tanggal')->widget(\yii\jui\DatePicker::class, [
-        'language' => 'en',
-        'dateFormat' => 'php:d/m/Y',
-    ]) ?>
+    <?= $form->field($model, 'tanggal')->widget(\kartik\date\DatePicker::className(), [
+                'readonly' => true,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'todayHighlight' => true,
+                ]
+            ]) ?>
 
      <?= $form->field($model, 'strength')->widget(CKEditor::className(), [
         'options' => ['rows' => 6],

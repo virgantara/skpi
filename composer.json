@@ -26,7 +26,6 @@
         "kartik-v/yii2-widget-datetimepicker": "*",
         "kartik-v/yii2-widget-timepicker": "*",
         "insolita/yii2-migration-generator": "~2.3",
-        "yiisoft/yii2-jui": "^2.0",
         "kartik-v/yii2-widget-typeahead": "*",
         "kartik-v/yii2-widget-fileinput": "dev-master",
         "keygenqt/yii2-autocomplete-ajax": "@dev",

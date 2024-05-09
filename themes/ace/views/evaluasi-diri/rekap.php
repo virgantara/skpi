@@ -37,11 +37,11 @@ $listDepartment = \app\models\Departemen::getListDepartemens();
     <div class="form-group">
         <label class="col-sm-2 control-label no-padding-right" for="form-field-1"> Tanggal</label>
         <div class="col-sm-2">
-           <?= \yii\jui\DatePicker::widget([
+           <?= \kartik\date\DatePicker::widget([
              'options' => ['placeholder' => 'Pilih tanggal awal ...','id'=>'tanggal'],
              'name' => 'tanggal',
              'value' => $tanggal,
-            'dateFormat' => 'php:d-m-Y',
+            'format' => 'php:d-m-Y',
         ]
     ) ?>
        
