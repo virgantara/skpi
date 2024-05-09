@@ -27,10 +27,10 @@ class SkpiPermohonanController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['create','update','delete'],
+                'only' => ['create','update','delete','index'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','delete'],
+                        'actions' => ['create','update','delete','index'],
                         'allow' => true,
                         'roles' => ['akpamPusat','admin'],
                     ],
