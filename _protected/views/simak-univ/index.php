@@ -21,7 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
      ?>
-     ?>
     <p>
         <?= Html::a('Create KKNI', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
