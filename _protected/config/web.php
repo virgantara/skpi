@@ -25,7 +25,7 @@ $config = [
      
     ],
     'aliases' => [
-        '@vendor/yidas/yii2-bower-asset/bower',
+        '@bower' => '@vendor/yidas/yii2-bower-asset/bower',
         // '@bower' => '@vendor/bower',
         '@npm'   => '@app/../node_modules',
     ],
