@@ -28,7 +28,6 @@
         "insolita/yii2-migration-generator": "~2.3",
         "kartik-v/yii2-widget-typeahead": "*",
         "kartik-v/yii2-widget-fileinput": "dev-master",
-        "keygenqt/yii2-autocomplete-ajax": "@dev",
         "yiisoft/yii2-httpclient": "^2.0",
         "kartik-v/yii2-field-range": "*",
         "2amigos/yii2-ckeditor-widget": "^2.1",
