@@ -14,12 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="simak-universitas-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php 
+    if(!Yii::$app->user->isGuest){
 
+
+     ?>
      <p>
         <?= Html::a('Update', ['update'], ['class' => 'btn btn-primary']) ?>
         
     </p>
-    
+    <?php } ?>
     <table class="table table-striped">
             <tr>
                 <td colspan="3"><h3>Informasi Terkait SKPI</h3></td>

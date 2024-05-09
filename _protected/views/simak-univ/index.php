@@ -16,12 +16,19 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="simak-univ-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php 
+    if(!Yii::$app->user->isGuest){
 
+
+     ?>
+     ?>
     <p>
         <?= Html::a('Create KKNI', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
- 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    
+    <?php 
+}
+    // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?php 
     $gridColumns = [
     // ['class' => '\kartik\grid\CheckboxColumn'],
@@ -45,25 +52,39 @@ $this->params['breadcrumbs'][] = $this->title;
         'class' => 'yii\grid\ActionColumn',
         'template' => '{up} {down} {view} {update}  {delete}',
         'buttons'=>[
+
             'up'=>function ($url, $model) {
-                return Html::a('<span class="fa fa-arrow-up"></span>', '#', ['aria-label' => 'Up', 'title'=>'Up','class' => 'btn-up','data-item' => $model->id]);
+                return Html::a('<span class="fa fa-arrow-up"></span> Up', '#', ['aria-label' => 'Up', 'title'=>'Up','class' => 'btn btn-primary btn-up','data-item' => $model->id]);
             },
             'down'=>function ($url, $model) {
-                return Html::a('<span class="fa fa-arrow-down"></span>', '#', ['aria-label' => 'Down', 'title'=>'Down','class' => 'btn-down','data-item' => $model->id]);
+                return Html::a('<span class="fa fa-arrow-down"></span> Down', '#', ['aria-label' => 'Down', 'title'=>'Down','class' => 'btn btn-primary btn-down','data-item' => $model->id]);
             },
+            'view'=>function ($url, $model) {
+                return Html::a('<span class="fa fa-eye"></span> View', $url, ['class' => 'btn btn-primary']);
+            },
+            'update'=>function ($url, $model) {
+                return Html::a('<span class="fa fa-edit"></span> Update', $url, ['class' => 'btn btn-primary']);
+            },
+            // 'delete'=>function ($url, $model) {
+            //     return Html::a('<span class="fa fa-trash"></span> Delete', $url, ['class' => 'btn btn-danger','data-method' => 'POST']);
+            // },
             
         ],
-        // 'visibleButtons' => [
-        //     'up' => function ($model, $key, $index) {
-        //         return Yii::$app->user->can('akpam');
-        //     },
-        //     'delete' => function ($model, $key, $index) {
-        //         return Yii::$app->user->can('akpam');
-        //     },
-        //     'update' => function ($model, $key, $index) {
-        //         return Yii::$app->user->can('akpam');
-        //     }
-        // ]
+        'visibleButtons' => [
+            'up' => function ($model, $key, $index) {
+                return Yii::$app->user->can('akpam');
+            },
+            'down' => function ($model, $key, $index) {
+                return Yii::$app->user->can('akpam');
+            },
+
+            'delete' => function ($model, $key, $index) {
+                return Yii::$app->user->can('akpam');
+            },
+            'update' => function ($model, $key, $index) {
+                return Yii::$app->user->can('akpam');
+            }
+        ]
     ]
     ]
      ?>

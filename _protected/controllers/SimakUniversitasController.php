@@ -7,7 +7,7 @@ use app\models\SimakUniversitasSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\filters\AccessControl;
 /**
  * SimakUniversitasController implements the CRUD actions for SimakUniversitas model.
  */
@@ -18,17 +18,35 @@ class SimakUniversitasController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'denyCallback' => function ($rule, $action) {
+                    throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
+                },
+                'only' => ['create','update','delete','index'],
+                'rules' => [
+                    [
+                        'actions' => ['create','update','delete','index'],
+                        'allow' => true,
+                        'roles' => ['akpamPusat','admin'],
+                    ],
+                    [
+                        'actions' => [
+                            'create','update','delete','index','view'
+                        ],
+                        'allow' => true,
+                        'roles' => ['theCreator'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                ],
+            ],
+        ];
     }
 
     /**

@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var app\models\SimakUniv $model */
 
-$this->title = $model->id;
+$this->title = $model->nama;
 $this->params['breadcrumbs'][] = ['label' => 'KKNI', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -14,7 +14,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="simak-univ-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php 
+    if(!Yii::$app->user->isGuest){
 
+
+     ?>
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
@@ -25,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
+<?php } ?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [

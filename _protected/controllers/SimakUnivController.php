@@ -27,12 +27,12 @@ class SimakUnivController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['create','update','delete','index','view','up','down'],
+                'only' => ['create','update','delete','up','down'],
                 'rules' => [
                     [
                         'actions' => ['create','update','delete','index','view','up','down'],
                         'allow' => true,
-                        'roles' => ['akpam','admin'],
+                        'roles' => ['akpamPusat','admin'],
                     ],
                     [
                         'actions' => [
