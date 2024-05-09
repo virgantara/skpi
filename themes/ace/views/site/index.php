@@ -10,7 +10,6 @@ use app\helpers\MyHelper;
 use app\models\SimakMasterprogramstudi;
 use app\models\SimakTahunakademik;
 use kartik\select2\Select2;
-use richardfan\widget\JSRegister;
 
 $this->title = Yii::t('app', Yii::$app->name);
 
