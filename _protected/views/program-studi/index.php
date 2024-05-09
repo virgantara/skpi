@@ -8,6 +8,10 @@ use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model app\models\ProgramStudi */
 /* @var $form yii\widgets\ActiveForm */
+
+
+$this->title = 'Program Studi';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <div class="body">
@@ -186,6 +190,10 @@ $(document).on("change","#kode_prodi",function(e){
                 
                     $("#span_nama_prodi").html(data.prodi.nama_prodi)
                     $("#span_nama_prodi_en").html(data.prodi.nama_prodi_en)
+                    $("#span_jenjang").html(data.prodi.jenjang)
+                    $("#span_jenjang_en").html(data.prodi.jenjang_en)
+                    $("#span_gelar_lulusan").html(data.prodi.gelar_lulusan)
+                    $("#span_gelar_lulusan_en").html(data.prodi.gelar_lulusan_en)
 
                     $("#span_nama_fakultas").html(data.fakultas.nama_fakultas)
                     $("#span_nama_fakultas_en").html(data.fakultas.nama_fakultas_en)
@@ -195,6 +203,10 @@ $(document).on("change","#kode_prodi",function(e){
 
                     $("#span_kaprodi_niy").html(data.kaprodi.niy)
                     $("#span_kaprodi_nama_dosen").html(data.kaprodi.nama_dosen)
+
+                    $("#span_status_akreditasi").html(data.akreditasi.status)
+                    $("#span_no_sk_akreditasi").html(data.akreditasi.nomor_sk)
+                    $("#span_lembaga_akreditasi").html(data.akreditasi.lembaga)
                 }
                 
                 else{
