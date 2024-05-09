@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <table class="table table-striped table-bordered table-hover">
             <tr>
                 <th width="30%">Program Studi<br><i>Major</i></th>
-                <td><span id="span_nama_prodi"></span></td>
+                <td width="30%"><span id="span_nama_prodi"></span></td>
                 <td><span id="span_nama_prodi_en"></span></td>
             </tr>
             <tr>
