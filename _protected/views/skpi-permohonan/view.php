@@ -129,44 +129,39 @@ $list_status_pengajuan = [
                 </table>
 
                 <h3>Nilai Induk Kompetensi</h3>
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered" id="tabel-induk-kompetensi">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <th width="10%">No</th>
+                            <th width="40%">Induk Kompetensi</th>
+                            <th width="10%" >Nilai</th>
+                            <th width="10%">Persentase</th>
+                            <th>Predikat</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td colspan="5"><h3>Loading...</h3></td>
+                            
                         </tr>
                         
                     </tbody>
                 </table>
 
                 <h3>Nilai Kompetensi</h3>
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered" id="tabel-kompetensi">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                            <th width="10%">No</th>
+                            <th width="40%">Kompetensi</th>
+                            <th width="20%">Nilai</th>
+                            <th>Predikat</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td colspan="4"><h3>Loading...</h3></td>
+                            
                         </tr>
                         
                     </tbody>
@@ -176,3 +171,138 @@ $list_status_pengajuan = [
 
     </div>
 </div>
+
+
+
+<?php 
+
+$this->registerJs(' 
+
+function getIndukKompetensi(ta,nim){
+
+
+  var obj = new Object;
+  obj.tahun_akademik = ta;
+  obj.nim = nim;
+  var ajax_url= "/simak-kegiatan-mahasiswa/ajax-get-induk-kompetensi";
+  $.ajax({
+
+        type : "POST",
+        url : ajax_url,
+        data : {
+            dataPost : obj
+        },
+        success: function(data){
+            var hasils = $.parseJSON(data);
+
+            var row = \'\';
+    
+            var counter = 0;
+            var list_kategori = []
+            var list_values = []
+
+            tahun_aktif = ta;
+            $("#tahun_akademik").val(ta)
+            
+
+            $(\'#tabel-induk-kompetensi > tbody\').empty();
+            
+            row = \'\';
+            counter = 0;
+            $.each(hasils, function(i, objects){
+              list_kategori.push(objects.induk)
+              list_values.push(objects.persentase)
+              counter++;
+              
+              row += \'<tr>\';
+              row += \'<td>\'+counter+\'</td>\';
+              row += \'<td>\'+objects.induk+\'</td>\';
+              row += \'<td>\'+objects.akpam+\'</td>\';
+              row += \'<td>\'+objects.persentase+\' %</td>\';
+              row += \'<td><span class="label label-\'+objects.color+\'">\'+objects.label+\'</span></td>\';
+              row += \'</tr>\';
+            });
+            
+            
+            $(\'#tabel-induk-kompetensi > tbody\').append(row);
+        }
+    });
+
+  
+}
+
+
+var tahun_aktif = "";
+
+var list_kompetensi = []
+
+function getKompetensi(ta,nim){
+
+  var obj = new Object;
+  obj.tahun_akademik = ta;
+  obj.nim = nim;
+  var ajax_url= "/simak-kegiatan-mahasiswa/ajax-get-kompetensi";
+  $.ajax({
+
+        type : "POST",
+        url : ajax_url,
+        data : {
+            dataPost : obj
+        },
+        success: function(data){
+            var hasils = $.parseJSON(data);
+
+            var row = \'\';
+            $(\'#tabel-kompetensi > tbody\').empty();
+            
+            var counter = 0;
+            var list_kategori = []
+            var list_values = []
+
+            tahun_aktif = ta;
+
+
+            $.each(hasils, function(i, objects){
+              
+              $.each(objects.komponen, function(i, obj){
+                var induk_kom = "";
+                var counter_label = "";
+                if(!list_kategori.includes(objects.induk)){
+                  list_kategori.push(objects.induk)
+                  
+                  induk_kom = objects.induk
+                  
+                  counter_label = counter
+                }
+
+                counter++;
+               
+                row += \'<tr>\';
+                row += \'<td>\'+(counter)+\'</td>\';
+                // row += \'<td>\'+induk_kom+\'</td>\';
+                row += \'<td>\'+obj.kompetensi+\'</td>\';
+                row += \'<td class="text-center"><a target="_blank" href="/simak-kegiatan-mahasiswa/kompetensi?nim=\'+nim+\'&tahun_id=\'+tahun_aktif+\'&induk_id=\'+objects.induk_id+\'">\'+obj.nilai_akhir+\'</a></td>\';
+
+                row += \'<td><span class="label label-\'+obj.color+\'">\'+obj.label+\'</span></td>\';
+                row += \'</tr>\';
+
+                list_kompetensi.push(obj.kompetensi_id)
+              });
+            });
+
+           
+            $(\'#tabel-kompetensi > tbody\').append(row);          
+        }
+    });
+  
+
+  
+}
+
+getKompetensi("20221","'.$model->nim.'")
+getIndukKompetensi("20221","'.$model->nim.'")
+
+
+', \yii\web\View::POS_READY);
+
+?>
