@@ -40,7 +40,7 @@ class SkpiPermohonan extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['tanggal_pengajuan', 'updated_at', 'created_at'], 'safe'],
+            [['tanggal_pengajuan', 'updated_at', 'created_at','deskripsi','deskripsi_en'], 'safe'],
             [['id', 'link_barcode'], 'string', 'max' => 255],
             [['nim'], 'string', 'max' => 25],
             [['nomor_skpi'], 'string', 'max' => 50],
@@ -64,6 +64,8 @@ class SkpiPermohonan extends \yii\db\ActiveRecord
             'tanggal_pengajuan' => 'Tanggal Pengajuan',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',
+            'deskripsi' => Yii::t('app', 'Deskripsi'),
+            'deskripsi_en' => Yii::t('app', 'Description'),
             'namaProdi' => Yii::t('app', 'Program Studi'),
             'namaKampus' => Yii::t('app', 'Kelas'),
             'kode_prodi' => Yii::t('app', 'Prodi'),

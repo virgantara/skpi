@@ -164,14 +164,7 @@ $list_status_pengajuan = [
             
             [
                 'attribute' => 'status_pengajuan',
-                'class' => 'kartik\grid\EditableColumn',
-                'readonly' => !Yii::$app->user->can('akpamPusat'),
-                'refreshGrid' => true,
-                'editableOptions' => [
-                    'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
-                    'data' => $list_status_pengajuan,
-                    'asPopover' => false,
-                ],
+                
                 'filter' => $list_status_pengajuan,
                 'value' => function($data) use ($list_status_pengajuan){
                     return $list_status_pengajuan[$data->status_pengajuan];

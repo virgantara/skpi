@@ -159,7 +159,7 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
             'kode_fakultas' => 'Kode Fakultas',
             'kode_prodi' => 'Kode Prodi',
             'kode_jenjang_studi' => 'Kode Jenjang Studi',
-            'nim_mhs' => 'Nim Mhs',
+            'nim_mhs' => 'NIM',
             'nama_mahasiswa' => 'Nama Mahasiswa',
             'tempat_lahir' => 'Tempat Lahir',
             'tgl_lahir' => 'Tgl Lahir',

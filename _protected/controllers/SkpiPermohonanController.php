@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\SimakMastermahasiswa;
 use app\models\SkpiPermohonan;
 use app\models\SkpiPermohonanSearch;
 use yii\web\Controller;
@@ -104,8 +105,11 @@ class SkpiPermohonanController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $mhs = $model->nim0;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'mhs' => $mhs
         ]);
     }
 
