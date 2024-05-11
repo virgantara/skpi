@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var app\models\SimakUniv $model */
 
-$this->title = $model->nama;
+$this->title = $model->header;
 $this->params['breadcrumbs'][] = ['label' => 'KKNI', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);

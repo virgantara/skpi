@@ -3,6 +3,9 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\SimakRekapKompetensi;
+use app\models\SimakPilihan;
+use app\models\SimakIndukKegiatanKompetensi;
 use app\models\SimakMastermahasiswa;
 use app\models\SimakKegiatanMahasiswa;
 use app\models\SimakKegiatanMahasiswaSearch;
@@ -77,53 +80,80 @@ class SimakKegiatanMahasiswaController extends Controller
 
             $list_tahun = $query->orderBy(['tahun_id' => SORT_DESC])->cache(60 * 10)->all();
 
-            $list_induk = \app\models\SimakIndukKegiatan::find()->cache(60 * 10)->all();
 
-            $all_results = [];
-            foreach($list_tahun as $tahun){
+            $pembagi = count($list_tahun);
+            foreach($list_kompetensi as $kompetensi){
 
-                $results = [];
-                $hasil_kompetensi = \app\models\SimakKegiatanMahasiswa::getHasilKompetensi($list_kompetensi, $obj['tahun_akademik'], $nim);
+                $total_bobot = 0;
+                $induk = SimakIndukKegiatanKompetensi::findOne(['pilihan_id' => $kompetensi->id]);
+                foreach($list_tahun as $tahun){
 
-                foreach ($list_induk as $induk) {
-                    $total = 0;
-                    $tmp = [];
-                    foreach ($induk->simakIndukKegiatanKompetensis as $kom) {
 
-                        if (!empty($hasil_kompetensi[$kom->pilihan_id])) {
-                            $h = $hasil_kompetensi[$kom->pilihan_id];
-                            if (!empty($h)) {
-                                $total += $h['nilai_akhir'];
-                                $tmp[$kom->pilihan_id] = $h;
-                            }
-                        }
-                    }
+                    $query = (new \yii\db\Query())
+                        ->select(['SUM(kk.bobot) as bobot', 'ik.id'])
+                        ->from('simak_pilihan p')
+                        ->join('JOIN', 'simak_kegiatan_kompetensi kk','kk.pilihan_id = p.id')
+                        ->join('JOIN', 'simak_kegiatan k','k.id = kk.kegiatan_id')
+                        ->join('JOIN', 'simak_kegiatan_mahasiswa km','km.id_kegiatan = kk.kegiatan_id')
+                        ->join('JOIN', 'simak_jenis_kegiatan jk','k.id_jenis_kegiatan = jk.id')
+                        ->join('JOIN', 'simak_induk_kegiatan ik','jk.induk_id = ik.id')
+                        ->where([
+                            'p.id' => $kompetensi->id,
+                            'km.nim' => $nim,
+                            'km.tahun_akademik' => $tahun->tahun_id,
+                            'km.is_approved' => 1,
+                        ])
+                        ->groupBy(['ik.id']);
 
-                    $max_kompetensi = $induk->maxKompetensi != 0 ? $induk->maxKompetensi : 1;
-                    $total = round($total / $max_kompetensi * 100, 2);
-                    $range = $induk->getRangeNilai($total);
-                    $label = !empty($range) ? $range->label : '';
-                    $color = !empty($range) ? $range->color : '';
-                    $results[$induk->id] = [
-                        'total' => $total,
-                        'induk' => $induk->nama,
-                        'induk_id' => $induk->id,
-                        'komponen' => $tmp,
-                        'limit' => $induk->maxKompetensi,
-                        'label' => $label,
-                        'color' => $color
-                    ];
+                    $bobot = $query->one();
+                    if(!empty($bobot))
+                        $total_bobot += $bobot['bobot'];
                 }
 
-                $all_results[$tahun->tahun_id] = $results;
-            }
+                $avg_bobot = 0;
+                if($pembagi > 0)
+                    $avg_bobot = $total_bobot / $pembagi;
 
-            echo '<pre>';
-            print_r($all_results);
-            exit;
-            // header('Content-Type: application/json');
+                
+                $predikat = [];
+                $label = '';
+                $color = '';
+                $nilai_akhir = 0;
+                if(!empty($induk))
+                {
+                    $max_range = \app\models\SimakKompetensiRangeNilai::getMaxKompetensi($induk->id);
+                    $nilai_kumulatif = $avg_bobot;
+                    if(!empty($max_range))
+                    {
+                        $nilai_akhir = $nilai_kumulatif > $max_range->nilai_maksimal ? $max_range->nilai_maksimal : $nilai_kumulatif;
+                        $nilai_kumulatif = $nilai_akhir;
+                    }
+
+                    $range = \app\models\SimakKompetensiRangeNilai::getRangeNilai($nilai_kumulatif, $induk->id);
+
+
+                    if(!empty($range))
+                    {
+                        $label = $range->label;
+                        $color = $range->color;
+                        
+                    }
+                }
+
+                $results[] = [
+                    'total' => round($avg_bobot,2),
+                    'induk' => '',
+                    'induk_id' => '',
+                    'komponen' => $kompetensi->label_en,
+                    'limit' => 5,
+                    'label' => $label,
+                    'color' => $color,
+                    'nilai_akhir' => round($nilai_akhir,2)
+                ];
+            }
+            
             echo json_encode($results);
-            // echo '</pre>';
+            
         }
 
         die();
@@ -133,23 +163,32 @@ class SimakKegiatanMahasiswaController extends Controller
     {
         if (Yii::$app->request->isPost && !empty($_POST['dataPost'])) {
             $obj = $_POST['dataPost'];
-            if (Yii::$app->user->identity->access_role == 'Mahasiswa') {
-                $nim = Yii::$app->user->identity->nim;
-            } else {
-                $nim = $obj['nim'];
-            }
+            $nim = $obj['nim'];
+            
 
             $list_induk = \app\models\SimakIndukKegiatan::find()->cache(60 * 10)->all();
-            // $list_induk = \app\models\SimakIndukKegiatan::find()->all();
 
             $results = [];
+
+            $mhs = SimakMastermahasiswa::findOne(['nim_mhs' => $nim]);
+            $tahun_awal = $mhs->tahun_masuk . '1';
+            $tahun_lulus = (!empty($mhs->tgl_lulus) ? date('Y',strtotime($mhs->tgl_lulus)) : null);
+
+            $query = \app\models\SimakTahunakademik::find();
+            $query->where(['>=', 'tahun_id', $tahun_awal]);
+
+            if(!empty($tahun_lulus))
+                $query->andWhere(['<=', 'tahun_id', $tahun_lulus.'2']);
+
+            $list_tahun = $query->orderBy(['tahun_id' => SORT_DESC])->cache(60 * 10)->all();
+
             foreach ($list_induk as $induk) {
                 $total = 0;
                 $tmp = [];
                 $max_kompetensi = 0;
                 $akpam_total = 0;
 
-
+                
                 foreach ($induk->simakJenisKegiatans as $kom) {
 
                     $akpam = \app\models\SimakRekapAkpam::find()->where([

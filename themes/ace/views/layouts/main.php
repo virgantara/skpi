@@ -127,7 +127,7 @@ if(!Yii::$app->user->isGuest){
                                 <li class="dropdown-content">
                                     <ul class="dropdown-menu dropdown-navbar">
                                         <li>
-                                            <a href="<?=$app->app_url.$token;?>" class="clearfix">
+                                            <a target="_blank" href="<?=$app->app_url.$token;?>" class="clearfix">
                                                <!--  <img src="assets/images/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" /> -->
                                                 <span class="msg-body">
                                                     <span class="msg-title">

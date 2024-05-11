@@ -236,10 +236,9 @@ var tahun_aktif = "";
 
 var list_kompetensi = []
 
-function getKompetensi(ta,nim){
+function getKompetensi(nim){
 
   var obj = new Object;
-  obj.tahun_akademik = ta;
   obj.nim = nim;
   var ajax_url= "/simak-kegiatan-mahasiswa/ajax-get-kompetensi";
   $.ajax({
@@ -256,38 +255,19 @@ function getKompetensi(ta,nim){
             $(\'#tabel-kompetensi > tbody\').empty();
             
             var counter = 0;
-            var list_kategori = []
-            var list_values = []
 
-            tahun_aktif = ta;
-
-
-            $.each(hasils, function(i, objects){
+            $.each(hasils, function(i, obj){
               
-              $.each(objects.komponen, function(i, obj){
-                var induk_kom = "";
-                var counter_label = "";
-                if(!list_kategori.includes(objects.induk)){
-                  list_kategori.push(objects.induk)
-                  
-                  induk_kom = objects.induk
-                  
-                  counter_label = counter
-                }
-
                 counter++;
                
-                row += \'<tr>\';
-                row += \'<td>\'+(counter)+\'</td>\';
-                // row += \'<td>\'+induk_kom+\'</td>\';
-                row += \'<td>\'+obj.kompetensi+\'</td>\';
-                row += \'<td class="text-center"><a target="_blank" href="/simak-kegiatan-mahasiswa/kompetensi?nim=\'+nim+\'&tahun_id=\'+tahun_aktif+\'&induk_id=\'+objects.induk_id+\'">\'+obj.nilai_akhir+\'</a></td>\';
+                row += "<tr>";
+                row += "<td>"+(counter)+"</td>";
+                row += "<td>"+obj.komponen+"</td>";
+                row += "<td>"+obj.total+"</td>";
+                row += "<td><span class=\'label label-"+obj.color+"\'>"+obj.label+"</span></td>";
+                row += "</tr>";
 
-                row += \'<td><span class="label label-\'+obj.color+\'">\'+obj.label+\'</span></td>\';
-                row += \'</tr>\';
-
-                list_kompetensi.push(obj.kompetensi_id)
-              });
+            
             });
 
            
@@ -299,7 +279,7 @@ function getKompetensi(ta,nim){
   
 }
 
-getKompetensi("20221","'.$model->nim.'")
+getKompetensi("'.$model->nim.'")
 getIndukKompetensi("20221","'.$model->nim.'")
 
 
