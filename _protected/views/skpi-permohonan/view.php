@@ -162,7 +162,30 @@ $list_status_pengajuan = [
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="4"><h3>Loading...</h3></td>
+                            <td colspan="4">
+                                <span id="loading_kompetensi" style="display: none"><img width="24px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
+                            </td>
+                            
+                        </tr>
+                        
+                    </tbody>
+                </table>
+
+                <h3>Nilai AKPAM</h3>
+                <table class="table table-striped table-bordered" id="tabel-akpam">
+                    <thead>
+                        <tr>
+                            <th width="10%">No</th>
+                            <th width="40%">Program</th>
+                            <th width="20%">Nilai</th>
+                            <!-- <th>Predikat</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">
+                                <span id="loading_akpam" style="display: none"><img width="24px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
+                            </td>
                             
                         </tr>
                         
@@ -179,6 +202,64 @@ $list_status_pengajuan = [
 <?php 
 
 $this->registerJs(' 
+
+
+function getRekapAkpam(nim){
+
+  var obj = new Object;
+  obj.nim = nim;
+  var ajax_url= "/simak-kegiatan-mahasiswa/ajax-get-rekap-akpam";
+  $.ajax({
+
+        type : "POST",
+        url : ajax_url,
+        data : {
+            dataPost : obj
+        },
+        beforeSend: function(){
+            $("#loading_akpam").show()
+        },
+        success: function(data){
+            $("#loading_akpam").hide()
+            var hasils = $.parseJSON(data);
+
+            var row = \'\';
+            $(\'#tabel-akpam > tbody\').empty();
+            
+            var counter = 0;
+
+            $.each(hasils.items, function(i, obj){
+              
+                counter++;
+               
+                row += "<tr>";
+                row += "<td>"+(counter)+"</td>";
+                row += "<td>"+obj.nama+"</td>";
+                row += "<td style=\'text-align:center\'>"+obj.nilai+"</td>";
+                // row += "<td></td>";
+                row += "</tr>";
+
+            
+            });
+
+            row += "<tr>";
+            row += "<td colspan=\'2\' style=\'text-align:right\'>Total</td>";
+            row += "<td style=\'text-align:center\'>"+hasils.total+"</td>";
+            // row += "<td></td>";
+            row += "</tr>";
+            row += "<tr>";
+            row += "<td colspan=\'2\' style=\'text-align:right\'>Indeks</td>";
+            row += "<td style=\'text-align:center\'>"+hasils.ipks+"</td>";
+            // row += "<td></td>";
+            row += "</tr>";
+           
+            $(\'#tabel-akpam > tbody\').append(row);          
+        }
+    });
+  
+
+  
+}
 
 function getIndukKompetensi(nim){
 
@@ -219,8 +300,8 @@ function getIndukKompetensi(nim){
               row += \'<tr>\';
               row += \'<td>\'+counter+\'</td>\';
               row += \'<td>\'+objects.induk+\'</td>\';
-              row += \'<td>\'+objects.akpam+\'</td>\';
-              row += \'<td>\'+objects.persentase+\' %</td>\';
+              row += \'<td  style="text-align:center">\'+objects.akpam+\'</td>\';
+              row += \'<td  style="text-align:center">\'+objects.persentase+\' %</td>\';
               row += \'<td><span class="label label-\'+objects.color+\'">\'+objects.label+\'</span></td>\';
               row += \'</tr>\';
             });
@@ -232,11 +313,6 @@ function getIndukKompetensi(nim){
 
   
 }
-
-
-var tahun_aktif = "";
-
-var list_kompetensi = []
 
 function getKompetensi(nim){
 
@@ -250,7 +326,11 @@ function getKompetensi(nim){
         data : {
             dataPost : obj
         },
+        beforeSend: function(){
+            $("#loading_kompetensi").show()
+        },
         success: function(data){
+            $("#loading_kompetensi").hide()
             var hasils = $.parseJSON(data);
 
             var row = \'\';
@@ -265,7 +345,7 @@ function getKompetensi(nim){
                 row += "<tr>";
                 row += "<td>"+(counter)+"</td>";
                 row += "<td>"+obj.komponen+"</td>";
-                row += "<td>"+obj.total+"</td>";
+                row += "<td style=\'text-align:center\'>"+obj.total+"</td>";
                 row += "<td><span class=\'label label-"+obj.color+"\'>"+obj.label+"</span></td>";
                 row += "</tr>";
 
@@ -283,7 +363,7 @@ function getKompetensi(nim){
 
 getKompetensi("'.$model->nim.'")
 getIndukKompetensi("'.$model->nim.'")
-
+getRekapAkpam("'.$model->nim.'")
 
 ', \yii\web\View::POS_READY);
 

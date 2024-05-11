@@ -13,6 +13,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\httpclient\Client;
 
 /**
  * SimakKegiatanMahasiswaController implements the CRUD actions for SimakKegiatanMahasiswa model.
@@ -30,16 +31,16 @@ class SimakKegiatanMahasiswaController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['create','update','delete'],
+                'only' => ['create','update','delete','ajax-get-rekap-akpam','ajax-get-kompetensi','ajax-get-induk-kompetensi'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','delete'],
+                        'actions' => ['create','update','delete','ajax-get-rekap-akpam','ajax-get-kompetensi','ajax-get-induk-kompetensi'],
                         'allow' => true,
                         'roles' => ['akpamPusat','admin'],
                     ],
                     [
                         'actions' => [
-                            'create','update','delete','index','view'
+                            'create','update','delete','index','view','ajax-get-rekap-akpam','ajax-get-kompetensi','ajax-get-induk-kompetensi'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator'],
@@ -53,6 +54,91 @@ class SimakKegiatanMahasiswaController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionAjaxGetRekapAkpam()
+    {
+        $results = [];
+        $list_akpam = [];
+        $params = [];
+        $listJenisKegiatan = \app\models\SimakJenisKegiatan::find()->all();
+        if (Yii::$app->request->isPost && !empty($_POST['dataPost'])) {
+            $obj = $_POST['dataPost'];
+            // $obj['tahun_akademik'] = 20211;
+            // $obj['nim'] = 3920186110295;
+            
+            $nim = $obj['nim'];
+            
+            $api_baseurl = Yii::$app->params['api_baseurl'];
+            $client = new Client(['baseUrl' => $api_baseurl]);
+            $client_token = Yii::$app->params['client_token'];
+            $headers = ['x-access-token' => $client_token];
+            $params = [
+                'nim' => $nim
+            ];
+
+            $response = $client->get('/report/akpam/get', $params, $headers)->send();
+
+
+            if ($response->isOk) {
+                $temp = $response->data['values'];
+                
+                foreach ($temp as $tmp) {
+                    foreach ($tmp as $t) {
+
+                        $list_akpam[$t['semester']][$t['id_jenis_kegiatan']][$t['nim']] = $t['akpam'];
+                    }
+                }
+
+                
+            }
+        } 
+
+        $subakpam = 0;
+        $limit_semester = 8;
+        $items = [];
+        foreach($listJenisKegiatan as $jk){
+            $sum = 0;
+            for($i=1;$i<=$limit_semester;$i++)
+            {
+                $formated_akpam = '';
+                if(!empty($list_akpam[$i][$jk->id][$nim]))
+                {
+                    $akpam = $list_akpam[$i][$jk->id][$nim];
+                    $akpam = $akpam >= $jk->nilai_maximal ? $jk->nilai_maximal : $akpam;
+                    $formated_akpam = round($akpam);
+                    $sum += $akpam;
+                }
+
+                else
+                {
+                    $formated_akpam = '-';
+                }
+
+                // echo '<td class="text-center">'.$formated_akpam.'</td>';  
+
+            }
+
+            $subakpam += $sum;
+            $avg = $sum / $limit_semester;
+            $nilai = round($avg,2);
+            $items[] = [
+                'id' => $jk->id,
+                'nama' => $jk->nama_jenis_kegiatan,
+                'nilai' => $nilai
+            ];
+        }
+
+        $pembagi = $limit_semester;
+        $subakpam = $subakpam / $pembagi;
+
+        $ipks = $subakpam / 100;
+        $results['total'] = $subakpam;
+        $results['ipks'] = $ipks;
+        $results['items'] = $items;
+        echo json_encode($results);
+
+        die();
     }
 
     public function actionAjaxGetKompetensi()
@@ -170,18 +256,7 @@ class SimakKegiatanMahasiswaController extends Controller
 
             $results = [];
 
-            // $mhs = SimakMastermahasiswa::findOne(['nim_mhs' => $nim]);
-            // $tahun_awal = $mhs->tahun_masuk . '1';
-            // $tahun_lulus = (!empty($mhs->tgl_lulus) ? date('Y',strtotime($mhs->tgl_lulus)) : null);
-
-            // $query = \app\models\SimakTahunakademik::find();
-            // $query->where(['>=', 'tahun_id', $tahun_awal]);
-
-            // if(!empty($tahun_lulus))
-            //     $query->andWhere(['<=', 'tahun_id', $tahun_lulus.'2']);
-
-            // $list_tahun = $query->orderBy(['tahun_id' => SORT_DESC])->cache(60 * 10)->all();
-
+           
             foreach ($list_induk as $induk) {
                 $total = 0;
                 $tmp = [];
