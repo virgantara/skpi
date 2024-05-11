@@ -141,7 +141,9 @@ $list_status_pengajuan = [
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="5"><h3>Loading...</h3></td>
+                            <td colspan="5">
+                                <span id="loading" style="display: none"><img width="24px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
+                            </td>
                             
                         </tr>
                         
@@ -178,11 +180,10 @@ $list_status_pengajuan = [
 
 $this->registerJs(' 
 
-function getIndukKompetensi(ta,nim){
+function getIndukKompetensi(nim){
 
 
   var obj = new Object;
-  obj.tahun_akademik = ta;
   obj.nim = nim;
   var ajax_url= "/simak-kegiatan-mahasiswa/ajax-get-induk-kompetensi";
   $.ajax({
@@ -192,7 +193,11 @@ function getIndukKompetensi(ta,nim){
         data : {
             dataPost : obj
         },
+        beforeSend: function(){
+            $("#loading").show()
+        },
         success: function(data){
+            $("#loading").hide()
             var hasils = $.parseJSON(data);
 
             var row = \'\';
@@ -201,9 +206,6 @@ function getIndukKompetensi(ta,nim){
             var list_kategori = []
             var list_values = []
 
-            tahun_aktif = ta;
-            $("#tahun_akademik").val(ta)
-            
 
             $(\'#tabel-induk-kompetensi > tbody\').empty();
             
@@ -280,7 +282,7 @@ function getKompetensi(nim){
 }
 
 getKompetensi("'.$model->nim.'")
-getIndukKompetensi("20221","'.$model->nim.'")
+getIndukKompetensi("'.$model->nim.'")
 
 
 ', \yii\web\View::POS_READY);

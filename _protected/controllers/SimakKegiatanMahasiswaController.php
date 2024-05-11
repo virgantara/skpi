@@ -170,17 +170,17 @@ class SimakKegiatanMahasiswaController extends Controller
 
             $results = [];
 
-            $mhs = SimakMastermahasiswa::findOne(['nim_mhs' => $nim]);
-            $tahun_awal = $mhs->tahun_masuk . '1';
-            $tahun_lulus = (!empty($mhs->tgl_lulus) ? date('Y',strtotime($mhs->tgl_lulus)) : null);
+            // $mhs = SimakMastermahasiswa::findOne(['nim_mhs' => $nim]);
+            // $tahun_awal = $mhs->tahun_masuk . '1';
+            // $tahun_lulus = (!empty($mhs->tgl_lulus) ? date('Y',strtotime($mhs->tgl_lulus)) : null);
 
-            $query = \app\models\SimakTahunakademik::find();
-            $query->where(['>=', 'tahun_id', $tahun_awal]);
+            // $query = \app\models\SimakTahunakademik::find();
+            // $query->where(['>=', 'tahun_id', $tahun_awal]);
 
-            if(!empty($tahun_lulus))
-                $query->andWhere(['<=', 'tahun_id', $tahun_lulus.'2']);
+            // if(!empty($tahun_lulus))
+            //     $query->andWhere(['<=', 'tahun_id', $tahun_lulus.'2']);
 
-            $list_tahun = $query->orderBy(['tahun_id' => SORT_DESC])->cache(60 * 10)->all();
+            // $list_tahun = $query->orderBy(['tahun_id' => SORT_DESC])->cache(60 * 10)->all();
 
             foreach ($list_induk as $induk) {
                 $total = 0;
@@ -190,27 +190,27 @@ class SimakKegiatanMahasiswaController extends Controller
 
                 
                 foreach ($induk->simakJenisKegiatans as $kom) {
-
+                    // foreach($list_tahun as $tahun){
                     $akpam = \app\models\SimakRekapAkpam::find()->where([
-                        'tahun_akademik' => $obj['tahun_akademik'],
+                        // 'tahun_akademik' => $tahun->tahun_id,
                         'nim' => $nim,
                         'id_jenis_kegiatan' => $kom->id
-                    ])->sum('akpam');
+                    ])->average('akpam');
+                    // }
                     $akpam_total += $akpam;
                     $akpam = $akpam >= $kom->nilai_maximal ? $kom->nilai_maximal : $akpam;
                     $max_kompetensi += $kom->nilai_maximal;
                     $total += $akpam;
                 }
-
+                
                 $pembagi = count($induk->simakIndukKegiatanKompetensis);
-
                 $persentase = round($total / $max_kompetensi * 100, 2);
                 $range = $induk->getRangeNilai($persentase);
                 $label = !empty($range) ? $range->label : '';
                 $color = !empty($range) ? $range->color : '';
                 $results[$induk->id] = [
                     'persentase' => $persentase,
-                    'akpam' => ($pembagi > 0 ? $akpam_total / $pembagi : $akpam_total),
+                    'akpam' => round($pembagi > 0 ? $akpam_total / $pembagi : $akpam_total,2),
                     'induk' => $induk->nama,
                     'induk_id' => $induk->id,
                     'label' => $label,
