@@ -8,7 +8,27 @@ use Yii;
  * Css helper class.
  */
 class MyHelper
-{		
+{
+	
+	public static function getJenisTes()
+    {
+        return [
+            '1' => 'IELTS',
+            '2' => 'TOEFL iBT',
+            '3' => 'TOEFL ITP',
+            '4' => 'TOEIC',
+            '5' => 'TOAFL'
+        ];
+    }
+
+    public static function getJenisSertifikasi()
+    {
+        return [
+            '1' => 'Sertifikasi Kompetensi',
+            '2' => 'Sertifikasi Profesi',
+        ];
+    }
+    		
 	public static function listAkreditasi()
     {
         $list = [

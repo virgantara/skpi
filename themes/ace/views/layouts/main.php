@@ -28,18 +28,6 @@ $themeUrl = $this->theme->baseUrl."/new_leaflet";
     <meta name="viewport" content="width=device-width, initial-scale=1">
      <link rel="icon" type="image/png" sizes="96x96" href="<?=Yii::$app->view->theme->baseUrl;?>/images/favicon.ico">
     <?= Html::csrfMetaTags() ?>
-    <link rel="stylesheet" href="<?=$themeUrl;?>/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
-    <script src="<?=$themeUrl;?>/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-
-    <!-- Load Esri Leaflet from CDN -->
-    <script src="<?=$themeUrl;?>/esri-leaflet.js"></script>
-    
-    <!-- <script src="https://unpkg.com/esri-leaflet@3.0.2/dist/esri-leaflet.js" integrity="sha512-myckXhaJsP7Q7MZva03Tfme/MSF5a6HC2xryjAM4FxPLHGqlh5VALCbywHnzs2uPoF/4G/QVXyYDDSkp5nPfig==" crossorigin=""></script> -->
-
-    <!-- Load Esri Leaflet Geocoder from CDN -->
-    <link rel="stylesheet" href="<?=$themeUrl;?>/esri-leaflet-geocoder.css">
-    <script src="<?=$themeUrl;?>/esri-leaflet-geocoder.js"></script>
-    <script src="<?=$themeUrl;?>/indonesia-geojson.js"></script>
     <title><?= Html::encode($this->title) ?></title>
 
     <?php $this->head(); ?>

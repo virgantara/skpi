@@ -191,6 +191,53 @@ $list_status_pengajuan = [
                         
                     </tbody>
                 </table>
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <h3>SERTIFIKAT PROFESIONAL</h3>
+                        <table class="table table-striped table-bordered" id="tabel-sertifikasi">
+                            <thead>
+                                <tr>
+                                    <th width="10%">No</th>
+                                    <th width="40%">Nama Sertifikasi</th>
+                                    <th width="20%">Opsi</th>
+                                    <!-- <th>Predikat</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <span id="loading_sertifikasi" style="display: none"><img width="24px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
+                                    </td>
+                                    
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <h3>PRESTASI</h3>
+                        <table class="table table-striped table-bordered" id="tabel-prestasi">
+                            <thead>
+                                <tr>
+                                    <th width="10%">No</th>
+                                    <th width="40%">Nama Prestasi</th>
+                                    <th width="20%">Opsi</th>
+                                    <!-- <th>Predikat</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">
+                                        <span id="loading_prestasi" style="display: none"><img width="24px" src="<?=$this->theme->baseUrl;?>/images/loading.gif" /></span>
+                                    </td>
+                                    
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -203,6 +250,113 @@ $list_status_pengajuan = [
 
 $this->registerJs(' 
 
+
+getKompetensi("'.$model->nim.'")
+getIndukKompetensi("'.$model->nim.'")
+getRekapAkpam("'.$model->nim.'")
+getSertifikasi("'.$model->nim.'")
+getPrestasi("'.$model->nim.'")
+
+function getPrestasi(nim){
+
+  var obj = new Object;
+  obj.nim = nim;
+  var ajax_url= "/tes/ajax-get";
+  $.ajax({
+
+        type : "POST",
+        url : ajax_url,
+        data : {
+            dataPost : obj
+        },
+        beforeSend: function(){
+            $("#loading_prestasi").show()
+        },
+        error: function(e){
+            $("#loading_prestasi").hide()
+        },
+        success: function(data){
+            $("#loading_prestasi").hide()
+            var hasils = $.parseJSON(data);
+
+            var row = \'\';
+            $(\'#tabel-prestasi > tbody\').empty();
+            
+            var counter = 0;
+
+            $.each(hasils.items, function(i, obj){
+              
+                counter++;
+                let url = \'/tes/download?id=\'+obj.id
+                row += "<tr>";
+                row += "<td>"+(counter)+"</td>";
+                row += "<td>"+obj.jenis_tes+" - "+obj.nama_tes+"</td>";
+                row += "<td style=\'text-align:center\'><a class=\'btn btn-primary\' target=\'_blank\' href=\'"+url+"\'><i class=\'fa fa-download\'></i>Unduh</a></td>";
+                row += "</tr>";
+
+            
+            });
+
+            
+           
+            $(\'#tabel-prestasi > tbody\').append(row);          
+        }
+    });
+  
+
+  
+}
+
+function getSertifikasi(nim){
+
+  var obj = new Object;
+  obj.nim = nim;
+  var ajax_url= "/sertifikasi/ajax-get";
+  $.ajax({
+
+        type : "POST",
+        url : ajax_url,
+        data : {
+            dataPost : obj
+        },
+        beforeSend: function(){
+            $("#loading_sertifikasi").show()
+        },
+        error: function(e){
+            $("#loading_sertifikasi").hide()
+        },
+        success: function(data){
+            $("#loading_sertifikasi").hide()
+            var hasils = $.parseJSON(data);
+
+            var row = \'\';
+            $(\'#tabel-sertifikasi > tbody\').empty();
+            
+            var counter = 0;
+
+            $.each(hasils.items, function(i, obj){
+              
+                counter++;
+                let url = \'/sertifikasi/download?id=\'+obj.id
+                row += "<tr>";
+                row += "<td>"+(counter)+"</td>";
+                row += "<td>"+obj.jenis_sertifikasi+" - "+obj.lembaga_sertifikasi+"</td>";
+                row += "<td style=\'text-align:center\'><a class=\'btn btn-primary\' target=\'_blank\' href=\'"+url+"\'><i class=\'fa fa-download\'></i>Unduh</a></td>";
+                // row += "<td></td>";
+                row += "</tr>";
+
+            
+            });
+
+            
+           
+            $(\'#tabel-sertifikasi > tbody\').append(row);          
+        }
+    });
+  
+
+  
+}
 
 function getRekapAkpam(nim){
 
@@ -218,6 +372,9 @@ function getRekapAkpam(nim){
         },
         beforeSend: function(){
             $("#loading_akpam").show()
+        },
+        error: function(e){
+            $("#loading_akpam").hide()
         },
         success: function(data){
             $("#loading_akpam").hide()
@@ -277,6 +434,9 @@ function getIndukKompetensi(nim){
         beforeSend: function(){
             $("#loading").show()
         },
+        error: function(e){
+            $("#loading").hide()
+        },
         success: function(data){
             $("#loading").hide()
             var hasils = $.parseJSON(data);
@@ -329,6 +489,9 @@ function getKompetensi(nim){
         beforeSend: function(){
             $("#loading_kompetensi").show()
         },
+        error: function(e){
+            $("#loading_kompetensi").hide()
+        },
         success: function(data){
             $("#loading_kompetensi").hide()
             var hasils = $.parseJSON(data);
@@ -360,11 +523,6 @@ function getKompetensi(nim){
 
   
 }
-
-getKompetensi("'.$model->nim.'")
-getIndukKompetensi("'.$model->nim.'")
-getRekapAkpam("'.$model->nim.'")
-
 ', \yii\web\View::POS_READY);
 
 ?>
