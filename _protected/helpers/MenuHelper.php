@@ -110,7 +110,7 @@ class MenuHelper
 				],
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Kompetensi',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['mahasiswa/kompetensi'],
 				],
 
 			]

@@ -34,11 +34,11 @@ class MahasiswaController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi'],
+                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi','kompetensi'],
                 'rules' => [
                     [
                         'actions' => [
-                            'skpi'
+                            'skpi','kompetensi'
                         ],
                         'allow' => true,
                         'roles' => ['Mahasiswa'],
@@ -61,6 +61,24 @@ class MahasiswaController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionKompetensi()
+    {
+        if (Yii::$app->user->isGuest) {
+            $this->redirect(['/site/login']);
+        }
+
+        $model = SkpiPermohonan::findOne(['nim' => Yii::$app->user->identity->nim ]);
+        $mhs = null;
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            $mhs =  SimakMastermahasiswa::findOne(['nim_mhs' => Yii::$app->user->identity->nim]);
+        }
+        
+        return $this->render('kompetensi', [
+            'model' => $model,
+            'mhs' => $mhs
+        ]);
     }
 
     public function actionSkpi()
