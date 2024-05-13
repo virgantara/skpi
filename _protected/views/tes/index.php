@@ -39,7 +39,14 @@ $list_kampus = \app\helpers\MyHelper::getKampusList();
                 <h3><?= Html::encode($this->title) ?></h3>
             </div>
 <div class="x_content">
-
+     <?php 
+    if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+     ?>
+    
+    <p>
+        <?= Html::a('<i class="fa fa-plus"></i> Tambah', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
+    <?php } ?>
      
     <div id="faq" role="tablist" aria-multiselectable="true">
 
