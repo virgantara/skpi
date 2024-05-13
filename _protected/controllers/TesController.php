@@ -31,7 +31,7 @@ class TesController extends Controller
                     [
                         'actions' => ['create','update','delete','ajax-get','download'],
                         'allow' => true,
-                        'roles' => ['akpamPusat','admin'],
+                        'roles' => ['akpamPusat','admin','sekretearis','fakultas'],
                     ],
                     [
                         'actions' => [
