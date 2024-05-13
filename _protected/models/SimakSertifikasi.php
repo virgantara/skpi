@@ -10,24 +10,31 @@ use Yii;
  * @property string $id
  * @property string $nim
  * @property string $jenis_sertifikasi
+ * @property string $bidang_studi
  * @property string $lembaga_sertifikasi
  * @property string $nomor_registrasi_sertifikasi
- * @property string|null $nomor_sk_sertifikasi
  * @property int $tahun_sertifikasi
  * @property string $tmt_sertifikasi
  * @property string|null $tst_sertifikasi
  * @property string|null $file_path
  * @property string $status_validasi
- * @property int|null $approved_by
- * @property string|null $catatan
  * @property string $updated_at
  * @property string $created_at
  *
- * @property SimakUsers $approvedBy
  * @property SimakMastermahasiswa $nim0
  */
 class SimakSertifikasi extends \yii\db\ActiveRecord
 {
+    public $kode_fakultas;
+    public $kode_prodi;
+    public $tahun_masuk;
+    public $status_aktivitas;
+    
+    public $namaMahasiswa;
+    public $namaKampus;
+    public $namaProdi;
+    public $namaJenisKegiatan;
+    public $namaKegiatan;
     /**
      * {@inheritdoc}
      */
@@ -43,16 +50,16 @@ class SimakSertifikasi extends \yii\db\ActiveRecord
     {
         return [
             [['id', 'nim', 'jenis_sertifikasi', 'lembaga_sertifikasi', 'nomor_registrasi_sertifikasi', 'tahun_sertifikasi', 'tmt_sertifikasi'], 'required'],
-            [['tahun_sertifikasi', 'approved_by'], 'integer'],
-            [['tmt_sertifikasi', 'tst_sertifikasi', 'updated_at', 'created_at'], 'safe'],
-            [['catatan'], 'string'],
+            [['tahun_sertifikasi'], 'integer'],
+            [['tmt_sertifikasi', 'tst_sertifikasi', 'updated_at', 'created_at','catatan'], 'safe'],
             [['id', 'lembaga_sertifikasi', 'nomor_registrasi_sertifikasi', 'nomor_sk_sertifikasi'], 'string', 'max' => 255],
             [['nim'], 'string', 'max' => 25],
             [['jenis_sertifikasi', 'status_validasi'], 'string', 'max' => 1],
             [['file_path'], 'string', 'max' => 500],
             [['id'], 'unique'],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::class, 'targetAttribute' => ['nim' => 'nim_mhs']],
-            [['approved_by'], 'exist', 'skipOnError' => true, 'targetClass' => SimakUsers::class, 'targetAttribute' => ['approved_by' => 'id']],
+            [['file_path'], 'file', 'skipOnEmpty' => true, 'extensions' => ['pdf'], 'maxSize' => 1024 * 1024 * 2],
+            [['approved_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['approved_by' => 'id']],
         ];
     }
 
@@ -63,31 +70,24 @@ class SimakSertifikasi extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nim' => 'Nim',
+            'nim' => 'NIM',
             'jenis_sertifikasi' => 'Jenis Sertifikasi',
             'lembaga_sertifikasi' => 'Lembaga Sertifikasi',
             'nomor_registrasi_sertifikasi' => 'Nomor Registrasi Sertifikasi',
-            'nomor_sk_sertifikasi' => 'Nomor Sk Sertifikasi',
+            'nomor_sk_sertifikasi' => 'Nomor SK Sertifikasi',
             'tahun_sertifikasi' => 'Tahun Sertifikasi',
-            'tmt_sertifikasi' => 'Tmt Sertifikasi',
-            'tst_sertifikasi' => 'Tst Sertifikasi',
-            'file_path' => 'File Path',
+            'tmt_sertifikasi' => 'Tanggal Mulai Berlaku Sertifikasi',
+            'tst_sertifikasi' => 'Tanggal Akhir Berlaku Sertifikasi',
+            'file_path' => 'File Sertifikat',
             'status_validasi' => 'Status Validasi',
-            'approved_by' => 'Approved By',
-            'catatan' => 'Catatan',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',
         ];
     }
 
-    /**
-     * Gets query for [[ApprovedBy]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getApprovedBy()
     {
-        return $this->hasOne(SimakUsers::class, ['id' => 'approved_by']);
+        return $this->hasOne(User::class, ['id' => 'approved_by']);
     }
 
     /**

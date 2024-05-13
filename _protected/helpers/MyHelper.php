@@ -9,7 +9,24 @@ use Yii;
  */
 class MyHelper
 {
-	
+
+	public static function getStatusValidasi()
+    {
+        return [
+            '0' => 'Belum Divalidasi',
+            '1' => 'Valid',
+            '2' => 'Tidak Valid'
+        ];
+    }
+	public static function getStatusPengajuan()
+	{
+		return [
+		    '0' => 'BELUM DIAJUKAN',
+		    '1' => 'DIPROSES',
+		    '2' => 'DISETUJUI',
+		    '3' => 'DITOLAK'
+		];
+	}
 	public static function getJenisTes()
     {
         return [

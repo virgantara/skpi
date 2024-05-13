@@ -117,6 +117,14 @@ class SimakMasterprogramstudi extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getJenjang(){
+        $pilihan = SimakPilihan::find()->select(['label','label_en'])->where(['kode'=>'01','value'=>$this->kode_jenjang_studi])->one();
+
+        return $pilihan;
+        
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */

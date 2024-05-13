@@ -28,12 +28,17 @@ class SkpiPermohonanController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['create','update','delete','index'],
+                'only' => ['create','update','delete','index','ajax-apply'],
                 'rules' => [
                     [
                         'actions' => ['update','delete','index'],
                         'allow' => true,
                         'roles' => ['akpamPusat','admin','sekretearis','fakultas'],
+                    ],
+                    [
+                        'actions' => ['create','ajax-apply'],
+                        'allow' => true,
+                        'roles' => ['Mahasiswa'],
                     ],
                     [
                         'actions' => [
@@ -51,6 +56,52 @@ class SkpiPermohonanController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionAjaxApply()
+    {
+        $results = [
+            'code' => 406,
+            'message' => 'Bad Request'
+        ] ;
+        if (!Yii::$app->user->isGuest && Yii::$app->request->isPost) {
+            if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+                $model = SkpiPermohonan::findOne(['nim' => Yii::$app->user->identity->nim]);
+
+                if(!empty($model)){
+                    $results = [
+                        'code' => 500,
+                        'message' => 'Anda saat ini sudah memiliki permohonan SKPI'
+                    ] ;         
+                }
+
+                else{
+                    $model = new SkpiPermohonan;
+                    $model->id = MyHelper::gen_uuid();
+                    $model->tanggal_pengajuan = date('YmdHis');
+                    $model->status_pengajuan = '1';
+                    $model->nim = Yii::$app->user->identity->nim;
+                    if($model->save()){
+                        $results = [
+                            'code' => 200,
+                            'message' => 'Data permohonan SKPI berhasil diajukan'
+                        ] ;  
+                    }
+
+                    else{
+                        $error = MyHelper::logError($model);
+                        $results = [
+                            'code' => 500,
+                            'message' => $error
+                        ] ; 
+                    }
+                }    
+            }
+            
+        }
+
+        echo json_encode($results);
+        exit;
     }
 
     /**

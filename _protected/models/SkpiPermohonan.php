@@ -39,7 +39,7 @@ class SkpiPermohonan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
+            [['id','nim','tanggal_pengajuan'], 'required'],
             [['tanggal_pengajuan', 'updated_at', 'created_at','deskripsi','deskripsi_en','approved_by'], 'safe'],
             [['id', 'link_barcode'], 'string', 'max' => 255],
             [['nim'], 'string', 'max' => 25],

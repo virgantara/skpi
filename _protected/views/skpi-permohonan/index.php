@@ -27,11 +27,7 @@ $prodi_tags = (!empty($_GET['kode_prodi']) ? $_GET['kode_prodi'] : null);
 
 $list_kampus = ArrayHelper::map(\app\models\SimakKampus::find()->all(),'kode_kampus','nama_kampus');
 
-$list_status_pengajuan = [
-    '0' =>'BELUM DISETUJUI',
-    '1' =>'DISETUJUI',
-    '2' =>'DITOLAK'
-];
+$list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
 ?>
 
 <div class="row">

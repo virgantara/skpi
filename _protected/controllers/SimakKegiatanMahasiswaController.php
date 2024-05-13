@@ -39,6 +39,11 @@ class SimakKegiatanMahasiswaController extends Controller
                         'roles' => ['akpamPusat','admin','sekretearis','fakultas'],
                     ],
                     [
+                        'actions' => ['ajax-get-rekap-akpam','ajax-get-kompetensi','ajax-get-induk-kompetensi'],
+                        'allow' => true,
+                        'roles' => ['Mahasiswa'],
+                    ],
+                    [
                         'actions' => [
                             'create','update','delete','index','view','ajax-get-rekap-akpam','ajax-get-kompetensi','ajax-get-induk-kompetensi'
                         ],

@@ -18,7 +18,7 @@ class SimakTesSearch extends SimakTes
     public function rules()
     {
         return [
-            [['id', 'nim', 'jenis_tes', 'nama_tes', 'penyelenggara', 'tanggal_tes', 'file_path', 'status_validasi', 'catatan', 'updated_at', 'created_at'], 'safe'],
+            [['id', 'nim', 'jenis_tes', 'nama_tes', 'penyelenggara', 'tanggal_tes', 'file_path', 'status_validasi', 'catatan', 'updated_at', 'created_at','namaMahasiswa','namaKampus','namaProdi','namaKegiatan','namaJenisKegiatan','status_aktivitas','tahun_masuk'], 'safe'],
             [['tahun', 'approved_by'], 'integer'],
             [['skor_tes'], 'number'],
         ];
@@ -43,6 +43,8 @@ class SimakTesSearch extends SimakTes
     public function search($params)
     {
         $query = SimakTes::find();
+        $query->alias('t');
+        $query->joinWith(['nim0 as mhs','nim0.kampus0 as k','nim0.kodeProdi as p']);
 
         // add conditions that should always apply here
 
@@ -58,24 +60,54 @@ class SimakTesSearch extends SimakTes
             return $dataProvider;
         }
 
+        $dataProvider->sort->attributes['namaMahasiswa'] = [
+            'asc' => ['mhs.nama_mahasiswa'=>SORT_ASC],
+            'desc' => ['mhs.nama_mahasiswa'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaKampus'] = [
+            'asc' => ['k.nama_kampus'=>SORT_ASC],
+            'desc' => ['k.nama_kampus'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaProdi'] = [
+            'asc' => ['p.nama_prodi'=>SORT_ASC],
+            'desc' => ['p.nama_prodi'=>SORT_DESC]
+        ];
+
+        // grid filtering conditions
+        if(!empty($this->namaKampus))
+        {
+            $query->andWhere(['mhs.kampus'=>$this->namaKampus]);
+        }
+
+        if(!empty($this->namaProdi))
+        {
+            $query->andWhere(['mhs.kode_prodi'=>$this->namaProdi]);
+        }
+
+
         // grid filtering conditions
         $query->andFilterWhere([
+            'jenis_tes' => $this->jenis_tes,
             'tahun' => $this->tahun,
             'skor_tes' => $this->skor_tes,
-            'approved_by' => $this->approved_by,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
+            'status_validasi' => $this->status_validasi
         ]);
 
         $query->andFilterWhere(['like', 'id', $this->id])
             ->andFilterWhere(['like', 'nim', $this->nim])
-            ->andFilterWhere(['like', 'jenis_tes', $this->jenis_tes])
+
             ->andFilterWhere(['like', 'nama_tes', $this->nama_tes])
             ->andFilterWhere(['like', 'penyelenggara', $this->penyelenggara])
             ->andFilterWhere(['like', 'tanggal_tes', $this->tanggal_tes])
-            ->andFilterWhere(['like', 'file_path', $this->file_path])
-            ->andFilterWhere(['like', 'status_validasi', $this->status_validasi])
-            ->andFilterWhere(['like', 'catatan', $this->catatan]);
+            ->andFilterWhere(['like', 'file_path', $this->file_path]);
+
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            $query->andWhere(['nim' => Yii::$app->user->identity->nim]);
+        }
 
         return $dataProvider;
     }

@@ -52,35 +52,41 @@ class MenuHelper
 				]
 			];
 		}
-		$menuItems[] = [
-			'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Program Studi </span><i class="caret"></i>',
-			'url' => '#',
-			'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-			'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-			'items' => [
 
-				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Program Studi',
-					'url' =>  ['program-studi/index'],
-				],
-				
-				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Capaian Pembelajaran',
-					'url' =>  ['capaian-pembelajaran-lulusan/index'],
-				],
+		if (
+			Yii::$app->user->can('akpamPusat') ||
+			Yii::$app->user->can('sekretearis') ||
+			Yii::$app->user->can('fakultas')
+		) {
+			$menuItems[] = [
+				'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Program Studi </span><i class="caret"></i>',
+				'url' => '#',
+				'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+				'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+				'items' => [
 
-				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Mahasiswa',
-					'url' =>  ['skpi-permohonan/index'],
-				],
-				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Program Tambahan',
-					'url' =>  ['simkatmawa-belmawa/index'],
-				],
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Program Studi',
+						'url' =>  ['program-studi/index'],
+					],
+					
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> Capaian Pembelajaran',
+						'url' =>  ['capaian-pembelajaran-lulusan/index'],
+					],
 
-			]
-		];
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> Mahasiswa',
+						'url' =>  ['skpi-permohonan/index'],
+					],
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> Program Tambahan',
+						'url' =>  ['simkatmawa-belmawa/index'],
+					],
 
+				]
+			];
+		}
 		$menuItems[] = [
 			'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Mahasiswa </span><i class="caret"></i>',
 			'url' => '#',
@@ -90,17 +96,17 @@ class MenuHelper
 
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Mahasiswa',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['mahasiswa/skpi'],
 				],
 				
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Prestasi',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['tes/index'],
 				],
 
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Sertifikasi',
-					'url' =>  ['simkatmawa-belmawa/index'],
+					'url' =>  ['sertifikasi/index'],
 				],
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Kompetensi',
@@ -110,7 +116,7 @@ class MenuHelper
 			]
 		];
 		// display Users to admin+ roles
-		if (Yii::$app->user->can('akpam')) {
+		if (Yii::$app->user->can('theCreator')) {
 
 			$menuItems[] = [
 				'label' => '<i class="menu-icon fa fa-book"></i><span class="menu-text"> Master </span><i class="caret"></i>', 'url' => '#',

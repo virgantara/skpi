@@ -7,11 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\SkpiPermohonan */
 /* @var $form yii\widgets\ActiveForm */
 
-$list_status_pengajuan = [
-    '0' =>'BELUM DISETUJUI',
-    '1' =>'DISETUJUI',
-    '2' =>'DITOLAK'
-];
+$list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
 ?>
 
 <div class="body">

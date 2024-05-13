@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\helpers\MyHelper;
 
+use yii\web\UploadedFile;
 /**
  * SertifikasiController implements the CRUD actions for SimakSertifikasi model.
  */
@@ -33,6 +34,11 @@ class SertifikasiController extends Controller
                         'actions' => ['create','update','delete','ajax-get','download'],
                         'allow' => true,
                         'roles' => ['akpamPusat','admin','sekretearis','fakultas'],
+                    ],
+                    [
+                        'actions' => ['ajax-get','download','create','update','delete','index','view'],
+                        'allow' => true,
+                        'roles' => ['Mahasiswa'],
                     ],
                     [
                         'actions' => [
@@ -131,8 +137,11 @@ class SertifikasiController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $mhs = $model->nim0;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'mhs' => $mhs
         ]);
     }
 
@@ -143,11 +152,67 @@ class SertifikasiController extends Controller
      */
     public function actionCreate()
     {
-        $model = new SimakSertifikasi();
+        if(Yii::$app->user->isGuest){
+            return $this->redirect(['site/logout']);
+        }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Data tersimpan");
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model = new SimakSertifikasi();
+        $model->id = MyHelper::gen_uuid();
+
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            $model->nim = Yii::$app->user->identity->nim;
+        }
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            $s3config = Yii::$app->params['s3'];
+
+            $s3 = new \Aws\S3\S3Client($s3config);
+            $errors = '';
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction();
+
+            $model->file_path = UploadedFile::getInstance($model, 'file_path');
+            
+            try {
+                if ($model->file_path) {
+                    $file_name = $model->id.'.'.$model->file_path->extension;
+                    $s3_path = $model->file_path->tempName;
+                    $mime_type = $model->file_path->type;
+                                    
+                    $key = 'sertifikasi/'.$model->nim.'/'.$file_name;
+                     
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $s3_path,
+                         'ContentType' => $mime_type
+                    ]);
+
+                    
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->file_path = $plainUrl;
+                   
+                }
+
+                if($model->validate()){
+                    $model->save();
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', "Data tersimpan");
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
+            catch (\Exception $e) {
+                $transaction->rollBack();
+                $errors .= $e->getMessage();
+                Yii::$app->session->setFlash('danger', $errors);
+            } 
+            catch (\Throwable $e) {
+                $transaction->rollBack();
+                $errors .= $e->getMessage();
+                Yii::$app->session->setFlash('danger', $errors);
+            }
         }
 
         return $this->render('create', [
@@ -158,17 +223,67 @@ class SertifikasiController extends Controller
     /**
      * Updates an existing SimakSertifikasi model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id ID
+     * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        if($model->status_validasi == '1'){
+            return $this->redirect(['view','id' => $id]);
+        }
+        $s3config = Yii::$app->params['s3'];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Data tersimpan");
-            return $this->redirect(['view', 'id' => $model->id]);
+        $s3 = new \Aws\S3\S3Client($s3config);
+        $errors = '';
+        $file_path = $model->file_path;
+        if ($model->load(Yii::$app->request->post())) {
+            
+            $connection = \Yii::$app->db;
+            $transaction = $connection->beginTransaction();
+            $model->file_path = UploadedFile::getInstance($model, 'file_path');
+            try {
+                
+                if ($model->file_path) {
+                    $file_name = $model->id.'.'.$model->file_path->extension;
+                    $s3_path = $model->file_path->tempName;
+                    $mime_type = $model->file_path->type;
+                                    
+                    $key = 'sertifikasi/'.$model->nim.'/'.$file_name;
+                     
+                    $insert = $s3->putObject([
+                         'Bucket' => 'siakad',
+                         'Key'    => $key,
+                         'Body'   => 'This is the Body',
+                         'SourceFile' => $s3_path,
+                         'ContentType' => $mime_type
+                    ]);
+
+                    
+                    $plainUrl = $s3->getObjectUrl('siakad', $key);
+                    $model->file_path = $plainUrl;
+                   
+                }
+
+                
+                if (empty($model->file_path)){
+                     $model->file_path = $file_path;
+                }
+
+                if($model->save())
+                {
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', "Data updated");
+                    return $this->redirect(['view', 'id' => $model->id]);    
+                        
+                }
+            }
+            catch (\Exception $e) {
+                $transaction->rollBack();
+                $errors .= $e->getMessage();
+                Yii::$app->session->setFlash('danger', $errors);
+            } 
         }
 
         return $this->render('update', [
@@ -179,13 +294,18 @@ class SertifikasiController extends Controller
     /**
      * Deletes an existing SimakSertifikasi model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id ID
+     * @param string $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if($model->status_validasi == '1'){
+            Yii::$app->session->setFlash('danger', 'This item cannot be deleted');
+            return $this->redirect(['view','id' => $id]);
+        }
+        $model->delete();
 
         return $this->redirect(['index']);
     }

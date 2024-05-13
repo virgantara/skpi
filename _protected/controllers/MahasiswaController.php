@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use Yii;
+
+use app\models\SkpiPermohonan;
 use app\models\RiwayatKamar;
 use app\models\RiwayatPelanggaran;
 use app\models\SimakMastermahasiswa;
@@ -32,8 +34,15 @@ class MahasiswaController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator'],
+                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi'],
                 'rules' => [
+                    [
+                        'actions' => [
+                            'skpi'
+                        ],
+                        'allow' => true,
+                        'roles' => ['Mahasiswa'],
+                    ],
 
                     [
                         'actions' => [
@@ -52,6 +61,24 @@ class MahasiswaController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionSkpi()
+    {
+        if (Yii::$app->user->isGuest) {
+            $this->redirect(['/site/login']);
+        }
+
+        $model = SkpiPermohonan::findOne(['nim' => Yii::$app->user->identity->nim ]);
+        $mhs = null;
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            $mhs =  SimakMastermahasiswa::findOne(['nim_mhs' => Yii::$app->user->identity->nim]);
+        }
+        
+        return $this->render('skpi', [
+            'model' => $model,
+            'mhs' => $mhs
+        ]);
     }
 
     public function actionUpdateKoordinator()

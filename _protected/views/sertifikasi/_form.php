@@ -1,143 +1,64 @@
 <?php
-
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\date\DatePicker;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\SimakSertifikasi */
 /* @var $form yii\widgets\ActiveForm */
+
+$list_jenis_sertifikasi = \app\helpers\MyHelper::getJenisSertifikasi();
+
+$list_tahun = \app\models\SimakTahunakademik::find()->orderBy(['tahun_id' => SORT_DESC])->cache(60 * 10)->all();
+
+$list_tahun = ArrayHelper::map($list_tahun,'tahun_id','nama_tahun');
 ?>
 
 <div class="body">
 
     <?php $form = ActiveForm::begin([
-    	'options' => [
+        'options' => [
             'id' => 'form_validation',
-    	]
+        ]
     ]); ?>
+<?php
 
-
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Id</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'id')->textInput(['maxlength' => true])->label(false) ?>
+    echo $form->errorSummary($model,['header'=>'<div class="alert alert-danger">','footer'=>'</div>']);
+?>
+         
+            <?= $form->field($model, 'jenis_sertifikasi')->dropDownList($list_jenis_sertifikasi,['class'=>'form-control','prompt' => '- Pilih Jenis Sertifikasi -']) ?>
+            <?= $form->field($model, 'lembaga_sertifikasi')->textInput(['class'=>'form-control','maxlength' => true]) ?>
+            <?= $form->field($model, 'nomor_registrasi_sertifikasi')->textInput(['class'=>'form-control','maxlength' => true]) ?>
+            
+            <?= $form->field($model, 'tahun_sertifikasi')->widget(Select2::classname(), [
+                    'data' => $list_tahun,
+                    'options'=>['id'=>'tahun_akademik','placeholder'=>Yii::t('app','- Pilih Tahun Akademik -')],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                    ],
+                ])?>
+            <?= $form->field($model, 'tmt_sertifikasi')->widget(DatePicker::className(), [
+                'readonly' => true,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'todayHighlight' => true,
+                ]
+            ]) ?>
+            <?= $form->field($model, 'tst_sertifikasi')->widget(DatePicker::className(), [
+                'readonly' => true,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'todayHighlight' => true,
+                ]
+            ]) ?>
 
             
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Nim</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'nim')->textInput(['maxlength' => true])->label(false) ?>
-
+            <?= $form->field($model, 'file_path')->fileInput(['accept'=>'application/pdf']) ?>
             
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Jenis sertifikasi</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'jenis_sertifikasi')->textInput(['maxlength' => true])->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Lembaga sertifikasi</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'lembaga_sertifikasi')->textInput(['maxlength' => true])->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Nomor registrasi sertifikasi</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'nomor_registrasi_sertifikasi')->textInput(['maxlength' => true])->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Nomor sk sertifikasi</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'nomor_sk_sertifikasi')->textInput(['maxlength' => true])->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Tahun sertifikasi</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'tahun_sertifikasi')->textInput()->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Tmt sertifikasi</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'tmt_sertifikasi')->textInput()->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Tst sertifikasi</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'tst_sertifikasi')->textInput()->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">File path</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'file_path')->textInput(['maxlength' => true])->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Status validasi</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'status_validasi')->textInput(['maxlength' => true])->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Approved by</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'approved_by')->textInput()->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Catatan</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'catatan')->textarea(['rows' => 6])->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Updated at</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'updated_at')->textInput()->label(false) ?>
-
-            
-            </div>
-        </div>
-                <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">Created at</label>
-        <div class="col-sm-9">
-            <?= $form->field($model, 'created_at')->textInput()->label(false) ?>
-
-            
-            </div>
-        </div>
                 <?= Html::submitButton('Save', ['class' => 'btn btn-primary waves-effect']) ?>
     
     <?php ActiveForm::end(); ?>

@@ -18,8 +18,8 @@ class SimakSertifikasiSearch extends SimakSertifikasi
     public function rules()
     {
         return [
-            [['id', 'nim', 'jenis_sertifikasi', 'lembaga_sertifikasi', 'nomor_registrasi_sertifikasi', 'nomor_sk_sertifikasi', 'tmt_sertifikasi', 'tst_sertifikasi', 'file_path', 'status_validasi', 'catatan', 'updated_at', 'created_at'], 'safe'],
-            [['tahun_sertifikasi', 'approved_by'], 'integer'],
+            [['id', 'nim', 'jenis_sertifikasi', 'lembaga_sertifikasi', 'nomor_registrasi_sertifikasi', 'tmt_sertifikasi', 'tst_sertifikasi', 'file_path', 'status_validasi', 'updated_at', 'created_at','nomor_sk_sertifikasi','namaMahasiswa','namaKampus','namaProdi','namaKegiatan','namaJenisKegiatan','status_aktivitas','tahun_masuk'], 'safe'],
+            [['tahun_sertifikasi'], 'integer'],
         ];
     }
 
@@ -42,7 +42,8 @@ class SimakSertifikasiSearch extends SimakSertifikasi
     public function search($params)
     {
         $query = SimakSertifikasi::find();
-
+        $query->alias('t');
+        $query->joinWith(['nim0 as mhs','nim0.kampus0 as k','nim0.kodeProdi as p']);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -57,25 +58,56 @@ class SimakSertifikasiSearch extends SimakSertifikasi
             return $dataProvider;
         }
 
+        $dataProvider->sort->attributes['namaMahasiswa'] = [
+            'asc' => ['mhs.nama_mahasiswa'=>SORT_ASC],
+            'desc' => ['mhs.nama_mahasiswa'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaKampus'] = [
+            'asc' => ['k.nama_kampus'=>SORT_ASC],
+            'desc' => ['k.nama_kampus'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaProdi'] = [
+            'asc' => ['p.nama_prodi'=>SORT_ASC],
+            'desc' => ['p.nama_prodi'=>SORT_DESC]
+        ];
+
+        // grid filtering conditions
+        if(!empty($this->namaKampus))
+        {
+            $query->andWhere(['mhs.kampus'=>$this->namaKampus]);
+        }
+
+        if(!empty($this->namaProdi))
+        {
+            $query->andWhere(['mhs.kode_prodi'=>$this->namaProdi]);
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'tahun_sertifikasi' => $this->tahun_sertifikasi,
             'tmt_sertifikasi' => $this->tmt_sertifikasi,
             'tst_sertifikasi' => $this->tst_sertifikasi,
-            'approved_by' => $this->approved_by,
+            'jenis_sertifikasi' => $this->jenis_sertifikasi,
+            'status_validasi' => $this->status_validasi,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
         ]);
 
+
+
         $query->andFilterWhere(['like', 'id', $this->id])
             ->andFilterWhere(['like', 'nim', $this->nim])
-            ->andFilterWhere(['like', 'jenis_sertifikasi', $this->jenis_sertifikasi])
+            ->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->namaMahasiswa])
             ->andFilterWhere(['like', 'lembaga_sertifikasi', $this->lembaga_sertifikasi])
             ->andFilterWhere(['like', 'nomor_registrasi_sertifikasi', $this->nomor_registrasi_sertifikasi])
             ->andFilterWhere(['like', 'nomor_sk_sertifikasi', $this->nomor_sk_sertifikasi])
-            ->andFilterWhere(['like', 'file_path', $this->file_path])
-            ->andFilterWhere(['like', 'status_validasi', $this->status_validasi])
-            ->andFilterWhere(['like', 'catatan', $this->catatan]);
+            ->andFilterWhere(['like', 'file_path', $this->file_path]);
+
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            $query->andWhere(['nim' => Yii::$app->user->identity->nim]);
+        }
 
         return $dataProvider;
     }
