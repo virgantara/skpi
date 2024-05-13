@@ -91,13 +91,41 @@ class CapaianPembelajaranLulusanController extends Controller
      * @return mixed
      */
     public function actionIndex()
-    {
+    {   
+        $kode_prodi = '';
+        $kode_fakultas = '';
         $searchModel = new CapaianPembelajaranLulusanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $list_fakultas = [];
+        if (!Yii::$app->user->isGuest) {
+            $kode_prodi = '';
+            $kode_fakultas = '';
+            if(Yii::$app->user->identity->access_role == 'sekretearis'){
+                $kode_prodi = Yii::$app->user->identity->prodi;
+                $prodi = \app\models\SimakMasterprogramstudi::findOne(['kode_prodi' => $kode_prodi]);
 
+                if(!empty($prodi)){
+                    $kode_fakultas = $prodi->kode_fakultas;
+
+                    $list_fakultas = \app\models\SimakMasterfakultas::find()->where(['kode_fakultas' => $kode_fakultas])->orderBy(['nama_fakultas'=>SORT_ASC])->all();
+                }            
+            }   
+
+            else if(Yii::$app->user->identity->access_role == 'fakultas'){
+                $kode_fakultas = Yii::$app->user->identity->fakultas;
+                $list_fakultas = \app\models\SimakMasterfakultas::find()->where(['kode_fakultas' => Yii::$app->user->identity->fakultas])->orderBy(['nama_fakultas'=>SORT_ASC])->all();
+            }
+
+            else{
+                $list_fakultas = \app\models\SimakMasterfakultas::find()->orderBy(['nama_fakultas'=>SORT_ASC])->all();
+            }
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'kode_prodi' => $kode_prodi,
+            'list_fakultas' =>$list_fakultas,
+            'kode_fakultas' => $kode_fakultas
         ]);
     }
 

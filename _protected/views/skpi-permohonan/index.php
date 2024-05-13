@@ -24,7 +24,7 @@ $prodi_tags = (!empty($_GET['kode_prodi']) ? $_GET['kode_prodi'] : null);
 // $list_prodi = $query->all();
 // $list_prodi = ArrayHelper::map($list_prodi,'kode_prodi','nama_prodi');
 
-$list_prodi = \app\helpers\MyHelper::getProdiList();
+
 $list_kampus = ArrayHelper::map(\app\models\SimakKampus::find()->all(),'kode_kampus','nama_kampus');
 
 $list_status_pengajuan = [
@@ -41,10 +41,14 @@ $list_status_pengajuan = [
                 <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
             </div>
             <div class="panel-body ">
-
+                <?php 
+                if(Yii::$app->user->can('theCreator')){
+                 ?>
+                
                 <p>
                     <?= Html::a('Ajukan pemohon', ['create'], ['class' => 'btn btn-success']) ?>
                 </p>
+            <?php } ?>
                 <div id="faq" role="tablist" aria-multiselectable="true">
 
                 <div class="panel panel-default">
@@ -168,6 +172,12 @@ $list_status_pengajuan = [
                 'filter' => $list_status_pengajuan,
                 'value' => function($data) use ($list_status_pengajuan){
                     return $list_status_pengajuan[$data->status_pengajuan];
+                }
+            ],
+            [
+                'attribute' => 'approved_by',
+                'value' => function($data) {
+                    return (!empty($data->approvedBy) ? $data->approvedBy->display_name : '-');
                 }
             ],
             //'updated_at',

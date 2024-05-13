@@ -106,6 +106,10 @@ class SkpiPermohonanSearch extends SkpiPermohonan
             $query->andWhere(['m.kode_prodi' => Yii::$app->user->identity->prodi]);   
         }
 
+        else if(Yii::$app->user->identity->access_role == 'fakultas'){
+            $query->andWhere(['p.kode_fakultas' => Yii::$app->user->identity->fakultas]);   
+        }
+
 
 
         return $dataProvider;

@@ -40,13 +40,14 @@ class SkpiPermohonan extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['tanggal_pengajuan', 'updated_at', 'created_at','deskripsi','deskripsi_en'], 'safe'],
+            [['tanggal_pengajuan', 'updated_at', 'created_at','deskripsi','deskripsi_en','approved_by'], 'safe'],
             [['id', 'link_barcode'], 'string', 'max' => 255],
             [['nim'], 'string', 'max' => 25],
             [['nomor_skpi'], 'string', 'max' => 50],
             [['status_pengajuan'], 'string', 'max' => 1],
             [['id'], 'unique'],
             [['nim'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMastermahasiswa::class, 'targetAttribute' => ['nim' => 'nim_mhs']],
+            [['approved_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['approved_by' => 'id']],
         ];
     }
 
@@ -70,6 +71,11 @@ class SkpiPermohonan extends \yii\db\ActiveRecord
             'namaKampus' => Yii::t('app', 'Kelas'),
             'kode_prodi' => Yii::t('app', 'Prodi'),
         ];
+    }
+
+    public function getApprovedBy()
+    {
+        return $this->hasOne(User::class, ['id' => 'approved_by']);
     }
 
     /**

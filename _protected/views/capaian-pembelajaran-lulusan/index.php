@@ -12,6 +12,9 @@ use kartik\select2\Select2;
 
 $this->title = 'Capaian Pembelajaran';
 $this->params['breadcrumbs'][] = $this->title;
+
+
+$list_fakultas = ArrayHelper::map($list_fakultas,'kode_fakultas','nama_fakultas');
 ?>
 
 <div class="body">
@@ -21,8 +24,8 @@ $this->params['breadcrumbs'][] = $this->title;
             Pilih Fakultas: 
             <?= Select2::widget([
                 'name' => 'fakultas',
-                'data' => ArrayHelper::map(\app\models\SimakMasterfakultas::find()->orderBy(['nama_fakultas'=>SORT_ASC])->all(),'kode_fakultas','nama_fakultas'),
-
+                'value' => $kode_fakultas,
+                'data' => $list_fakultas,
                 'options'=>['id'=>'fakultas_id','placeholder'=>Yii::t('app','- Pilih Fakultas -')],
                 'pluginOptions' => [
                     'allowClear' => true,
@@ -34,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             Pilih Prodi: 
             <?= DepDrop::widget([
             'name' => 'prodi',
+            'value' => $kode_prodi,
             'type'=>DepDrop::TYPE_SELECT2,
             'options'=>['id'=>'kode_prodi'],
             'select2Options'=>['pluginOptions'=>['allowClear'=>true]],

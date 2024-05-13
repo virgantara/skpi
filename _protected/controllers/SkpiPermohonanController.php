@@ -31,9 +31,9 @@ class SkpiPermohonanController extends Controller
                 'only' => ['create','update','delete','index'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','delete','index'],
+                        'actions' => ['update','delete','index'],
                         'allow' => true,
-                        'roles' => ['akpamPusat','admin'],
+                        'roles' => ['akpamPusat','admin','sekretearis','fakultas'],
                     ],
                     [
                         'actions' => [
@@ -61,7 +61,29 @@ class SkpiPermohonanController extends Controller
     {
         $searchModel = new SkpiPermohonanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $kode_prodi = '';
+        $list_prodi = [];
+        if (!Yii::$app->user->isGuest) {
+            if(Yii::$app->user->identity->access_role == 'sekretearis'){
+                $kode_prodi = Yii::$app->user->identity->prodi;
+                $listProdi = \app\models\SimakMasterprogramstudi::find()->where(['kode_prodi' => $kode_prodi])->all();
 
+                foreach ($listProdi as $item_name) {
+                    $list_prodi[$item_name->kode_prodi] = $item_name->nama_prodi;
+                } 
+            }
+            else if(Yii::$app->user->identity->access_role == 'fakultas'){
+                $kode_fakultas = Yii::$app->user->identity->fakultas;
+                $listProdi = \app\models\SimakMasterprogramstudi::find()->where(['kode_fakultas' => $kode_fakultas])->all();
+
+                foreach ($listProdi as $item_name) {
+                    $list_prodi[$item_name->kode_prodi] = $item_name->nama_prodi;
+                } 
+            }
+            else{
+                $list_fakultas = \app\models\SimakMasterfakultas::find()->orderBy(['nama_fakultas'=>SORT_ASC])->all();
+            }
+        }
         if (Yii::$app->request->post('hasEditable')) {
 
             // instantiate your book model for saving
@@ -94,6 +116,8 @@ class SkpiPermohonanController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'kode_prodi' => $kode_prodi,
+            'list_prodi' => $list_prodi
         ]);
     }
 
@@ -144,9 +168,13 @@ class SkpiPermohonanController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', "Data tersimpan");
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->approved_by = Yii::$app->user->identity->id;
+            if($model->save()){
+                Yii::$app->session->setFlash('success', "Data tersimpan");
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [

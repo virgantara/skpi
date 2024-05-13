@@ -22,31 +22,36 @@ class MenuHelper
 		];
 		// }
 
-		$menuItems[] = [
-			'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Universitas </span><i class="caret"></i>',
-			'url' => '#',
-			'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
-			'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
-			'items' => [
+		if (
+			Yii::$app->user->can('akpamPusat') ||
+			Yii::$app->user->can('sekretearis') ||
+			Yii::$app->user->can('fakultas')
+		) {
+			$menuItems[] = [
+				'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Universitas </span><i class="caret"></i>',
+				'url' => '#',
+				'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
+				'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
+				'items' => [
 
-				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Universitas',
-					'url' =>  ['simak-universitas/view'],
-				],
-				
-				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> KKNI',
-					'url' =>  ['simak-univ/index'],
-				],
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Universitas',
+						'url' =>  ['simak-universitas/view'],
+					],
+					
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> KKNI',
+						'url' =>  ['simak-univ/index'],
+					],
 
-				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Sistem Pendidikan',
-					'url' =>  ['sistem-pendidikan/index'],
-				],
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> Sistem Pendidikan',
+						'url' =>  ['sistem-pendidikan/index'],
+					],
 
-			]
-		];
-
+				]
+			];
+		}
 		$menuItems[] = [
 			'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Program Studi </span><i class="caret"></i>',
 			'url' => '#',
