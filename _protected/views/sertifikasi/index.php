@@ -157,7 +157,8 @@ $list_kampus = \app\helpers\MyHelper::getKampusList();
             ],
             'lembaga_sertifikasi',
             'nomor_registrasi_sertifikasi',
-            'nomor_sk_sertifikasi',
+            // 'nomor_sk_sertifikasi',
+            'predikat',
             'tahun_sertifikasi',
             [
                 'attribute' => 'status_validasi',

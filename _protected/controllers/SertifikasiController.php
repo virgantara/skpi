@@ -97,6 +97,7 @@ class SertifikasiController extends Controller
                 $items[] = [
                     'jenis_sertifikasi' => $list_jenis_sertifikasi[$item->jenis_sertifikasi],
                     'lembaga_sertifikasi' => $item->lembaga_sertifikasi,
+                    'predikat' => $item->predikat,
                     'id' => $item->id
                 ]; 
             }

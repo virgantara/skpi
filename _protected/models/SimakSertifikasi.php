@@ -51,9 +51,10 @@ class SimakSertifikasi extends \yii\db\ActiveRecord
         return [
             [['id', 'nim', 'jenis_sertifikasi', 'lembaga_sertifikasi', 'nomor_registrasi_sertifikasi', 'tahun_sertifikasi', 'tmt_sertifikasi'], 'required'],
             [['tahun_sertifikasi'], 'integer'],
-            [['tmt_sertifikasi', 'tst_sertifikasi', 'updated_at', 'created_at','catatan'], 'safe'],
+            [['tmt_sertifikasi', 'tst_sertifikasi', 'updated_at', 'created_at','catatan','predikat'], 'safe'],
             [['id', 'lembaga_sertifikasi', 'nomor_registrasi_sertifikasi', 'nomor_sk_sertifikasi'], 'string', 'max' => 255],
             [['nim'], 'string', 'max' => 25],
+            [['predikat'], 'string', 'max' => 50],
             [['jenis_sertifikasi', 'status_validasi'], 'string', 'max' => 1],
             [['file_path'], 'string', 'max' => 500],
             [['id'], 'unique'],
@@ -82,6 +83,7 @@ class SimakSertifikasi extends \yii\db\ActiveRecord
             'status_validasi' => 'Status Validasi',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',
+            'predikat' => 'Predikat',
         ];
     }
 

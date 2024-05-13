@@ -75,6 +75,7 @@ $list_status_validasi = \app\helpers\MyHelper::getStatusValidasi();
                     return $list_jenis_sertifikasi[$data->jenis_sertifikasi];
                 }
             ],
+            'predikat',
             'lembaga_sertifikasi',
             'nomor_registrasi_sertifikasi',
             'tahun_sertifikasi',

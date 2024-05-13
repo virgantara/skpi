@@ -143,7 +143,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                                 <tr>
                                     <th width="10%">No</th>
                                     <th width="40%">Nama Sertifikasi</th>
-                                    <th width="20%">Opsi</th>
+                                    <th width="20%">Predikat</th>
                                     <!-- <th>Predikat</th> -->
                                 </tr>
                             </thead>
@@ -333,7 +333,7 @@ function getSertifikasi(nim){
                 row += "<tr>";
                 row += "<td>"+(counter)+"</td>";
                 row += "<td>"+obj.jenis_sertifikasi+" - "+obj.lembaga_sertifikasi+"</td>";
-                row += "<td style=\'text-align:center\'></td>";
+                row += "<td style=\'text-align:center\'>"+obj.predikat+"</td>";
                 // row += "<td></td>";
                 row += "</tr>";
 

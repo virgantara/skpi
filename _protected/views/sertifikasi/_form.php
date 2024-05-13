@@ -31,7 +31,7 @@ $list_tahun = ArrayHelper::map($list_tahun,'tahun_id','nama_tahun');
             <?= $form->field($model, 'jenis_sertifikasi')->dropDownList($list_jenis_sertifikasi,['class'=>'form-control','prompt' => '- Pilih Jenis Sertifikasi -']) ?>
             <?= $form->field($model, 'lembaga_sertifikasi')->textInput(['class'=>'form-control','maxlength' => true]) ?>
             <?= $form->field($model, 'nomor_registrasi_sertifikasi')->textInput(['class'=>'form-control','maxlength' => true]) ?>
-            
+            <?= $form->field($model, 'predikat')->textInput(['class'=>'form-control','maxlength' => true]) ?>
             <?= $form->field($model, 'tahun_sertifikasi')->widget(Select2::classname(), [
                     'data' => $list_tahun,
                     'options'=>['id'=>'tahun_akademik','placeholder'=>Yii::t('app','- Pilih Tahun Akademik -')],
