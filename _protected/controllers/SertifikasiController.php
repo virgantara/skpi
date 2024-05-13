@@ -232,6 +232,7 @@ class SertifikasiController extends Controller
     {
         $model = $this->findModel($id);
         if($model->status_validasi == '1'){
+            Yii::$app->session->setFlash('success', "Data ini sudah divalidasi sehingga tidak bisa diupdate");
             return $this->redirect(['view','id' => $id]);
         }
         $s3config = Yii::$app->params['s3'];
