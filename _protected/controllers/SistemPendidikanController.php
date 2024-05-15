@@ -24,8 +24,13 @@ class SistemPendidikanController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['create','update','delete','up','down'],
+                'only' => ['create','update','delete','up','down','index','view'],
                 'rules' => [
+                    [
+                        'actions' => ['index','view'],
+                        'allow' => true,
+                        'roles' => ['sekretearis'],
+                    ],
                     [
                         'actions' => ['create','update','delete','index','view','up','down'],
                         'allow' => true,

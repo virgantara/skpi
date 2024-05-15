@@ -30,6 +30,11 @@ class SimakUnivController extends Controller
                 'only' => ['create','update','delete','up','down'],
                 'rules' => [
                     [
+                        'actions' => ['index','view'],
+                        'allow' => true,
+                        'roles' => ['sekretearis'],
+                    ],
+                    [
                         'actions' => ['create','update','delete','index','view','up','down'],
                         'allow' => true,
                         'roles' => ['akpamPusat','admin'],
