@@ -38,6 +38,10 @@ use Yii;
  */
 class SimakKegiatanMahasiswa extends \yii\db\ActiveRecord
 {
+    public $namaMahasiswa;
+    public $namaProdi;
+    public $namaKampus;
+    public $kode_prodi;
     /**
      * {@inheritdoc}
      */

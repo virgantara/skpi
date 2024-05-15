@@ -101,7 +101,7 @@ class MenuHelper
 				
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Prestasi',
-					'url' =>  ['tes/index'],
+					'url' =>  ['prestasi/index'],
 				],
 
 				[

@@ -4,13 +4,12 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\SimakSertifikasi */
+/* @var $model app\models\SimakPrestasi */
 
-$this->title = $model->lembaga_sertifikasi;
-$this->params['breadcrumbs'][] = ['label' => 'Simak Sertifikasis', 'url' => ['index']];
+$this->title = $model->nim;
+$this->params['breadcrumbs'][] = ['label' => 'Simak Prestasis', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$list_jenis_sertifikasi = \app\helpers\MyHelper::getJenisSertifikasi();
 $list_status_validasi = \app\helpers\MyHelper::getStatusValidasi();
 
 ?>
@@ -26,7 +25,6 @@ $list_status_validasi = \app\helpers\MyHelper::getStatusValidasi();
                     echo Html::a('<i class="fa fa-check"></i> Validasi', ['validasi', 'id' => $model->id], ['class' => 'btn btn-success']) ;
                 }
                  ?>
-                
                 <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
                 <?= Html::a('Delete', ['delete', 'id' => $model->id], [
                     'class' => 'btn btn-danger',
@@ -38,60 +36,51 @@ $list_status_validasi = \app\helpers\MyHelper::getStatusValidasi();
             </div>
 
             <div class="panel-body ">
-<h3>Info Mahasiswa</h3>
-<?= DetailView::widget([
-        'model' => $mhs,
-        'attributes' => [
-            'nim_mhs',
-            [
-                'label' => 'Nama Mahasiswa',
-                'value' => function($data){
-                    return $data->nama_mahasiswa;
-                }
-            ],
-            [
-                'label' => 'Prodi',
-                'value' => function($data){
-                    return $data->kodeProdi->nama_prodi;
-                }
-            ],
-            [
-                'label' => 'Angkatan',
-                'value' => function($data){
-                    return $data->tahun_masuk;
-                }
-            ],
-            
-        ],
-    ]) ?>
-    <h3>Info Sertifikasi</h3>
+        
 <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             
+            'nim',
             [
-                'attribute' => 'jenis_sertifikasi',
-                'value' => function($data) use ($list_jenis_sertifikasi){
-                    return $list_jenis_sertifikasi[$data->jenis_sertifikasi];
+                'attribute' => 'namaMahasiswa',
+                'value' => function($data){
+                    return !empty($data->nim0) ? $data->nim0->nama_mahasiswa : null;
                 }
             ],
-            'predikat',
-            'lembaga_sertifikasi',
-            'nomor_registrasi_sertifikasi',
-            'tahun_sertifikasi',
-            'tmt_sertifikasi',
-            'tst_sertifikasi',
+        
             [
-                'attribute'=>'file_path',
-                'format'=>'raw',
+                'label' => 'Prodi',
+                // 'filter' => $list_prodi,
                 'value' => function($data){
-                if(!empty($data->file_path)){
-                  return Html::a('<i class="fa fa-download"></i> Download', ['sertifikasi/download', 'id' => $data->id],['class' => 'btn btn-primary','target'=>'_blank']);
+                    return $data->nim0->kodeProdi->nama_prodi;
                 }
-                else
-                {
-                    return "<p class='btn btn-danger' align='center'>No File</p>";
+            ],
+            [
+                'label' => 'Kelas',
+                // 'filter' => $list_kampus,
+                'value' => function($data){
+                    return $data->nim0->kampus0->nama_kampus;
                 }
+            ],
+            [
+                'attribute' => 'kegiatan_id',
+                'label' => 'Prestasi',
+                'value' => function($data){
+                    $label = '';
+                    if(!empty($data->kegiatan) && !empty($data->kegiatan->kegiatan)){
+
+                        $label .= $data->kegiatan->tema.' - '.$data->kegiatan->kegiatan->nama_kegiatan.' - '.$data->kegiatan->instansi;
+
+                        if(!empty($data->kegiatan->jenisKegiatan))
+                            $label .= ' - '.$data->kegiatan->jenisKegiatan->nama_jenis_kegiatan;
+                    }
+
+                    
+
+                    
+
+                    return $label;
                 }
             ],
             [
@@ -106,7 +95,9 @@ $list_status_validasi = \app\helpers\MyHelper::getStatusValidasi();
                     return (!empty($data->approvedBy) ? $data->approvedBy->display_name : '-');
                 }
             ],
-            'catatan:html'
+            'catatan:html',
+            'updated_at',
+            'created_at',
         ],
     ]) ?>
 

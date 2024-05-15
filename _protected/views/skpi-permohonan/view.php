@@ -257,7 +257,7 @@ function getPrestasi(nim){
 
   var obj = new Object;
   obj.nim = nim;
-  var ajax_url= "/tes/ajax-get";
+  var ajax_url= "/prestasi/ajax-get";
   $.ajax({
 
         type : "POST",
@@ -283,10 +283,10 @@ function getPrestasi(nim){
             $.each(hasils.items, function(i, obj){
               
                 counter++;
-                let url = \'/tes/download?id=\'+obj.id
+                let url = \'/prestasi/download?id=\'+obj.id
                 row += "<tr>";
                 row += "<td>"+(counter)+"</td>";
-                row += "<td>"+obj.jenis_tes+" - "+obj.nama_tes+"</td>";
+                row += "<td>"+obj.nama+"</td>";
                 row += "<td style=\'text-align:center\'><a class=\'btn btn-primary\' target=\'_blank\' href=\'"+url+"\'><i class=\'fa fa-download\'></i>Unduh</a></td>";
                 row += "</tr>";
 

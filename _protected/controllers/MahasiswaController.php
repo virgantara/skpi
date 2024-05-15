@@ -50,7 +50,7 @@ class MahasiswaController extends Controller
                             'update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator', 'admin', 'operatorCabang','sekretearis','fakultas'],
+                        'roles' => ['theCreator', 'admin', 'akpamPusat','sekretearis','fakultas'],
                     ],
 
                 ],
@@ -93,7 +93,7 @@ class MahasiswaController extends Controller
             $mhs =  SimakMastermahasiswa::findOne(['nim_mhs' => Yii::$app->user->identity->nim]);
 
             $model = SkpiPermohonan::findOne(['nim' => Yii::$app->user->identity->nim ]);
-            $mhs = null;
+            
 
             return $this->render('skpi', [
                 'model' => $model,
@@ -140,6 +140,11 @@ class MahasiswaController extends Controller
         }
         else{
             $list_fakultas = \app\models\SimakMasterfakultas::find()->orderBy(['nama_fakultas'=>SORT_ASC])->all();
+            $listProdi = \app\models\SimakMasterprogramstudi::find()->all();
+
+            foreach ($listProdi as $item_name) {
+                $list_prodi[$item_name->kode_prodi] = $item_name->nama_prodi;
+            } 
         }
 
         return $this->render('index', [
