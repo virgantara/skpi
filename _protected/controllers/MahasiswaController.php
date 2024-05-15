@@ -8,6 +8,7 @@ use app\models\SkpiPermohonan;
 use app\models\RiwayatKamar;
 use app\models\RiwayatPelanggaran;
 use app\models\SimakMastermahasiswa;
+
 use app\models\MahasiswaSearch;
 use app\models\Asrama;
 use yii\web\Controller;
@@ -46,10 +47,10 @@ class MahasiswaController extends Controller
 
                     [
                         'actions' => [
-                            'update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator'
+                            'update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi'
                         ],
                         'allow' => true,
-                        'roles' => ['theCreator', 'admin', 'operatorCabang'],
+                        'roles' => ['theCreator', 'admin', 'operatorCabang','sekretearis','fakultas'],
                     ],
 
                 ],
@@ -87,87 +88,69 @@ class MahasiswaController extends Controller
             $this->redirect(['/site/login']);
         }
 
-        $model = SkpiPermohonan::findOne(['nim' => Yii::$app->user->identity->nim ]);
-        $mhs = null;
+        
         if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
             $mhs =  SimakMastermahasiswa::findOne(['nim_mhs' => Yii::$app->user->identity->nim]);
+
+            $model = SkpiPermohonan::findOne(['nim' => Yii::$app->user->identity->nim ]);
+            $mhs = null;
+
+            return $this->render('skpi', [
+                'model' => $model,
+                'mhs' => $mhs
+            ]);
         }
         
-        return $this->render('skpi', [
-            'model' => $model,
-            'mhs' => $mhs
-        ]);
-    }
+        $kode_prodi = '';
+        $kode_fakultas = '';
+        $searchModel = new MahasiswaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $list_fakultas = [];
+        
+        $kode_prodi = '';
+        $kode_fakultas = '';
+        $list_prodi = [];
+        if(Yii::$app->user->identity->access_role == 'sekretearis'){
+            $kode_prodi = Yii::$app->user->identity->prodi;
+            $prodi = \app\models\SimakMasterprogramstudi::findOne(['kode_prodi' => $kode_prodi]);
 
-    public function actionUpdateKoordinator()
-    {
-        $dataku = $_POST['dataku'];
-        $nim = $dataku['nimku'];
-        $koordinator_id = $dataku['koordinator_id'];
-        if (!empty($dataku['nimku'])) {
-            if (!empty($dataku['koordinator_id'])) {
-                $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
+            if(!empty($prodi)){
+                $kode_fakultas = $prodi->kode_fakultas;
 
-                $data->koordinator_id = $koordinator_id;
-                $koordinator = \app\models\SimakKampusKoordinator::findOne($koordinator_id);
-                if ($data->save()) {
-                    $results = [
-                        'code' => 200,
-                        'msg' => "Koordinator berhasil diupdate",
-                        'nama' => $koordinator->nama_koordinator
-                    ];
-                } else {
-                    $errors = \app\helpers\MyHelper::logError($data);
-                    $results = [
-                        'code' => 400,
-                        'msg' => $errors,
-                        'nama' => ''
-                    ];
-                }
+                $list_fakultas = \app\models\SimakMasterfakultas::find()->where(['kode_fakultas' => $kode_fakultas])->orderBy(['nama_fakultas'=>SORT_ASC])->all();
+            }            
 
+            $kode_prodi = Yii::$app->user->identity->prodi;
+            $listProdi = \app\models\SimakMasterprogramstudi::find()->where(['kode_prodi' => $kode_prodi])->all();
 
-                echo json_encode($results);
-            } else {
-                echo "Koordinator kosong, Isi terlebih dahulu";
-            }
-        } else {
-            echo "Koordinator kosong, Isi terlebih dahulu";
+            foreach ($listProdi as $item_name) {
+                $list_prodi[$item_name->kode_prodi] = $item_name->nama_prodi;
+            } 
+            
         }
-        die();
-    }
+        else if(Yii::$app->user->identity->access_role == 'fakultas'){
+            $kode_fakultas = Yii::$app->user->identity->fakultas;
+            $list_fakultas = \app\models\SimakMasterfakultas::find()->where(['kode_fakultas' => Yii::$app->user->identity->fakultas])->orderBy(['nama_fakultas'=>SORT_ASC])->all();
 
-    public function actionKoordinator()
-    {
-        $model = new SimakMastermahasiswa;
-        $model->setScenario('asrama');
+            $listProdi = \app\models\SimakMasterprogramstudi::find()->where(['kode_fakultas' => $kode_fakultas])->all();
 
-        $results = [];
-        $params = [];
-
-        if (!empty($_GET['btn-search'])) {
-            if (!empty($_GET['SimakMastermahasiswa'])) {
-                $params = $_GET['SimakMastermahasiswa'];
-                $query = SimakMastermahasiswa::find()->where([
-                    'kampus' => $params['kampus'],
-                    'kode_prodi' => !empty($params['kode_prodi']) ? $params['kode_prodi'] : '-',
-
-                    'status_aktivitas' => $params['status_aktivitas']
-                ]);
-
-                if (Yii::$app->user->identity->access_role == 'operatorCabang') {
-                    $query->andWhere(['kampus' => Yii::$app->user->identity->kampus]);
-                }
-
-                $query->orderBy(['semester' => SORT_ASC, 'nama_mahasiswa' => SORT_ASC]);
-                $results = $query->all();
-            }
+            foreach ($listProdi as $item_name) {
+                $list_prodi[$item_name->kode_prodi] = $item_name->nama_prodi;
+            } 
+        }
+        else{
+            $list_fakultas = \app\models\SimakMasterfakultas::find()->orderBy(['nama_fakultas'=>SORT_ASC])->all();
         }
 
-        return $this->render('koordinator', [
-            'model' => $model,
-            'results' => $results,
-            'params' => $params,
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'kode_prodi' => $kode_prodi,
+            'list_prodi' => $list_prodi,
+            'list_fakultas' =>$list_fakultas,
+            'kode_fakultas' => $kode_fakultas
         ]);
+        
     }
 
     public function actionAjaxCariMahasiswa()
@@ -298,174 +281,6 @@ class MahasiswaController extends Controller
         return $resource;
     }
 
-    public function actionKonsulatWni()
-    {
-        $model = new SimakMastermahasiswa;
-        $results = [];
-
-        if (!empty($_GET['SimakMastermahasiswa']['kabupaten']) && !empty($_GET['SimakMastermahasiswa']['status_aktivitas'])) {
-
-            $results = SimakMastermahasiswa::find()->where([
-                'kabupaten' => $_GET['SimakMastermahasiswa']['kabupaten'],
-                'status_aktivitas' => $_GET['SimakMastermahasiswa']['status_aktivitas'],
-                'status_warga' => 'WNI'
-            ])->all();
-        }
-
-        if (!empty($_POST['btn-update-all'])) {
-            $connection = \Yii::$app->db;
-            $transaction = $connection->beginTransaction();
-            $errors = '';
-            $hasil = [];
-
-            try {
-
-
-                foreach ($_POST['nim'] as $q => $nim) {
-                    $mhs = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
-                    $konsul = !empty($_POST['konsulat'][$q]) ? $_POST['konsulat'][$q] : null;
-                    if (!empty($mhs)) {
-                        $mhs->konsulat = $konsul;
-                        if (!$mhs->save()) {
-                            $errors .= \app\helpers\MyHelper::logError($mhs);
-                            throw new \Exception;
-                        }
-                    }
-                }
-                Yii::$app->session->setFlash('success', "Data tersimpan");
-                $transaction->commit();
-
-                return $this->redirect(['konsulat-wni']);
-            } catch (\Exception $e) {
-                $transaction->rollBack();
-                $errors .= $e->getMessage();
-                Yii::$app->session->setFlash('danger', $errors);
-            } catch (\Throwable $e) {
-                $transaction->rollBack();
-                $errors .= $e->getMessage();
-                Yii::$app->session->setFlash('danger', $errors);
-            }
-        }
-        return $this->render('konsulat_wni', [
-            'model' => $model,
-            'results' => $results,
-        ]);
-    }
-
-
-
-    public function actionKonsulatRekap()
-    {
-        $query = new \yii\db\Query();
-        $results = $query->select(['konsulat', 'c.name', 'c.latitude', 'c.longitude', 'count(*) as total'])
-            ->from('simak_mastermahasiswa m')
-            ->innerJoin('cities c', 'm.konsulat = c.id')
-            ->groupBy(['m.konsulat', 'c.name', 'c.latitude', 'c.longitude'])
-            ->orderBy('total DESC')
-            // ->limit(10)
-            ->all();
-
-        return $this->render('konsulat_rekap', [
-            'results' => $results
-        ]);
-    }
-
-    public function actionAddKonsulat()
-    {
-        $dataku = $_POST['dataku'];
-        $nim = $dataku['nim'];
-        $city = $dataku['city'];
-        if (!empty($dataku['nim'])) {
-            if (!empty($dataku['city'])) {
-                $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
-
-                if (empty($data->konsulat)) {
-                    $data->konsulat = $city;
-                    $data->save(false, ['konsulat']);
-
-                    $results = [
-                        'code' => 200,
-                        'msg' => "Berhasil",
-
-                    ];
-                } else if ($city == $data->konsulat) {
-                    $results = [
-                        'code' => 500,
-                        'msg' => "Oops, mahasiswa ini sudah di konsulat ini",
-
-                    ];
-                } else {
-                    $results = [
-                        'code' => 500,
-                        'msg' => "Oops, mahasiswa ini sudah ada di konsulat lain",
-
-                    ];
-                }
-            } else {
-                $results = [
-                    'code' => 500,
-                    'msg' => "Konsulat kosong, Isi terlebih dahulu",
-
-                ];
-            }
-        } else {
-            $results = [
-                'code' => 500,
-                'msg' => "NIM kosong, Isi terlebih dahulu",
-
-            ];
-        }
-
-        echo json_encode($results);
-        die();
-    }
-
-    public function actionRemoveKonsulat()
-    {
-        $dataku = $_POST['dataku'];
-        $nim = $dataku['nim'];
-        if (!empty($dataku['nim'])) {
-            $data = SimakMastermahasiswa::find()->where(['nim_mhs' => $nim])->one();
-            $data->konsulat = null;
-            $data->save(false, ['konsulat']);
-            $results = [
-                'code' => 200,
-                'msg' => "Berhasil",
-
-            ];
-        } else {
-            $results = [
-                'code' => 500,
-                'msg' => "NIM kosong, Isi terlebih dahulu",
-
-            ];
-        }
-
-        echo json_encode($results);
-        die();
-    }
-
-
-
-    public function actionKonsulat()
-    {
-        $model = new SimakMastermahasiswa;
-        $results = [];
-
-        if (!empty($_GET['SimakMastermahasiswa']['konsulat'])) {
-
-            $results = SimakMastermahasiswa::find()->where([
-                'konsulat' => $_GET['SimakMastermahasiswa']['konsulat'],
-            ])->all();
-        }
-
-        // print_r($_GET['SimakMastermahasiswa']['konsulat']);exit;
-        return $this->render('konsulat', [
-            'model' => $model,
-            'results' => $results,
-        ]);
-    }
-
     /**
      * Lists all SimakMastermahasiswa models.
      * @return mixed
@@ -523,59 +338,43 @@ class MahasiswaController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($nim)
     {
-        $model = $this->findModel($id);
-        $query = RiwayatPelanggaran::find()->where([
-            'nim' => $model->nim_mhs
-        ]);
 
-        $query->orderBy(['created_at' => SORT_DESC]);
-
-        $riwayat = $query->all();
-
-        $query = RiwayatKamar::find()->where([
-            'nim' => $model->nim_mhs
-        ]);
-
-        $querykrs = new \yii\db\Query();
-        $querykrsmhs = $querykrs->select(['c.label as tahun', 'SUM(a.sks) as jumlah', 'SUM(a.sks * b.angka) as nilai', 'SUM(a.sks * b.angka) / SUM(a.sks) as ip'])
-            ->from('simak_datakrs a')
-            ->innerJoin('simak_konversi b', 'a.nilai_huruf = b.huruf')
-            ->innerJoin('simak_pilihan c', 'a.tahun_akademik = c.value')
-            ->where(['a.mahasiswa' => $model->nim_mhs])
-            ->andWhere(['!=', 'a.nilai_huruf', "NULL"])
-            ->andWhere(['>', 'a.sks', '0'])
-            ->groupBy(['c.label'])
-            ->orderBy('c.label ASC')
-            ->all();
-
-        $query->orderBy(['created_at' => SORT_DESC]);
-
-        $riwayatKamar = $query->all();
-
-        $api_baseurl = Yii::$app->params['api_baseurl'];
-        $client = new Client(['baseUrl' => $api_baseurl]);
-        $client_token = Yii::$app->params['client_token'];
-        $headers = ['x-access-token' => $client_token];
-        $response = $client->get('/b/tagihan/mahasiswa', ['nim' => $model->nim_mhs], $headers)->send();
-
-        $riwayatPembayaran = [];
-
-        if ($response->isOk) {
-            $result = $response->data['values'];
-            // print_r($result);exit;
-            if (!empty($result)) {
-                $riwayatPembayaran = $result;
-            }
+        if(Yii::$app->user->isGuest){
+            return $this->redirect(['site/logout']);
         }
 
-        return $this->render('view', [
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            return $this->redirect(['skpi']);
+        }
+        $mhs =  SimakMastermahasiswa::findOne(['nim_mhs' => $nim]);
+
+        $model = SkpiPermohonan::findOne(['nim' => $nim]);
+
+        return $this->render('skpi', [
             'model' => $model,
-            'riwayat' => $riwayat,
-            'riwayatKamar' => $riwayatKamar,
-            'dataKrs' => $querykrsmhs,
-            'riwayatPembayaran' => $riwayatPembayaran
+            'mhs' => $mhs
+        ]);
+    }
+
+    public function actionViewKompetensi($nim)
+    {
+
+        if(Yii::$app->user->isGuest){
+            return $this->redirect(['site/logout']);
+        }
+        
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            return $this->redirect(['skpi']);
+        }
+        $mhs =  SimakMastermahasiswa::findOne(['nim_mhs' => $nim]);
+
+        $model = SkpiPermohonan::findOne(['nim' => $nim]);
+
+        return $this->render('kompetensi', [
+            'model' => $model,
+            'mhs' => $mhs
         ]);
     }
 

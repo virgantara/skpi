@@ -109,6 +109,15 @@ class SimakTesSearch extends SimakTes
             $query->andWhere(['nim' => Yii::$app->user->identity->nim]);
         }
 
+        else if(Yii::$app->user->identity->access_role == 'sekretearis'){
+            $query->andWhere(['mhs.kode_prodi' => Yii::$app->user->identity->prodi]);   
+        }
+
+        else if(Yii::$app->user->identity->access_role == 'fakultas'){
+            $query->andWhere(['p.kode_fakultas' => Yii::$app->user->identity->fakultas]);   
+        }
+
+
         return $dataProvider;
     }
 }

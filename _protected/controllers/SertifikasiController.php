@@ -28,10 +28,10 @@ class SertifikasiController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['create','update','delete','index','view','ajax-get','download'],
+                'only' => ['create','update','delete','index','view','ajax-get','download','validasi'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','delete','ajax-get','download'],
+                        'actions' => ['delete','ajax-get','download','validasi','index','view'],
                         'allow' => true,
                         'roles' => ['akpamPusat','admin','sekretearis','fakultas'],
                     ],
@@ -42,7 +42,7 @@ class SertifikasiController extends Controller
                     ],
                     [
                         'actions' => [
-                            'create','update','delete','index','view','ajax-get','download'
+                            'create','update','delete','index','view','ajax-get','download','validasi'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator'],
@@ -57,6 +57,26 @@ class SertifikasiController extends Controller
             ],
         ];
     }
+
+    public function actionValidasi($id)
+    {
+        $model = $this->findModel($id);
+        
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->approved_by = Yii::$app->user->identity->id;
+            if($model->save()){
+                Yii::$app->session->setFlash('success', "Data updated");
+                return $this->redirect(['view', 'id' => $model->id]);    
+            }        
+            
+        }
+
+        return $this->render('validasi', [
+            'model' => $model,
+        ]);
+    }
+
 
     public function actionDownload($id) 
     { 

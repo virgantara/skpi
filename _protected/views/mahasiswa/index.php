@@ -4,6 +4,9 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\export\ExportMenu;
 
+use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\MahasiswaSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -11,6 +14,20 @@ use kartik\export\ExportMenu;
 $this->title = 'Master Mahasiswa';
 $this->params['breadcrumbs'][] = $this->title;
 
+
+
+$rencana_studi = ['1' => '4 Tahun', '2' => '1 Tahun'];
+
+$prodi_tags = (!empty($_GET['kode_prodi']) ? $_GET['kode_prodi'] : null);
+$status_aktif_tags = (!empty($_GET['status_aktivitas']) ? $_GET['status_aktivitas'] : null);
+$kampus_tags = (!empty($_GET['kampus']) ? $_GET['kampus'] : null);
+
+$status_hapus_tags = (!empty($_GET['status_hapus']) ? $_GET['status_hapus'] : null);
+$tahun_masuk_tags = (!empty($_GET['tahun_masuk']) ? $_GET['tahun_masuk'] : null);
+
+$list_status_aktif = \app\helpers\MyHelper::getStatusAktivitas();
+$years = array_combine(range(date("Y"), 2010), range(date("Y"), 2010));
+$list_kampus = \app\helpers\MyHelper::getKampusList();
 ?>
 <div class="simak-mastermahasiswa-index">
 
@@ -23,6 +40,91 @@ $this->params['breadcrumbs'][] = $this->title;
         echo '</div>';
         yii\bootstrap\Modal::end();
     ?>
+
+  <div id="faq" role="tablist" aria-multiselectable="true">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="questionOne">
+                        <h5 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#faq" href="#answerOne" aria-expanded="false" aria-controls="answerOne">
+                                <i class="fa fa-filter"></i> Filter <small style="color:blue">* Klik di sini untuk filter data</small>
+                            </a>
+                        </h5>
+                    </div>
+                    <div id="answerOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="questionOne">
+                        <div class="panel-body">
+
+                            <?php $form = ActiveForm::begin([
+                                'action' => ['mahasiswa/skpi'],
+                                'method' => 'get',
+                            ]); ?>
+                            <div class="row">
+                                
+                                <div class="col-lg-6">
+                                    <?= $form->field($searchModel, 'nama_mahasiswa')->textInput(['class' => 'form-control selec2-filter']) ?>
+                                    <?= $form->field($searchModel, 'nim_mhs')->textInput(['class' => 'form-control selec2-filter']) ?>
+                                    <?= $form->field($searchModel, 'semester')->textInput(['class' => 'form-control selec2-filter']) ?>
+                                    <?= $form->field($searchModel, 'tahun_masuk')->widget(Select2::classname(), [
+                                        'data' => $years,
+                                        'value' => $tahun_masuk_tags,
+                                        'options' => [
+                                            'placeholder' => 'Pilih Angkatan ...',
+                                            'multiple' => true,
+                                            'id' => 'select2-tahun_masuk',
+                                            'class' => 'selec2-filter'
+                                        ],
+                                    ]) ?>
+                                   
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <?= $form->field($searchModel, 'kode_prodi')->widget(Select2::classname(), [
+                                        'data' => $list_prodi,
+                                        'value' => $prodi_tags,
+                                        'options' => [
+                                            'id' => 'select2-kode_prodi',
+                                            'class' => 'selec2-filter',
+                                            'placeholder' => 'Pilih Prodi ...',
+                                            'multiple' => true
+                                        ],
+                                    ]) ?>
+                                    <?= $form->field($searchModel, 'status_aktivitas')->widget(Select2::classname(), [
+                                        'data' => $list_status_aktif,
+                                        'value' => $status_aktif_tags,
+                                        'options' => [
+                                            'id' => 'select2-status_aktivitas',
+                                            'class' => 'selec2-filter',
+                                            'placeholder' => 'Pilih Status Aktif ...',
+                                            'multiple' => true
+                                        ],
+                                    ]) ?>
+                                    <?= $form->field($searchModel, 'kampus')->widget(Select2::classname(), [
+                                        'data' => $list_kampus,
+                                        'value' => $kampus_tags,
+                                        'options' => [
+                                            'id' => 'select2-kampus',
+                                            'class' => 'selec2-filter',
+                                            'placeholder' => 'Pilih Kelas ...',
+                                            'multiple' => true
+                                        ],
+                                    ]) ?>
+                                   
+                                    
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <?= Html::submitButton('Apply Filter', ['class' => 'btn btn-primary']) ?>
+                                <?= Html::resetButton('Reset', ['class' => 'btn btn-default btn-reset', 'type' => 'reset']) ?>
+                            </div>
+                            <?php ActiveForm::end(); ?>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
 <?php
     $gridColumns = [
     [
@@ -66,7 +168,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'namaProdi',
                 'label' => 'Prodi',
                 'format' => 'raw',
-                'filter'=>$prodis,
                 'value'=>function($model,$url){
                     return $model->namaProdi;
                     
@@ -77,34 +178,41 @@ $this->params['breadcrumbs'][] = $this->title;
             'tahun_masuk',
             [
                 'attribute' => 'kampus',
-                'filter' => $listKampus,
                 'value' => function($data){
                     return !empty($data->kampus0) ? $data->kampus0->nama_kampus : '-';
                 }
             ],
-            [
-                'class' => 'kartik\grid\EditableColumn',
-                'attribute' => 'rfid',
-                'readonly' => !Yii::$app->user->can('admin'),
-                'editableOptions' => [
-                    'inputType' => \kartik\editable\Editable::INPUT_TEXT,
-                    
-                ],
-            ],
+            
             [
                 'attribute' => 'status_aktivitas',
                 'label' => 'Status Aktif',
                 'format' => 'raw',
-                'filter'=>$status_aktif,
                 'value'=>function($model,$url){
                     return $model->status_aktivitas;
                     
                 },
             ],
             [
-                'class'     => 'yii\grid\ActionColumn',
-                'template'  => '{view} {update}',
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{skpi} {kompetensi}',
+            'buttons'=>[
+                'skpi'=>function ($url, $model) {
+                    return Html::a('<span class="fa fa-eye"></span> SKPI', ['mahasiswa/view','nim' => $model->nim_mhs], ['class' => 'btn btn-primary']);
+                },
+                'kompetensi'=>function ($url, $model) {
+                    return Html::a('<span class="fa fa-eye"></span> Kompetensi', ['mahasiswa/view-kompetensi','nim' => $model->nim_mhs], ['class' => 'btn btn-success']);
+                },
+                
             ],
+            // 'visibleButtons' => [
+            //     'validasi' => function ($model, $key, $index) {
+            //         return Yii::$app->user->can('akpamPusat') || Yii::$app->user->can('sekretearis')||Yii::$app->user->can('fakultas');
+            //     },
+            //     'update' => function ($model, $key, $index) {
+            //         return Yii::$app->user->can('Mahasiswa');
+            //     },
+            // ]
+        ]
     
 ];?>    
 <p>
@@ -119,7 +227,7 @@ echo ExportMenu::widget([
 </p>
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        // 'filterModel' => $searchModel,
         'columns' => $gridColumns,
         'containerOptions' => ['style' => 'overflow: auto'], 
         'headerRowOptions' => ['class' => 'kartik-sheet-style'],

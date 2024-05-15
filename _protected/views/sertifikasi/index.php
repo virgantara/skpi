@@ -149,6 +149,27 @@ $list_kampus = \app\helpers\MyHelper::getKampusList();
             // 'id',
             'nim',
             [
+                'attribute' => 'namaMahasiswa',
+                'value' => function($data){
+                    return !empty($data->nim0) ? $data->nim0->nama_mahasiswa : null;
+                }
+            ],
+    
+            [
+                'attribute' => 'namaProdi',
+                'filter' => $list_prodi,
+                'value' => function($data){
+                    return $data->nim0->kodeProdi->nama_prodi;
+                }
+            ],
+            [
+                'attribute' => 'namaKampus',
+                'filter' => $list_kampus,
+                'value' => function($data){
+                    return $data->nim0->kampus0->nama_kampus;
+                }
+            ],
+            [
                 'attribute' => 'jenis_sertifikasi',
                 'filter' => $list_jenis_sertifikasi,
                 'value' => function($data) use ($list_jenis_sertifikasi){
@@ -200,7 +221,10 @@ $list_kampus = \app\helpers\MyHelper::getKampusList();
             ],
             'visibleButtons' => [
                 'validasi' => function ($model, $key, $index) {
-                    return Yii::$app->user->can('akpamPusat');
+                    return Yii::$app->user->can('akpamPusat') || Yii::$app->user->can('sekretearis')||Yii::$app->user->can('fakultas');
+                },
+                'update' => function ($model, $key, $index) {
+                    return Yii::$app->user->can('Mahasiswa');
                 },
             ]
         ]

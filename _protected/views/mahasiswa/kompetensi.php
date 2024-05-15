@@ -5,7 +5,7 @@ use dosamigos\ckeditor\CKEditor;
 /* @var $this yii\web\View */
 /* @var $model app\models\SkpiPermohonan */
 
-$this->title = $model->nim0->nama_mahasiswa;
+$this->title = $mhs->nama_mahasiswa;
 $this->params['breadcrumbs'][] = ['label' => 'SKPI', 'url' => '#'];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -78,8 +78,8 @@ Yii::$app->language = 'id-ID';
 $this->registerJs(' 
 
 
-getKompetensi("'.$model->nim.'")
-getIndukKompetensi("'.$model->nim.'")
+getKompetensi("'.$mhs->nim_mhs.'")
+getIndukKompetensi("'.$mhs->nim_mhs.'")
 
 
 function getIndukKompetensi(nim){

@@ -22,11 +22,15 @@ $list_status_validasi = \app\helpers\MyHelper::getStatusValidasi();
         <div class="panel">
             <div class="panel-heading">
                 <?php 
-                if(Yii::$app->user->can('akpamPusat')){
+                if(Yii::$app->user->can('akpamPusat')|| Yii::$app->user->can('sekretearis')||Yii::$app->user->can('fakultas')){
                     echo Html::a('<i class="fa fa-check"></i> Validasi', ['validasi', 'id' => $model->id], ['class' => 'btn btn-success']) ;
                 }
-                 ?>
-                <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                
+                else if(Yii::$app->user->can('Mahasiswa')){
+
+                    echo Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']);
+                }
+             ?>
                 <?= Html::a('Delete', ['delete', 'id' => $model->id], [
                     'class' => 'btn btn-danger',
                     'data' => [

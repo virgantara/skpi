@@ -43,43 +43,25 @@ class MahasiswaSearch extends SimakMastermahasiswa
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $status_aktif = null, $tahun_now = null)
     {
         $query = SimakMastermahasiswa::find();
+        $query->alias('t');
+        $query->joinWith(['kampus0 as k','kodeProdi as p']);
 
+        // $query->joinWith(['simak_users u']);
+        // $query->joinWith(['SimakKegiatanMahasiswas']);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'status_aktivitas'=>SORT_ASC,
-                    'kode_prodi'=>SORT_ASC,
+                    'status_aktivitas' => SORT_ASC,
                     'kampus' => SORT_ASC,
-                    'nama_mahasiswa'=>SORT_ASC
+                    'nama_mahasiswa' => SORT_ASC
                 ]
             ]
-        ]);
-
-        $dataProvider->sort->attributes['namaProdi'] = [
-            'asc' => ['p.nama_prodi'=>SORT_ASC],
-            'desc' => ['p.nama_prodi'=>SORT_DESC]
-        ];
-
-        $dataProvider->sort->attributes['namaFakultas'] = [
-            'asc' => ['f.nama_fakultas'=>SORT_ASC],
-            'desc' => ['f.nama_fakultas'=>SORT_DESC]
-        ];
-
-        $dataProvider->sort->attributes['namaKampus'] = [
-            'asc' => ['k.nama_kampus'=>SORT_ASC],
-            'desc' => ['k.nama_kampus'=>SORT_DESC]
-        ];
-
-        $query->joinWith([
-            'kodeProdi as p',
-            'kodeFakultas as f',
-            'kampus0 as k',
         ]);
 
         $this->load($params);
@@ -90,117 +72,86 @@ class MahasiswaSearch extends SimakMastermahasiswa
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        // $query->andFilterWhere([
-        //     'id' => $this->id,
-        //     'tgl_lahir' => $this->tgl_lahir,
-        //     'tgl_masuk' => $this->tgl_masuk,
-        //     'tgl_lulus' => $this->tgl_lulus,
-        //     'status_bayar' => $this->status_bayar,
-        //     'tgl_sk_yudisium' => $this->tgl_sk_yudisium,
-        //     'status_mahasiswa' => $this->status_mahasiswa,
-        //     'is_synced' => $this->is_synced,
-        //     'is_eligible' => $this->is_eligible,
-        //     'kamar_id' => $this->kamar_id,
-        //     'created_at' => $this->created_at,
-        //     'updated_at' => $this->updated_at,
-        // ]);
-
-        if(!empty($this->dapur_id))
-            $query->andWhere(['dapur_id'=>$this->dapur_id]);
-        
-        if(!empty($this->namaProdi))
-            $query->andWhere(['p.kode_prodi'=>$this->namaProdi]);
-        
-        if(!empty($this->namaFakultas))
-            $query->andWhere(['f.kode_fakultas'=> $this->namaFakultas]);
-        
-        if(!empty($this->namaKampus))
-            $query->andWhere(['k.nama_kampus' => $this->namaKampus]);
-
-        if(!empty($this->status_aktivitas))
-            $query->andWhere(['status_aktivitas' => $this->status_aktivitas]);
-
-        if(!empty($this->semester))
-            $query->andWhere(['semester'=> $this->semester]);
-
-        if(!empty($this->kampus))
-            $query->andWhere(['kampus'=>$this->kampus]);
-
-        if(Yii::$app->user->identity->access_role == 'operatorCabang')
-        {
-            $query->andWhere(['kampus'=>Yii::$app->user->identity->kampus]);    
+        if (Yii::$app->user->identity->access_role == ('theCreator')) {
+            $query->andFilterWhere(['status_hapus' => $this->status_hapus]);
+        } else {
+            $query->andWhere(['status_hapus' => 0]);
         }
 
-        $query->andFilterWhere(['tahun_masuk'=> $this->tahun_masuk]);
-        $query->andFilterWhere(['kampus'=> $this->kampus]);
-        
+        if (Yii::$app->user->identity->access_role == 'Mahasiswa') {
+            $query->andWhere(['nim_mhs' => Yii::$app->user->identity->nim]);
+        }
 
-        $query->andFilterWhere(['like', 'kode_pt', $this->kode_pt])
-            ->andFilterWhere(['like', 'kode_jenjang_studi', $this->kode_jenjang_studi])
+        // grid filtering conditions
+
+        if (!empty($this->kode_prodi)) {
+            $query->andWhere(['t.kode_prodi' => $this->kode_prodi]);
+        }
+
+
+        if (!empty($this->kampus)) {
+            $query->andWhere(['kampus' => $this->kampus]);
+        }
+
+        if (!empty($status_aktif)) {
+
+            $query->andWhere(['status_aktivitas' => $status_aktif]);
+        }
+
+        if (!empty($this->tahun_lulus_keluar)) {
+            $min_year = min($this->tahun_lulus_keluar);
+            $max_year = max($this->tahun_lulus_keluar);
+
+            $sd = $min_year . '-01-01';
+            $ed = $max_year . '-12-31';
+            $query->andWhere(['between', 'tgl_sk_yudisium', $sd, $ed]);
+        }
+
+        $query->andFilterWhere(['nip_promotor' => $this->nip_promotor])
+            ->andFilterWhere(['status_aktivitas' => $this->status_aktivitas])
+            ->andFilterWhere(['status_warga' => $this->status_warga])
+            ->andFilterWhere(['tahun_masuk' => $this->tahun_masuk])
+
+            ->andFilterWhere(['apakah_4_tahun' => $this->apakah_4_tahun]);
+
+        $query->andFilterWhere(['like', 'kode_fakultas', $this->kode_fakultas])
             ->andFilterWhere(['like', 'nim_mhs', $this->nim_mhs])
+            ->andFilterWhere(['like', 'nisn', $this->nisn])
+            ->andFilterWhere(['like', 'keterangan_lulus_keluar', $this->keterangan_lulus_keluar])
             ->andFilterWhere(['like', 'nama_mahasiswa', $this->nama_mahasiswa])
             ->andFilterWhere(['like', 'tempat_lahir', $this->tempat_lahir])
-            ->andFilterWhere(['like', 'rfid', $this->rfid])
-            ->andFilterWhere(['like', 'jenis_kelamin', $this->jenis_kelamin]);
-            // ->andFilterWhere(['like', 'tahun_masuk', $this->tahun_masuk])
-            // ->andFilterWhere(['like', 'semester_awal', $this->semester_awal])
-            // ->andFilterWhere(['like', 'batas_studi', $this->batas_studi])
-            // ->andFilterWhere(['like', 'asal_propinsi', $this->asal_propinsi])
-            // // ->andFilterWhere(['like', 'status_aktivitas', $this->status_aktivitas])
-            // ->andFilterWhere(['like', 'status_awal', $this->status_awal])
-            // ->andFilterWhere(['like', 'jml_sks_diakui', $this->jml_sks_diakui])
-            // ->andFilterWhere(['like', 'nim_asal', $this->nim_asal])
-            // ->andFilterWhere(['like', 'asal_pt', $this->asal_pt])
-            // ->andFilterWhere(['like', 'nama_asal_pt', $this->nama_asal_pt])
-            // ->andFilterWhere(['like', 'asal_jenjang_studi', $this->asal_jenjang_studi])
-            // ->andFilterWhere(['like', 'asal_prodi', $this->asal_prodi])
-            // ->andFilterWhere(['like', 'kode_biaya_studi', $this->kode_biaya_studi])
-            // ->andFilterWhere(['like', 'kode_pekerjaan', $this->kode_pekerjaan])
-            // ->andFilterWhere(['like', 'tempat_kerja', $this->tempat_kerja])
-            // ->andFilterWhere(['like', 'kode_pt_kerja', $this->kode_pt_kerja])
-            // ->andFilterWhere(['like', 'kode_ps_kerja', $this->kode_ps_kerja])
-            // ->andFilterWhere(['like', 'nip_promotor', $this->nip_promotor])
-            // ->andFilterWhere(['like', 'nip_co_promotor1', $this->nip_co_promotor1])
-            // ->andFilterWhere(['like', 'nip_co_promotor2', $this->nip_co_promotor2])
-            // ->andFilterWhere(['like', 'nip_co_promotor3', $this->nip_co_promotor3])
-            // ->andFilterWhere(['like', 'nip_co_promotor4', $this->nip_co_promotor4])
-            // ->andFilterWhere(['like', 'photo_mahasiswa', $this->photo_mahasiswa])
-            
-            // ->andFilterWhere(['like', 'keterangan', $this->keterangan])
-            // ->andFilterWhere(['like', 'telepon', $this->telepon])
-            // ->andFilterWhere(['like', 'hp', $this->hp])
-            // ->andFilterWhere(['like', 'email', $this->email])
-            // ->andFilterWhere(['like', 'alamat', $this->alamat])
-            // ->andFilterWhere(['like', 'berat', $this->berat])
-            // ->andFilterWhere(['like', 'tinggi', $this->tinggi])
-            // ->andFilterWhere(['like', 'ktp', $this->ktp])
-            // ->andFilterWhere(['like', 'rt', $this->rt])
-            // ->andFilterWhere(['like', 'rw', $this->rw])
-            // ->andFilterWhere(['like', 'dusun', $this->dusun])
-            // ->andFilterWhere(['like', 'kode_pos', $this->kode_pos])
-            // ->andFilterWhere(['like', 'desa', $this->desa])
-            // ->andFilterWhere(['like', 'kecamatan', $this->kecamatan])
-            // ->andFilterWhere(['like', 'kecamatan_feeder', $this->kecamatan_feeder])
-            // ->andFilterWhere(['like', 'jenis_tinggal', $this->jenis_tinggal])
-            // ->andFilterWhere(['like', 'penerima_kps', $this->penerima_kps])
-            // ->andFilterWhere(['like', 'no_kps', $this->no_kps])
-            // ->andFilterWhere(['like', 'provinsi', $this->provinsi])
-            // ->andFilterWhere(['like', 'kabupaten', $this->kabupaten])
-            // ->andFilterWhere(['like', 'status_warga', $this->status_warga])
-            // ->andFilterWhere(['like', 'warga_negara', $this->warga_negara])
-            // ->andFilterWhere(['like', 'warga_negara_feeder', $this->warga_negara_feeder])
-            // ->andFilterWhere(['like', 'status_sipil', $this->status_sipil])
-            // ->andFilterWhere(['like', 'agama', $this->agama])
-            // ->andFilterWhere(['like', 'gol_darah', $this->gol_darah])
-            // ->andFilterWhere(['like', 'masuk_kelas', $this->masuk_kelas])
-            // ->andFilterWhere(['like', 'no_ijazah', $this->no_ijazah])
-            // 
-            // ->andFilterWhere(['like', 'jur_thn_smta', $this->jur_thn_smta])
-            // ->andFilterWhere(['like', 'kode_pd', $this->kode_pd])
-            // ->andFilterWhere(['like', 'va_code', $this->va_code]);
+            ->andFilterWhere(['like', 'jenis_kelamin', $this->jenis_kelamin])
 
-        
+            ->andFilterWhere(['like', 'semester', $this->semester])
+            ->andFilterWhere(['like', 'keterangan', $this->keterangan])
+            ->andFilterWhere(['like', 'telepon', $this->telepon])
+            ->andFilterWhere(['like', 'hp', $this->hp])
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'alamat', $this->alamat])
+            ->andFilterWhere(['like', 'ktp', $this->ktp])
+            ->andFilterWhere(['like', 'kk', $this->kk])
+            ->andFilterWhere(['like', 'kecamatan', $this->kecamatan])
+            ->andFilterWhere(['like', 'kecamatan_feeder', $this->kecamatan_feeder])
+            ->andFilterWhere(['like', 'jenis_tinggal', $this->jenis_tinggal])
+            ->andFilterWhere(['like', 'provinsi', $this->provinsi])
+            ->andFilterWhere(['like', 'kabupaten', $this->kabupaten])
+            ->andFilterWhere(['like', 'warga_negara', $this->warga_negara])
+            ->andFilterWhere(['like', 'warga_negara_feeder', $this->warga_negara_feeder])
+            ->andFilterWhere(['like', 'status_sipil', $this->status_sipil])
+
+            ->andFilterWhere(['like', 'va_code', $this->va_code]);
+
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            $query->andWhere(['nim_mhs' => Yii::$app->user->identity->nim]);
+        }
+
+        else if(Yii::$app->user->identity->access_role == 'sekretearis'){
+            $query->andWhere(['t.kode_prodi' => Yii::$app->user->identity->prodi]);   
+        }
+
+        else if(Yii::$app->user->identity->access_role == 'fakultas'){
+            $query->andWhere(['p.kode_fakultas' => Yii::$app->user->identity->fakultas]);   
+        }
 
         return $dataProvider;
     }

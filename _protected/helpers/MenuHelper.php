@@ -108,10 +108,7 @@ class MenuHelper
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Sertifikasi',
 					'url' =>  ['sertifikasi/index'],
 				],
-				[
-					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Kompetensi',
-					'url' =>  ['mahasiswa/kompetensi'],
-				],
+				
 
 			]
 		];
