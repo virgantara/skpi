@@ -63,8 +63,8 @@ $config = [
             'thousandSeparator' => '.',
             'decimalSeparator' => ',',
             'currencyCode' => 'IDR',
-            'dateFormat' => 'dd-MM-yyyy',
-            'datetimeFormat' => 'dd/MM/yyyy H:i:s'
+            'dateFormat' => 'php:d-m-Y',
+            'datetimeFormat' => 'php:d-m-Y H:i:s'
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

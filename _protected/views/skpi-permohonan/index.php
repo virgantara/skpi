@@ -136,7 +136,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                     return (isset($data->nim0->tgl_lulus) ? \app\helpers\MyHelper::convertTanggalIndo($data->nim0->tgl_lulus) : null);
                 }
             ],
-            'tanggal_pengajuan:date',
+            'tanggal_pengajuan:datetime',
             [
                 'label' => 'Nomor Ijazah',
                 'value' => function($data){
