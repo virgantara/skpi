@@ -23,7 +23,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
             <div class="panel-heading">
                 <?= Html::a('<i class="fa fa-save"></i> Simpan', '#', ['class' => 'btn btn-primary']) ?>
                 <?= Html::a('<i class="fa fa-check"></i> Approval', ['update', 'id' => $model->id], ['class' => 'btn btn-inverse']) ?>
-                <?= Html::a('<i class="fa fa-download"></i> Download', ['update', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+                <?= Html::a('<i class="fa fa-download"></i> Download', ['print-skpi', 'id' => $model->id], ['class' => 'btn btn-success','target'=>'_blank']) ?>
             </div>
 
             <div class="panel-body ">

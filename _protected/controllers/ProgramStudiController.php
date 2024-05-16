@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Json;
 use app\helpers\MyHelper;
 use app\models\ProgramStudi;
+use app\models\SimakMasterprogramstudi;
 use app\models\ProgramStudiSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -63,7 +64,7 @@ class ProgramStudiController extends Controller
         if (Yii::$app->request->isPost && !empty($_POST['dataPost']) && !empty($_POST['dataPost']['kode_prodi'])) 
         {
             $kode_prodi = $_POST['dataPost']['kode_prodi'];
-            $model = ProgramStudi::findOne(['kode_prodi' => $kode_prodi]);
+            $model = SimakMasterprogramstudi::findOne(['kode_prodi' => $kode_prodi]);
             $item = null;
             if(!empty($model)){
 

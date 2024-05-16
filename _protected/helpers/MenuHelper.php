@@ -76,7 +76,7 @@ class MenuHelper
 					],
 
 					[
-						'label' => '<i class="menu-icon fa fa-caret-right"></i> Mahasiswa',
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemohon SKPI',
 						'url' =>  ['skpi-permohonan/index'],
 					],
 					[

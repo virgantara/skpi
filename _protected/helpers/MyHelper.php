@@ -9,7 +9,17 @@ use Yii;
  */
 class MyHelper
 {
+	public static function setAkreditasi()
+    {
 
+        $result = [
+            'nomor_sk' => '363/SK/BAN-PT/Ak/PT/V/2023',
+            'kualifikasi' => 'UNGGUL'
+        ];
+
+        return $result;
+    }
+    
 	public static function getStatusValidasi()
     {
         return [
