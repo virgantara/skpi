@@ -69,6 +69,11 @@ class SkpiPermohonanController extends Controller
 
         $model = $this->findModel($id);
 
+        if($model->status_pengajuan != 2){
+            Yii::$app->session->setFlash('warning', 'Oops. Permohonan SKPI Anda belum disetujui');
+            return $this->redirect(['view','id' => $id]);
+        }
+
         $mhs = $model->nim0;
         
         if (!empty($mhs)) {

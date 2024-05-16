@@ -180,13 +180,13 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
             //'created_at',
                 [
                     'class' => 'yii\grid\ActionColumn',
-                    'template' => '{view} {download}',
+                    'template' => '{view} {print-skpi}',
                     'buttons'=>[                    
                         'view'=>function ($url, $model) {
                             return Html::a('<span class="fa fa-eye"></span> View', $url, ['class' => 'btn btn-primary']);
                         },
-                        'download'=>function ($url, $model) {
-                            return Html::a('<span class="fa fa-download"></span> Download', $url, ['class' => 'btn btn-success']);
+                        'print-skpi'=>function ($url, $model) {
+                            return Html::a('<span class="fa fa-download"></span> Download', $url, ['class' => 'btn btn-success','data-pjax' => 0]);
                         },
                         // 'delete'=>function ($url, $model) {
                         //     return Html::a('<span class="fa fa-trash"></span> Delete', $url, ['class' => 'btn btn-danger','data-method' => 'POST']);
