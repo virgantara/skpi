@@ -72,6 +72,7 @@ class SimakMasterprogramstudi extends \yii\db\ActiveRecord
             [['frekuensi_kurikulum', 'pelaksanaan_kurikulum'], 'string', 'max' => 10],
             [['kode_prodi'], 'unique'],
             [['kode_fakultas'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterfakultas::className(), 'targetAttribute' => ['kode_fakultas' => 'kode_fakultas']],
+            [['nidn_ketua_prodi'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterdosen::class, 'targetAttribute' => ['nidn_ketua_prodi' => 'nidn']],
         ];
     }
 
@@ -115,6 +116,11 @@ class SimakMasterprogramstudi extends \yii\db\ActiveRecord
             'singkatan' => 'Singkatan',
             'kode_feeder' => 'Kode Feeder',
         ];
+    }
+
+    public function getKaprodi()
+    {
+        return $this->hasOne(SimakMasterdosen::className(), ['nidn' => 'nidn_ketua_prodi']);
     }
 
     public function getJenjang(){
