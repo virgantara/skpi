@@ -235,6 +235,16 @@ class SimakMastermahasiswa extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getSimakPrestasis()
+    {
+        return $this->hasMany(SimakPrestasi::class, ['nim' => 'nim_mhs']);
+    }
+
+    public function getSimakSertifikasis()
+    {
+        return $this->hasMany(SimakSertifikasi::class, ['nim' => 'nim_mhs']);
+    }
+
     public function getKoordinator()
     {
         return $this->hasOne(SimakKampusKoordinator::class, ['id' => 'koordinator_id']);

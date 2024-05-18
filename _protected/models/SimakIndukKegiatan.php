@@ -30,8 +30,8 @@ class SimakIndukKegiatan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama'], 'required'],
-            [['nama'], 'string', 'max' => 255],
+            [['nama','nama_en'], 'required'],
+            [['nama','nama_en'], 'string', 'max' => 255],
         ];
     }
 
@@ -43,6 +43,7 @@ class SimakIndukKegiatan extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nama' => 'Nama',
+            'nama_en' => 'Name',
         ];
     }
 

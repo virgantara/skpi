@@ -89,6 +89,7 @@ class SimakKegiatanMahasiswaSearch extends SimakKegiatanMahasiswa
 
         $query->andFilterWhere(['like', 'nim', $this->nim])
             ->andFilterWhere(['like', 'event_id', $this->event_id])
+            ->andFilterWhere(['like', 'm.nama_mahasiswa', $this->namaMahasiswa])
             ->andFilterWhere(['like', 'keterangan', $this->keterangan])
             ->andFilterWhere(['like', 'tema', $this->tema])
             ->andFilterWhere(['like', 'instansi', $this->instansi])

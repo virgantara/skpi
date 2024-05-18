@@ -21,7 +21,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
    <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading">
-                <?= Html::a('<i class="fa fa-save"></i> Simpan', '#', ['class' => 'btn btn-primary']) ?>
+                <?= Html::a('<i class="fa fa-save"></i> Simpan', '#', ['class' => 'btn btn-primary','id' => 'btn-save']) ?>
                 <?= Html::a('<i class="fa fa-check"></i> Approval', ['update', 'id' => $model->id], ['class' => 'btn btn-inverse']) ?>
                 <?php 
                 if($model->status_pengajuan == 2){
@@ -104,7 +104,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                             <?= CKEditor::widget([
                                 'name' => 'deskripsi',
                                 'value' => $model->deskripsi,
-                                'options' => ['rows' => 6],
+                                'options' => ['rows' => 6,'id' => 'skpi_deskripsi'],
                                 'preset' => 'advance',
                                 'clientOptions' => [
                                     'enterMode' => 2,
@@ -117,7 +117,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                             <?= CKEditor::widget([
                                 'name' => 'deskripsi_en',
                                 'value' => $model->deskripsi_en,
-                                'options' => ['rows' => 6],
+                                'options' => ['rows' => 6,'id' => 'skpi_deskripsi_en'],
                                 'preset' => 'advance',
                                 'clientOptions' => [
                                     'enterMode' => 2,
@@ -251,6 +251,69 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
 
 $this->registerJs(' 
 
+
+
+$(document).on("click","#btn-save",function(e){
+    e.preventDefault()
+
+    
+
+    var obj = new FormData;
+    obj.append("skpi_permohonan_id","'.$model->id.'")
+    obj.append("deskripsi",$("#skpi_deskripsi").val())
+    obj.append("deskripsi_en",$("#skpi_deskripsi_en").val())
+    
+    $.ajax({
+        type: \'POST\',
+        url: "/skpi-permohonan/ajax-save",
+        data: obj,
+        async: true,
+        cache: false,
+        processData: false,
+        contentType: false,
+        error : function(e){
+            Swal.hideLoading();
+        
+
+        },
+        beforeSend: function(){
+            Swal.fire({
+                title : "Please wait",
+                html: "Saving...",
+                
+                allowOutsideClick: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+                
+            })
+        },
+        success: function (data) {
+            Swal.close()
+            var hasil = $.parseJSON(data)
+            if(hasil.code == 200){
+      
+                Swal.fire({
+                    title: \'Yeay!\',
+                    icon: \'success\',
+                    text: hasil.message
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.reload()
+                    }
+                });
+            }
+
+            else{
+                Swal.fire({
+                    title: \'Oops!\',
+                    icon: \'error\',
+                    text: hasil.message
+                });
+            }
+        }
+    })
+})
 
 getKompetensi("'.$model->nim.'")
 getIndukKompetensi("'.$model->nim.'")
