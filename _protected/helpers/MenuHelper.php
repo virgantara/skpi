@@ -79,10 +79,7 @@ class MenuHelper
 						'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemohon SKPI',
 						'url' =>  ['skpi-permohonan/index'],
 					],
-					[
-						'label' => '<i class="menu-icon fa fa-caret-right"></i> Program Tambahan',
-						'url' =>  ['simkatmawa-belmawa/index'],
-					],
+					
 
 				]
 			];
@@ -108,7 +105,10 @@ class MenuHelper
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Data Sertifikasi',
 					'url' =>  ['sertifikasi/index'],
 				],
-				
+				[
+					'label' => '<i class="menu-icon fa fa-caret-right"></i> Program Tambahan',
+					'url' =>  ['mahasiswa/tambahan'],
+				],
 
 			]
 		];

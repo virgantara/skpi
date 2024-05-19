@@ -35,11 +35,11 @@ class MahasiswaController extends Controller
                 'denyCallback' => function ($rule, $action) {
                     throw new \yii\web\ForbiddenHttpException('You are not allowed to access this page');
                 },
-                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi','kompetensi'],
+                'only' => ['update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi','kompetensi','tambahan'],
                 'rules' => [
                     [
                         'actions' => [
-                            'skpi','kompetensi'
+                            'skpi','kompetensi','tambahan'
                         ],
                         'allow' => true,
                         'roles' => ['Mahasiswa'],
@@ -47,7 +47,7 @@ class MahasiswaController extends Controller
 
                     [
                         'actions' => [
-                            'update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi'
+                            'update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi','tambahan'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator', 'admin', 'akpamPusat','sekretearis','fakultas'],
@@ -62,6 +62,24 @@ class MahasiswaController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionTambahan()
+    {
+        if (Yii::$app->user->isGuest) {
+            $this->redirect(['/site/login']);
+        }
+
+        $model = SkpiPermohonan::findOne(['nim' => Yii::$app->user->identity->nim ]);
+        $mhs = null;
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            $mhs =  SimakMastermahasiswa::findOne(['nim_mhs' => Yii::$app->user->identity->nim]);
+        }
+        
+        return $this->render('tambahan', [
+            'model' => $model,
+            'mhs' => $mhs
+        ]);
     }
 
     public function actionKompetensi()
