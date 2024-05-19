@@ -1,5 +1,5 @@
 <?php
-
+use yii\helpers\Url;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\export\ExportMenu;
@@ -142,7 +142,7 @@ $list_kampus = \app\helpers\MyHelper::getKampusList();
 
                 'value' => function($data){
                     if(!empty($data->foto_path))
-                        return Html::a(Html::img($data->foto_path,['width'=>'70px']),'',['class'=>'popupModal','data-item'=>$data->foto_path]);
+                        return Html::a(Html::img(Url::to(['mahasiswa/foto','id' => $data->id]),['width'=>'70px']),'',['class'=>'popupModal','data-item'=>Url::to(['mahasiswa/foto','id' => $data->id])]);
                     else
                         return '';
                 }
