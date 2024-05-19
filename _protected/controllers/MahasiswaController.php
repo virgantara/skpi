@@ -264,9 +264,12 @@ class MahasiswaController extends Controller
             try {
                 $image = imagecreatefromstring($this->getImage($model->foto_path));
 
-                header('Content-Type: image/png');
-                imagepng($image);
+                header('Content-Type: image/jpeg');
+                // imagejpeg($image, $image_output, 50);
+                imagejpeg($image);
+                // imagejpeg($dest);
             } catch (\Exception $e) {
+                print_r($e->getMessage());
             }
         }
 
