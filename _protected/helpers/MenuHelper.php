@@ -79,7 +79,11 @@ class MenuHelper
 						'label' => '<i class="menu-icon fa fa-caret-right"></i> Pemohon SKPI',
 						'url' =>  ['skpi-permohonan/index'],
 					],
-					
+					[
+						'label' => '<i class="menu-icon fa fa-caret-right"></i> Program Tambahan',
+						'url' =>  ['tambahan/index'],
+						'visible' => Yii::$app->user->can('akpamPusat')
+					],
 
 				]
 			];
@@ -108,6 +112,7 @@ class MenuHelper
 				[
 					'label' => '<i class="menu-icon fa fa-caret-right"></i> Program Tambahan',
 					'url' =>  ['mahasiswa/tambahan'],
+					'visible' => Yii::$app->user->can('Mahasiswa')
 				],
 
 			]

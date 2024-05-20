@@ -47,7 +47,7 @@ class MahasiswaController extends Controller
 
                     [
                         'actions' => [
-                            'update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi','tambahan'
+                            'update', 'index', 'view', 'konsulat', 'konsulat-wni','koordinator','skpi'
                         ],
                         'allow' => true,
                         'roles' => ['theCreator', 'admin', 'akpamPusat','sekretearis','fakultas'],

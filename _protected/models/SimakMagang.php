@@ -45,6 +45,10 @@ class SimakMagang extends \yii\db\ActiveRecord
     public $nama_dosen;
     public $kode_prodi;
     public $nama_prodi;
+    public $namaMahasiswa;
+    public $kampus;
+    public $negara;
+    public $provinsi;
     /**
      * {@inheritdoc}
      */
@@ -61,7 +65,7 @@ class SimakMagang extends \yii\db\ActiveRecord
         return [
             [['id', 'jenis_magang_id', 'nama_instansi'], 'required'],
             [['jenis_magang_id', 'kota_instansi', 'pembimbing_id', 'status_magang_id', 'matakuliah_id'], 'integer'],
-            [['tanggal_mulai_magang', 'tanggal_selesai_magang', 'updated_at', 'created_at'], 'safe'],
+            [['tanggal_mulai_magang', 'tanggal_selesai_magang', 'updated_at', 'created_at','negara','provinsi'], 'safe'],
             [['keterangan'], 'string'],
             [['nilai_angka'], 'number'],
             [['id', 'email_instansi'], 'string', 'max' => 50],
