@@ -85,18 +85,17 @@ class SimakMagangSearch extends SimakMagang
             ->andFilterWhere(['like', 'is_dalam_negeri', $this->is_dalam_negeri])
             ->andFilterWhere(['like', 'keterangan', $this->keterangan]);
 
-        // if(Yii::$app->user->identity->access_role == 'Dosen'){
-        //     // print_r(Yii::$app->user->identity->id);exit;
-        //     $query->andWhere([
-        //         'pembimbing_id' => Yii::$app->user->identity->id
-        //     ]);
-        // }
+        if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
+            $query->andWhere(['nim' => Yii::$app->user->identity->nim]);   
+        }
 
-        // else  if(in_array(Yii::$app->user->identity->access_role,['sekretearis','kaprodi','fakultas','kurikulum_prodi'])){
-        //     $query->andWhere([
-        //         'mhs.kode_prodi' => Yii::$app->user->identity->prodi
-        //     ]);
-        // }
+        else if(Yii::$app->user->identity->access_role == 'sekretearis'){
+            $query->andWhere(['prod.kode_prodi' => Yii::$app->user->identity->prodi]);   
+        }
+
+        else if(Yii::$app->user->identity->access_role == 'fakultas'){
+            $query->andWhere(['prod.kode_fakultas' => Yii::$app->user->identity->fakultas]);   
+        }
 
 
         return $dataProvider;

@@ -82,7 +82,7 @@ class MenuHelper
 					[
 						'label' => '<i class="menu-icon fa fa-caret-right"></i> Program Tambahan',
 						'url' =>  ['tambahan/index'],
-						'visible' => Yii::$app->user->can('akpamPusat')
+						'visible' => Yii::$app->user->can('akpamPusat') || Yii::$app->user->can('fakultas')||Yii::$app->user->can('sekretearis')
 					],
 
 				]
