@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\SimakUniv;
 use app\models\SimakSertifikasi;
 use app\models\SimakRangeNilai;
 use app\models\CapaianPembelajaranLulusan;
@@ -138,6 +139,17 @@ class SkpiPermohonanController extends Controller
                     'kode_prodi' => $mhs->kode_prodi,
                     'state' => '1'
                 ])->orderBy(['urutan' => SORT_ASC])->all();
+
+                $list_sistem_pendidikan = SimakUniv::find()
+                    ->where(['kode'=>'SISDIK'])
+                    ->orderBy(['urutan' => SORT_ASC])
+                    ->all();
+
+                $list_kkni = SimakUniv::find()
+                    ->where(['kode'=>'KKNI1'])
+                    ->orderBy(['urutan' => SORT_ASC])
+                    ->all();
+
                 $range_nilai = SimakRangeNilai::find()->orderBy(['dari' => SORT_DESC])->all();
                 $label_range_nilai = [];
                 foreach($range_nilai as $nilai){
@@ -268,6 +280,75 @@ class SkpiPermohonanController extends Controller
 
                 $pdf->SetFont($fontreg, '', 8);
                 $pdf->writeHTML($data);
+
+                ob_start();
+                echo $this->renderPartial('_sisdik', [
+                    'data_universitas' => $data_universitas,
+                    'mhs' => $mhs,
+                    'list_sistem_pendidikan' => $list_sistem_pendidikan
+                ]);
+                $pdf->AddPage();
+                $data = ob_get_clean();
+                $pdf->SetFont($fontreg, '', 8);
+                $pdf->writeHTML($data);
+
+                ob_start();
+                echo $this->renderPartial('_kkni', [
+                    'data_universitas' => $data_universitas,
+                    'mhs' => $mhs,
+                    'list_kkni' => $list_kkni
+                ]);
+                $pdf->AddPage();
+                $data = ob_get_clean();
+                $pdf->SetFont($fontreg, '', 8);
+                $pdf->writeHTML($data);
+
+                $rektor = \app\helpers\MyHelper::getRektor();
+                $nama_rektor = !empty($rektor) ? $rektor->rektor0->nama_dosen : 'contoh nama rektor';
+                $niy = !empty($rektor) ? $rektor->rektor0->nidn_asli : '';
+                $label_dekan_id = !in_array($mhs->kodeProdi->kode_jenjang_studi, ['A', 'B']) ? 'Dekan Fakultas' : 'Direktur Pascasarjana';
+                $label_dekan_en = !in_array($mhs->kodeProdi->kode_jenjang_studi, ['A', 'B']) ? 'Dean of ' : 'Director of Postgraduate';
+
+                
+                
+
+                $nama_dekan = '';
+                $niy_dekan = '';
+                if (!empty($mhs->kodeProdi->kodeFakultas->pejabat0)) {
+                    $nama_dekan = $mhs->kodeProdi->kodeFakultas->pejabat0->nama_dosen;
+                    $niy_dekan = $mhs->kodeProdi->kodeFakultas->pejabat0->niy;
+                }
+
+                ob_start();
+                echo $this->renderPartial('_pengesahan', [
+                    'data_universitas' => $data_universitas,
+                    'model' => $model,
+                    'mhs' => $mhs,
+                    'list_kkni' => $list_kkni,
+                    'nama_dekan' => $nama_dekan,
+                    'nama_rektor' => $nama_rektor,
+                    'niy_rektor' => $niy,
+                    'niy_dekan' => $niy_dekan,
+                    'label_dekan_id' => $label_dekan_id,
+                    'label_dekan_en' => $label_dekan_en,
+                ]);
+
+                $pdf->AddPage();
+                $data = ob_get_clean();
+                $pdf->SetFont($fontreg, '', 8);
+                $pdf->writeHTML($data);
+                
+
+                // $pdf->writeHTMLCell($page_div_3 + 25, '', 15, '', '<strong><u>' . $nama_rektor . '</u></strong>', 0, 0, 0, true, 'L', true);
+                // $pdf->writeHTMLCell($page_div_3 + 5, '', '', '', '', 0, 0, 0, true, 'L', true);
+                // $pdf->writeHTMLCell($page_div_3 + 10, '', '', '', '<strong><u>' . $nama_dekan . '</u></strong>', 0, 0, 0, true, 'L', true);
+                // $pdf->Ln();
+                // $pdf->writeHTMLCell($page_div_3 + 20, '', 15, '', 'NIDN: ' . $niy, 0, 0, 0, true, 'L', true);
+                // $pdf->writeHTMLCell($page_div_3 + 10, '', '', '', '', 0, 0, 0, true, 'L', true);
+                // $pdf->writeHTMLCell($page_div_3 + 10, '', '', '', 'NIDN: ' . $mhs->kodeProdi->kodeFakultas->pejabat0->nidn_asli, 0, 0, 0, true, 'L', true);
+                // $data = ob_get_clean();
+                // $pdf->SetFont($fontreg, '', 8);
+                // $pdf->writeHTML($data);
 
                 // $pdf->SetFont($fontreg, '', $font_reg_size);
                 // $txt = 'SURAT KETERANGAN PENDAMPING IJAZAH ' . strtoupper($mhs->kodeProdi->jenjang->label_id) . ' (' . strtoupper($mhs->kodeProdi->jenjang->label) . ')';

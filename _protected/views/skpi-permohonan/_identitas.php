@@ -2,7 +2,7 @@
   <tr>
     <td colspan="2" style="border-top: 1px sold #7c7d7e;">
       <span style="font-weight: bold;">1. INFORMASI TENTANG IDENTITAS DIRI PEMEGANG SKPI</span><br>
-      <span style="font-style: italic;">1. Information Identifying the Holder of Diploma Supplement</span><br>
+      <span style="font-style: italic; color:#176da7">1. Information Identifying the Holder of Diploma Supplement</span><br>
     </td>
   </tr>
 </table>
@@ -10,14 +10,14 @@
   <tr>
     <td width="50%">
       Nama Lengkap<br>
-      <i>Fullname</i><br>
+      <i style="color:#176da7">Fullname</i><br>
       <div style="font-weight: bold;text-indent: 10px;">
         <?=strtoupper($mhs->nama_mahasiswa);?>
         </div><br>
     </td>
     <td width="50%">
       Tahun Lulus<br>
-      <i>Year of Completion</i><br>
+      <i style="color:#176da7">Year of Completion</i><br>
       <div style="font-weight: bold;text-indent: 10px;">
         <?=(isset($mhs->tgl_lulus) ? date('Y',strtotime($mhs->tgl_lulus)) : null)?>
           
@@ -27,7 +27,7 @@
   <tr>
     <td width="50%">
       Tempat dan Tanggal Lahir<br>
-      <i>Place and Date of Birth</i><br>
+      <i style="color:#176da7">Place and Date of Birth</i><br>
       <div style="font-weight: bold;text-indent: 10px;">
         <?=$mhs->tempat_lahir.', '.\app\helpers\MyHelper::convertTanggalIndo($mhs->tgl_lahir)?>
           
@@ -35,7 +35,7 @@
     </td>
     <td width="50%">
       Nomor Ijazah<br>
-      <i>Diploma Number</i><br>
+      <i style="color:#176da7">Diploma Number</i><br>
       <div style="font-weight: bold;text-indent: 10px;">
         <?=($mhs->no_ijazah ?: '-')?>
           
@@ -45,7 +45,7 @@
   <tr>
     <td width="50%">
       Nomor Induk Mahasiswa<br>
-      <i>Student Identification Number</i><br>
+      <i style="color:#176da7">Student Identification Number</i><br>
       <div style="font-weight: bold;text-indent: 10px;">
         <?=$mhs->nim_mhs?>
           
@@ -53,7 +53,7 @@
     </td>
     <td width="50%">
       Gelar<br>
-      <i>Name of Qualification</i><br>
+      <i style="color:#176da7">Name of Qualification</i><br>
       <div style="font-weight: bold;text-indent: 10px;">
        <b><?=ucwords(strtolower($mhs->kodeProdi->gelar_lulusan));?> (<?=$mhs->kodeProdi->gelar_lulusan_short;?>)</b><br>
        <i><?=ucwords(strtolower($mhs->kodeProdi->gelar_lulusan_en));?></i>

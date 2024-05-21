@@ -1,6 +1,6 @@
 <table cellpadding="4" border="0" cellspacing="0" width="100%">
   <tr>
-    <td width="70%" style="border-top: 1px sold #7c7d7e;"><span style="font-size: 24px;color:#176da7">SURAT KETERANGAN PENDAMPING IJAZAH</span><br><br><span style="font-size: 12px;font-style: italic;">Diploma Supplement</span>
+    <td width="70%" style="border-top: 1px sold #7c7d7e;"><span style="font-size: 24px;color:#176da7">SURAT KETERANGAN PENDAMPING IJAZAH</span><br><br><span style="font-size: 12px;font-style: italic; color:#176da7">Diploma Supplement</span>
     </td>
     <td width="30%" style="border-top: 1px sold #7c7d7e;">
       Nomor: <?=($model->nomor_skpi ?: '<span style="color:red">Nomor SKPI belum diisi</span>')?>

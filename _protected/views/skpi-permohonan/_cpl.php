@@ -1,6 +1,6 @@
 <table cellpadding="4" border="0" cellspacing="0" width="100%">
   <tr>
-    <td colspan="2" style="border-top: 1px sold #7c7d7e;"><span style="font-weight: bold;">3. INFORMASI TENTANG KUALIFIKASI DAN HASIL YANG DICAPAI</span><br><span style="font-style: italic;">3. Information Identifying the Qualification and Outcomes Obtained
+    <td colspan="2" style="border-top: 1px sold #7c7d7e;"><span style="font-weight: bold;">3. INFORMASI TENTANG KUALIFIKASI DAN HASIL YANG DICAPAI</span><br><span style="font-style: italic;color:#176da7">3. Information Identifying the Qualification and Outcomes Obtained
 </span><br>
     </td>
   </tr>

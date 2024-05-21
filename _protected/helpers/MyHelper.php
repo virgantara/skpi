@@ -10,7 +10,12 @@ use Yii;
 class MyHelper
 {
 
-    
+    public static function getRektor()
+    {
+        $model = \app\models\SimakUniversitas::find()->where(['status_aktif' => 'Y'])->one();
+        // print_r($model);exit;
+        return $model;
+    }
 	public static function setAkreditasi()
     {
 
