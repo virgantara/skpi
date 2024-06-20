@@ -11,6 +11,7 @@ use app\models\SimakUniv;
  */
 class SimakUnivSearch extends SimakUniv
 {
+    public $namaJenjang;
     /**
      * {@inheritdoc}
      */
@@ -18,7 +19,7 @@ class SimakUnivSearch extends SimakUniv
     {
         return [
             [['id'], 'integer'],
-            [['kode', 'nama', 'nama_en', 'created_at', 'updated_at','header','header_en',], 'safe'],
+            [['kode', 'nama', 'nama_en', 'created_at', 'updated_at','header','header_en','namaJenjang'], 'safe'],
         ];
     }
 
@@ -60,7 +61,7 @@ class SimakUnivSearch extends SimakUniv
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'namaJenjang' => $this->namaJenjang,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

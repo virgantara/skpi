@@ -2,6 +2,7 @@
 
 use app\models\SimakUniv;
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use kartik\grid\GridView;
@@ -12,6 +13,8 @@ use kartik\grid\GridView;
 
 $this->title = 'KKNI';
 $this->params['breadcrumbs'][] = $this->title;
+
+$list_jenjang = ArrayHelper::map($list_jenjang,'id','label');
 ?>
 <div class="simak-univ-index">
 
@@ -39,6 +42,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'pageSummaryOptions' => ['colspan' => 6],
         'header'=>'',
         'headerOptions'=>['class'=>'kartik-sheet-style']
+    ],
+    [
+        'class' => 'kartik\grid\EditableColumn',
+        'attribute' => 'pilihan_id',
+        'filter' => $list_jenjang,
+        'refreshGrid' => true,
+        'editableOptions' => [
+            'inputType' => \kartik\editable\Editable::INPUT_DROPDOWN_LIST,
+            'data' => $list_jenjang,
+            'asPopover' => false,
+        ],
+        'value' => function($data){
+            return $data->namaJenjang;
+        }
+
+      
     ],
     'header',
     'header_en',
