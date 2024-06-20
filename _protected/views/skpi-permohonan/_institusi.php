@@ -61,10 +61,10 @@
     <td width="50%">
       <span  style="font-weight: bold;">Jenjang Kualifikasi Sesuai KKNI</span><br>
       <i style="color:#176da7">Level of Qualification in the National Qualificatio Framework</i><br><span style="">
-
-        Level 6</span>
+        <?=(!empty($level_kkni) ? $level_kkni->header : 'KKNI Jenjang ini belum ada')?>
+        </span>
           <br><span>
-            <i>Level 6</i>
+            <i><?=(!empty($level_kkni) ? $level_kkni->header_en : 'KKNI Jenjang ini belum ada')?></i>
           </span>
         
     </td>

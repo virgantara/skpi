@@ -553,7 +553,7 @@ function getKompetensi(nim){
                 row += "<tr>";
                 row += "<td>"+(counter)+"</td>";
                 row += "<td>"+obj.komponen+"</td>";
-                row += "<td style=\'text-align:center\'>"+obj.total+" - "+obj.normalized+"</td>";
+                row += "<td style=\'text-align:center\'>"+obj.total+"</td>";
 
                 row += "<td><span class=\'label label-"+obj.color+"\'>"+obj.label+"</span></td>";
                 row += "</tr>";

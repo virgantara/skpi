@@ -151,6 +151,11 @@ class SkpiPermohonanController extends Controller
                     ->orderBy(['urutan' => SORT_ASC])
                     ->all();
 
+                $level_kkni = SimakUniv::findOne([
+                    'kode'=>'KKNI1',
+                    'pilihan_id' => $mhs->kodeProdi->jenjang->id,
+                ]);
+                    
                 // print_r($mhs->kodeProdi->jenjang);exit;
                 $syarat_penerimaan = SyaratPenerimaan::findOne([
                     'jenjang_id' => $mhs->kodeProdi->jenjang->id,
@@ -223,7 +228,8 @@ class SkpiPermohonanController extends Controller
                     'data_universitas' => $data_universitas,
                     'mhs' => $mhs,
                     'label_range_nilai' => $label_range_nilai,
-                    'syarat_penerimaan' => $syarat_penerimaan
+                    'syarat_penerimaan' => $syarat_penerimaan,
+                    'level_kkni' => $level_kkni
                 ]);
 
                 $data = ob_get_clean();
