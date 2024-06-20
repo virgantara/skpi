@@ -178,7 +178,7 @@ class SkpiPermohonanController extends Controller
                 $fontbold = \TCPDF_FONTS::addTTFfont($fontpathbold, 'TrueTypeUnicode', '', 86);
                 $fontitalic = \TCPDF_FONTS::addTTFfont($fontpathitalic, 'TrueTypeUnicode', '', 86);
                 // $pdf->SetAutoPageBreak(TRUE, 0);
-                $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+                $pdf->SetAutoPageBreak(TRUE, 20);
                 $pdf->SetFont($fontreg, '', 8, '', false);
                 $pdf->SetPrintHeader(false);
                 $pdf->SetPrintFooter(false);
