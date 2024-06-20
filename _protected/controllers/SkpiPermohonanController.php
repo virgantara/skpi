@@ -829,7 +829,7 @@ class SkpiPermohonanController extends Controller
     private function getKompetensi($nim)
     {
 
-        $list_kompetensi = \app\models\SimakPilihan::find()->select(['id', 'label_en','label'])->where(['kode' => 'kompetensi'])->cache(60 * 5)->all();
+        $list_kompetensi = \app\models\SimakPilihan::find()->select(['id', 'label_en','label'])->where(['kode' => 'kompetensi'])->all();
 
         $mhs = SimakMastermahasiswa::findOne(['nim_mhs' => $nim]);
         $tahun_awal = $mhs->tahun_masuk . '1';
