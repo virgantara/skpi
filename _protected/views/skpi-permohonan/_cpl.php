@@ -17,7 +17,7 @@
   <tr>
     <td style="text-align: justify;border:1px solid #7c7d7e"><?=$q+1?>. <?=$item->deskripsi?></td>
     <td></td>
-    <td style="text-align: justify;border:1px solid #7c7d7e"><?=$q+1?>. <?=$item->deskripsi_en?></td>
+    <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7"><i><?=$q+1?>. <?=$item->deskripsi_en?></i></td>
   </tr>
   
 <?php } ?>

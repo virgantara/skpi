@@ -127,26 +127,26 @@ class MenuHelper
 				'items' => [
 
 					
-					[
-						'label' => '<i class="menu-icon fa fa-caret-right"></i> Jenjang Pendidikan',
-						'url' =>  ['simkatmawa-belmawa/index'],
-					],
-					[
-						'label' => '<i class="menu-icon fa fa-caret-right"></i> Lembaga Akreditasi',
-						'url' =>  ['simkatmawa-belmawa/index'],
-					],
-					[
-						'label' => '<i class="menu-icon fa fa-caret-right"></i> Level KKNI',
-						'url' =>  ['simkatmawa-belmawa/index'],
-					],
+					// [
+					// 	'label' => '<i class="menu-icon fa fa-caret-right"></i> Jenjang Pendidikan',
+					// 	'url' =>  ['simkatmawa-belmawa/index'],
+					// ],
+					// [
+					// 	'label' => '<i class="menu-icon fa fa-caret-right"></i> Lembaga Akreditasi',
+					// 	'url' =>  ['simkatmawa-belmawa/index'],
+					// ],
+					// [
+					// 	'label' => '<i class="menu-icon fa fa-caret-right"></i> Level KKNI',
+					// 	'url' =>  ['simkatmawa-belmawa/index'],
+					// ],
 					[
 						'label' => '<i class="menu-icon fa fa-caret-right"></i> Persyaratan Penerimaan',
-						'url' =>  ['simkatmawa-belmawa/index'],
+						'url' =>  ['syarat-penerimaan/index'],
 					],
-					[
-						'label' => '<i class="menu-icon fa fa-caret-right"></i> Status Akreditasi',
-						'url' =>  ['simkatmawa-belmawa/index'],
-					],
+					// [
+					// 	'label' => '<i class="menu-icon fa fa-caret-right"></i> Status Akreditasi',
+					// 	'url' =>  ['simkatmawa-belmawa/index'],
+					// ],
 
 					
 				]

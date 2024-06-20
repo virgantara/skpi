@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\SyaratPenerimaan;
 use app\models\SimakUniv;
 use app\models\SimakSertifikasi;
 use app\models\SimakRangeNilai;
@@ -150,6 +151,12 @@ class SkpiPermohonanController extends Controller
                     ->orderBy(['urutan' => SORT_ASC])
                     ->all();
 
+                // print_r($mhs->kodeProdi->jenjang);exit;
+                $syarat_penerimaan = SyaratPenerimaan::findOne([
+                    'jenjang_id' => $mhs->kodeProdi->jenjang->id,
+
+                ]);
+
                 $range_nilai = SimakRangeNilai::find()->orderBy(['dari' => SORT_DESC])->all();
                 $label_range_nilai = [];
                 foreach($range_nilai as $nilai){
@@ -214,12 +221,14 @@ class SkpiPermohonanController extends Controller
                 echo $this->renderPartial('_institusi', [
                     'data_universitas' => $data_universitas,
                     'mhs' => $mhs,
-                    'label_range_nilai' => $label_range_nilai
+                    'label_range_nilai' => $label_range_nilai,
+                    'syarat_penerimaan' => $syarat_penerimaan
                 ]);
 
                 $data = ob_get_clean();
                 $pdf->SetFont($fontreg, '', 8);
                 $pdf->writeHTML($data);
+
 
                 $pdf->SetHeaderFont([$fontreg, '', 6]);
                 $pdf->SetFooterFont([$fontreg, '', 6]);
@@ -535,7 +544,7 @@ class SkpiPermohonanController extends Controller
                 // $pdf->writeHTMLCell($page_div_3 + 20, '', 15, '', 'NIDN: ' . $niy, 0, 0, 0, true, 'L', true);
                 // $pdf->writeHTMLCell($page_div_3 + 10, '', '', '', '', 0, 0, 0, true, 'L', true);
                 // $pdf->writeHTMLCell($page_div_3 + 10, '', '', '', 'NIDN: ' . $mhs->kodeProdi->kodeFakultas->pejabat0->nidn_asli, 0, 0, 0, true, 'L', true);
-
+               
                 $pdf->Output('skpi_' . $mhs->nim_mhs . '.pdf', 'I');
                 die();
             } catch (\HTML2PDF_exception $e) {
@@ -621,6 +630,11 @@ class SkpiPermohonanController extends Controller
             }
             else{
                 $list_fakultas = \app\models\SimakMasterfakultas::find()->orderBy(['nama_fakultas'=>SORT_ASC])->all();
+                $listProdi = \app\models\SimakMasterprogramstudi::find()->all();
+
+                foreach ($listProdi as $item_name) {
+                    $list_prodi[$item_name->kode_prodi] = $item_name->nama_prodi;
+                }
             }
         }
         if (Yii::$app->request->post('hasEditable')) {

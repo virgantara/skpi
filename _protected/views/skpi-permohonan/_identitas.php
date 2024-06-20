@@ -1,64 +1,56 @@
 <table cellpadding="4" border="0" cellspacing="0" width="100%">
   <tr>
-    <td colspan="2" style="border-top: 1px sold #7c7d7e;">
-      <span style="font-weight: bold;">1. INFORMASI TENTANG IDENTITAS DIRI PEMEGANG SKPI</span><br>
-      <span style="font-style: italic; color:#176da7">1. Information Identifying the Holder of Diploma Supplement</span><br>
+    <td colspan="2" style="border-top: 1px sold #7c7d7e;"><span style="font-weight: bold;">1. INFORMASI TENTANG IDENTITAS DIRI PEMEGANG SKPI</span><br><span style="font-style: italic; color:#176da7">1. Information Identifying the Holder of Diploma Supplement</span><br>
     </td>
   </tr>
 </table>
 <table cellpadding="0" border="0" cellspacing="0" width="100%">
   <tr>
     <td width="50%">
-      Nama Lengkap<br>
-      <i style="color:#176da7">Fullname</i><br>
-      <div style="font-weight: bold;text-indent: 10px;">
+      NAMA LENGKAP<br>
+      <i style="color:#176da7">Fullname</i><br><span style="font-weight: bold;">
         <?=strtoupper($mhs->nama_mahasiswa);?>
-        </div><br>
+        </span><br>
     </td>
     <td width="50%">
       Tahun Lulus<br>
-      <i style="color:#176da7">Year of Completion</i><br>
-      <div style="font-weight: bold;text-indent: 10px;">
+      <i style="color:#176da7">Year of Completion</i><br><span style="font-weight: bold;">
         <?=(isset($mhs->tgl_lulus) ? date('Y',strtotime($mhs->tgl_lulus)) : null)?>
           
-        </div>
+        </span>
     </td>
   </tr>
   <tr>
     <td width="50%">
-      Tempat dan Tanggal Lahir<br>
-      <i style="color:#176da7">Place and Date of Birth</i><br>
-      <div style="font-weight: bold;text-indent: 10px;">
+      TEMPAT DAN TANGGAL LAHIR<br>
+      <i style="color:#176da7">Place and Date of Birth</i><br><span style="font-weight: bold;">
         <?=$mhs->tempat_lahir.', '.\app\helpers\MyHelper::convertTanggalIndo($mhs->tgl_lahir)?>
           
-        </div><br>
+        </span><br>
     </td>
     <td width="50%">
-      Nomor Ijazah<br>
-      <i style="color:#176da7">Diploma Number</i><br>
-      <div style="font-weight: bold;text-indent: 10px;">
+      NOMOR IJAZAH<br>
+      <i style="color:#176da7">Diploma Number</i><br><span style="font-weight: bold;">
         <?=($mhs->no_ijazah ?: '-')?>
           
-        </div>
+        </span>
     </td>
   </tr>
   <tr>
     <td width="50%">
-      Nomor Induk Mahasiswa<br>
-      <i style="color:#176da7">Student Identification Number</i><br>
-      <div style="font-weight: bold;text-indent: 10px;">
+      NOMOR INDUK MAHASISWA<br>
+      <i style="color:#176da7">Student Identification Number</i><br><span style="font-weight: bold;">
         <?=$mhs->nim_mhs?>
           
-        </div><br>
+        </span><br>
     </td>
     <td width="50%">
-      Gelar<br>
+      GELAR<br>
       <i style="color:#176da7">Name of Qualification</i><br>
-      <div style="font-weight: bold;text-indent: 10px;">
        <b><?=ucwords(strtolower($mhs->kodeProdi->gelar_lulusan));?> (<?=$mhs->kodeProdi->gelar_lulusan_short;?>)</b><br>
        <i><?=ucwords(strtolower($mhs->kodeProdi->gelar_lulusan_en));?></i>
           
-        </div>
+        
     </td>
   </tr>
 </table>
