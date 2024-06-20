@@ -32,6 +32,6 @@ class MyTcpdf extends TCPDF
         // Right footer text
         $right_label = 'Halaman '.$this->getAliasNumPage().' dari '.$this->getAliasNbPages();
         $right_label .= '| Page '.$this->getAliasNumPage().' from '.$this->getAliasNbPages();
-        $this->Cell(25, 10, $right_label, 0, 0, 'R');
+        $this->Cell(22, 10, $right_label, 0, 0, 'R');
     }
 }

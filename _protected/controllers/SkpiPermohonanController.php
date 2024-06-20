@@ -177,7 +177,8 @@ class SkpiPermohonanController extends Controller
                 $fontreg = \TCPDF_FONTS::addTTFfont($fontpath, 'TrueTypeUnicode', '', 86);
                 $fontbold = \TCPDF_FONTS::addTTFfont($fontpathbold, 'TrueTypeUnicode', '', 86);
                 $fontitalic = \TCPDF_FONTS::addTTFfont($fontpathitalic, 'TrueTypeUnicode', '', 86);
-                $pdf->SetAutoPageBreak(TRUE, 0);
+                // $pdf->SetAutoPageBreak(TRUE, 0);
+                $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
                 $pdf->SetFont($fontreg, '', 8, '', false);
                 $pdf->SetPrintHeader(false);
                 $pdf->SetPrintFooter(false);
@@ -270,7 +271,11 @@ class SkpiPermohonanController extends Controller
                     'nilai_kompetensi' => $nilai_kompetensi,
                     'nilai_induk_kompetensi' => $nilai_induk_kompetensi
                 ]);
+
+
+
                 $pdf->AddPage();
+
                 $data = ob_get_clean();
 
                 $pdf->SetFont($fontreg, '', 8);
@@ -872,6 +877,7 @@ class SkpiPermohonanController extends Controller
             $label_en = '';
             $color = '';
             $nilai_akhir = 0;
+            $normalized = 0;
             if(!empty($induk))
             {
                 $max_range = \app\models\SimakKompetensiRangeNilai::getMaxKompetensi($induk->id);
@@ -880,6 +886,7 @@ class SkpiPermohonanController extends Controller
                 {
                     $nilai_akhir = $nilai_kumulatif > $max_range->nilai_maksimal ? $max_range->nilai_maksimal : $nilai_kumulatif;
                     $nilai_kumulatif = $nilai_akhir;
+                    $normalized = MyHelper::normalize($nilai_akhir,$max_range->nilai_minimal, $max_range->nilai_maksimal);
                 }
 
                 $range = \app\models\SimakKompetensiRangeNilai::getRangeNilai($nilai_kumulatif, $induk->id);
@@ -906,9 +913,37 @@ class SkpiPermohonanController extends Controller
                 'color' => $color,
                 'nilai_akhir' => round($nilai_akhir,2)
             ];
+
+            $unsorted[] = [
+                'normalized' => $normalized,
+                'komponen' => $kompetensi->label_en,
+                'komponen_indonesia' => $kompetensi->label,
+                'kompetensi_id' => $kompetensi->id,
+                'label' => $label,
+                
+            ];
+
+            $topAndBottonSkills = MyHelper::getTopAndBottonSkills($unsorted);
+            
+            $sorted = $topAndBottonSkills['sorted'];
+            $list_bottom_skills = $topAndBottonSkills['list_bottom_skills'];
+            $list_top_skills = $topAndBottonSkills['list_top_skills'];
+            $list_bottom_skills_en = $topAndBottonSkills['list_bottom_skills_en'];
+            $list_top_skills_en = $topAndBottonSkills['list_top_skills_en'];
+            $bottom3_evaluasi = $topAndBottonSkills['bottom3_evaluasi'];
+            $top3_evaluasi = $topAndBottonSkills['top3_evaluasi'];
         }
         
-        return $results;
+        return [
+            'items' => $results,
+            'sorted' => $sorted,
+            'list_bottom_skills' => '<b>'.$list_bottom_skills.'</b>',
+            'list_top_skills' => '<b>'.$list_top_skills.'</b>',
+            'list_bottom_skills_en' => '<b>'.$list_bottom_skills_en.'</b>',
+            'list_top_skills_en' => '<b>'.$list_top_skills_en.'</b>',
+            'bottom3_evaluasi' => $bottom3_evaluasi,
+            'top3_evaluasi' => $top3_evaluasi,
+        ];
            
     }
 

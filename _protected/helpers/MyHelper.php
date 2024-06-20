@@ -10,6 +10,148 @@ use Yii;
 class MyHelper
 {
 
+	public static function getTopAndBottonSkills($unsorted)
+    {
+        $temp = $unsorted;
+        usort($temp, function($a, $b) {
+            return $a['normalized'] <=> $b['normalized'];
+        });
+        
+        $sorted = $temp;
+
+        $bottom3_skills = array_slice($sorted, 0, 3);
+        $top3_skills = array_slice($sorted, -3, 3,true);
+
+        $bottom3_evaluasi = [];
+        $list_bottom_skills = [];
+        $list_bottom_skills_en = [];
+        foreach ($bottom3_skills as $skill) {
+            $list_bottom_skills[] = $skill['komponen_indonesia'];
+            $list_bottom_skills_en[] = $skill['komponen'];
+            $induk = \app\models\SimakIndukKegiatanKompetensi::findOne(['pilihan_id' => $skill['kompetensi_id']]);
+            if(!empty($induk)){
+                $label = strtolower($skill['label']);
+                if($label == 'bad'){
+                    $bottom3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->bad_id,
+                        'en' => $induk->bad_en
+                    ];
+                }
+
+                else if($label == 'fair'){
+                    $bottom3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->fair_id,
+                        'en' => $induk->fair_en
+                    ];
+                }
+
+                else if($label == 'good'){
+                    $bottom3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->good_id,
+                        'en' => $induk->good_en
+                    ];
+                }
+
+                else if($label == 'very good'){
+                    $bottom3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->very_good_id,
+                        'en' => $induk->very_good_en
+                    ];
+                }
+
+                else if($label == 'excellent'){
+                    $bottom3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->excellent_id,
+                        'en' => $induk->excellent_en
+                    ];
+                }
+            }
+        }
+
+        $top3_evaluasi = [];
+        $list_top_skills = [];
+        $list_top_skills_en = [];
+        foreach ($top3_skills as $skill) {
+            $list_top_skills[] = $skill['komponen_indonesia'];
+            $list_top_skills_en[] = $skill['komponen'];
+            $induk = \app\models\SimakIndukKegiatanKompetensi::findOne(['pilihan_id' => $skill['kompetensi_id']]);
+            if(!empty($induk)){
+                $label = strtolower($skill['label']);
+                if($label == 'bad'){
+                    $top3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->bad_id,
+                        'en' => $induk->bad_en
+                    ];
+                }
+
+                else if($label == 'fair'){
+                    $top3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->fair_id,
+                        'en' => $induk->fair_en
+                    ];
+                }
+
+                else if($label == 'good'){
+                    $top3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->good_id,
+                        'en' => $induk->good_en
+                    ];
+                }
+
+                else if($label == 'very good'){
+                    $top3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->very_good_id,
+                        'en' => $induk->very_good_en
+                    ];
+                }
+
+                else if($label == 'excellent'){
+                    $top3_evaluasi[] = [
+                        'skill_en' => $skill['komponen'],
+                        'skill_id' => $skill['komponen_indonesia'],
+                        'id' => $induk->excellent_id,
+                        'en' => $induk->excellent_en
+                    ];
+                }
+            }
+        }
+
+        $list_bottom_skills = join(', dan ', array_filter(array_merge(array(join(', ', array_slice($list_bottom_skills, 0, -1))), array_slice($list_bottom_skills, -1)), 'strlen'));
+
+        $list_top_skills = join(', dan ', array_filter(array_merge(array(join(', ', array_slice($list_top_skills, 0, -1))), array_slice($list_top_skills, -1)), 'strlen'));
+
+        $list_bottom_skills_en = join(', and ', array_filter(array_merge(array(join(', ', array_slice($list_bottom_skills_en, 0, -1))), array_slice($list_bottom_skills_en, -1)), 'strlen'));
+
+        $list_top_skills_en = join(', and ', array_filter(array_merge(array(join(', ', array_slice($list_top_skills_en, 0, -1))), array_slice($list_top_skills_en, -1)), 'strlen'));
+        return [
+            'sorted' => $sorted,
+            'list_bottom_skills' => $list_bottom_skills,
+            'list_top_skills' => $list_top_skills,
+            'list_bottom_skills_en' => $list_bottom_skills_en,
+            'list_top_skills_en' => $list_top_skills_en,
+            'bottom3_evaluasi' => $bottom3_evaluasi,
+            'top3_evaluasi' => $top3_evaluasi,
+        ];
+    }
+
 	public static function normalize($x, $xmin, $xmax) {
 		return ($x - $xmin) / ($xmax - $xmin);
 	}

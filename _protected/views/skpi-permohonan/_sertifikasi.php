@@ -110,7 +110,7 @@
         </tr>
         <?php 
   
-        foreach($nilai_kompetensi as $q=>$item){
+        foreach($nilai_kompetensi['items'] as $q=>$item){
           
 
 
@@ -136,7 +136,7 @@
         </tr>
         <?php 
   
-        foreach($nilai_kompetensi as $q=>$item){
+        foreach($nilai_kompetensi['items'] as $q=>$item){
 
 
 
@@ -226,8 +226,35 @@
     <td width="49%" style="border:1px solid #7c7d7e;background-color:#b8b8b8;text-align: justify"><i>Based on the results of the previously mentioned non-academic competency assessment, it can be concluded that the holder of this supplement:</i></td>
   </tr>
   <tr>
-    <td style="border:1px solid #7c7d7e;text-align: justify;"><?=$model->deskripsi?></td>
+    <td style="border:1px solid #7c7d7e;text-align: justify;">
+      <?php 
+        $label_header = "Mahasiswa ini memiliki keunggulan terbesar dalam ".$nilai_kompetensi['list_top_skills']." Sementara itu, kemampuan terendah terletak pada ".$nilai_kompetensi['list_bottom_skills'];
+        $label_header_en = "Students have the greatest advantage in ".$nilai_kompetensi['list_top_skills_en'].". Meanwhile, the lowest ability lies in ".$nilai_kompetensi['list_bottom_skills_en'] ;
+        $label_eval_id = "";
+        $label_eval_en = "";
+
+        foreach($nilai_kompetensi['top3_evaluasi'] as $obj){
+
+            $label_eval_id .= $obj['id'];
+            $label_eval_en .= $obj['en'];
+        }
+
+        $label_eval_id .= "<br><br>";
+        $label_eval_en .= "<br><br>";
+
+        foreach($nilai_kompetensi['bottom3_evaluasi'] as $obj){
+
+            $label_eval_id .= $obj['id'];
+            $label_eval_en .= $obj['en'];
+        }
+          
+        echo $label_header.".<br><br> ".$label_eval_id;
+            
+       ?>
+    </td>
     <td></td>
-    <td style="border:1px solid #7c7d7e;text-align: justify;"><?=$model->deskripsi_en?></td>
+    <td style="border:1px solid #7c7d7e;text-align: justify;">
+      <?php echo $label_header_en.".<br><br> ".$label_eval_en; ?>
+    </td>
   </tr>
 </table>
