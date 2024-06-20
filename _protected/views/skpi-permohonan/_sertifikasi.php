@@ -165,7 +165,7 @@
     <td width="49%"><br><br><table cellpadding="2" border="0" cellspacing="0" width="100%">
         <tr>
           <td width="10%" style="border:1px solid #7c7d7e;background-color:#b8b8b8">No</td>
-          <td width="65%" style="border:1px solid #7c7d7e;background-color:#b8b8b8">Induk:</td>
+          <td width="65%" style="border:1px solid #7c7d7e;background-color:#b8b8b8">Induk</td>
           <td width="25%" style="border:1px solid #7c7d7e;background-color:#b8b8b8">Predikat</td>
         </tr>
         <?php 
@@ -191,7 +191,7 @@
     <td width="49%"><br><br><table cellpadding="2" border="0" cellspacing="0" width="100%">
         <tr>
           <td width="10%" style="border:1px solid #7c7d7e;background-color:#b8b8b8">No</td>
-          <td width="65%" style="border:1px solid #7c7d7e;background-color:#b8b8b8"><i>Main:</i></td>
+          <td width="65%" style="border:1px solid #7c7d7e;background-color:#b8b8b8"><i>Main</i></td>
           <td width="25%" style="border:1px solid #7c7d7e;background-color:#b8b8b8"><i>Predicate</i></td>
         </tr>
         <?php 
