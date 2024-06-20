@@ -101,30 +101,11 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                     <tr>
                         <th style='width: 20%;' ><?=Yii::t('app', 'Description')?><br><i>Description</i></th>
                         <td width="40%">
-                            <?= CKEditor::widget([
-                                'name' => 'deskripsi',
-                                'value' => $model->deskripsi,
-                                'options' => ['rows' => 6,'id' => 'skpi_deskripsi'],
-                                'preset' => 'advance',
-                                'clientOptions' => [
-                                    'enterMode' => 2,
-                                    'forceEnterMode' => false,
-                                    'shiftEnterMode' => 1
-                                ]
-                            ]) ?>        
+                            <span id="skpi_deskripsi" style="text-align:justify;"></span>
                         </td>
                         <td>
-                            <?= CKEditor::widget([
-                                'name' => 'deskripsi_en',
-                                'value' => $model->deskripsi_en,
-                                'options' => ['rows' => 6,'id' => 'skpi_deskripsi_en'],
-                                'preset' => 'advance',
-                                'clientOptions' => [
-                                    'enterMode' => 2,
-                                    'forceEnterMode' => false,
-                                    'shiftEnterMode' => 1
-                                ]
-                            ]) ?>    
+                            <span id="skpi_deskripsi_en" style="font-style: italic;text-align:justify"></span>
+                                
                         </td>
                     </tr>
                 </table>
@@ -260,8 +241,8 @@ $(document).on("click","#btn-save",function(e){
 
     var obj = new FormData;
     obj.append("skpi_permohonan_id","'.$model->id.'")
-    obj.append("deskripsi",$("#skpi_deskripsi").val())
-    obj.append("deskripsi_en",$("#skpi_deskripsi_en").val())
+    // obj.append("deskripsi",$("#skpi_deskripsi").val())
+    // obj.append("deskripsi_en",$("#skpi_deskripsi_en").val())
     
     $.ajax({
         type: \'POST\',
@@ -565,7 +546,7 @@ function getKompetensi(nim){
             
             var counter = 0;
 
-            $.each(hasils, function(i, obj){
+            $.each(hasils.items, function(i, obj){
               
                 counter++;
                
@@ -573,6 +554,7 @@ function getKompetensi(nim){
                 row += "<td>"+(counter)+"</td>";
                 row += "<td>"+obj.komponen+"</td>";
                 row += "<td style=\'text-align:center\'>"+obj.total+"</td>";
+
                 row += "<td><span class=\'label label-"+obj.color+"\'>"+obj.label+"</span></td>";
                 row += "</tr>";
 
@@ -581,6 +563,30 @@ function getKompetensi(nim){
 
            
             $(\'#tabel-kompetensi > tbody\').append(row);          
+
+            let label_header = "Mahasiswa ini memiliki keunggulan terbesar dalam "+hasils.list_top_skills+". Sementara itu, kemampuan terendah terletak pada "+hasils.list_bottom_skills
+            let label_header_en = "Students have the greatest advantage in "+hasils.list_top_skills_en+". Meanwhile, the lowest ability lies in "+hasils.list_bottom_skills_en 
+            let label_eval_id = ""
+            let label_eval_en = ""
+
+            $.each(hasils.top3_evaluasi, function(i, obj){
+                label_eval_id += obj.id
+                label_eval_en += obj.en
+            });
+
+            label_eval_id += "<br><br>"
+            label_eval_en += "<br><br>"
+
+            $.each(hasils.bottom3_evaluasi, function(i, obj){
+                label_eval_id += obj.id
+                label_eval_en += obj.en
+            });
+
+            
+
+            $("span#skpi_deskripsi").html(label_header+".<br><br> "+label_eval_id)
+            $("span#skpi_deskripsi_en").html(label_header_en+".<br><br>"+label_eval_en)
+
         }
     });
   

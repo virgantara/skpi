@@ -10,6 +10,10 @@ use Yii;
 class MyHelper
 {
 
+	public static function normalize($x, $xmin, $xmax) {
+		return ($x - $xmin) / ($xmax - $xmin);
+	}
+
     public static function getRektor()
     {
         $model = \app\models\SimakUniversitas::find()->where(['status_aktif' => 'Y'])->one();
