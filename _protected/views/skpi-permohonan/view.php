@@ -100,11 +100,11 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                 <table class="table table-striped table-bordered">
                     <tr>
                         <th style='width: 20%;' ><?=Yii::t('app', 'Description')?><br><i>Description</i></th>
-                        <td width="40%">
-                            <span id="skpi_deskripsi" style="text-align:justify;"></span>
+                        <td width="40%" style="text-align:justify;">
+                            <span id="skpi_deskripsi" ></span>
                         </td>
-                        <td>
-                            <span id="skpi_deskripsi_en" style="font-style: italic;text-align:justify"></span>
+                        <td style="text-align:justify;">
+                            <span id="skpi_deskripsi_en" style="font-style: italic;"></span>
                                 
                         </td>
                     </tr>
