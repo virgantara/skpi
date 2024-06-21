@@ -242,7 +242,7 @@ class SkpiPermohonanController extends Controller
 
                 $pdf->SetPrintHeader(true);
                 $pdf->SetPrintFooter(true);
-                $pdf->customHeaderText = $mhs->nama_mahasiswa.' | No. '.$model->nomor_skpi;
+                $pdf->customHeaderText = $mhs->nama_mahasiswa.' | No. '.$mhs->nina;
                 $pdf->AddPage();
 
                 
@@ -322,7 +322,7 @@ class SkpiPermohonanController extends Controller
                 $data = ob_get_clean();
                 $pdf->SetFont($fontreg, '', 8);
                 $pdf->writeHTML($data);
-
+                
                 $rektor = \app\helpers\MyHelper::getRektor();
                 $nama_rektor = !empty($rektor) ? $rektor->rektor0->nama_dosen : 'contoh nama rektor';
                 $niy = !empty($rektor) ? $rektor->rektor0->nidn_asli : '';

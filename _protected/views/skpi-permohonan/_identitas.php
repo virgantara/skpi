@@ -31,7 +31,7 @@
     <td width="50%">
       NOMOR IJAZAH<br>
       <i style="color:#176da7">Diploma Number</i><br><span style="font-weight: bold;">
-        <?=($mhs->no_ijazah ?: '-')?>
+        <?=($mhs->nina)?>
           
         </span>
     </td>

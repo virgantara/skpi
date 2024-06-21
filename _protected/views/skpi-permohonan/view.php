@@ -84,9 +84,17 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                         <td><?=$model->nim0->no_ijazah?></td>
                     </tr>
                     <tr>
-                        <th>Nomor SKPI</th>
-                        <td><?=Html::textInput('nomor_skpi',$model->nomor_skpi,['class' => 'form-control'])?></td>
+                        <th>NINA</th>
+                        <td><?=$model->nim0->nina?></td>
                     </tr>
+                    <!-- <tr>
+                        <th>Nomor SKPI</th>
+                        <td> -->
+                            <?php
+                            // Html::textInput('nomor_skpi',$model->nomor_skpi,['class' => 'form-control'])
+                        ?>
+                    <!-- </td>
+                    </tr> -->
                     <tr>
                         <th>Link Barcode</th>
                         <td><?=Html::textInput('link_barcode',$model->link_barcode,['class' => 'form-control'])?></td>
