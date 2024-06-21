@@ -71,75 +71,84 @@ class ProgramStudiController extends Controller
             if(!empty($model)){
 
                 $list_akreditasi = MyHelper::listAkreditasi();
-
-                $api_baseurl = Yii::$app->params['api_baseurl'];
-                $client = new Client(['baseUrl' => $api_baseurl]);
-                $client_token = Yii::$app->params['client_token'];
-                $headers = ['x-access-token'=>$client_token];
-
-                $params = [
-                    'kode_prodi' => $model->kode_prodi
-                ];
-
-                $options = [
-                    'timeout' => 7
-                ];
-
-                $response = $client->get('/spmi/prodi/akreditasi/get', $params,$headers,$options)->send();
-
                 $akreditasi = [];
-                if ($response->isOk) {
-                    $values = $response->data['values'];
+                try{
+                    $api_baseurl = Yii::$app->params['api_baseurl'];
+                    $client = new Client(['baseUrl' => $api_baseurl]);
+                    $client_token = Yii::$app->params['client_token'];
+                    $headers = ['x-access-token'=>$client_token];
 
-                    $akreditasi = count($values) == 1 ? $values[0] : [];
+                    $params = [
+                        'kode_prodi' => $model->kode_prodi
+                    ];
+
+                    $options = [
+                        'timeout' => 7
+                    ];
+
+                    $response = $client->get('/spmi/prodi/akreditasi/get', $params,$headers,$options)->send();
+
+                    
+                    if ($response->isOk) {
+                        $values = $response->data['values'];
+
+                        $akreditasi = count($values) == 1 ? $values[0] : [];
+                    }
+
+                    $level_kkni = SimakUniv::findOne([
+                        'kode'=>'KKNI1',
+                        'pilihan_id' => $model->jenjang->id,
+                    ]);
+
+                    $syarat_penerimaan = SyaratPenerimaan::findOne([
+                        'jenjang_id' => $model->jenjang->id,
+
+                    ]);
+
+                    $results = [
+                        'code' => 200,
+                        'message' => 'Success',
+                        'prodi' => [
+                            'nama_prodi' => $model->nama_prodi,
+                            'nama_prodi_en' => $model->nama_prodi_en,
+                            'gelar_lulusan' => $model->gelar_lulusan,
+                            'gelar_lulusan_en' => $model->gelar_lulusan_en,
+                            'jenjang' => (!empty($model->jenjang) ? $model->jenjang->label : '-'),
+                            'jenjang_en' => (!empty($model->jenjang) ? $model->jenjang->label_en : '-'),
+                            'bahasa_pengantar' => '-',
+                            'bahasa_pengantar_en' => '-',
+                            'kualifikasi_kkni' => (!empty($syarat_penerimaan) ? $level_kkni->header : '-'),
+                            'kualifikasi_kkni_en' => (!empty($syarat_penerimaan) ? $level_kkni->header_en : '-'),
+                            'persyaratan' => (!empty($syarat_penerimaan) ? $syarat_penerimaan->keterangan: '-'),
+                            'persyaratan_en' => (!empty($syarat_penerimaan) ? $syarat_penerimaan->keterangan_en: '-'),
+                        ],
+                        'fakultas' => [
+                            'nama_fakultas' => $model->kodeFakultas->nama_fakultas,
+                            'nama_fakultas_en' => $model->kodeFakultas->nama_fakultas_en
+                        ],
+                        'kaprodi' => [
+                            'niy' => (!empty($model->kaprodi) ? $model->kaprodi->niy : '-'),
+                            'nama_dosen' => (!empty($model->kaprodi) ? $model->kaprodi->nama_dosen : '-'),
+                        ],
+                        'dekan' => [
+                            'niy' => (!empty($model->kodeFakultas->pejabat0) ? $model->kodeFakultas->pejabat0->niy : '-'),
+                            'nama_dosen' => (!empty($model->kodeFakultas->pejabat0) ? $model->kodeFakultas->pejabat0->nama_dosen : '-'),
+                        ],
+                        'akreditasi' => [
+                            'status' => $list_akreditasi[$akreditasi['akreditasi']],
+                            'nomor_sk' => $akreditasi['nomor_sk'],
+                            'lembaga' => ''
+                        ]
+
+                    ];
                 }
 
-                $level_kkni = SimakUniv::findOne([
-                    'kode'=>'KKNI1',
-                    'pilihan_id' => $model->jenjang->id,
-                ]);
-
-                $syarat_penerimaan = SyaratPenerimaan::findOne([
-                    'jenjang_id' => $model->jenjang->id,
-
-                ]);
-
-                $results = [
-                    'code' => 200,
-                    'message' => 'Success',
-                    'prodi' => [
-                        'nama_prodi' => $model->nama_prodi,
-                        'nama_prodi_en' => $model->nama_prodi_en,
-                        'gelar_lulusan' => $model->gelar_lulusan,
-                        'gelar_lulusan_en' => $model->gelar_lulusan_en,
-                        'jenjang' => (!empty($model->jenjang) ? $model->jenjang->label : '-'),
-                        'jenjang_en' => (!empty($model->jenjang) ? $model->jenjang->label_en : '-'),
-                        'bahasa_pengantar' => '-',
-                        'bahasa_pengantar_en' => '-',
-                        'kualifikasi_kkni' => (!empty($syarat_penerimaan) ? $level_kkni->header : '-'),
-                        'kualifikasi_kkni_en' => (!empty($syarat_penerimaan) ? $level_kkni->header_en : '-'),
-                        'persyaratan' => (!empty($syarat_penerimaan) ? $syarat_penerimaan->keterangan: '-'),
-                        'persyaratan_en' => (!empty($syarat_penerimaan) ? $syarat_penerimaan->keterangan_en: '-'),
-                    ],
-                    'fakultas' => [
-                        'nama_fakultas' => $model->kodeFakultas->nama_fakultas,
-                        'nama_fakultas_en' => $model->kodeFakultas->nama_fakultas_en
-                    ],
-                    'kaprodi' => [
-                        'niy' => (!empty($model->kaprodi) ? $model->kaprodi->niy : '-'),
-                        'nama_dosen' => (!empty($model->kaprodi) ? $model->kaprodi->nama_dosen : '-'),
-                    ],
-                    'dekan' => [
-                        'niy' => (!empty($model->kodeFakultas->pejabat0) ? $model->kodeFakultas->pejabat0->niy : '-'),
-                        'nama_dosen' => (!empty($model->kodeFakultas->pejabat0) ? $model->kodeFakultas->pejabat0->nama_dosen : '-'),
-                    ],
-                    'akreditasi' => [
-                        'status' => $list_akreditasi[$akreditasi['akreditasi']],
-                        'nomor_sk' => $akreditasi['nomor_sk'],
-                        'lembaga' => ''
-                    ]
-
-                ];
+                catch(\Exception $e){
+                    $results = [
+                        'code' => $e->getCode(),
+                        'message' => $e->getMessage()
+                    ] ;
+                }
             }
               
             
