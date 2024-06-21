@@ -81,7 +81,11 @@ class ProgramStudiController extends Controller
                     'kode_prodi' => $model->kode_prodi
                 ];
 
-                $response = $client->get('/spmi/prodi/akreditasi/get', $params,$headers)->send();
+                $options = [
+                    'timeout' => 7
+                ];
+
+                $response = $client->get('/spmi/prodi/akreditasi/get', $params,$headers,$options)->send();
 
                 $akreditasi = [];
                 if ($response->isOk) {
