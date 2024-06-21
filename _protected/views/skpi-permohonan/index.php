@@ -186,7 +186,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                             return Html::a('<span class="fa fa-eye"></span> View', $url, ['class' => 'btn btn-primary']);
                         },
                         'print-skpi'=>function ($url, $model) {
-                            return Html::a('<span class="fa fa-download"></span> Download', $url, ['class' => 'btn btn-success','data-pjax' => 0]);
+                            return Html::a('<span class="fa fa-download"></span> Download', $url, ['class' => 'btn btn-success','data-pjax' => 0,'target' => '_blank']);
                         },
                         // 'delete'=>function ($url, $model) {
                         //     return Html::a('<span class="fa fa-trash"></span> Delete', $url, ['class' => 'btn btn-danger','data-method' => 'POST']);
