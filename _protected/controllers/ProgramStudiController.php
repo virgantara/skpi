@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use yii\helpers\Json;
 use app\helpers\MyHelper;
+use app\models\SimakUniv;
+use app\models\SyaratPenerimaan;
 use app\models\ProgramStudi;
 use app\models\SimakMasterprogramstudi;
 use app\models\ProgramStudiSearch;
@@ -88,6 +90,16 @@ class ProgramStudiController extends Controller
                     $akreditasi = count($values) == 1 ? $values[0] : [];
                 }
 
+                $level_kkni = SimakUniv::findOne([
+                    'kode'=>'KKNI1',
+                    'pilihan_id' => $model->jenjang->id,
+                ]);
+
+                $syarat_penerimaan = SyaratPenerimaan::findOne([
+                    'jenjang_id' => $model->jenjang->id,
+
+                ]);
+
                 $results = [
                     'code' => 200,
                     'message' => 'Success',
@@ -100,10 +112,10 @@ class ProgramStudiController extends Controller
                         'jenjang_en' => (!empty($model->jenjang) ? $model->jenjang->label_en : '-'),
                         'bahasa_pengantar' => '-',
                         'bahasa_pengantar_en' => '-',
-                        'kualifikasi_kkni' => '-',
-                        'kualifikasi_kkni_en' => '-',
-                        'persyaratan' => '-',
-                        'persyaratan_en' => '-',
+                        'kualifikasi_kkni' => (!empty($syarat_penerimaan) ? $level_kkni->header : '-'),
+                        'kualifikasi_kkni_en' => (!empty($syarat_penerimaan) ? $level_kkni->header_en : '-'),
+                        'persyaratan' => (!empty($syarat_penerimaan) ? $syarat_penerimaan->keterangan: '-'),
+                        'persyaratan_en' => (!empty($syarat_penerimaan) ? $syarat_penerimaan->keterangan_en: '-'),
                     ],
                     'fakultas' => [
                         'nama_fakultas' => $model->kodeFakultas->nama_fakultas,

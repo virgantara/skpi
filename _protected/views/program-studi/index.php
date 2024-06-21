@@ -197,6 +197,12 @@ $(document).on("change","#kode_prodi",function(e){
                     $("#span_nama_prodi_en").html(data.prodi.nama_prodi_en)
                     $("#span_jenjang").html(data.prodi.jenjang)
                     $("#span_jenjang_en").html(data.prodi.jenjang_en)
+                    $("#span_jenjang_kkni").html(data.prodi.kualifikasi_kkni)
+                    $("#span_jenjang_kkni_en").html(data.prodi.kualifikasi_kkni_en)
+
+                    $("#span_syarat_penerimaan").html(data.prodi.persyaratan)
+                    $("#span_syarat_penerimaan_en").html(data.prodi.persyaratan_en)
+
                     $("#span_gelar_lulusan").html(data.prodi.gelar_lulusan)
                     $("#span_gelar_lulusan_en").html(data.prodi.gelar_lulusan_en)
 
