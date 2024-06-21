@@ -217,9 +217,12 @@ class MyHelper
             'BK' => 'Baik',
             'A' => 'A',
             'B' => 'B',
-            'C' => 'C'
+            'C' => 'C',
+            'Accredited' => 'Accredited',
+            'NotAccredited' => 'Not Accredited'
 
         ];
+
 
         return $list;
     }

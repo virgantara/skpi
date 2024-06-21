@@ -98,7 +98,7 @@ $list_fakultas = ArrayHelper::map($list_fakultas,'kode_fakultas','nama_fakultas'
             </tr>
         </table>
         <h3>Nomor dan Status Akreditasi Program Studi</h3>
-        <table class="table table-striped table-bordered table-hover">
+        <table class="table table-striped table-bordered table-hover" id="tabel_akreditasi">
             <tr>
                 <th width="30%" rowspan="3">Akreditasi Nasional<br><i>National Accreditation</i></th>
                 <td width="30%">Peringkat<br><i>Ranking</i></td>
@@ -215,9 +215,44 @@ $(document).on("change","#kode_prodi",function(e){
                     $("#span_kaprodi_niy").html(data.kaprodi.niy)
                     $("#span_kaprodi_nama_dosen").html(data.kaprodi.nama_dosen)
 
-                    $("#span_status_akreditasi").html(data.akreditasi.status)
-                    $("#span_no_sk_akreditasi").html(data.akreditasi.nomor_sk)
-                    $("#span_lembaga_akreditasi").html(data.akreditasi.lembaga)
+                    $("#tabel_akreditasi").empty()
+                    let html = ""
+                    $.each(data.akreditasi.nasional, function(i, obj){
+                        html += "<tr>"
+                        html += "    <th width=\'30%\' rowspan=\'3\'>Akreditasi Nasional<br><i>National Accreditation</i></th>"
+                        html += "    <td width=\'30%\'>Peringkat<br><i>Ranking</i></td>"
+                        html += "    <td>"+obj.status_akreditasi+"</td>"
+                        html += "</tr>"
+                        html += "<tr>"
+                        html += "    <td>Nomor Dokumen<br><i>Document Number</i></td>"
+                        html += "    <td>"+obj.nomor_sk+"</td>"
+                        html += "</tr>"
+                        html += "<tr>"
+                        html += "    <td>Lembaga<br><i>Institution</i></td>"
+                        html += "    <td>"+obj.lembaga+"</td>"
+                        html += "</tr>"
+                    })
+
+                    
+                    
+                    $.each(data.akreditasi.internasional, function(i, obj){
+                        html += "<tr>"
+                        html += "    <th width=\'30%\' rowspan=\'3\'>Akreditasi Internasional<br><i>Internasional Accreditation</i></th>"
+                        html += "    <td width=\'30%\'>Peringkat<br><i>Ranking</i></td>"
+                        html += "    <td>"+obj.status_akreditasi+"</td>"
+                        html += "</tr>"
+                        html += "<tr>"
+                        html += "    <td>Nomor Dokumen<br><i>Document Number</i></td>"
+                        html += "    <td>"+obj.nomor_sk+"</td>"
+                        html += "</tr>"
+                        html += "<tr>"
+                        html += "    <td>Lembaga<br><i>Institution</i></td>"
+                        html += "    <td>"+obj.lembaga+"</td>"
+                        html += "</tr>"
+                    })
+
+                    $("#tabel_akreditasi").append(html)
+
                 }
                 
                 else{

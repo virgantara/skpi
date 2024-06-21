@@ -72,6 +72,8 @@ class ProgramStudiController extends Controller
 
                 $list_akreditasi = MyHelper::listAkreditasi();
                 $akreditasi = [];
+                $list_akreditasi_nasional = [];
+                $list_akreditasi_internasional = [];
                 try{
                     $api_baseurl = Yii::$app->params['api_baseurl'];
                     $client = new Client(['baseUrl' => $api_baseurl]);
@@ -92,7 +94,29 @@ class ProgramStudiController extends Controller
                     if ($response->isOk) {
                         $values = $response->data['values'];
 
-                        $akreditasi = count($values) == 1 ? $values[0] : [];
+                        foreach($values as $akr){
+                            if($akr['tingkat'] == 3 || $akr['tingkat'] == 2){
+                                $list_akreditasi_internasional[] = [
+                                    'nomor_sk' => $akr['nomor_sk'],
+                                    'tanggal_sk' => $akr['tanggal_sk'],
+                                    'lembaga' => $akr['singkatan_lembaga'],
+                                    'status_akreditasi' => $list_akreditasi[$akr['status_akreditasi']]
+                                ];
+                            }
+
+                            else{
+                                $list_akreditasi_nasional[] = [
+                                    'nomor_sk' => $akr['nomor_sk'],
+                                    'tanggal_sk' => $akr['tanggal_sk'],
+                                    'lembaga' => $akr['singkatan_lembaga'],
+                                    'status_akreditasi' => $list_akreditasi[$akr['status_akreditasi']]
+                                ];
+                            }
+                        }
+                        $akreditasi = [
+                            'nasional' => $list_akreditasi_nasional,
+                            'internasional' => $list_akreditasi_internasional,
+                        ];
                     }
 
                     
@@ -144,11 +168,7 @@ class ProgramStudiController extends Controller
                         'niy' => (!empty($model->kodeFakultas->pejabat0) ? $model->kodeFakultas->pejabat0->niy : '-'),
                         'nama_dosen' => (!empty($model->kodeFakultas->pejabat0) ? $model->kodeFakultas->pejabat0->nama_dosen : '-'),
                     ],
-                    'akreditasi' => [
-                        'status' => $list_akreditasi[$akreditasi['akreditasi']],
-                        'nomor_sk' => $akreditasi['nomor_sk'],
-                        'lembaga' => ''
-                    ]
+                    'akreditasi' => $akreditasi
 
                 ];
             }
