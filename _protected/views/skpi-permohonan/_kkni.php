@@ -12,12 +12,12 @@
   <tr>
     <td width="49%" style="border:1px solid #7c7d7e;background-color:#b8b8b8"><?=$item->header?></td>
     <td width="2%"></td>
-    <td width="49%" style="border:1px solid #7c7d7e;background-color:#b8b8b8"><i><?=$item->header_en?></i></td>
+    <td width="49%" style="border:1px solid #7c7d7e;background-color:#b8b8b8;font-style: italic;"><i><?=$item->header_en?></i></td>
   </tr>
   <tr>
     <td style="text-align: justify;border:1px solid #7c7d7e"><?=$q+1?>. <?=$item->nama?></td>
     <td></td>
-    <td style="text-align: justify;border:1px solid #7c7d7e"><?=$q+1?>. <?=$item->nama_en?></td>
+    <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style: italic;"><?=$q+1?>. <?=$item->nama_en?></td>
   </tr>
   
 <?php } ?>

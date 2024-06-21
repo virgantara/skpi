@@ -16,7 +16,7 @@
   <tr>
     <td style="text-align: justify;border:1px solid #7c7d7e"><?=$q+1?>. <?=$item->nama?></td>
     <td></td>
-    <td style="text-align: justify;border:1px solid #7c7d7e"><?=$q+1?>. <?=$item->nama_en?></td>
+    <td style="text-align: justify;border:1px solid #7c7d7e;font-style: italic;color:#176da7"><?=$q+1?>. <?=$item->nama_en?></td>
   </tr>
   
 <?php } ?>

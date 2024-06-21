@@ -76,9 +76,9 @@
 
          ?>
         <tr>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><?=$q+1?>. </td>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><i><?=$item['nama_en']?></i></td>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><?=$item['nilai']?></td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style:italic;"><?=$q+1?>. </td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style:italic;"><i><?=$item['nama_en']?></i></td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style:italic;"><?=$item['nilai']?></td>
         </tr>
         
       <?php 
@@ -142,9 +142,9 @@
 
          ?>
         <tr>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><?=$q+1?>. </td>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><i><?=$item['nama_en']?></i></td>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><?=$item['label_en']?></td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style:italic;"><?=$q+1?>. </td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style:italic;"><i><?=$item['nama_en']?></i></td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style:italic;"><?=$item['label_en']?></td>
         </tr>
         
       <?php 
@@ -191,8 +191,8 @@
     <td width="49%"><br><br><table cellpadding="2" border="0" cellspacing="0" width="100%">
         <tr>
           <td width="10%" style="border:1px solid #7c7d7e;background-color:#b8b8b8">No</td>
-          <td width="65%" style="border:1px solid #7c7d7e;background-color:#b8b8b8"><i>Main</i></td>
-          <td width="25%" style="border:1px solid #7c7d7e;background-color:#b8b8b8"><i>Predicate</i></td>
+          <td width="65%" style="border:1px solid #7c7d7e;background-color:#b8b8b8;color:#176da7"><i>Main</i></td>
+          <td width="25%" style="border:1px solid #7c7d7e;background-color:#b8b8b8;color:#176da7;font-style: italic;"><i>Predicate</i></td>
         </tr>
         <?php 
         $counter = 0;
@@ -202,9 +202,9 @@
 
          ?>
         <tr>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><?=$counter;?>. </td>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><i><?=$item['induk_en']?></i></td>
-          <td style="text-align: justify;border:1px solid #7c7d7e"><?=$item['label_en']?></td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style:italic;"><?=$counter;?>. </td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7"><i><?=$item['induk_en']?></i></td>
+          <td style="text-align: justify;border:1px solid #7c7d7e;color:#176da7;font-style: italic;"><?=$item['label_en']?></td>
         </tr>
         
       <?php 
@@ -229,7 +229,7 @@
     <td style="border:1px solid #7c7d7e;text-align: justify;">
       <?php 
         $label_header = "Mahasiswa ini memiliki keunggulan terbesar dalam ".$nilai_kompetensi['list_top_skills']." Sementara itu, kemampuan terendah terletak pada ".$nilai_kompetensi['list_bottom_skills'];
-        $label_header_en = "Students have the greatest advantage in ".$nilai_kompetensi['list_top_skills_en'].". Meanwhile, the lowest ability lies in ".$nilai_kompetensi['list_bottom_skills_en'] ;
+        $label_header_en = "<i>Students have the greatest advantage in ".strip_tags($nilai_kompetensi['list_top_skills_en']).". Meanwhile, the lowest ability lies in ".strip_tags($nilai_kompetensi['list_bottom_skills_en'])."</i>" ;
         $label_eval_id = "";
         $label_eval_en = "";
 
@@ -253,8 +253,8 @@
        ?>
     </td>
     <td></td>
-    <td style="border:1px solid #7c7d7e;text-align: justify;">
-      <?php echo $label_header_en.".<br><br> ".$label_eval_en; ?>
+    <td style="border:1px solid #7c7d7e;text-align: justify;color:#176da7">
+      <i><?php echo $label_header_en.".<br><br> ".$label_eval_en; ?></i>
     </td>
   </tr>
 </table>
