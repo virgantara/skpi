@@ -38,7 +38,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
             </div>
             <div class="panel-body ">
                 <?php 
-                if(Yii::$app->user->can('akpamPusat') || Yii::$app->user->can('sekretearis')){
+                if(Yii::$app->user->can('akpamPusat') || Yii::$app->user->can('admin') || Yii::$app->user->can('sekretearis')){
                  ?>
                 
                 <p>
