@@ -150,7 +150,6 @@ class SkpiPermohonanController extends Controller
                 ];
 
                 $response = $client->get('/spmi/prodi/akreditasi/get', $params,$headers,$options)->send();
-                $list_akreditasi = MyHelper::listAkreditasi();
                 
                 $list_akreditasi_nasional = [];
                 $list_akreditasi_internasional = [];
@@ -163,7 +162,8 @@ class SkpiPermohonanController extends Controller
                                 'nomor_sk' => $akr['nomor_sk'],
                                 'tanggal_sk' => $akr['tanggal_sk'],
                                 'lembaga' => $akr['singkatan_lembaga'],
-                                'status_akreditasi' => $list_akreditasi[$akr['status_akreditasi']]
+                                'status_akreditasi' => $akr['status_akreditasi'],
+                                'status_akreditasi_en' => $akr['status_akreditasi_en']
                             ];
                         }
 
@@ -172,7 +172,8 @@ class SkpiPermohonanController extends Controller
                                 'nomor_sk' => $akr['nomor_sk'],
                                 'tanggal_sk' => $akr['tanggal_sk'],
                                 'lembaga' => $akr['singkatan_lembaga'],
-                                'status_akreditasi' => $list_akreditasi[$akr['status_akreditasi']]
+                                'status_akreditasi' => $akr['status_akreditasi'],
+                                'status_akreditasi_en' => $akr['status_akreditasi_en']
                             ];
                         }
                     }

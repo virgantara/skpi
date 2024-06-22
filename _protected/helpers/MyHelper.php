@@ -209,23 +209,23 @@ class MyHelper
         ];
     }
     		
-	public static function listAkreditasi()
-    {
-        $list = [
-            'U' => 'Unggul',
-            'BS' => 'Baik Sekali',
-            'BK' => 'Baik',
-            'A' => 'A',
-            'B' => 'B',
-            'C' => 'C',
-            'Accredited' => 'Accredited',
-            'NotAccredited' => 'Not Accredited'
+	// public static function listAkreditasi()
+    // {
+    //     $list = [
+    //         'U' => 'Unggul',
+    //         'BS' => 'Baik Sekali',
+    //         'BK' => 'Baik',
+    //         'A' => 'A',
+    //         'B' => 'B',
+    //         'C' => 'C',
+    //         'Accredited' => 'Accredited',
+    //         'NotAccredited' => 'Not Accredited'
 
-        ];
+    //     ];
 
 
-        return $list;
-    }
+    //     return $list;
+    // }
     
 	public static function getListHeaderSurat()
     {

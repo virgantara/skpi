@@ -97,19 +97,22 @@
       <span  style="font-weight: bold;">AKREDITASI PROGRAM STUDI</span><br>
       <i style="color:#176da7">Major Accreditation</i><br><span style="">
         <?php 
+        $label_id = '';
+        $label_en = '';
         foreach($akreditasi['nasional'] as $akr){
-          echo 'Nasional - '.$akr['status_akreditasi'].' - '.$akr['lembaga'];
+          $label_id .= 'Nasional - '.$akr['status_akreditasi'].' - '.$akr['lembaga'];
+          $label_en .= 'National - '.$akr['status_akreditasi_en'].' - '.$akr['lembaga'];
         }
 
-        echo '<br>';
+        echo $label_id;
+        
         foreach($akreditasi['internasional'] as $akr){
-          echo 'Internasional - '.$akr['status_akreditasi'].' - '.$akr['lembaga'];
+          $label_id .= '<br>Internasional - '.$akr['status_akreditasi'].' - '.$akr['lembaga'];
+          $label_en .= 'International - '.$akr['status_akreditasi_en'].' - '.$akr['lembaga'];
         }
         ?>
-        
-        </span>
-          <br><span>
-            <i></i>
+        </span><br><span>
+          <i><?=$label_en?></i>
           </span>
         
     </td>

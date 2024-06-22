@@ -70,7 +70,6 @@ class ProgramStudiController extends Controller
             $item = null;
             if(!empty($model)){
 
-                $list_akreditasi = MyHelper::listAkreditasi();
                 $akreditasi = [];
                 $list_akreditasi_nasional = [];
                 $list_akreditasi_internasional = [];
@@ -100,7 +99,8 @@ class ProgramStudiController extends Controller
                                     'nomor_sk' => $akr['nomor_sk'],
                                     'tanggal_sk' => $akr['tanggal_sk'],
                                     'lembaga' => $akr['singkatan_lembaga'],
-                                    'status_akreditasi' => $list_akreditasi[$akr['status_akreditasi']]
+                                    'status_akreditasi' => $akr['status_akreditasi'],
+
                                 ];
                             }
 
@@ -109,7 +109,7 @@ class ProgramStudiController extends Controller
                                     'nomor_sk' => $akr['nomor_sk'],
                                     'tanggal_sk' => $akr['tanggal_sk'],
                                     'lembaga' => $akr['singkatan_lembaga'],
-                                    'status_akreditasi' => $list_akreditasi[$akr['status_akreditasi']]
+                                    'status_akreditasi' => $akr['status_akreditasi']
                                 ];
                             }
                         }
