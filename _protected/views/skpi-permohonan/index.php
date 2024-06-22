@@ -144,13 +144,10 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                 }
             ],
             [
-                'attribute' => 'nomor_skpi',
-                'class' => 'kartik\grid\EditableColumn',
-                'readonly' => !Yii::$app->user->can('akpamPusat'),
-                'editableOptions' => [
-                    'inputType' => \kartik\editable\Editable::INPUT_TEXT,
-                    'asPopover' => false,
-                ],
+                'header' => 'NINA',
+                'value' => function($data){
+                    return $data->nim0->nina;
+                }
             ],
             [
                 'attribute' => 'link_barcode',

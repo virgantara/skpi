@@ -58,7 +58,13 @@
         <i style="color:#176da7">Contact Details</i></span>
         <br><br><span>
           <?=strtoupper($data_universitas->nama_institusi);?></span>
-          <br><br><span><?=$data_universitas->alamat?></span>
+          <p>
+            Address: <?=$data_universitas->alamat?><br>
+            Telp: <?=$data_universitas->telepon?><br>
+            Fax: <?=$data_universitas->fax?><br>
+            Website: <?=$data_universitas->website?><br>
+            E-Mail: <?=$data_universitas->email?>
+          </p>
     </td>
   </tr>
   <tr>

@@ -4,7 +4,7 @@
     </span><br><br><span style="font-size: 12px;font-style: italic; color:#176da7">Diploma Supplement</span>
     </td>
     <td width="30%" style="border-top: 1px sold #7c7d7e;">
-      Nomor: <?=($model->nomor_skpi ?: '<span style="color:red">Nomor SKPI belum diisi</span>')?>
+      Nomor: <?=($model->nim0->nina ?: '<span style="color:red">Nomor SKPI belum diisi</span>')?>
     </td>
   </tr>
 </table>
