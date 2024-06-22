@@ -136,6 +136,52 @@ class SkpiPermohonanController extends Controller
             
             try {
 
+                $api_baseurl = Yii::$app->params['api_baseurl'];
+                $client = new Client(['baseUrl' => $api_baseurl]);
+                $client_token = Yii::$app->params['client_token'];
+                $headers = ['x-access-token'=>$client_token];
+
+                $params = [
+                    'kode_prodi' => $mhs->kode_prodi
+                ];
+
+                $options = [
+                    'timeout' => 7
+                ];
+
+                $response = $client->get('/spmi/prodi/akreditasi/get', $params,$headers,$options)->send();
+                $list_akreditasi = MyHelper::listAkreditasi();
+                
+                $list_akreditasi_nasional = [];
+                $list_akreditasi_internasional = [];
+                if ($response->isOk) {
+                    $values = $response->data['values'];
+
+                    foreach($values as $akr){
+                        if($akr['tingkat'] == 3 || $akr['tingkat'] == 2){
+                            $list_akreditasi_internasional[] = [
+                                'nomor_sk' => $akr['nomor_sk'],
+                                'tanggal_sk' => $akr['tanggal_sk'],
+                                'lembaga' => $akr['singkatan_lembaga'],
+                                'status_akreditasi' => $list_akreditasi[$akr['status_akreditasi']]
+                            ];
+                        }
+
+                        else{
+                            $list_akreditasi_nasional[] = [
+                                'nomor_sk' => $akr['nomor_sk'],
+                                'tanggal_sk' => $akr['tanggal_sk'],
+                                'lembaga' => $akr['singkatan_lembaga'],
+                                'status_akreditasi' => $list_akreditasi[$akr['status_akreditasi']]
+                            ];
+                        }
+                    }
+                    $akreditasi = [
+                        'nasional' => $list_akreditasi_nasional,
+                        'internasional' => $list_akreditasi_internasional,
+                    ];
+                }
+
                 $list_cpl = CapaianPembelajaranLulusan::find()->where([
                     'kode_prodi' => $mhs->kode_prodi,
                     'state' => '1'
@@ -229,7 +275,8 @@ class SkpiPermohonanController extends Controller
                     'mhs' => $mhs,
                     'label_range_nilai' => $label_range_nilai,
                     'syarat_penerimaan' => $syarat_penerimaan,
-                    'level_kkni' => $level_kkni
+                    'level_kkni' => $level_kkni,
+                    'akreditasi' => $akreditasi
                 ]);
 
                 $data = ob_get_clean();

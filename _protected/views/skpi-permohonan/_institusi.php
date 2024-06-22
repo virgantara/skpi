@@ -24,10 +24,25 @@
   </tr>
   <tr>
     <td width="50%">
-      <span  style="font-weight: bold;">Program Studi</span><br>
-      <i style="color:#176da7">Department</i><br>
-      <?=strtoupper($mhs->kodeProdi->nama_prodi);?><br>
-      <span><i><?=$mhs->kodeProdi->nama_prodi_en?></i></span>
+      <span  style="font-weight: bold;">NAMA PERGURUAN TINGGI</span><br>
+      <i style="color:#176da7">Awarding Institution</i><br><span>
+        UNIVERSITAS DARUSSALAM GONTOR</span>
+        
+    </td>
+    <td width="50%">
+      <span  style="font-weight: bold;">BAHASA PENGANTAR KULIAH</span><br>
+      <i style="color:#176da7">Language of Instruction</i><br>
+      <span>Indonesia, Inggris, dan Arab</span><br><span>
+        <i>Indonesia, English, and Arabic</i></span>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <span  style="font-weight: bold;">AKREDITASI PERGURUAN TINGGI</span><br>
+      <i style="color:#176da7">Institution Accreditation</i><br>
+      Unggul - BAN-PT
+      <br>
+      <span><i>Excellent - BAN-PT</i></span>
         <br>
     </td>
     <td width="50%">
@@ -41,13 +56,13 @@
   </tr>
   <tr>
     <td width="50%">
-      <span  style="font-weight: bold;">Jenis & Jenjang Pendidikan</span><br>
-      <i style="color:#176da7">Types & Level of Education</i><br><span>
-        <?=strtoupper((!empty($mhs->kodeProdi->jenjang) ? $mhs->kodeProdi->jenjang->label : '-'));?></span>
-          <br><span>
-            <i><?=(!empty($mhs->kodeProdi->jenjang) ? $mhs->kodeProdi->jenjang->label_en : '-')?></i>
-        </span><br>
+      <span  style="font-weight: bold;">Program Studi</span><br>
+      <i style="color:#176da7">Department</i><br>
+      <?=strtoupper($mhs->kodeProdi->nama_prodi);?><br>
+      <span><i><?=$mhs->kodeProdi->nama_prodi_en?></i></span>
+        <br>
     </td>
+    
     <td width="50%">
       <span  style="font-weight: bold;">Lama Studi Reguler</span><br>
       <i style="color:#176da7">Regular Length of Study</i><br><span>
@@ -59,12 +74,42 @@
   </tr>
   <tr>
     <td width="50%">
-      <span  style="font-weight: bold;">Jenjang Kualifikasi Sesuai KKNI</span><br>
-      <i style="color:#176da7">Level of Qualification in the National Qualificatio Framework</i><br><span style="">
-        <?=(!empty($level_kkni) ? $level_kkni->header : 'KKNI Jenjang ini belum ada')?>
+
+      <span  style="font-weight: bold;">Jenis & Jenjang Pendidikan</span><br>
+      <i style="color:#176da7">Types & Level of Education</i><br><span>
+        <?=strtoupper((!empty($mhs->kodeProdi->jenjang) ? $mhs->kodeProdi->jenjang->label : '-'));?></span>
+          <br><span>
+            <i><?=(!empty($mhs->kodeProdi->jenjang) ? $mhs->kodeProdi->jenjang->label_en : '-')?></i>
+        </span><br>
+    </td>
+    <td width="50%">
+      <span  style="font-weight: bold;">Status Profesi (Bila Ada)</span><br>
+      <i style="color:#176da7">Professional Status (If Applicable)</i><br>
+      <div style="">
+
+        </div>
+
+        
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <span  style="font-weight: bold;">AKREDITASI PROGRAM STUDI</span><br>
+      <i style="color:#176da7">Major Accreditation</i><br><span style="">
+        <?php 
+        foreach($akreditasi['nasional'] as $akr){
+          echo 'Nasional - '.$akr['status_akreditasi'].' - '.$akr['lembaga'];
+        }
+
+        echo '<br>';
+        foreach($akreditasi['internasional'] as $akr){
+          echo 'Internasional - '.$akr['status_akreditasi'].' - '.$akr['lembaga'];
+        }
+        ?>
+        
         </span>
           <br><span>
-            <i><?=(!empty($level_kkni) ? $level_kkni->header_en : 'KKNI Jenjang ini belum ada')?></i>
+            <i></i>
           </span>
         
     </td>
@@ -80,16 +125,17 @@
   </tr>
   <tr>
     <td width="50%">
-      
+      <span  style="font-weight: bold;">Jenjang Kualifikasi Sesuai KKNI</span><br>
+      <i style="color:#176da7">Level of Qualification in the National Qualificatio Framework</i><br><span style="">
+        <?=(!empty($level_kkni) ? $level_kkni->header : 'KKNI Jenjang ini belum ada')?>
+        </span>
+          <br><span>
+            <i><?=(!empty($level_kkni) ? $level_kkni->header_en : 'KKNI Jenjang ini belum ada')?></i>
+          </span>
+        
     </td>
     <td width="50%">
-      <span  style="font-weight: bold;">Status Profesi (Bila Ada)</span><br>
-      <i style="color:#176da7">Professional Status (If Applicable)</i><br>
-      <div style="">
-
-        </div>
-
-        
+      
     </td>
   </tr>
 </table>
