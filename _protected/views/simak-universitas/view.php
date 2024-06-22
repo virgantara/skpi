@@ -47,6 +47,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <td></td>
             </tr>
             <tr>
+                <th>Tanggal SK Pendirian Perguruan Tinggi</th>
+                <td><?= $model->tanggal_sk_pendirian ?></td>
+                <td></td>
+            </tr>
+            <tr>
                 <th>Peringkat Akreditasi<br><i>Accreditation Ranking</i></th>
                 <td><?= $model->peringkat_akreditasi ?></td>
                 <td><?= $model->peringkat_akreditasi_en ?></td>

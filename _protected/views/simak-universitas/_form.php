@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use dosamigos\ckeditor\CKEditor;
+use kartik\date\DatePicker;
 /** @var yii\web\View $this */
 /** @var app\models\SimakUniversitas $model */
 /** @var yii\widgets\ActiveForm $form */
@@ -55,6 +56,22 @@ use dosamigos\ckeditor\CKEditor;
             <tr>
                 <td>SK Pendirian Perguruan Tinggi<br><i>Awarding Institution's License</i></td>
                 <td><?= $form->field($model, 'sk_pendirian')->textInput(['maxlength' => true])->label(false) ?></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Tanggal SK Pendirian Perguruan Tinggi</td>
+                <td>
+                    <?php
+                    echo $form->field($model, 'tanggal_sk_pendirian')->widget(DatePicker::classname(), [
+                        'options' => ['placeholder' => 'Input Tanggal SK Pendirian ...', 'autocomplete' => 'off'],
+                        'pluginOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd',
+                        ]
+                    ])->label(false);
+                    ?>
+                        
+                </td>
                 <td></td>
             </tr>
             <tr>
