@@ -194,7 +194,10 @@ class SkpiPermohonanController extends Controller
                     ->all();
 
                 $list_kkni = SimakUniv::find()
-                    ->where(['kode'=>'KKNI1'])
+                    ->where([
+                        'kode'=>'KKNI1',
+                        'pilihan_id' => $mhs->kodeProdi->jenjang->id,
+                    ])
                     ->orderBy(['urutan' => SORT_ASC])
                     ->all();
 
@@ -336,19 +339,22 @@ class SkpiPermohonanController extends Controller
                 $pdf->writeHTML($data);
 
                 $list_prestasi = $mhs->getSimakPrestasis()->where(['status_validasi' => '1'])->all();
-                ob_start();
-                echo $this->renderPartial('_prestasi', [
-                    'data_universitas' => $data_universitas,
-                    'mhs' => $mhs,
-                    'model' => $model,
-                    'list_prestasi' => $list_prestasi
-                ]);
-                $pdf->AddPage();
-                $data = ob_get_clean();
+                if(count($list_prestasi) > 0){
 
-                $pdf->SetFont($fontreg, '', 8);
-                $pdf->writeHTML($data);
 
+                    ob_start();
+                    echo $this->renderPartial('_prestasi', [
+                        'data_universitas' => $data_universitas,
+                        'mhs' => $mhs,
+                        'model' => $model,
+                        'list_prestasi' => $list_prestasi
+                    ]);
+                    $pdf->AddPage();
+                    $data = ob_get_clean();
+
+                    $pdf->SetFont($fontreg, '', 8);
+                    $pdf->writeHTML($data);
+                }
                 ob_start();
                 echo $this->renderPartial('_sisdik', [
                     'data_universitas' => $data_universitas,
