@@ -6,11 +6,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\SkpiPermohonan */
 
-$this->title = 'Create Skpi Permohonan';
+$this->title = 'Ajukan Permohonan SKPI';
 $this->params['breadcrumbs'][] = ['label' => 'Skpi Permohonans', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<h3><?= Html::encode($this->title) ?></h3>
 <div class="row">
     <div class="col-md-12">
         <div class="panel">

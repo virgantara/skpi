@@ -40,7 +40,7 @@ class SkpiPermohonanController extends Controller
                 'only' => ['create','update','delete','index','ajax-apply','print-skpi','ajax-save'],
                 'rules' => [
                     [
-                        'actions' => ['update','delete','index','print-skpi','ajax-save'],
+                        'actions' => ['create','update','delete','index','print-skpi','ajax-save'],
                         'allow' => true,
                         'roles' => ['akpamPusat','admin','sekretearis','fakultas'],
                     ],
