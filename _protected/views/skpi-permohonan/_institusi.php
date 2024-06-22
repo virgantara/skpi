@@ -34,15 +34,16 @@
       <i style="color:#176da7">Language of Instruction</i><br>
       <span>Indonesia, Inggris, dan Arab</span><br><span>
         <i>Indonesia, English, and Arabic</i></span>
+        <br>
     </td>
   </tr>
   <tr>
     <td width="50%">
       <span  style="font-weight: bold;">AKREDITASI PERGURUAN TINGGI</span><br>
       <i style="color:#176da7">Institution Accreditation</i><br>
-      Unggul - BAN-PT
+      <?=$data_universitas->peringkat_akreditasi?> - <?=$data_universitas->lembaga_akreditasi?>
       <br>
-      <span><i>Excellent - BAN-PT</i></span>
+      <span><i><?=$data_universitas->peringkat_akreditasi_en?> - <?=$data_universitas->lembaga_akreditasi_en?></i></span>
         <br>
     </td>
     <td width="50%">

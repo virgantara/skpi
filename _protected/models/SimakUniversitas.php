@@ -58,7 +58,7 @@ class SimakUniversitas extends \yii\db\ActiveRecord
             [['catatan_resmi', 'catatan_resmi_en', 'deskripsi_skpi', 'deskripsi_skpi_en', 'persyaratan_penerimaan', 'persyaratan_penerimaan_en', 'sistem_penilaian', 'sistem_penilaian_en'], 'string'],
             [['alamat', 'sk_rektor', 'periode', 'nama_institusi', 'nama_institusi_en', 'nomor_sertifikat_akreditasi'], 'string', 'max' => 255],
             [['telepon', 'fax', 'website'], 'string', 'max' => 50],
-            [['email', 'sk_pendirian', 'peringkat_akreditasi', 'lembaga_akreditasi'], 'string', 'max' => 100],
+            [['email', 'sk_pendirian', 'peringkat_akreditasi', 'lembaga_akreditasi','peringkat_akreditasi_en','lembaga_akreditasi_en'], 'string', 'max' => 100],
             [['status_aktif'], 'string', 'max' => 1],
             [['rektor'], 'exist', 'skipOnError' => true, 'targetClass' => SimakMasterdosen::class, 'targetAttribute' => ['rektor' => 'id']],
         ];

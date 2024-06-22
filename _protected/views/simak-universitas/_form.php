@@ -60,7 +60,7 @@ use dosamigos\ckeditor\CKEditor;
             <tr>
                 <td>Peringkat Akreditasi<br><i>Accreditation Ranking</i></td>
                 <td><?= $form->field($model, 'peringkat_akreditasi')->textInput(['maxlength' => true])->label(false) ?></td>
-                <td></td>
+                <td><?= $form->field($model, 'peringkat_akreditasi_en')->textInput(['maxlength' => true])->label(false) ?></td>
             </tr>
             <tr>
                 <td>Nomor Sertifikat Akreditasi<br><i>Accreditation Decree Number</i></td>
@@ -70,7 +70,7 @@ use dosamigos\ckeditor\CKEditor;
             <tr>
                 <td>Lembaga Akreditasi<br><i>Accreditation Organization</i></td>
                 <td><?= $form->field($model, 'lembaga_akreditasi')->textInput(['maxlength' => true])->label(false) ?></td>
-                <td></td>
+                <td><?= $form->field($model, 'lembaga_akreditasi_en')->textInput(['maxlength' => true])->label(false) ?></td>
             </tr>
             <tr>
                 <td>

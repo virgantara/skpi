@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <tr>
                 <th>Peringkat Akreditasi<br><i>Accreditation Ranking</i></th>
                 <td><?= $model->peringkat_akreditasi ?></td>
-                <td></td>
+                <td><?= $model->peringkat_akreditasi_en ?></td>
             </tr>
             <tr>
                 <th>Nomor Sertifikat Akreditasi<br><i>Accreditation Decree Number</i></th>
@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <tr>
                 <th>Lembaga Akreditasi<br><i>Accreditation Organization</i></th>
                 <td><?= $model->lembaga_akreditasi ?></td>
-                <td></td>
+                <td><?= $model->lembaga_akreditasi_en ?></td>
             </tr>
             <tr>
                 <th>Persyaratan Penerimaan<br><i>Entry Requirements</i></th>
