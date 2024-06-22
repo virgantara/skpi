@@ -11,10 +11,11 @@
     $label = '';
     if(!empty($item->kegiatan) && !empty($item->kegiatan->kegiatan)){
 
-        $label .= $item->kegiatan->tema.' - '.$item->kegiatan->kegiatan->nama_kegiatan;
+        $label .= $item->kegiatan->tema;
+        // $label .= $item->kegiatan->tema.' - '.$item->kegiatan->kegiatan->nama_kegiatan;
 
-        if(!empty($item->kegiatan->jenisKegiatan))
-            $label .= ' - '.$item->kegiatan->jenisKegiatan->nama_jenis_kegiatan;
+        // if(!empty($item->kegiatan->jenisKegiatan))
+        //     $label .= ' - '.$item->kegiatan->jenisKegiatan->nama_jenis_kegiatan;
     }
 
    ?>
