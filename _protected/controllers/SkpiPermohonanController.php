@@ -239,13 +239,14 @@ class SkpiPermohonanController extends Controller
                 $pdf->SetPrintFooter(false);
                 $pdf->AddPage();
                 $imgdata = Yii::getAlias('@webroot').'/themes/ace/assets/img/logo-ori.png';
+                $header_img = Yii::getAlias('@webroot').'/themes/ace/assets/img/header_skpi.png';
                 // $imgdata = Yii::getAlias('@webroot').'/themes/klorofil/assets/img/logo_full.png';
                 $size = 50;
-                $pdf->Image($imgdata,10,5,15);
+                $pdf->Image($header_img,10,5,190);
 
-                $header = '<span style="text-align:center;">UNIVERSITAS DARUSSALAM GONTOR<br>PONOROGO - INDONESIA</span>';
-                $pdf->SetFont($fontbold, '', 12);
-                $pdf->writeHTML($header, true, 0, true, true);
+                // $header = '<span style="text-align:center;">UNIVERSITAS DARUSSALAM GONTOR<br>PONOROGO - INDONESIA</span>';
+                // $pdf->SetFont($fontbold, '', 12);
+                // $pdf->writeHTML($header, true, 0, true, true);
 
                 $pdf->write2DBarcode(($model->link_barcode ?: 'https://unida.gontor.ac.id'), 'QRCODE,H', 180, 35, 16,16);
                 $pdf->setXY(10, 30);
