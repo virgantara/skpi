@@ -68,6 +68,33 @@ class SkpiPermohonanController extends Controller
         ];
     }
 
+    public function actionAjaxCountPermohonanPerFakultas()
+    {
+        $query = new \yii\db\Query();
+        $rows = $query->select(['f.kode_fakultas', 'f.nama_fakultas','COUNT(*) as total'])
+        ->from('simak_skpi_permohonan t')
+        ->innerJoin('simak_mastermahasiswa m', 'm.nim_mhs = t.nim')
+        ->innerJoin('simak_masterprogramstudi p', 'p.kode_prodi = m.kode_prodi')
+        ->innerJoin('simak_masterfakultas f', 'f.kode_fakultas = p.kode_fakultas')
+        ->groupBy(['f.nama_fakultas', 'f.kode_fakultas'])
+        ->all();
+
+        echo json_encode($rows);
+        exit;
+    }
+
+    public function actionAjaxCountPermohonan()
+    {
+        $query = new \yii\db\Query();
+        $rows = $query->select(['t.status_pengajuan','COUNT(*) as total'])
+        ->from('simak_skpi_permohonan t')
+        ->groupBy(['t.status_pengajuan'])
+        ->all();
+
+        echo json_encode($rows);
+        exit;
+    }
+
     public function actionAjaxSave()
     {
         $results = [];
