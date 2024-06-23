@@ -1,6 +1,6 @@
 <table cellpadding="4" border="0" cellspacing="0" width="100%">
   <tr>
-    <td colspan="2" style="border-top: 1px sold #7c7d7e;"><span style="font-weight: bold;">6. PENGESAHAN SKPI</span><br><span style="font-style: italic;color:#176da7">6. SKPI Legalization</span><br>
+    <td colspan="2" style="border-top: 1px sold #7c7d7e;"><span style="font-weight: bold;">5. PENGESAHAN SKPI</span><br><span style="font-style: italic;color:#176da7">5. SKPI Legalization</span><br>
     </td>
   </tr>
 </table>

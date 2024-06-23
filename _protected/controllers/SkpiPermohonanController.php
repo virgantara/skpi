@@ -188,10 +188,10 @@ class SkpiPermohonanController extends Controller
                     'state' => '1'
                 ])->orderBy(['urutan' => SORT_ASC])->all();
 
-                $list_sistem_pendidikan = SimakUniv::find()
-                    ->where(['kode'=>'SISDIK'])
-                    ->orderBy(['urutan' => SORT_ASC])
-                    ->all();
+                // $list_sistem_pendidikan = SimakUniv::find()
+                //     ->where(['kode'=>'SISDIK'])
+                //     ->orderBy(['urutan' => SORT_ASC])
+                //     ->all();
 
                 $list_kkni = SimakUniv::find()
                     ->where([
@@ -356,16 +356,16 @@ class SkpiPermohonanController extends Controller
                     $pdf->SetFont($fontreg, '', 8);
                     $pdf->writeHTML($data);
                 }
-                ob_start();
-                echo $this->renderPartial('_sisdik', [
-                    'data_universitas' => $data_universitas,
-                    'mhs' => $mhs,
-                    'list_sistem_pendidikan' => $list_sistem_pendidikan
-                ]);
-                $pdf->AddPage();
-                $data = ob_get_clean();
-                $pdf->SetFont($fontreg, '', 8);
-                $pdf->writeHTML($data);
+                // ob_start();
+                // echo $this->renderPartial('_sisdik', [
+                //     'data_universitas' => $data_universitas,
+                //     'mhs' => $mhs,
+                //     'list_sistem_pendidikan' => $list_sistem_pendidikan
+                // ]);
+                // $pdf->AddPage();
+                // $data = ob_get_clean();
+                // $pdf->SetFont($fontreg, '', 8);
+                // $pdf->writeHTML($data);
 
                 ob_start();
                 echo $this->renderPartial('_kkni', [

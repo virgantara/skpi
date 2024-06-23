@@ -1,6 +1,6 @@
 <table cellpadding="4" border="0" cellspacing="0" width="100%">
   <tr>
-    <td colspan="2" style="border-top: 1px sold #7c7d7e;"><span style="font-weight: bold;">5. KERANGKA KUALIFIKASI NASIONAL INDONESIA (KKNI)</span><br><span style="font-style: italic;color:#176da7">5. Indonesian Qualification Framework</span><br>
+    <td colspan="2" style="border-top: 1px sold #7c7d7e;"><span style="font-weight: bold;">4. KERANGKA KUALIFIKASI NASIONAL INDONESIA (KKNI)</span><br><span style="font-style: italic;color:#176da7">4. Indonesian Qualification Framework</span><br>
     </td>
   </tr>
 </table>
