@@ -77,6 +77,7 @@ class SkpiPermohonanController extends Controller
         ->innerJoin('simak_masterprogramstudi p', 'p.kode_prodi = m.kode_prodi')
         ->innerJoin('simak_masterfakultas f', 'f.kode_fakultas = p.kode_fakultas')
         ->groupBy(['f.nama_fakultas', 'f.kode_fakultas'])
+        ->orderBy(['f.kode_fakultas'=>SORT_ASC])
         ->all();
 
         echo json_encode($rows);
