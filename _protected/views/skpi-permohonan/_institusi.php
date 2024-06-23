@@ -67,7 +67,7 @@
     <td width="50%">
       <span  style="font-weight: bold;">Lama Studi Reguler</span><br>
       <i style="color:#176da7">Regular Length of Study</i><br><span>
-         8 Semester
+         <?=$masa_studi->masa_studi?> Semester
         </span>
 
         

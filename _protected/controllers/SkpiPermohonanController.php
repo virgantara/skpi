@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\MasaStudi;
 use app\models\SyaratPenerimaan;
 use app\models\SimakUniv;
 use app\models\SimakSertifikasi;
@@ -212,6 +213,10 @@ class SkpiPermohonanController extends Controller
 
                 ]);
 
+                $masa_studi = MasaStudi::findOne([
+                    'jenjang_id' => $mhs->kodeProdi->jenjang->id,
+                ]);
+
                 $range_nilai = SimakRangeNilai::find()->orderBy(['dari' => SORT_DESC])->all();
                 $label_range_nilai = [];
                 foreach($range_nilai as $nilai){
@@ -281,7 +286,8 @@ class SkpiPermohonanController extends Controller
                     'label_range_nilai' => $label_range_nilai,
                     'syarat_penerimaan' => $syarat_penerimaan,
                     'level_kkni' => $level_kkni,
-                    'akreditasi' => $akreditasi
+                    'akreditasi' => $akreditasi,
+                    'masa_studi' => $masa_studi
                 ]);
 
                 $data = ob_get_clean();

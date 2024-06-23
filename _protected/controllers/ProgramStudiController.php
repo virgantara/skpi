@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Json;
 use app\helpers\MyHelper;
 use app\models\SimakUniv;
+use app\models\MasaStudi;
 use app\models\SyaratPenerimaan;
 use app\models\ProgramStudi;
 use app\models\SimakMasterprogramstudi;
@@ -139,10 +140,16 @@ class ProgramStudiController extends Controller
 
                 ]);
 
+                $masa_studi = MasaStudi::findOne([
+                    'jenjang_id' => $model->jenjang->id,
+                ]);
+
                 $results = [
                     'code' => 200,
                     'message' => 'Success',
                     'prodi' => [
+                        'masa_studi' => $masa_studi->masa_studi.' semester',
+                        'masa_studi_en' => $masa_studi->masa_studi.' semester',
                         'nama_prodi' => $model->nama_prodi,
                         'nama_prodi_en' => $model->nama_prodi_en,
                         'gelar_lulusan' => $model->gelar_lulusan,

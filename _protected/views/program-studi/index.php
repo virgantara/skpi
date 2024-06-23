@@ -92,6 +92,11 @@ $list_fakultas = ArrayHelper::map($list_fakultas,'kode_fakultas','nama_fakultas'
                 <td><span id="span_jenjang_kkni_en"></span></td>
             </tr>
             <tr>
+                <th>Masa Studi<br><i>Regular Length of Study</i></th>
+                <td><span id="span_masa_studi"></span></td>
+                <td><span id="span_masa_studi_en"></span></td>
+            </tr>
+            <tr>
                 <th>Persyaratan Penerimaan<br><i>Entry Requirements</i></th>
                 <td><span id="span_syarat_penerimaan"></span></td>
                 <td><span id="span_syarat_penerimaan_en"></span></td>
@@ -192,7 +197,9 @@ $(document).on("change","#kode_prodi",function(e){
                 var data = $.parseJSON(data)
                 
                 if(data.code == 200){
-                
+                    $("#span_masa_studi").html(data.prodi.masa_studi)
+                    $("#span_masa_studi_en").html(data.prodi.masa_studi_en)
+
                     $("#span_nama_prodi").html(data.prodi.nama_prodi)
                     $("#span_nama_prodi_en").html(data.prodi.nama_prodi_en)
                     $("#span_jenjang").html(data.prodi.jenjang)
