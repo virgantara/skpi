@@ -361,7 +361,8 @@ class SkpiPermohonanController extends Controller
                     'list_sertifikasi' => $list_sertifikasi,
                     'nilai_akpam' => $nilai_akpam,
                     'nilai_kompetensi' => $nilai_kompetensi,
-                    'nilai_induk_kompetensi' => $nilai_induk_kompetensi
+                    'nilai_induk_kompetensi' => $nilai_induk_kompetensi,
+                    'list_kkni' => $list_kkni
                 ]);
 
 
@@ -401,16 +402,16 @@ class SkpiPermohonanController extends Controller
                 // $pdf->SetFont($fontreg, '', 8);
                 // $pdf->writeHTML($data);
 
-                ob_start();
-                echo $this->renderPartial('_kkni', [
-                    'data_universitas' => $data_universitas,
-                    'mhs' => $mhs,
-                    'list_kkni' => $list_kkni
-                ]);
-                $pdf->AddPage();
-                $data = ob_get_clean();
-                $pdf->SetFont($fontreg, '', 8);
-                $pdf->writeHTML($data);
+                // ob_start();
+                // echo $this->renderPartial('_kkni', [
+                //     'data_universitas' => $data_universitas,
+                //     'mhs' => $mhs,
+                //     'list_kkni' => $list_kkni
+                // ]);
+                // $pdf->AddPage();
+                // $data = ob_get_clean();
+                // $pdf->SetFont($fontreg, '', 8);
+                // $pdf->writeHTML($data);
                 
                 $rektor = \app\helpers\MyHelper::getRektor();
                 $nama_rektor = !empty($rektor) ? $rektor->rektor0->nama_dosen : 'contoh nama rektor';
