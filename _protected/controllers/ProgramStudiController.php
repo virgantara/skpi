@@ -96,7 +96,7 @@ class ProgramStudiController extends Controller
 
                         foreach($values as $akr){
                             if($akr['tingkat'] == 3 || $akr['tingkat'] == 2){
-                                $list_akreditasi_internasional[] = [
+                                $list_akreditasi_internasional[$akr['singkatan_lembaga']] = [
                                     'nomor_sk' => $akr['nomor_sk'],
                                     'tanggal_sk' => $akr['tanggal_sk'],
                                     'lembaga' => $akr['singkatan_lembaga'],
@@ -106,7 +106,7 @@ class ProgramStudiController extends Controller
                             }
 
                             else{
-                                $list_akreditasi_nasional[] = [
+                                $list_akreditasi_nasional[$akr['singkatan_lembaga']] = [
                                     'nomor_sk' => $akr['nomor_sk'],
                                     'tanggal_sk' => $akr['tanggal_sk'],
                                     'lembaga' => $akr['singkatan_lembaga'],
