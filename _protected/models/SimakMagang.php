@@ -42,10 +42,8 @@ use Yii;
  */
 class SimakMagang extends \yii\db\ActiveRecord
 {
-    public $nama_dosen;
     public $kode_prodi;
-    public $nama_prodi;
-    public $namaMahasiswa;
+    
     public $kampus;
     public $negara;
     public $provinsi;
@@ -94,6 +92,7 @@ class SimakMagang extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'nim' => Yii::t('app', 'NIM'),
             'jenis_magang_id' => Yii::t('app', 'Jenis Magang'),
+            'namaDosen' => Yii::t('app', 'Pembimbing Magang'),
             'status_magang_id' => Yii::t('app', 'Status Magang'),
             'nama_instansi' => Yii::t('app', 'Nama Instansi'),
             'alamat_instansi' => Yii::t('app', 'Alamat Instansi'),
@@ -107,6 +106,36 @@ class SimakMagang extends \yii\db\ActiveRecord
             'tanggal_selesai_magang' => Yii::t('app', 'Tanggal Selesai Magang'),
             'keterangan' => Yii::t('app', 'Keterangan'),
         ];
+    }
+
+    public function getNamaStatusMagang()
+    {
+        return (!empty($this->statusMagang) ? $this->statusMagang->label : '<i style="color:red">Status Magang belum ditentukan</i>');
+    }
+
+    public function getNamaKotaInstansi()
+    {
+        return (!empty($this->kotaInstansi) ? $this->kotaInstansi->name : null);
+    }
+
+    public function getNamaJenisMagang()
+    {
+        return (!empty($this->jenisMagang) ? $this->jenisMagang->label : null);
+    }
+
+    public function getNamaProdi()
+    {
+        return (!empty($this->nim0) && !empty($this->nim0->kodeProdi) ? $this->nim0->kodeProdi->nama_prodi : null);
+    }
+
+    public function getNamaMahasiswa()
+    {
+        return (!empty($this->nim0) ? $this->nim0->nama_mahasiswa : null);
+    }
+
+    public function getNamaDosen()
+    {
+        return (!empty($this->pembimbing) ? $this->pembimbing->display_name :  '<i style="color:red">Pembimbing Magang belum ditentukan</i>');
     }
 
     /**

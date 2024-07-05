@@ -12,13 +12,19 @@ use app\models\SimakMagang;
  */
 class SimakMagangSearch extends SimakMagang
 {
+    public $namaDosen;
+    public $namaMahasiswa;
+    public $namaProdi;
+    public $namaJenisMagang;
+    public $namaKotaInstansi;
+    public $namaStatusMagang;
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'nim', 'nama_instansi', 'alamat_instansi', 'telp_instansi', 'email_instansi', 'nama_pembina_instansi', 'jabatan_pembina_instansi', 'kota_instansi', 'is_dalam_negeri', 'tanggal_mulai_magang', 'tanggal_selesai_magang', 'status_magang_id','jenis_magang_id', 'keterangan','pembimbing_id','nama_dosen','nama_prodi','kode_prodi','kampus','namaMahasiswa','negara','provinsi'], 'safe'],
+            [['id', 'nim', 'nama_instansi', 'alamat_instansi', 'telp_instansi', 'email_instansi', 'nama_pembina_instansi', 'jabatan_pembina_instansi', 'kota_instansi', 'is_dalam_negeri', 'tanggal_mulai_magang', 'tanggal_selesai_magang', 'status_magang_id','jenis_magang_id', 'keterangan','pembimbing_id','namaProdi','kode_prodi','kampus','namaMahasiswa','negara','provinsi','namaDosen','namaJenisMagang','namaKotaInstansi','namaStatusMagang'], 'safe'],
         ];
     }
 
@@ -56,9 +62,14 @@ class SimakMagangSearch extends SimakMagang
             'desc' => ['mhs.nama_mahasiswa'=>SORT_DESC]
         ];
 
-        $dataProvider->sort->attributes['nama_prodi'] = [
+        $dataProvider->sort->attributes['namaProdi'] = [
             'asc' => ['prod.nama_prodi'=>SORT_ASC],
             'desc' => ['prod.nama_prodi'=>SORT_DESC]
+        ];
+
+        $dataProvider->sort->attributes['namaDosen'] = [
+            'asc' => ['p.display_name'=>SORT_ASC],
+            'desc' => ['p.display_name'=>SORT_DESC]
         ];
 
         // grid filtering conditions
@@ -75,7 +86,7 @@ class SimakMagangSearch extends SimakMagang
 
         $query->andFilterWhere(['like', 'id', $this->id])
             ->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->nim])
-            ->andFilterWhere(['like', 'p.display_name', $this->nama_dosen])
+            ->andFilterWhere(['like', 'p.display_name', $this->namaDosen])
             ->andFilterWhere(['like', 'nama_instansi', $this->nama_instansi])
             ->andFilterWhere(['like', 'alamat_instansi', $this->alamat_instansi])
             ->andFilterWhere(['like', 'telp_instansi', $this->telp_instansi])
@@ -138,7 +149,7 @@ class SimakMagangSearch extends SimakMagang
 
         $query->andFilterWhere(['like', 'id', $this->id])
             ->andFilterWhere(['like', 'mhs.nama_mahasiswa', $this->nim])
-            ->andFilterWhere(['like', 'p.display_name', $this->nama_dosen])
+            ->andFilterWhere(['like', 'p.display_name', $this->namaDosen])
             ->andFilterWhere(['like', 'nama_instansi', $this->nama_instansi])
             ->andFilterWhere(['like', 'alamat_instansi', $this->alamat_instansi])
             ->andFilterWhere(['like', 'telp_instansi', $this->telp_instansi])

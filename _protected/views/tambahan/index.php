@@ -126,7 +126,7 @@ $kota_tags = (!empty($_GET['kota_instansi']) ? $_GET['kota_instansi'] : null);
                                             'multiple' => true
                                         ],
                                     ]) ?>
-                                    <?= $form->field($searchModel, 'nama_dosen')->textInput(['class' => 'form-control selec2-filter']) ?>
+                                    <?= $form->field($searchModel, 'namaDosen')->textInput(['class' => 'form-control selec2-filter']) ?>
                                 </div>
                                 <div class="col-lg-4">
                                    
@@ -207,56 +207,16 @@ $kota_tags = (!empty($_GET['kota_instansi']) ? $_GET['kota_instansi'] : null);
                     'headerOptions'=>['class'=>'kartik-sheet-style']
                 ],
             'nim',
-            // [
-            //     'label' => 'Foto',
-            //     'format' => 'raw',
-            //     'value' => function($data){
-            //         if(!empty($data->nim0->foto_path))
-            //             return Html::a(Html::img(Url::to(['mahasiswa/foto','id' => $data->nim0->id]),['width'=>'70px','loading' => 'lazy']),'',['class'=>'popupModal','data-item'=>Url::to(['mahasiswa/foto','id' => $data->nim0->id])]);
-            //         else
-            //             return '';
-            //     }
-            // ],
-            [
-                'attribute' => 'namaMahasiswa',
-                // 'contentOptions' => ['width' => '80%'],
-                'label' => 'Mahasiswa',
-                'value' => function($data){
-                    return (!empty($data->nim0) ? $data->nim0->nama_mahasiswa : null);
-                }
-            ],
             
-            [
-                'attribute' => 'nama_prodi',
-                'label' => 'Prodi',
-                'value' => function($data){
-                    return (!empty($data->nim0) && !empty($data->nim0->kodeProdi) ? $data->nim0->kodeProdi->nama_prodi : null);
-                }
-            ],
-            [
-                'attribute' => 'jenis_magang_id',
-                'filter' => $list_jenis_magang,
-                'value' => function($data){
-                    return (!empty($data->jenisMagang) ? $data->jenisMagang->label : null);
-                }
-            ],
+            'namaMahasiswa',
+            'namaProdi',
+            'namaJenisMagang',
+            
             'nama_instansi',
+            'namaKotaInstansi',
             
-            [
-                'attribute' => 'kota_instansi',
-                // 'contentOptions' => ['width' => '80%'],
-                'value' => function($data){
-                    return (!empty($data->kotaInstansi) ? $data->kotaInstansi->name : null);
-                }
-            ],
-            [
-                'attribute' => 'nama_dosen',
-                'label' => 'Pembimbing Magang',
-                'format' => 'raw',
-                'value' => function($data){
-                    return (!empty($data->pembimbing) ? $data->pembimbing->display_name :  '<i style="color:red">Pembimbing Magang belum ditentukan</i>');
-                }
-            ],
+            'namaDosen:raw',
+            
             [
                 'attribute' => 'is_dalam_negeri',
                 'filter' => $list_lokasi_magang,
@@ -267,15 +227,8 @@ $kota_tags = (!empty($_GET['kota_instansi']) ? $_GET['kota_instansi'] : null);
 
             'tanggal_mulai_magang:date',
             'tanggal_selesai_magang:date',
-            [
-                'attribute' => 'status_magang_id',
-                'format' => 'raw',
-                'filter' => $list_status_magang,
-                'value' => function($data){
-                    return (!empty($data->statusMagang) ? $data->statusMagang->label : '<i style="color:red">Status Magang belum ditentukan</i>');
-                }
-            ],
-           
+            'namaStatusMagang:raw',
+            
             
                 [
                     'class' => 'yii\grid\ActionColumn',

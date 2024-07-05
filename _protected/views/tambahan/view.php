@@ -1,5 +1,5 @@
 <?php
-
+use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -24,9 +24,23 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            // 'id',
+            [
+                // 'attribute' => 'foto_path',
+                'format' => 'raw',
+                'label' => 'Foto',
+                'value' => function($data){
+                    if(!empty($data->nim0->foto_path))
+                        return Html::a(Html::img(Url::to(['mahasiswa/foto','id' => $data->nim0->id]),['width'=>'70px','loading' => 'lazy']),'',['class'=>'popupModal','data-item'=>Url::to(['mahasiswa/foto','id' => $data->nim0->id])]);
+                    else
+                        return '';
+                }
+            ],
             'nim',
-            'jenis_magang_id',
+            'namaMahasiswa',
+            'namaDosen:raw',
+            'namaProdi',
+            'namaJenisMagang',
+            'namaKotaInstansi',
             'nama_instansi',
             'alamat_instansi',
             'telp_instansi',
@@ -39,16 +53,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'tanggal_selesai_magang',
             'status',
             'keterangan:ntext',
-            'pembimbing_id',
+            
             'status_magang_id',
-            'file_laporan:raw',
-            'file_sk_penerimaan_magang:raw',
-            'file_surat_tugas:raw',
-            'nilai_angka',
-            'nilai_huruf',
-            'matakuliah_id',
-            'updated_at',
-            'created_at',
+            // 'file_laporan:raw',
+            // 'file_sk_penerimaan_magang:raw',
+            // 'file_surat_tugas:raw',
+            // 'nilai_angka',
+            // 'nilai_huruf',
+            // 'matakuliah_id',
+            // 'updated_at',
+            // 'created_at',
         ],
     ]) ?>
 
@@ -57,3 +71,24 @@ $this->params['breadcrumbs'][] = $this->title;
 
     </div>
 </div>
+<?php
+        yii\bootstrap\Modal::begin(['id' =>'modal','size'=>'modal-lg',]);
+        echo '<div class="text-center">';
+        echo '<img width="100%" id="img">';
+        echo '</div>';
+        yii\bootstrap\Modal::end();
+    ?>
+
+<?php
+
+$this->registerJs("$(function() {
+
+    $(document).on('click','.popupModal',function(e){
+        e.preventDefault();
+        var m = $('#modal').modal('show').find('#img');
+
+        m.attr('src',$(this).data('item'))
+    })
+    
+});");
+?>

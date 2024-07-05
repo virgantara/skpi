@@ -136,7 +136,7 @@ $list_kampus = \app\helpers\MyHelper::getKampusList();
         'header'=>'',
         'headerOptions'=>['class'=>'kartik-sheet-style']
     ],
-        [
+            [
                 'attribute' => 'foto_path',
                 'format' => 'raw',
 
