@@ -106,8 +106,8 @@ class SkpiPermohonanController extends Controller
             
             $skpi_permohonan_id = $_POST['skpi_permohonan_id'];
             $model = $this->findModel($skpi_permohonan_id);
-            $model->deskripsi = $_POST['deskripsi'] ?: '-';
-            $model->deskripsi_en = $_POST['deskripsi_en'] ?: '-';
+            $model->link_barcode = $_POST['link_barcode'] ?: '-';
+            // $model->deskripsi_en = $_POST['deskripsi_en'] ?: '-';
             
             $connection = \Yii::$app->db;
             $transaction = $connection->beginTransaction();
@@ -663,38 +663,46 @@ class SkpiPermohonanController extends Controller
             'message' => 'Bad Request'
         ] ;
         if (!Yii::$app->user->isGuest && Yii::$app->request->isPost) {
+            $nim = '';
             if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
-                $model = SkpiPermohonan::findOne(['nim' => Yii::$app->user->identity->nim]);
+                $nim = Yii::$app->user->identity->nim;
+            }
 
-                if(!empty($model)){
+            else{
+                $nim = (!empty($_POST['dataPost']['nim']) ? $_POST['dataPost']['nim'] : '-');
+            }
+
+            $model = SkpiPermohonan::findOne(['nim' => $nim]);
+
+            if(!empty($model)){
+                $results = [
+                    'code' => 500,
+                    'message' => 'Anda saat ini sudah memiliki permohonan SKPI'
+                ] ;         
+            }
+
+            else{
+                $model = new SkpiPermohonan;
+                $model->id = MyHelper::gen_uuid();
+                $model->tanggal_pengajuan = date('YmdHis');
+                $model->status_pengajuan = '1';
+                $model->nim = $nim;
+                if($model->save()){
                     $results = [
-                        'code' => 500,
-                        'message' => 'Anda saat ini sudah memiliki permohonan SKPI'
-                    ] ;         
+                        'code' => 200,
+                        'message' => 'Data permohonan SKPI berhasil diajukan'
+                    ] ;  
                 }
 
                 else{
-                    $model = new SkpiPermohonan;
-                    $model->id = MyHelper::gen_uuid();
-                    $model->tanggal_pengajuan = date('YmdHis');
-                    $model->status_pengajuan = '1';
-                    $model->nim = Yii::$app->user->identity->nim;
-                    if($model->save()){
-                        $results = [
-                            'code' => 200,
-                            'message' => 'Data permohonan SKPI berhasil diajukan'
-                        ] ;  
-                    }
-
-                    else{
-                        $error = MyHelper::logError($model);
-                        $results = [
-                            'code' => 500,
-                            'message' => $error
-                        ] ; 
-                    }
-                }    
-            }
+                    $error = MyHelper::logError($model);
+                    $results = [
+                        'code' => 500,
+                        'message' => $error
+                    ] ; 
+                }
+            }    
+            
             
         }
 

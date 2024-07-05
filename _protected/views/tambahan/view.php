@@ -6,25 +6,17 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\SimakMagang */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Simak Magangs', 'url' => ['index']];
+$this->title = $model->nama_instansi;
+$this->params['breadcrumbs'][] = ['label' => 'Magang', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="block-header">
-    <h2><?= Html::encode($this->title) ?></h2>
-</div>
+
 <div class="row">
    <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading">
-                <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-                    'class' => 'btn btn-danger',
-                    'data' => [
-                        'confirm' => 'Are you sure you want to delete this item?',
-                        'method' => 'post',
-                    ],
-                ]) ?>
+                <h3><?= Html::encode($this->title) ?></h3>
+               
             </div>
 
             <div class="panel-body ">
@@ -32,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            // 'id',
             'nim',
             'jenis_magang_id',
             'nama_instansi',
@@ -49,9 +41,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'keterangan:ntext',
             'pembimbing_id',
             'status_magang_id',
-            'file_laporan',
-            'file_sk_penerimaan_magang',
-            'file_surat_tugas',
+            'file_laporan:raw',
+            'file_sk_penerimaan_magang:raw',
+            'file_surat_tugas:raw',
             'nilai_angka',
             'nilai_huruf',
             'matakuliah_id',

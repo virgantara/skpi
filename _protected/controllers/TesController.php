@@ -37,7 +37,7 @@ class TesController extends Controller
                     [
                         'actions' => ['ajax-get','download','create','update','delete','index','view'],
                         'allow' => true,
-                        'roles' => ['Mahasiswa'],
+                        'roles' => ['Mahasiswa','akpamPusat'],
                     ],
                     [
                         'actions' => [
@@ -169,7 +169,7 @@ class TesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($nim='-')
     {
         if(Yii::$app->user->isGuest){
             return $this->redirect(['site/logout']);
@@ -180,6 +180,10 @@ class TesController extends Controller
 
         if(Yii::$app->user->identity->access_role == 'Mahasiswa'){
             $model->nim = Yii::$app->user->identity->nim;
+        }
+
+        else if(Yii::$app->user->can('akpamPusat')){
+            $model->nim = $nim;
         }
 
         if ($model->load(Yii::$app->request->post())) {

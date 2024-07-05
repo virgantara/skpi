@@ -97,7 +97,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                     </tr> -->
                     <tr>
                         <th>Link Barcode</th>
-                        <td><?=Html::textInput('link_barcode',$model->link_barcode,['class' => 'form-control'])?></td>
+                        <td><?=Html::textInput('link_barcode',$model->link_barcode,['class' => 'form-control','id'=>'link_barcode'])?></td>
                     </tr>
                     <tr>
                         <th>Status Pengajuan</th>
@@ -249,7 +249,7 @@ $(document).on("click","#btn-save",function(e){
 
     var obj = new FormData;
     obj.append("skpi_permohonan_id","'.$model->id.'")
-    // obj.append("deskripsi",$("#skpi_deskripsi").val())
+    obj.append("link_barcode",$("#link_barcode").val())
     // obj.append("deskripsi_en",$("#skpi_deskripsi_en").val())
     
     $.ajax({

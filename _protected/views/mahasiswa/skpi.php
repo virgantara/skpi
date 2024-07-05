@@ -129,7 +129,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                             </tbody>
                             <tfoot>
                                 <tr>
-                                <th colspan="3"><?= Html::a('<i class="fa fa-plus"></i> Tambah Data Prestasi', ['tes/create'], ['class' => 'btn btn-primary btn-block']) ?>
+                                <th colspan="3"><?= Html::a('<i class="fa fa-plus"></i> Tambah Data Prestasi', ['tes/create','nim' => $mhs->nim_mhs], ['class' => 'btn btn-primary btn-block']) ?>
                                     
                                 </th>
                             </tr>
@@ -158,7 +158,7 @@ $list_status_pengajuan = \app\helpers\MyHelper::getStatusPengajuan();
                             </tbody>
                             <tfoot>
                                 <tr>
-                                <th colspan="3"><?= Html::a('<i class="fa fa-plus"></i> Tambah Data Sertifikasi', ['sertifikasi/create'], ['class' => 'btn btn-warning btn-block']) ?>
+                                <th colspan="3"><?= Html::a('<i class="fa fa-plus"></i> Tambah Data Sertifikasi', ['sertifikasi/create','nim' => $mhs->nim_mhs], ['class' => 'btn btn-warning btn-block']) ?>
                                     
                                 </th>
                             </tr>
@@ -215,9 +215,15 @@ $(document).on("click","#btn-apply",function(e){
       confirmButtonText: \'Yes, apply!\'
     }).then((result) => {
         if (result.value) {
+            let nim = "'.$mhs->nim_mhs.'"
+            let obj = new Object
+            obj.nim = nim
             $.ajax({
 
                 type : "POST",
+                data : {
+                    dataPost: obj
+                },
                 url : "/skpi-permohonan/ajax-apply",
                 success: function(data){
                     var hasil = $.parseJSON(data);
