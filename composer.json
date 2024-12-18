@@ -9,6 +9,16 @@
         "source": "https://github.com/nenad-zivkovic/yii2-basic-template"
     },
     "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/virgantara/Unida-Apps-Support.git"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
     "require": {
         "php": ">=7.4.0",
         "yiisoft/yii2": "*",
@@ -40,7 +50,8 @@
         "kartik-v/yii2-export": "dev-master",
         "tecnickcom/tcpdf": "^6.3",
         "geniusts/hijri-dates": "^1.1",
-        "yidas/yii2-bower-asset": "2.0.13.1"
+        "yidas/yii2-bower-asset": "2.0.13.1",
+        "virgantara/unida-apps-support": "dev-master"
     
     },
     "require-dev": {
@@ -55,7 +66,10 @@
     },
     "config": {
         "vendor-dir": "_protected/vendor",
-        "process-timeout": 1800
+        "process-timeout": 1800,
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
     },
     "scripts": {
         "post-create-project-cmd": [

@@ -1,7 +1,13 @@
 <?php
 
 return [
-
+     'oauth' => [
+          'baseurl' => 'http://local.oauth.com:5001',
+          'client_id' => '',
+          'redirectUri' => 'http://local.skpi.com/site/callback',
+          'client_secret' => '',
+          'grant_type' => 'password'
+     ],
     'api_baseurl' => 'http://localhost:1926',
    'client_token' => '',
    'redirectUri' => 'http://local.elitabmas.com/site/auth-drive',

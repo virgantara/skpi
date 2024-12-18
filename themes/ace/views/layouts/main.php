@@ -80,17 +80,21 @@ if(!Yii::$app->user->isGuest){
 
                         <?php 
                         $list_apps = [];
-                        try
-                        {
-                            $key = Yii::$app->params['jwt_key'];
-                            $session = Yii::$app->session;
-                            $token = $session->get('token');
-                            $decoded = \Firebase\JWT\JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
-                            $list_apps = $decoded->apps;
-                        }
-                        catch(\Exception $e) 
-                        {
-                       
+                         $session = Yii::$app->session;
+
+                        if($session->has('access_token') && $session->has('refresh_token')){
+                          $access_token = $session->get('access_token');
+                          $refresh_token = $session->get('refresh_token');
+                          try{
+                            $res = Yii::$app->aplikasi->getAllowedAplikasi($access_token, $refresh_token);
+                            $list_apps = $res['apps'];  
+                          }catch(\Exception $e){
+
+                          }
+
+                          
+
+
                         }
                     
 
@@ -115,18 +119,8 @@ if(!Yii::$app->user->isGuest){
                                 <li class="dropdown-content">
                                     <ul class="dropdown-menu dropdown-navbar">
                                         <li>
-                                            <a target="_blank" href="<?=$app->app_url.$token;?>" class="clearfix">
-                                               <!--  <img src="assets/images/avatars/avatar.png" class="msg-photo" alt="Alex's Avatar" /> -->
-                                                <span class="msg-body">
-                                                    <span class="msg-title">
-                                                        <span class="blue"><?=$app->app_name;?></span>
-                                                    </span>
-
-                                                    <!-- <span class="msg-time">
-                                                        <i class="ace-icon fa fa-clock-o"></i>
-                                                        <span>a moment ago</span>
-                                                    </span> -->
-                                                </span>
+                                            <a target="_blank" href="<?=$app['app_url'];?>" class="clearfix">
+                                               <?=$app['app_name'];?>
                                             </a>
                                         </li>
 

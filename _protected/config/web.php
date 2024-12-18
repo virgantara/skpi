@@ -31,6 +31,20 @@ $config = [
     ],
     'timeZone' => 'Asia/Jakarta',
     'components' => [
+        'aplikasi' => [
+            'class' => 'virgantara\components\AplikasiAuth',
+            'baseurl' => $params['oauth']['baseurl'], 
+        ],
+        'tokenManager' => [
+            'class' => 'virgantara\components\TokenManager',
+        ],
+        'oauth2' => [
+            'class' => 'virgantara\components\OAuth2Client',
+            'tokenValidationUrl' => $params['oauth']['baseurl'], // Endpoint for token validation
+            'tokenRefreshUrl' => $params['oauth']['baseurl'],
+            'client_id' => $params['oauth']['client_id'],
+            'client_secret' => $params['oauth']['client_secret'],
+        ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [
