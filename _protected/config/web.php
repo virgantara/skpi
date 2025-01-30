@@ -31,6 +31,12 @@ $config = [
     ],
     'timeZone' => 'Asia/Jakarta',
     'components' => [
+        'apiManager' => [
+            'class' => 'virgantara\components\ApiManager',
+            'api_baseurl' => $params['api_baseurl'],
+            'client_token' => $params['client_token'],
+            'timeout' => 60
+        ],
         'aplikasi' => [
             'class' => 'virgantara\components\AplikasiAuth',
             'baseurl' => $params['oauth']['baseurl'], 
