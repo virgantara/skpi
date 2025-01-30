@@ -91,6 +91,7 @@ class MenuHelper
 		$menuItems[] = [
 			'label' => '<i class="menu-icon fa fa-home"></i><span class="menu-text"> Mahasiswa </span><i class="caret"></i>',
 			'url' => '#',
+			'visible' => !Yii::$app->user->isGuest,
 			'submenuTemplate' => "\n<ul class='submenu'>\n{items}\n</ul>\n",
 			'template' => '<a href="{url}" class="dropdown-toggle">{label}</a>',
 			'items' => [
