@@ -195,27 +195,23 @@ class SiteController extends Controller
         try {
 
             $authCode = Yii::$app->request->get('code');
-            $accessToken = Yii::$app->tokenManager->fetchAccessTokenWithAuthCode($authCode);
+            $resp = Yii::$app->tokenManager->fetchAccessTokenWithAuthCode($authCode);
             
-            Yii::$app->session->set('jwt_token', $accessToken);
-
-            $jwtSecretKey = Yii::$app->params['jwt_key'];
-            $decoded = JWT::decode($accessToken, new Key($jwtSecretKey, 'HS256'));
-            $uuid = $decoded->uuid;
+            $uuid = $resp['uuid'];
             $user = \app\models\User::find()->where([
                 'uuid'=>$uuid,
             ])
             ->one();
 
-            Yii::$app->session->set('access_token', $decoded->accessToken);
-            Yii::$app->session->set('refresh_token', $decoded->refreshToken ?? null);
-            Yii::$app->session->set('expires_in',$decoded->accessTokenExpiresAt);
+            Yii::$app->session->set('access_token', $resp['access_token']);
+            Yii::$app->session->set('refresh_token', $resp['refresh_token'] ?? null);
+            Yii::$app->session->set('expires_in',$resp['expires_in']);
 
             if(!empty($user)){
                 
                 Yii::$app->user->login($user);
 
-                $hasil = Yii::$app->aplikasi->getAllowedAplikasi($decoded->accessToken,$decoded->refreshToken);               
+                $hasil = Yii::$app->aplikasi->getAllowedAplikasi($resp['access_token'],$resp['refresh_token']);               
             
                 $session->set('token',$hasil['token']);
                 $session->set('apps',$hasil['apps']);
@@ -509,68 +505,39 @@ class SiteController extends Controller
     {
 
         $session = Yii::$app->session;
+        
 
-        if($session->has('token'))
-        {
+        $clientId = Yii::$app->params['oauth']['client_id'];
+        $redirectUri = Yii::$app->params['oauth']['redirectUri'];
+        $scope = urlencode('read write');
 
-            try
-            {
-
-                $token = $session->get('token');
-                $key = Yii::$app->params['jwt_key'];
-                $decoded = \Firebase\JWT\JWT::decode($token, base64_decode(strtr($key, '-_', '+/')), ['HS256']);
-
-            }
-
-            catch(\Exception $e) 
-            {
-                \app\helpers\MyHelper::refreshToken($token);
-            }
-            
-             
+        // $state = bin2hex(random_bytes(16));
+        
+        if (!Yii::$app->session->isActive) {
+            Yii::$app->session->open();
         }
 
-        else
-        {
-            return $this->redirect(Yii::$app->params['sso_login']);
-        }
+        $secretKey = Yii::$app->params['jwt_key'];
 
-        $this->layout = 'default';
-        // user is logged in, he doesn't need to login
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+        $payload = [
+            'iss' => Yii::$app->params['oauth']['redirectUri'],         // Issuer
+            'iat' => time(),                   // Issued at
+            'exp' => time() + 300,             // Expiration (5 minutes)
+            'csrf_token' => bin2hex(random_bytes(16)) // Unique CSRF token
+        ];
 
-        // get setting value for 'Login With Email'
-        $lwe = Yii::$app->params['lwe'];
+        $jwt = JWT::encode($payload, $secretKey, 'HS256');
 
-        // if 'lwe' value is 'true' we instantiate LoginForm in 'lwe' scenario
-        $model = $lwe ? new LoginForm(['scenario' => 'lwe']) : new LoginForm();
-
-        // monitor login status
-        $successfulLogin = true;
-
-        // posting data or login has failed
-        if (!$model->load(Yii::$app->request->post()) || !$model->login()) {
-            $successfulLogin = false;
-        }
+        $authUrl = Yii::$app->params['oauth']['baseurl']."/oauth/login?"
+            . "client_id={$clientId}"
+            . "&redirect_uri={$redirectUri}"
+            . "&response_type=code"
+            . "&scope={$scope}"
+            . "&grant_type=password"
+            . "&state={$jwt}";
 
 
-
-        // if user's account is not activated, he will have to activate it first
-        if ($model->status === User::STATUS_INACTIVE && $successfulLogin === false) {
-            Yii::$app->session->setFlash('error', Yii::t('app', 
-                'You have to activate your account first. Please check your email.'));
-            return $this->refresh();
-        } 
-
-        // if user is not denied because he is not active, then his credentials are not good
-        if ($successfulLogin === false) {
-            return $this->render('login', ['model' => $model]);
-        }
-
-        // login was successful, let user go wherever he previously wanted
-        return $this->goBack();
+        return $this->redirect($authUrl);
     }
 
     /**
