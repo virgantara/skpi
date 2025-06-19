@@ -245,7 +245,9 @@ class SkpiPermohonanController extends Controller
                     'jenjang_id' => $mhs->kodeProdi->jenjang->id,
                 ]);
 
-                $range_nilai = SimakRangeNilai::find()->orderBy(['dari' => SORT_DESC])->all();
+                $range_nilai = SimakRangeNilai::find()->where([
+                    'kode_prodi' => $mhs->kode_prodi
+                ])->orderBy(['dari' => SORT_DESC])->all();
                 $label_range_nilai = [];
                 foreach($range_nilai as $nilai){
                     $label_range_nilai[] = $nilai->nilai_huruf.'='.$nilai->angka;

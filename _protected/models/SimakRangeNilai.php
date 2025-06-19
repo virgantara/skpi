@@ -30,7 +30,7 @@ class SimakRangeNilai extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['dari', 'sampai', 'nilai_huruf'], 'required'],
+            [['dari', 'sampai', 'nilai_huruf','kode_prodi'], 'required'],
             [['dari', 'sampai', 'angka'], 'number'],
             [['nilai_huruf'], 'string', 'max' => 2],
             [['keterangan'], 'string', 'max' => 10],
@@ -50,5 +50,24 @@ class SimakRangeNilai extends \yii\db\ActiveRecord
             'angka' => 'Angka',
             'keterangan' => 'Keterangan',
         ];
+    }
+
+    public function getNamaProdi()
+    {
+        $prodi = SimakMasterprogramstudi::findOne(['kode_prodi' => $this->kode_prodi]);
+
+        return (!empty($prodi) ? $prodi->nama_prodi : null);
+    }
+
+    public static function getNilaiHuruf($angka)
+    {
+        $prodi = Yii::$app->user->identity->prodi;
+        $query = new \yii\db\Query();
+        $query->select(['nilai_huruf']);
+        $query->from('simak_range_nilai');
+        $query->where($angka.' >= dari AND '.$angka.' <= sampai');
+        $query->andWhere(['kode_prodi' => $prodi]);
+        
+        return $query->one();
     }
 }
