@@ -197,7 +197,9 @@ class SiteController extends Controller
             $authCode = Yii::$app->request->get('code');
             $resp = Yii::$app->tokenManager->fetchAccessTokenWithAuthCode($authCode);
             
-            $uuid = $resp['uuid'];
+            $userinfo = Yii::$app->tokenManager->getUserinfo($resp['access_token']);
+            
+            $uuid = $userinfo['sub'];
             $user = \app\models\User::find()->where([
                 'uuid'=>$uuid,
             ])
